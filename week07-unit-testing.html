@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="en" data-mode="both">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 7 · Unit Testing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f4f7; --card:#ffffff; --ink:#0d1117; --ink-2:#3b4250; --muted:#6b7280; --line:#e5e7eb;
+  --th:#4b5563;
+  --blue:#2f5bff; --blue-bg:#e9efff; --green:#16a35f; --green-bg:#e4f6ec;
+  --red:#f0533f; --red-bg:#fde9e6; --amber:#e8a400; --amber-bg:#fff4d6; --violet:#7c4dff;
+  --code-bg:#11163b; --code-ink:#dbe3ff; --dark-box:#0d1117; --dark-ink:#fff;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 6px 20px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1016; --card:#161a22; --ink:#eef1f6; --ink-2:#c3c9d4; --muted:#8a93a3; --line:#262c38;
+    --th:#aab2c0; --blue:#6f8dff; --blue-bg:#1a2140; --green:#3ccf86; --green-bg:#122a20;
+    --red:#ff7563; --red-bg:#331a17; --amber:#f5c043; --amber-bg:#2f2610; --violet:#a58bff;
+    --code-bg:#0a0e24; --dark-box:#eef1f6; --dark-ink:#0d1117; --shadow:0 1px 2px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1016; --card:#161a22; --ink:#eef1f6; --ink-2:#c3c9d4; --muted:#8a93a3; --line:#262c38;
+  --th:#aab2c0; --blue:#6f8dff; --blue-bg:#1a2140; --green:#3ccf86; --green-bg:#122a20;
+  --red:#ff7563; --red-bg:#331a17; --amber:#f5c043; --amber-bg:#2f2610; --violet:#a58bff;
+  --code-bg:#0a0e24; --dark-box:#eef1f6; --dark-ink:#0d1117; --shadow:0 1px 2px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,"IBM Plex Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.88em}
+code{background:var(--line);padding:1px 6px;border-radius:5px}
+b,strong{font-weight:650}
+
+/* language modes */
+html[data-mode="en"] .th{display:none!important}
+html[data-mode="th"] .en{display:none!important}
+.th{font-family:"IBM Plex Sans Thai",Inter,sans-serif}
+html[data-mode="both"] .th{color:var(--th)}
+html[data-mode="both"] h1 .th,html[data-mode="both"] h2 .th,html[data-mode="both"] h3 .th,html[data-mode="both"] .ttl .th{display:block;font-weight:500;font-size:.72em;margin-top:2px}
+html[data-mode="both"] p.th,html[data-mode="both"] div.th{margin-top:4px}
+html[data-mode="both"] .en + .th{display:block}
+html[data-mode="both"] .nlist b.th{font-weight:500;font-size:.92em}
+html[data-mode="both"] .toc .th{display:none!important}
+html[data-mode="th"] h1 .th,html[data-mode="th"] h2 .th,html[data-mode="th"] h3 .th{color:var(--ink)}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between}
+.crumb{font:600 13px "IBM Plex Mono",monospace;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crumb::before{content:"▶ ";color:var(--blue)}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px;flex-shrink:0}
+.seg button{border:0;background:none;color:var(--muted);font:600 13px Inter,"IBM Plex Sans Thai",sans-serif;padding:5px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--blue);color:#fff}
+
+main{max-width:1040px;margin:0 auto;padding:0 16px 80px}
+section{padding:44px 0 8px}
+.kicker{font:600 12.5px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:0 0 6px}
+.kicker.red{color:var(--red)}
+h1{font-size:clamp(38px,7vw,64px);line-height:1.05;letter-spacing:-.025em;margin:0 0 18px;font-weight:800}
+h2{font-size:clamp(25px,3.6vw,34px);line-height:1.15;letter-spacing:-.015em;margin:0 0 18px;font-weight:750}
+h3{font-size:18px;line-height:1.3;margin:0 0 6px;font-weight:650}
+p{margin:0}
+.lead{font-size:18px;color:var(--ink-2);max-width:620px}
+.note{color:var(--muted);font-size:14.5px;margin-top:14px}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:760px){.g2,.g3{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.card .lbl{font:600 11.5px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.card p{color:var(--ink-2);font-size:15px}
+
+.plain{margin-top:14px;border-left:4px solid var(--blue);background:var(--blue-bg);border-radius:0 10px 10px 0;padding:12px 16px;font-size:15px}
+.plain.g{border-color:var(--green);background:var(--green-bg)}
+.plain.r{border-color:var(--red);background:var(--red-bg)}
+.plain .lbl{font:600 11px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:3px}
+.plain.g .lbl{color:var(--green)} .plain.r .lbl{color:var(--red)}
+
+/* hero */
+.hero{padding:64px 0 24px;position:relative;overflow:hidden}
+.dots{position:absolute;right:0;top:40px;width:260px;height:240px;pointer-events:none}
+.dots i{position:absolute;border-radius:50%}
+@media (max-width:980px){.dots{display:none}}
+
+/* toc */
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.toc a{font-size:13.5px;text-decoration:none;color:var(--ink-2);background:var(--card);border:1px solid var(--line);padding:5px 11px;border-radius:999px}
+.toc a:hover{border-color:var(--blue);color:var(--blue)}
+
+/* golden thread */
+.thread{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px}
+.step{flex:1 0 82px;background:var(--card);border:1px solid var(--line);border-radius:12px;text-align:center;padding:10px 6px;box-shadow:var(--shadow)}
+.step b{display:block;font-size:15px}.step small{color:var(--muted);font-size:12px}
+.step.on{background:var(--blue);border-color:var(--blue);color:#fff}.step.on small{color:#dbe3ff}
+
+/* V-model */
+.vm{display:grid;grid-template-columns:1fr auto 1fr;gap:10px 8px;align-items:center;max-width:640px;margin:6px auto 0}
+.vb{background:var(--dark-box);color:var(--dark-ink);border-radius:8px;padding:9px 10px;text-align:center;font-weight:600;font-size:14px}
+.vm .arrow{color:var(--muted);font-size:12px;text-align:center;font-family:"IBM Plex Mono",monospace;min-width:70px}
+.vm .s1{margin-right:0}.vm .s2{margin-right:6%}.vm .s3{margin-right:12%}
+.vm .t1{margin-left:0}.vm .t2{margin-left:6%}.vm .t3{margin-left:12%}
+
+/* flow */
+.flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:10px 0}
+.flow .card{text-align:center;min-width:170px;padding:12px 16px}
+.flow .card small{display:block;color:var(--muted);font-size:12.5px}
+.flow .ar{font-size:20px;color:var(--ink)}
+.verdict{text-align:center;font-size:19px;margin-top:8px}
+
+/* code */
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:16px 18px;overflow-x:auto;font:13.5px/1.65 "IBM Plex Mono",monospace;margin:0}
+pre .k{color:#8ea6ff}pre .s{color:#7ee2b0}pre .c{color:#7d86ad}
+
+.ac li{list-style:none;display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.ac li:last-child{border:0}
+.ac ul{margin:0;padding:0}
+.sq{width:16px;height:16px;border-radius:4px;flex-shrink:0;margin-top:4px}
+
+/* number line */
+.nl{width:100%;height:auto;display:block;margin-top:18px}
+.nl text{font:13px Inter,sans-serif;fill:var(--ink)}
+.nl .mut{fill:var(--muted);font-size:11px}
+
+/* numbered lists */
+.nlist{list-style:none;margin:0;padding:0}
+.nlist li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.nlist li:last-child{border-bottom:0}
+.num{width:24px;height:24px;border-radius:6px;background:var(--blue);color:#fff;font:700 12.5px Inter,sans-serif;display:grid;place-items:center;flex-shrink:0;margin-top:1px}
+.nlist .d{color:var(--ink-2);font-size:14.5px}
+.nlist .why{color:var(--muted);font-size:13.5px}
+
+/* pyramid */
+.pyr{display:flex;flex-direction:column;align-items:center;gap:3px;max-width:380px;margin:0 auto}
+.pyr div{background:var(--dark-box);color:var(--dark-ink);text-align:center;font-weight:600;padding:12px 4px;font-size:14px}
+.pyr .a{width:38%;clip-path:polygon(22% 0,78% 0,100% 100%,0 100%);font-size:12.5px}
+.pyr .b{width:66%;clip-path:polygon(12% 0,88% 0,100% 100%,0 100%)}
+.pyr .c{width:100%;clip-path:polygon(8% 0,92% 0,100% 100%,0 100%);padding:18px 4px}
+.pyr-cap{display:flex;justify-content:space-between;max-width:380px;margin:6px auto 0;font:12px "IBM Plex Mono",monospace;color:var(--muted)}
+
+/* levels tabs */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{border:1px solid var(--line);background:var(--card);color:var(--ink-2);font:600 14px Inter,"IBM Plex Sans Thai",sans-serif;padding:7px 14px;border-radius:999px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.level{display:none}.level.on{display:grid}
+.stack{display:flex;flex-direction:column;gap:6px;align-items:center}
+.stack span{width:min(100%,220px);text-align:center;padding:8px;border-radius:8px;font-size:14px;border:1px solid var(--line);background:var(--card);color:var(--muted)}
+.stack span.hl{background:var(--dark-box);color:var(--dark-ink);border-color:var(--dark-box)}
+.stack.rel span.hl{background:#a77900;border-color:#a77900;color:#fff}
+.stack .users{border-radius:999px;width:min(100%,160px)}
+.stack-cap{font:12px "IBM Plex Mono",monospace;color:var(--muted);text-align:center;margin-top:4px}
+
+/* models */
+.model{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mbox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;box-shadow:var(--shadow)}
+.mbox.dk{background:var(--dark-box);color:var(--dark-ink);border-color:var(--dark-box)}
+.drivers{display:grid;gap:6px}
+.drivers div{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:14px}
+
+/* SUS */
+.susbar{position:relative;height:26px;border-radius:4px;overflow:hidden;display:flex;margin-top:28px}
+.susbar span{display:flex;align-items:center;justify-content:center;font-size:12.5px;color:#fff}
+.susticks{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:4px;position:relative}
+.marker{position:absolute;top:-22px;transform:translateX(-50%);font-size:14px;transition:left .35s}
+.calc table{width:100%;border-collapse:collapse;font-size:14.5px}
+.calc td{padding:8px 4px;border-bottom:1px solid var(--line);vertical-align:middle}
+.calc td.q{width:100%}
+.calc .r{display:flex;gap:4px}
+.calc label{display:grid;place-items:center;width:30px;height:30px;border-radius:7px;border:1px solid var(--line);cursor:pointer;font-size:13px;color:var(--ink-2)}
+.calc input{position:absolute;opacity:0;pointer-events:none}
+.calc input:checked+label{background:var(--blue);color:#fff;border-color:var(--blue)}
+.calc input:focus-visible+label{outline:2px solid var(--blue);outline-offset:2px}
+.tag{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:5px;color:#fff;font:700 12px Inter,sans-serif;margin-right:8px}
+.score{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:14px}
+.score .big{font-size:44px;font-weight:800;letter-spacing:-.02em}
+@media (max-width:560px){.calc tr{display:flex;flex-direction:column;gap:6px}.calc td{border:0;padding:2px 0}.calc tr{border-bottom:1px solid var(--line);padding:8px 0}}
+
+/* table */
+.tbl{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);font-size:15px}
+.tbl th{background:var(--dark-box);color:var(--dark-ink);text-align:left;font:600 12px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;padding:10px 14px}
+.tbl td{padding:11px 14px;border-top:1px solid var(--line);vertical-align:top}
+.tbl td:first-child{font-weight:650;width:34%}
+
+.pill{display:inline-block;font:700 11.5px "IBM Plex Mono",monospace;letter-spacing:.06em;padding:3px 10px;border-radius:999px;color:#fff;margin-bottom:10px}
+.dl > div{padding:10px 0;border-bottom:1px solid var(--line)}
+.dl > div:last-child{border-bottom:0}
+.dl h3{font-size:16px;margin:0 0 2px}
+.dl p{font-size:14.5px}
+
+blockquote{margin:0;background:var(--card);border-left:5px solid var(--red);border-radius:0 12px 12px 0;padding:18px 22px;font-size:clamp(17px,2.4vw,22px);line-height:1.45;box-shadow:var(--shadow)}
+blockquote cite{display:block;font-size:14px;color:var(--muted);margin-top:8px}
+
+.summary{background:#141a4d;color:#fff;border-radius:18px;padding:32px 28px;margin-top:44px}
+.summary .kicker{color:#aab8ff}
+.summary h2{color:#fff}
+.summary h3{color:#fff}
+.summary p{color:#c8cff5;font-size:15px}
+.summary .lbl{font:600 11px "IBM Plex Mono",monospace;letter-spacing:.08em;color:#8d99d6;text-transform:uppercase}
+html[data-mode="both"] .summary .th{color:#aab3e6}
+.refs .num{margin-top:3px}
+footer{color:var(--muted);font-size:13px;text-align:center;margin-top:40px}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="bar-in">
+  <div class="crumb">intro2se · ch7 · unit testing</div>
+  <div class="seg" role="group" aria-label="Language">
+    <button data-m="en" aria-pressed="false">EN</button>
+    <button data-m="both" aria-pressed="true">EN + TH</button>
+    <button data-m="th" aria-pressed="false">TH</button>
+  </div>
+</div></div>
+
+<main>
+
+<!-- 1 · HERO -->
+<section class="hero">
+  <div class="dots" aria-hidden="true">
+    <i style="width:130px;height:130px;background:#2f5bff;right:60px;top:0"></i>
+    <i style="width:90px;height:90px;background:#16a35f;left:0;bottom:20px"></i>
+    <i style="width:150px;height:150px;background:#f0533f;left:100px;bottom:-80px"></i>
+    <i style="width:70px;height:70px;background:#ffc23a;right:0;bottom:10px"></i>
+  </div>
+  <p class="kicker" style="color:var(--muted)">Chapter 7 · Year-1 core · Unit testing</p>
+  <h1><span class="en">It runs. But is it <i>right</i>?</span><span class="th">มันรันได้ แต่มัน<i>ถูกต้อง</i>หรือเปล่า?</span></h1>
+  <p class="lead en">A program that starts up is not a program that works. <b>Testing</b> is how an engineer proves the code does what the requirement asked, and how you catch what <b>AI-generated code</b> quietly got wrong before a user does.</p>
+  <p class="lead th">โปรแกรมที่เปิดขึ้นได้ ไม่ได้แปลว่าโปรแกรมทำงานถูก <b>การทดสอบ (Testing)</b> คือวิธีที่วิศวกรพิสูจน์ว่าโค้ดทำตามที่ requirement กำหนดจริง และเป็นวิธีจับสิ่งที่ <b>โค้ดที่ AI เขียน</b> ทำผิดแบบเงียบ ๆ ก่อนที่ผู้ใช้จะเจอ</p>
+  <nav class="toc" aria-label="Contents">
+    <a href="#why"><span class="en">Why test</span><span class="th">ทำไมต้องทดสอบ</span></a>
+    <a href="#unit"><span class="en">Unit tests</span><span class="th">Unit test</span></a>
+    <a href="#ac"><span class="en">AC → tests</span><span class="th">AC → เทสต์</span></a>
+    <a href="#inputs"><span class="en">EP &amp; BVA</span><span class="th">EP และ BVA</span></a>
+    <a href="#levels"><span class="en">Levels</span><span class="th">ระดับการทดสอบ</span></a>
+    <a href="#accept"><span class="en">TAM · UTAUT2 · SUS</span><span class="th">TAM · UTAUT2 · SUS</span></a>
+    <a href="#good"><span class="en">Good tests</span><span class="th">เทสต์ที่ดี</span></a>
+    <a href="#ai"><span class="en">Testing AI code</span><span class="th">ทดสอบโค้ดจาก AI</span></a>
+    <a href="#studio"><span class="en">Studio &amp; critique</span><span class="th">กิจกรรม</span></a>
+    <a href="#summary"><span class="en">Summary</span><span class="th">สรุป</span></a>
+  </nav>
+</section>
+
+<!-- 2 · GOLDEN THREAD -->
+<section>
+  <p class="kicker">The golden thread · one step further</p>
+  <h2><span class="en">Testing closes the loop from requirement to running code</span><span class="th">การทดสอบปิดวงจร ตั้งแต่ requirement ไปจนถึงโค้ดที่รันได้</span></h2>
+  <div class="thread">
+    <div class="step"><b>Problem</b><small>Wk 3</small></div>
+    <div class="step"><b>FR / NFR</b><small>SRS</small></div>
+    <div class="step"><b>Model</b><small>UML</small></div>
+    <div class="step"><b>Design</b><small>Wk 5</small></div>
+    <div class="step"><b>Code</b><small>Wk 6</small></div>
+    <div class="step on"><b>Test</b><small>Ch7</small></div>
+    <div class="step"><b>Quality</b><small>Ch8</small></div>
+    <div class="step"><b>PM</b><small>Ch9</small></div>
+    <div class="step"><b>Ethics</b><small>Ch10</small></div>
+  </div>
+  <div class="grid g3" style="margin-top:10px">
+    <div class="card"><div class="lbl">Idea 1</div>
+      <h3><span class="en">Why test?</span><span class="th">ทำไมต้องทดสอบ?</span></h3>
+      <p class="en">Verification vs validation: "built it right" vs "built the right thing."</p>
+      <p class="th">Verification กับ Validation คือ "สร้างถูกวิธี" กับ "สร้างสิ่งที่ถูกต้อง"</p></div>
+    <div class="card"><div class="lbl">Idea 2 · 3</div>
+      <h3><span class="en">Unit tests</span><span class="th">Unit test</span></h3>
+      <p class="en">A test = input + expected output. A unit test checks one function in isolation.</p>
+      <p class="th">เทสต์ = input + ผลลัพธ์ที่คาดหวัง ส่วน unit test คือการตรวจฟังก์ชันเดียวแบบแยกเดี่ยว</p></div>
+    <div class="card"><div class="lbl">Idea 4 · 5</div>
+      <h3><span class="en">AC → tests</span><span class="th">AC → เทสต์</span></h3>
+      <p class="en">Each acceptance criterion becomes a test, and tests are how you catch AI mistakes.</p>
+      <p class="th">acceptance criterion แต่ละข้อจะกลายเป็นเทสต์หนึ่งตัว และเทสต์คือเครื่องมือจับความผิดพลาดของ AI</p></div>
+  </div>
+  <p class="note en">Scope reminder: testing is <b>understand-only</b> this term. You learn the concepts and apply them to harden your prototype; there is no separately graded test suite.</p>
+  <p class="note th">ขอบเขต: เทอมนี้เรื่อง testing เป็นแบบ <b>เข้าใจอย่างเดียว</b> คือเรียนแนวคิดแล้วเอาไปใช้ทำให้ prototype แข็งแรงขึ้น ไม่มีการให้คะแนนชุดเทสต์แยกต่างหาก</p>
+  <div class="plain"><div class="lbl">In plain terms · พูดง่าย ๆ</div>
+    <p class="en">A criterion and a test are the <b>same sentence written twice</b>: once in plain English ("a done task is not reminded"), once in code (the <code>assert</code>). Writing the test is just translating that sentence into something the computer can read.</p>
+    <p class="th">เกณฑ์ (criterion) กับเทสต์คือ <b>ประโยคเดียวกันที่เขียนสองครั้ง</b> ครั้งแรกเป็นภาษาคน ("งานที่ทำเสร็จแล้วจะไม่ถูกเตือน") ครั้งที่สองเป็นโค้ด (<code>assert</code>) การเขียนเทสต์ก็คือการแปลประโยคนั้นให้คอมพิวเตอร์อ่านได้</p>
+  </div>
+</section>
+
+<!-- 3 · V&V -->
+<section id="why">
+  <p class="kicker">Idea 1 · Why we test</p>
+  <h2><span class="en">Two questions every test answers</span><span class="th">สองคำถามที่ทุกเทสต์ต้องตอบ</span></h2>
+  <div class="grid g2">
+    <div class="card"><div class="lbl">Verification</div>
+      <h3><span class="en">Did we build it <i>right</i>?</span><span class="th">เราสร้างมัน<i>ถูกวิธี</i>ไหม?</span></h3>
+      <p class="en">Does the code match the spec, with no bugs and correct logic? Caught by unit tests &amp; reviews.</p>
+      <p class="th">โค้ดตรงกับ spec ไหม ไม่มีบั๊ก ตรรกะถูกต้อง? ตรวจจับได้ด้วย unit test และการรีวิวโค้ด</p></div>
+    <div class="card"><div class="lbl">Validation</div>
+      <h3><span class="en">Did we build the <i>right thing</i>?</span><span class="th">เราสร้าง<i>สิ่งที่ถูกต้อง</i>ไหม?</span></h3>
+      <p class="en">Is this what the user actually needed? Caught by demos, acceptance tests, feedback.</p>
+      <p class="th">นี่คือสิ่งที่ผู้ใช้ต้องการจริงหรือเปล่า? ตรวจจับได้ด้วยการเดโม acceptance test และ feedback</p></div>
+  </div>
+  <div class="plain"><div class="lbl">In plain terms · พูดง่าย ๆ</div>
+    <p class="en">A reminder that fires on the <b>wrong day</b> still "runs". It passes a glance but fails <i>verification</i>. A perfectly-coded feature nobody asked for passes verification but fails <i>validation</i>. You need both.</p>
+    <p class="th">การแจ้งเตือนที่เด้งขึ้น<b>ผิดวัน</b>ก็ยัง "รันได้" ดูผ่าน ๆ เหมือนใช้ได้ แต่ไม่ผ่าน <i>verification</i> ส่วนฟีเจอร์ที่เขียนโค้ดได้สมบูรณ์แบบแต่ไม่มีใครต้องการ จะผ่าน verification แต่ไม่ผ่าน <i>validation</i> ต้องมีทั้งสองอย่าง</p>
+  </div>
+</section>
+
+<!-- 4 · V-MODEL -->
+<section>
+  <p class="kicker">Idea 1b · The V-model (Sommerville §8)</p>
+  <h2><span class="en">Every build step has a matching check</span><span class="th">ทุกขั้นตอนการสร้าง มีขั้นตอนการตรวจที่จับคู่กัน</span></h2>
+  <div class="card">
+    <div class="vm">
+      <div class="vb s1">Requirements</div><div class="arrow">⇢ validation<br>"right thing?"</div><div class="vb t1">System / acceptance</div>
+      <div class="vb s2">Design / architecture</div><div class="arrow">⇢</div><div class="vb t2">Integration tests</div>
+      <div class="vb s3" style="opacity:.75">Detailed design</div><div class="arrow">⇢ verification<br>"built it right?"</div><div class="vb t3">Unit tests</div>
+      <div></div><div class="vb">Code</div><div></div>
+    </div>
+    <p class="note mono" style="text-align:center;font-size:12.5px"><span class="en">Left arm = what you specify · right arm = how you check it · each level tests the one across from it</span><span class="th">แขนซ้าย = สิ่งที่เรากำหนด · แขนขวา = วิธีตรวจ · แต่ละระดับทดสอบระดับที่อยู่ตรงข้าม</span></p>
+  </div>
+  <p class="note en">V&amp;V framing from <b>Boehm (1979)</b>: <i>Validation</i> = are we building the right product? <i>Verification</i> = are we building the product right? (Sommerville 9e, §8)</p>
+  <p class="note th">แนวคิด V&amp;V มาจาก <b>Boehm (1979)</b>: <i>Validation</i> = เรากำลังสร้างผลิตภัณฑ์ที่ถูกต้องไหม? <i>Verification</i> = เรากำลังสร้างผลิตภัณฑ์อย่างถูกต้องไหม?</p>
+  <div class="plain g"><div class="lbl">In plain terms · พูดง่าย ๆ</div>
+    <p class="en">It's <b>writing</b> (left arm) and <b>proofreading</b> (right arm). You proofread each part against what you meant to write: verification = "no typos, matches the plan"; validation = "this is the chapter the reader actually needed."</p>
+    <p class="th">เหมือน<b>การเขียน</b> (แขนซ้าย) กับ<b>การพิสูจน์อักษร</b> (แขนขวา) เราตรวจแต่ละส่วนเทียบกับสิ่งที่ตั้งใจเขียน verification = "ไม่มีคำผิด ตรงตามแผน" ส่วน validation = "นี่คือบทที่ผู้อ่านต้องการจริง ๆ"</p>
+  </div>
+</section>
+
+<!-- 5 · INPUT + EXPECTED -->
+<section>
+  <p class="kicker">Idea 2 · What a test actually is</p>
+  <h2><span class="en">Give known input → check the result equals what you expect</span><span class="th">ใส่ input ที่รู้ค่า → ตรวจว่าผลลัพธ์ตรงกับที่คาดไว้</span></h2>
+  <p class="lead en">If the real output matches the expected output, the test <b>passes</b>. If not, it <b>fails</b>, and you just found a bug cheaply, before a user did.</p>
+  <p class="lead th">ถ้าผลลัพธ์จริงตรงกับที่คาดไว้ เทสต์จะ<b>ผ่าน (pass)</b> ถ้าไม่ตรง เทสต์จะ<b>ล้มเหลว (fail)</b> แปลว่าเราเพิ่งเจอบั๊กได้แบบต้นทุนต่ำ ก่อนผู้ใช้จะเจอ</p>
+  <div class="flow" style="margin-top:22px">
+    <div class="card"><b>Input</b><small>task due 10 Aug, today 9 Aug</small></div><span class="ar">▶</span>
+    <div class="card"><b>function()</b><small class="mono">tasks_due_for_reminder</small></div><span class="ar">▶</span>
+    <div class="card"><b>Output</b><small>&nbsp;</small></div>
+  </div>
+  <p class="verdict">Output = Expected ? <b>✓ pass</b> / <b>✗ fail = bug</b></p>
+  <div class="plain g"><div class="lbl">In plain terms · พูดง่าย ๆ</div>
+    <p class="en">Type 2 + 2 into a calculator and you <b>expect</b> 4. If the screen shows 5, the calculator has a bug. A test is exactly that check: an expected answer you write down once, so the computer re-checks it for you every time.</p>
+    <p class="th">กด 2 + 2 ในเครื่องคิดเลข เรา<b>คาดหวัง</b>ว่าจะได้ 4 ถ้าหน้าจอขึ้น 5 แปลว่าเครื่องคิดเลขมีบั๊ก เทสต์ก็คือการตรวจแบบนั้นเป๊ะ ๆ เราเขียนคำตอบที่คาดหวังไว้ครั้งเดียว แล้วคอมพิวเตอร์จะตรวจซ้ำให้ทุกครั้ง</p>
+  </div>
+</section>
+
+<!-- 6 · UNIT TEST -->
+<section id="unit">
+  <p class="kicker">Idea 3 · The smallest useful test</p>
+  <h2><span class="en">A unit test checks one small piece in isolation</span><span class="th">Unit test ตรวจชิ้นส่วนเล็ก ๆ หนึ่งชิ้นแบบแยกเดี่ยว</span></h2>
+  <div class="grid g3">
+    <div class="card"><div class="lbl">One unit</div>
+      <h3><span class="en">Usually one function</span><span class="th">ปกติคือฟังก์ชันเดียว</span></h3>
+      <p class="en">Test <code>tasks_due_for_reminder()</code> alone: no database, no UI, no network.</p>
+      <p class="th">ทดสอบ <code>tasks_due_for_reminder()</code> ตัวเดียว ไม่มีฐานข้อมูล ไม่มี UI ไม่มีเน็ตเวิร์ก</p></div>
+    <div class="card"><div class="lbl">Fast</div>
+      <h3><span class="en">Runs in milliseconds</span><span class="th">รันเสร็จในระดับมิลลิวินาที</span></h3>
+      <p class="en">So you run them constantly, after every change, not once at the end.</p>
+      <p class="th">จึงรันได้ตลอดเวลาหลังแก้โค้ดทุกครั้ง ไม่ใช่รันครั้งเดียวตอนท้าย</p></div>
+    <div class="card"><div class="lbl">Precise</div>
+      <h3><span class="en">Pinpoints the break</span><span class="th">ชี้จุดที่พังได้ตรง ๆ</span></h3>
+      <p class="en">When one fails, you know <i>exactly</i> which piece broke. No hunting.</p>
+      <p class="th">เมื่อเทสต์ตัวไหน fail เราจะรู้<i>ทันที</i>ว่าชิ้นไหนพัง ไม่ต้องไล่หา</p></div>
+  </div>
+  <div class="plain g"><div class="lbl">In plain terms · พูดง่าย ๆ</div>
+    <p class="en">Unit tests are like checking each <b>LEGO brick</b> is the right shape before you build the castle. Cheaper to catch a bad brick now than to tear down the whole thing later.</p>
+    <p class="th">Unit test เหมือนการเช็กว่า<b>ตัวต่อ LEGO</b> แต่ละชิ้นมีรูปทรงถูกต้องก่อนต่อเป็นปราสาท จับชิ้นที่เสียตอนนี้ถูกกว่ารื้อทั้งปราสาททีหลัง</p>
+  </div>
+</section>
+
+<!-- 7 · AC → TESTS -->
+<section id="ac">
+  <p class="kicker">Idea 4 · The golden thread reaches testing</p>
+  <h2><span class="en">Each acceptance criterion becomes a test</span><span class="th">Acceptance criterion แต่ละข้อ กลายเป็นเทสต์หนึ่งตัว</span></h2>
+  <div class="grid g2">
+    <div>
+      <span class="pill" style="background:var(--blue)">FROM YOUR SRS</span>
+      <div class="card ac"><ul>
+        <li><span class="sq" style="background:var(--blue)"></span><div><b>FR-1</b> <span class="en">: remind an open task 1 day before it is due</span><span class="th pair">แจ้งเตือนงานที่ยังเปิดอยู่ล่วงหน้า 1 วันก่อนถึงกำหนด</span></div></li>
+        <li><span class="sq" style="background:var(--green)"></span><div><span class="en">AC: open task due tomorrow → <i>appears</i> in reminders</span><span class="th pair">AC: งาน open ที่ครบกำหนดพรุ่งนี้ → <i>ต้องปรากฏ</i>ในรายการแจ้งเตือน</span></div></li>
+        <li><span class="sq" style="background:var(--red)"></span><div><span class="en">AC: a <code>done</code> task → does <i>not</i> appear</span><span class="th pair">AC: งานที่ <code>done</code> แล้ว → <i>ต้องไม่</i>ปรากฏ</span></div></li>
+      </ul></div>
+      <p class="note en">Problem → FR → Design → Code → <b>Test</b>. Same thread, one step further.</p>
+      <p class="note th">Problem → FR → Design → Code → <b>Test</b> เส้นด้ายเส้นเดิม ก้าวไปอีกหนึ่งขั้น</p>
+    </div>
+    <div>
+      <p class="mono" style="color:var(--muted);font-size:12.5px;margin-bottom:6px"><span class="en">Two criteria, two tests</span><span class="th">สองเกณฑ์ สองเทสต์</span></p>
+<pre><span class="k">def</span> test_reminds_open_task_1_day_before():
+    tasks = [Task(due=date(2026,8,10), status=<span class="s">'open'</span>)]
+    <span class="k">assert</span> tasks_due_for_reminder(tasks, date(2026,8,9)) == tasks
+
+<span class="k">def</span> test_does_not_remind_done_task():
+    tasks = [Task(due=date(2026,8,10), status=<span class="s">'done'</span>)]
+    <span class="k">assert</span> tasks_due_for_reminder(tasks, date(2026,8,9)) == []</pre>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · EP & BVA -->
+<section id="inputs">
+  <p class="kicker">Choosing test inputs · two classic techniques (SWEBOK · Sommerville §8)</p>
+  <h2><span class="en">You can't test every input, so test the right few</span><span class="th">ทดสอบทุก input ไม่ได้ จึงต้องเลือกทดสอบเฉพาะตัวที่ใช่</span></h2>
+  <div class="grid g2">
+    <div class="card"><div class="lbl">Equivalence partitioning (EP)</div>
+      <h3><span class="en">Group inputs that behave the same</span><span class="th">จัดกลุ่ม input ที่ทำงานเหมือนกัน</span></h3>
+      <p class="en">Split inputs into <b>classes</b> the code treats alike, then test <b>one value from each</b>: one valid, one too short, one too long. One test now stands for a whole range.</p>
+      <p class="th">แบ่ง input เป็น<b>กลุ่ม (class)</b> ที่โค้ดจัดการแบบเดียวกัน แล้วทดสอบ<b>ค่าเดียวจากแต่ละกลุ่ม</b> เช่น ค่าที่ถูกต้อง 1 ค่า สั้นเกิน 1 ค่า ยาวเกิน 1 ค่า เทสต์เดียวจึงแทนค่าทั้งช่วงได้</p></div>
+    <div class="card"><div class="lbl">Boundary value analysis (BVA)</div>
+      <h3><span class="en">Bugs hide at the edges</span><span class="th">บั๊กชอบซ่อนอยู่ที่ขอบ</span></h3>
+      <p class="en">Test right <b>at and around each boundary</b>: the first and last allowed value, and just outside. This is where "≤ vs &lt;" and off-by-one bugs live.</p>
+      <p class="th">ทดสอบ<b>ที่ขอบและรอบ ๆ ขอบ</b> คือค่าแรกและค่าสุดท้ายที่ยอมรับได้ และค่าที่เลยขอบไปนิดเดียว ตรงนี้คือที่อยู่ของบั๊ก "≤ กับ &lt;" และ off-by-one</p></div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <svg class="nl" viewBox="0 0 820 130" role="img" aria-label="Title length number line: 0 invalid, 1 to 100 valid, 101 invalid">
+      <rect x="10" y="40" width="200" height="34" fill="var(--red-bg)"/>
+      <rect x="210" y="40" width="400" height="34" fill="var(--green-bg)"/>
+      <rect x="610" y="40" width="200" height="34" fill="var(--red-bg)"/>
+      <text x="110" y="28" text-anchor="middle">invalid · too short</text>
+      <text x="410" y="28" text-anchor="middle" style="fill:var(--green)">valid · 1–100 chars</text>
+      <text x="710" y="28" text-anchor="middle">invalid · too long</text>
+      <line x1="10" y1="57" x2="810" y2="57" stroke="var(--ink)" stroke-width="2"/>
+      <g text-anchor="middle">
+        <circle cx="110" cy="57" r="6" fill="var(--ink)"/><text x="110" y="95">0 (empty)</text><text x="110" y="115">✗</text>
+        <circle cx="210" cy="57" r="6" fill="var(--green)"/><text x="210" y="95">1 (min)</text><text x="210" y="115" style="fill:var(--green)">✓</text>
+        <circle cx="410" cy="57" r="6" fill="var(--green)"/><text x="410" y="95">50 (mid)</text><text x="410" y="115" style="fill:var(--green)">✓</text>
+        <circle cx="610" cy="57" r="6" fill="var(--green)"/><text x="610" y="95">100 (max)</text><text x="610" y="115" style="fill:var(--green)">✓</text>
+        <circle cx="710" cy="57" r="6" fill="var(--ink)"/><text x="710" y="95">101</text><text x="710" y="115">✗</text>
+      </g>
+    </svg>
+    <p class="mono" style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px"><span class="en">StudyMate: a task title must be 1–100 chars. EP picks one per band (0 · 50 · 101); BVA adds the edges (1 · 100)</span><span class="th">StudyMate: ชื่องานต้องยาว 1–100 ตัวอักษร EP เลือกค่าละหนึ่งตัวต่อช่วง (0 · 50 · 101) BVA เพิ่มค่าที่ขอบ (1 · 100)</span></p>
+  </div>
+  <p class="note en">Five well-chosen tests beat a hundred random ones. Same idea for a <b>due date</b> (past / today / future) or a reminder window. Source: Sommerville 9e §8.1.2; SWEBOK v4 Testing KA.</p>
+  <p class="note th">เทสต์ 5 ตัวที่เลือกมาดี ชนะเทสต์สุ่ม 100 ตัว ใช้แนวคิดเดียวกันได้กับ<b>วันครบกำหนด</b> (อดีต / วันนี้ / อนาคต) หรือช่วงเวลาแจ้งเตือน</p>
+</section>
+
+<!-- 9 · PYRAMID -->
+<section id="levels">
+  <p class="kicker">Idea 3b · Levels of testing (Sommerville §8.1–§8.4)</p>
+  <h2><span class="en">Many small tests at the base, a few big ones on top</span><span class="th">เทสต์เล็ก ๆ จำนวนมากอยู่ที่ฐาน เทสต์ใหญ่ไม่กี่ตัวอยู่ด้านบน</span></h2>
+  <div class="grid g2" style="align-items:center">
+    <div>
+      <div class="pyr" aria-label="Test pyramid">
+        <div class="a">System / release</div>
+        <div class="b">Integration / component</div>
+        <div class="c">Unit tests</div>
+      </div>
+      <div class="pyr-cap"><span>↑ few · slow</span><span>many · fast ↓</span></div>
+    </div>
+    <ol class="nlist card">
+      <li><span class="num">1</span><div><h3><span class="en">Development testing (§8.1)</span><span class="th">การทดสอบระหว่างพัฒนา (§8.1)</span></h3>
+        <p class="d en">You, during the build: <b>unit</b> → component → system tests.</p><p class="d th">นักพัฒนาทดสอบเองระหว่างสร้าง: <b>unit</b> → component → system</p></div></li>
+      <li><span class="num" style="background:var(--green)">2</span><div><h3><span class="en">Release testing (§8.3)</span><span class="th">การทดสอบก่อนปล่อย (§8.3)</span></h3>
+        <p class="d en">A separate check of the whole version before users get it.</p><p class="d th">การตรวจแยกต่างหากกับเวอร์ชันทั้งหมดก่อนถึงมือผู้ใช้</p></div></li>
+      <li><span class="num" style="background:var(--amber)">3</span><div><h3><span class="en">User testing (§8.4)</span><span class="th">การทดสอบโดยผู้ใช้ (§8.4)</span></h3>
+        <p class="d en">Real users try it. <b>Acceptance testing</b> is the formal form.</p><p class="d th">ผู้ใช้จริงลองใช้ <b>Acceptance testing</b> คือรูปแบบที่เป็นทางการ</p></div></li>
+    </ol>
+  </div>
+  <p class="note"><span class="en">Pyramid shape: Cohn (2009). Most of your effort is cheap unit tests at the base.</span><span class="th"> รูปพีระมิด: Cohn (2009) แรงส่วนใหญ่ควรอยู่ที่ unit test ราคาถูกที่ฐาน</span></p>
+  <div class="plain g"><div class="lbl">In plain terms · พูดง่าย ๆ</div>
+    <p class="en">Like checking a car: test each part on the bench many times (cheap, fast = <b>unit tests</b>), then take a few full test-drives (slow, expensive = <b>system tests</b>). Most of your checking lives at the bottom.</p>
+    <p class="th">เหมือนการตรวจรถยนต์ ทดสอบแต่ละชิ้นส่วนบนโต๊ะหลาย ๆ รอบ (ถูก เร็ว = <b>unit test</b>) แล้วค่อยลองขับจริงไม่กี่รอบ (ช้า แพง = <b>system test</b>) การตรวจส่วนใหญ่อยู่ที่ฐาน</p>
+  </div>
+</section>
+
+<!-- 10 · FIVE LEVELS -->
+<section>
+  <p class="kicker">Levels of testing · 5 levels on StudyMate</p>
+  <h2><span class="en">From one function to real users</span><span class="th">จากฟังก์ชันเดียว ไปจนถึงผู้ใช้จริง</span></h2>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-l="0">1 · Unit</button>
+    <button role="tab" aria-selected="false" data-l="1">2 · Integration</button>
+    <button role="tab" aria-selected="false" data-l="2">3 · System</button>
+    <button role="tab" aria-selected="false" data-l="3">4 · Release</button>
+    <button role="tab" aria-selected="false" data-l="4">5 · Acceptance</button>
+  </div>
+
+  <!-- unit -->
+  <div class="level grid g2 on" role="tabpanel">
+    <div>
+      <h3><span class="en">Unit testing: one function, in isolation</span><span class="th">Unit testing: ฟังก์ชันเดียว แยกเดี่ยว</span></h3>
+      <p class="en"><b>Testing individual program components (methods or object classes) in isolation</b> (Sommerville §8.1.1). A defect-testing process: fast (milliseconds), and a failure points at exactly one piece.</p>
+      <p class="th"><b>ทดสอบส่วนประกอบแต่ละชิ้นของโปรแกรม (เมธอดหรือคลาส) แบบแยกเดี่ยว</b> เป็นกระบวนการหาข้อบกพร่องที่เร็ว (มิลลิวินาที) และเมื่อ fail จะชี้ไปที่ชิ้นเดียวพอดี</p>
+      <div class="stack" style="margin-top:14px"><span>Today UI</span><span>TaskService</span><span class="hl">ReminderScheduler</span><span>TaskRepository</span><span>Notifier</span></div>
+      <p class="stack-cap"><span class="en">highlighted = tested at this level</span><span class="th">ไฮไลต์ = ส่วนที่ทดสอบในระดับนี้</span></p>
+      <p class="note"><span class="en">Base of the pyramid: the most numerous, fastest, cheapest tests. Mostly <b>verification</b>.</span><span class="th"> ฐานพีระมิด: จำนวนมากที่สุด เร็วที่สุด ถูกที่สุด ส่วนใหญ่เป็น <b>verification</b></span></p>
+    </div>
+    <ol class="nlist card">
+      <li><span class="num" style="background:var(--green)">1</span><div><b><code>days_until_due(task, today)</code></b>
+        <p class="d en">Due 10 Aug, today 8 Aug → returns <code>2</code>. <span class="why">· core date maths, zero dependencies</span></p><p class="d th">ครบกำหนด 10 ส.ค. วันนี้ 8 ส.ค. → คืนค่า <code>2</code> <span class="why">· คำนวณวันที่ล้วน ๆ ไม่พึ่งอะไรเลย</span></p></div></li>
+      <li><span class="num" style="background:var(--green)">2</span><div><b class="en">Boundaries of that function</b><b class="th">ขอบของฟังก์ชันนั้น</b>
+        <p class="d en">Overdue → a <i>negative</i> number; due <i>today</i> → <code>0</code>. <span class="why">· off-by-one is the classic bug</span></p><p class="d th">เลยกำหนด → ได้ค่า<i>ติดลบ</i>; ครบกำหนด<i>วันนี้</i> → <code>0</code> <span class="why">· off-by-one คือบั๊กคลาสสิก</span></p></div></li>
+      <li><span class="num" style="background:var(--green)">3</span><div><b><code>tasks_due_for_reminder(…)</code></b>
+        <p class="d en">An <code>open</code> task due tomorrow → is <i>in</i> the list. <span class="why">· the happy path of FR-1</span></p><p class="d th">งาน <code>open</code> ที่ครบกำหนดพรุ่งนี้ → <i>อยู่</i>ในรายการ <span class="why">· happy path ของ FR-1</span></p></div></li>
+      <li><span class="num" style="background:var(--green)">4</span><div><b class="en">The "should-not" case</b><b class="th">กรณี "ต้องไม่เกิด"</b>
+        <p class="d en">A <code>done</code> task → is <i>not</i> reminded. <span class="why">· proves the filter really filters</span></p><p class="d th">งานที่ <code>done</code> → <i>ไม่</i>ถูกแจ้งเตือน <span class="why">· พิสูจน์ว่าตัวกรองกรองจริง</span></p></div></li>
+      <li><span class="num" style="background:var(--green)">5</span><div><b><code>is_valid_title(title)</code></b>
+        <p class="d en">Empty / spaces-only → rejected; a normal title → accepted. <span class="why">· input validation in isolation</span></p><p class="d th">ว่าง / มีแต่ช่องว่าง → ปฏิเสธ; ชื่อปกติ → ยอมรับ <span class="why">· ตรวจ input แบบแยกเดี่ยว</span></p></div></li>
+    </ol>
+  </div>
+
+  <!-- integration -->
+  <div class="level grid g2" role="tabpanel">
+    <div>
+      <h3><span class="en">Integration / component testing: modules via their interfaces</span><span class="th">Integration / component testing: หลายโมดูลผ่าน interface</span></h3>
+      <p class="en"><b>Several units combined into composite components, tested through their interfaces</b> (Sommerville §8.1.3; SWEBOK calls it <i>integration testing</i>). The bugs live <i>between</i> the pieces, not inside one unit.</p>
+      <p class="th"><b>นำหลาย unit มารวมเป็นส่วนประกอบ แล้วทดสอบผ่าน interface</b> (SWEBOK เรียกว่า <i>integration testing</i>) บั๊กอยู่<i>ระหว่าง</i>ชิ้นส่วน ไม่ใช่ข้างในชิ้นใดชิ้นหนึ่ง</p>
+      <div class="stack" style="margin-top:14px"><span>Today UI</span><span class="hl">TaskService</span><span class="hl">ReminderScheduler</span><span class="hl">TaskRepository</span><span>Notifier</span></div>
+      <p class="stack-cap"><span class="en">highlighted = tested at this level</span><span class="th">ไฮไลต์ = ส่วนที่ทดสอบในระดับนี้</span></p>
+      <p class="note"><span class="en">The other level you'll actually build on your prototype in this course.</span><span class="th"> อีกระดับหนึ่งที่เราจะลงมือทำกับ prototype จริงในวิชานี้</span></p>
+    </div>
+    <ol class="nlist card">
+      <li><span class="num">1</span><div><b class="en">Add via the service</b><b class="th">เพิ่มงานผ่าน service</b>
+        <p class="d en"><code>TaskService.add(…)</code> → stored in <code>TaskRepository</code> and read back. <span class="why">· logic + persistence together</span></p><p class="d th"><code>TaskService.add(…)</code> → ถูกเก็บใน <code>TaskRepository</code> แล้วอ่านกลับมาได้ <span class="why">· ตรรกะ + การบันทึกข้อมูลทำงานร่วมกัน</span></p></div></li>
+      <li><span class="num">2</span><div><b class="en">Scheduler + repo + notifier</b><b class="th">Scheduler + repo + notifier</b>
+        <p class="d en">A due task flows through and a reminder is created by the notifier. <span class="why">· three modules, one path</span></p><p class="d th">งานที่ครบกำหนดไหลผ่านระบบ แล้ว notifier สร้างการแจ้งเตือน <span class="why">· สามโมดูล หนึ่งเส้นทาง</span></p></div></li>
+      <li><span class="num">3</span><div><b class="en">Mark done, end of chain</b><b class="th">ทำเครื่องหมายเสร็จ ตลอดสาย</b>
+        <p class="d en">Stored status updates <i>and</i> the task drops from tomorrow's reminders. <span class="why">· one action, two modules react</span></p><p class="d th">สถานะที่บันทึกอัปเดต <i>และ</i>งานหายไปจากการแจ้งเตือนวันพรุ่งนี้ <span class="why">· การกระทำเดียว สองโมดูลตอบสนอง</span></p></div></li>
+      <li><span class="num">4</span><div><b class="en">Invalid data at the boundary</b><b class="th">ข้อมูลผิดที่ขอบระบบ</b>
+        <p class="d en">A bad due date is rejected; <i>nothing</i> is written to the repository. <span class="why">· validation guards persistence</span></p><p class="d th">วันครบกำหนดที่ผิดถูกปฏิเสธ และ<i>ไม่มีอะไร</i>ถูกเขียนลง repository <span class="why">· การตรวจข้อมูลปกป้องการบันทึก</span></p></div></li>
+      <li><span class="num">5</span><div><b class="en">Today screen ↔ repository</b><b class="th">หน้า Today ↔ repository</b>
+        <p class="d en">The component queries the repo and renders the correct list for today. <span class="why">· UI reads real data correctly</span></p><p class="d th">component ดึงข้อมูลจาก repo แล้วแสดงรายการของวันนี้ได้ถูกต้อง <span class="why">· UI อ่านข้อมูลจริงได้ถูก</span></p></div></li>
+    </ol>
+  </div>
+
+  <!-- system -->
+  <div class="level grid g2" role="tabpanel">
+    <div>
+      <h3><span class="en">System testing: the whole app, end-to-end</span><span class="th">System testing: ทั้งแอป ตั้งแต่ต้นจนจบ</span></h3>
+      <p class="en"><b>Integrate the components into a version of the whole system and test it together</b>: that they interact correctly and pass the right data across interfaces (Sommerville §8.1.4). Also covers performance &amp; security.</p>
+      <p class="th"><b>รวมทุกส่วนเป็นระบบทั้งเวอร์ชันแล้วทดสอบพร้อมกัน</b> ว่าทำงานร่วมกันได้ถูกต้องและส่งข้อมูลข้าม interface ได้ถูก ครอบคลุมถึงประสิทธิภาพและความปลอดภัยด้วย</p>
+      <div class="stack" style="margin-top:14px"><span class="hl">Today UI</span><span class="hl">TaskService</span><span class="hl">ReminderScheduler</span><span class="hl">TaskRepository</span><span class="hl">Notifier</span></div>
+      <p class="stack-cap"><span class="en">highlighted = tested at this level</span><span class="th">ไฮไลต์ = ส่วนที่ทดสอบในระดับนี้</span></p>
+      <p class="note"><span class="en">Understand-only in this course: know what it is and why it matters.</span><span class="th"> วิชานี้แค่ให้เข้าใจ: รู้ว่าคืออะไรและสำคัญอย่างไร</span></p>
+    </div>
+    <ol class="nlist card">
+      <li><span class="num" style="background:var(--violet)">1</span><div><b class="en">Add → see it</b><b class="th">เพิ่ม → เห็นทันที</b>
+        <p class="d en">Add a task with a due date, save → it appears on the Today screen. <span class="why">· a full feature, end to end</span></p><p class="d th">เพิ่มงานพร้อมวันครบกำหนด บันทึก → ปรากฏบนหน้า Today <span class="why">· ฟีเจอร์เต็ม ตั้งแต่ต้นจนจบ</span></p></div></li>
+      <li><span class="num" style="background:var(--violet)">2</span><div><b class="en">Reminder fires</b><b class="th">การแจ้งเตือนทำงาน</b>
+        <p class="d en">A task due tomorrow → a notification at the scheduled time. <span class="why">· FR-1, across the real app</span></p><p class="d th">งานที่ครบกำหนดพรุ่งนี้ → มีการแจ้งเตือนตามเวลาที่ตั้ง <span class="why">· FR-1 บนแอปจริง</span></p></div></li>
+      <li><span class="num" style="background:var(--violet)">3</span><div><b class="en">Done disappears</b><b class="th">งานเสร็จแล้วหายไป</b>
+        <p class="d en">Removes it from the active list <i>and</i> reminders; counts it complete. <span class="why">· state consistent everywhere</span></p><p class="d th">ถูกเอาออกจากรายการและการแจ้งเตือน <i>และ</i>นับว่าเสร็จ <span class="why">· สถานะตรงกันทุกที่</span></p></div></li>
+      <li><span class="num" style="background:var(--violet)">4</span><div><b class="en">Access control</b><b class="th">การควบคุมสิทธิ์</b>
+        <p class="d en">User A cannot see or open user B's tasks. <span class="why">· security, system-wide (Ch8)</span></p><p class="d th">ผู้ใช้ A มองไม่เห็นและเปิดงานของผู้ใช้ B ไม่ได้ <span class="why">· ความปลอดภัยทั้งระบบ (Ch8)</span></p></div></li>
+      <li><span class="num" style="background:var(--violet)">5</span><div><b class="en">Performance (NFR)</b><b class="th">ประสิทธิภาพ (NFR)</b>
+        <p class="d en">With 500 tasks, the Today screen loads in &lt; 2 s. <span class="why">· measure it, don't assume it</span></p><p class="d th">มีงาน 500 รายการ หน้า Today ต้องโหลดภายใน 2 วินาที <span class="why">· วัดจริง อย่าเดาเอา</span></p></div></li>
+    </ol>
+  </div>
+
+  <!-- release -->
+  <div class="level grid g2" role="tabpanel">
+    <div>
+      <h3><span class="en">Release testing: a separate team, the full version</span><span class="th">Release testing: ทีมแยก ทดสอบเวอร์ชันเต็ม</span></h3>
+      <p class="en"><b>A separate team tests a complete version meant for use outside the dev team</b>, checking it meets stakeholders' requirements (Sommerville §8.3). A form of system testing, done before shipping.</p>
+      <p class="th"><b>ทีมที่แยกออกมาทดสอบเวอร์ชันสมบูรณ์ที่จะใช้นอกทีมพัฒนา</b> ตรวจว่าตรงตามความต้องการของผู้มีส่วนได้ส่วนเสีย เป็น system testing รูปแบบหนึ่ง ทำก่อนปล่อยจริง</p>
+      <div class="stack rel" style="margin-top:14px"><span class="hl">Today UI</span><span class="hl">TaskService</span><span class="hl">ReminderScheduler</span><span class="hl">TaskRepository</span><span class="hl">Notifier</span></div>
+      <p class="stack-cap" style="color:#a77900;font-weight:600">✓ v1.0 · ready to ship</p>
+      <p class="note"><span class="en">Understand-only: done by a separate team before shipping.</span><span class="th"> แค่ให้เข้าใจ: ทำโดยทีมแยกก่อนปล่อยจริง</span></p>
+    </div>
+    <ol class="nlist card">
+      <li><span class="num" style="background:var(--amber)">1</span><div><b class="en">Requirements coverage</b><b class="th">ครอบคลุม requirement</b>
+        <p class="d en">Every FR (FR-1 remind, FR-2 list, FR-3 edit…) has a passing end-to-end check. <span class="why">· nothing promised is missing</span></p><p class="d th">FR ทุกข้อ (FR-1 แจ้งเตือน, FR-2 รายการ, FR-3 แก้ไข…) มีการตรวจแบบ end-to-end ที่ผ่าน <span class="why">· สิ่งที่สัญญาไว้ต้องไม่ขาด</span></p></div></li>
+      <li><span class="num" style="background:var(--amber)">2</span><div><b class="en">Target platforms</b><b class="th">แพลตฟอร์มเป้าหมาย</b>
+        <p class="d en">Installs and runs on supported devices (e.g. iOS + Android). <span class="why">· works where users are</span></p><p class="d th">ติดตั้งและรันได้บนอุปกรณ์ที่รองรับ (เช่น iOS + Android) <span class="why">· ใช้ได้ในที่ที่ผู้ใช้อยู่</span></p></div></li>
+      <li><span class="num" style="background:var(--amber)">3</span><div><b class="en">No regression after update</b><b class="th">อัปเดตแล้วของเดิมไม่พัง</b>
+        <p class="d en">An existing user's saved tasks still load on the new version. <span class="why">· new code didn't break old data</span></p><p class="d th">งานที่ผู้ใช้เดิมบันทึกไว้ยังโหลดได้ในเวอร์ชันใหม่ <span class="why">· โค้ดใหม่ไม่ทำข้อมูลเก่าพัง</span></p></div></li>
+      <li><span class="num" style="background:var(--amber)">4</span><div><b class="en">Realistic failure</b><b class="th">รับมือความล้มเหลวที่เกิดจริง</b>
+        <p class="d en">No internet → a clear message, no crash, the reminder is queued. <span class="why">· graceful under bad conditions</span></p><p class="d th">ไม่มีอินเทอร์เน็ต → มีข้อความชัดเจน ไม่แครช การแจ้งเตือนถูกเก็บไว้ในคิว <span class="why">· รับมือได้ดีในสภาพไม่เป็นใจ</span></p></div></li>
+      <li><span class="num" style="background:var(--amber)">5</span><div><b class="en">Data safety</b><b class="th">ความปลอดภัยของข้อมูล</b>
+        <p class="d en">No secrets or real personal data leak into logs or responses. <span class="why">· ship-ready and PDPA-aware (Ch8)</span></p><p class="d th">ไม่มีความลับหรือข้อมูลส่วนบุคคลจริงรั่วไปใน log หรือ response <span class="why">· พร้อมปล่อยและคำนึงถึง PDPA (Ch8)</span></p></div></li>
+    </ol>
+  </div>
+
+  <!-- acceptance -->
+  <div class="level grid g2" role="tabpanel">
+    <div>
+      <h3><span class="en">Acceptance / user testing: real users validate</span><span class="th">Acceptance / user testing: ผู้ใช้จริงเป็นผู้ยืนยัน</span></h3>
+      <p class="en"><b>Users test it in their own environment; in acceptance testing the customer formally decides whether to accept it</b> (Sommerville §8.4). This is <i>validation</i>: you can pass every level below and still fail here.</p>
+      <p class="th"><b>ผู้ใช้ทดสอบในสภาพแวดล้อมของตัวเอง ใน acceptance testing ลูกค้าจะตัดสินใจอย่างเป็นทางการว่ายอมรับหรือไม่</b> นี่คือ <i>validation</i> ผ่านทุกระดับข้างล่างมาแล้วก็ยังอาจตกที่ระดับนี้ได้</p>
+      <div class="stack" style="margin-top:14px"><span class="hl users">real users</span><span class="hl">Today UI</span><span class="hl">TaskService</span><span class="hl">ReminderScheduler</span><span class="hl">TaskRepository</span><span class="hl">Notifier</span></div>
+      <p class="note"><span class="en">The only level that proves <b>validation</b>: the right thing, not just built right. How to measure it: TAM / UTAUT2 / SUS ↓</span><span class="th"> ระดับเดียวที่พิสูจน์ <b>validation</b> ได้ คือสร้างสิ่งที่ถูก ไม่ใช่แค่สร้างถูกวิธี วัดอย่างไร → TAM / UTAUT2 / SUS ↓</span></p>
+    </div>
+    <ol class="nlist card">
+      <li><span class="num" style="background:var(--red)">1</span><div><b class="en">Real use</b><b class="th">ใช้งานจริง</b>
+        <p class="d en">A student uses StudyMate for a week → the reminders really help. <span class="why">· does it solve the problem?</span></p><p class="d th">นักศึกษาใช้ StudyMate หนึ่งสัปดาห์ → การแจ้งเตือนช่วยได้จริง <span class="why">· แก้ปัญหาได้จริงไหม?</span></p></div></li>
+      <li><span class="num" style="background:var(--red)">2</span><div><b class="en">Formal sign-off</b><b class="th">การลงนามรับรองอย่างเป็นทางการ</b>
+        <p class="d en">The customer runs the agreed SRS acceptance scenarios and accepts. <span class="why">· contractual validation</span></p><p class="d th">ลูกค้าทดสอบตามสถานการณ์ acceptance ใน SRS ที่ตกลงกันไว้ แล้วยอมรับ <span class="why">· validation ตามสัญญา</span></p></div></li>
+      <li><span class="num" style="background:var(--red)">3</span><div><b class="en">Usability</b><b class="th">ความง่ายในการใช้งาน</b>
+        <p class="d en">A first-timer adds a task and sets a reminder, no instructions, in &lt; 1 min. <span class="why">· learnable without a manual</span></p><p class="d th">ผู้ใช้ครั้งแรกเพิ่มงานและตั้งการแจ้งเตือนได้ภายใน 1 นาที โดยไม่มีคำแนะนำ <span class="why">· เรียนรู้ได้โดยไม่ต้องมีคู่มือ</span></p></div></li>
+      <li><span class="num" style="background:var(--red)">4</span><div><b class="en">Right timing</b><b class="th">เวลาที่เหมาะสม</b>
+        <p class="d en">The reminder time (1 day before, a useful hour) matches what users want. <span class="why">· validated, not assumed</span></p><p class="d th">เวลาแจ้งเตือน (ล่วงหน้า 1 วัน ในชั่วโมงที่มีประโยชน์) ตรงกับที่ผู้ใช้ต้องการ <span class="why">· ยืนยันแล้ว ไม่ได้เดา</span></p></div></li>
+      <li><span class="num" style="background:var(--red)">5</span><div><b class="en">Fits real habits</b><b class="th">เข้ากับพฤติกรรมจริง</b>
+        <p class="d en">Users confirm the done / Today flow matches how they really plan study. <span class="why">· the right mental model</span></p><p class="d th">ผู้ใช้ยืนยันว่าขั้นตอน done / Today ตรงกับวิธีวางแผนการเรียนจริง ๆ <span class="why">· mental model ที่ถูกต้อง</span></p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- 11 · TAM -->
+<section id="accept">
+  <p class="kicker red">Acceptance · Technology Acceptance Model (Davis, 1989)</p>
+  <h2><span class="en">TAM: two things decide whether people adopt it</span><span class="th">TAM: สองปัจจัยที่ตัดสินว่าคนจะยอมรับใช้หรือไม่</span></h2>
+  <div class="grid g2" style="align-items:center">
+    <div class="card">
+      <div class="model" style="justify-content:center">
+        <div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+          <div class="mbox">Perceived Usefulness</div>
+          <span style="color:var(--muted);font-size:12px">↑ eases</span>
+          <div class="mbox">Perceived Ease of Use</div>
+        </div>
+        <span style="color:var(--muted)">→</span><div class="mbox dk">Intention to Use</div><span style="color:var(--muted)">→</span><div class="mbox dk">Use</div>
+      </div>
+      <p class="mono" style="text-align:center;font-size:12px;color:var(--muted);margin-top:12px">Usefulness + ease of use → intention → use</p>
+    </div>
+    <div>
+      <div class="plain" style="margin-top:0"><div class="lbl">Example · StudyMate survey (rate 1–5)</div>
+        <p class="en"><b>PU:</b> "StudyMate helps me not miss deadlines." <b>PEOU:</b> "Adding a task is easy." → average each.</p>
+        <p class="th"><b>PU (การรับรู้ประโยชน์):</b> "StudyMate ช่วยให้ฉันไม่พลาดกำหนดส่ง" <b>PEOU (การรับรู้ความง่าย):</b> "การเพิ่มงานทำได้ง่าย" → หาค่าเฉลี่ยของแต่ละข้อ</p></div>
+      <div class="plain g"><div class="lbl">When to use · ใช้เมื่อไร</div>
+        <p class="en">Early, quick read on <i>why</i> people would adopt a <b>work / productivity</b> tool. Only two levers, a short survey, easy to analyse.</p>
+        <p class="th">ใช้ช่วงแรกเพื่อดูอย่างรวดเร็วว่า<i>ทำไม</i>คนจะยอมรับเครื่องมือด้าน<b>การทำงาน / productivity</b> มีแค่สองตัวแปร แบบสอบถามสั้น วิเคราะห์ง่าย</p></div>
+    </div>
+  </div>
+  <p class="note"><span class="en">Source: Davis, F. D. (1989), <i>MIS Quarterly</i> 13(3). Ease of use also raises usefulness (easier → feels more useful).</span><span class="th"> ความง่ายในการใช้ยังเพิ่มการรับรู้ประโยชน์ด้วย (ยิ่งง่าย → ยิ่งรู้สึกว่ามีประโยชน์)</span></p>
+</section>
+
+<!-- 12 · UTAUT2 -->
+<section>
+  <p class="kicker red">Acceptance · UTAUT2 (Venkatesh, Thong &amp; Xu, 2012)</p>
+  <h2><span class="en">UTAUT2: seven drivers of whether people use it</span><span class="th">UTAUT2: เจ็ดปัจจัยที่ขับเคลื่อนการใช้งาน</span></h2>
+  <div class="grid g2" style="align-items:start">
+    <div class="card">
+      <div style="display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center">
+        <div class="drivers">
+          <div><b>PE</b> Performance Expectancy <span class="th">· ความคาดหวังด้านประสิทธิภาพ</span></div>
+          <div><b>EE</b> Effort Expectancy <span class="th">· ความคาดหวังด้านความพยายาม</span></div>
+          <div><b>SI</b> Social Influence <span class="th">· อิทธิพลทางสังคม</span></div>
+          <div><b>FC</b> Facilitating Conditions <span class="th">· สภาพที่เอื้ออำนวย</span></div>
+          <div><b>HM</b> Hedonic Motivation <span class="th">· แรงจูงใจด้านความเพลิดเพลิน</span></div>
+          <div><b>PV</b> Price Value <span class="th">· ความคุ้มค่าของราคา</span></div>
+          <div><b>HB</b> Habit <span class="th">· ความเคยชิน</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+          <span style="color:var(--muted)">→</span>
+          <div class="mbox dk" style="text-align:center">Behavioural<br>Intention</div>
+          <span style="color:var(--muted)">↓</span>
+          <div class="mbox dk" style="text-align:center">Use<br>Behaviour</div>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:12px"><span class="en">moderated by: age · gender · experience</span><span class="th">ตัวแปรกำกับ: อายุ · เพศ · ประสบการณ์</span></p>
+    </div>
+    <div>
+      <div class="plain" style="margin-top:0"><div class="lbl">Example · StudyMate (rate 1–5)</div>
+        <p class="en">"Helps my grades" (PE) · "easy to learn" (EE) · "my friends use it" (SI) · "I open it automatically" (Habit).</p>
+        <p class="th">"ช่วยให้เกรดดีขึ้น" (PE) · "เรียนรู้ง่าย" (EE) · "เพื่อน ๆ ก็ใช้" (SI) · "เปิดขึ้นมาใช้โดยอัตโนมัติ" (Habit)</p></div>
+      <div class="plain g"><div class="lbl">When to use · ใช้เมื่อไร</div>
+        <p class="en">When you need a <b>fuller, consumer-app</b> picture: adds motivation, price, habit &amp; social factors beyond TAM. Heavier survey; usually in research / theses.</p>
+        <p class="th">ใช้เมื่อต้องการภาพที่<b>ครบกว่าสำหรับแอปผู้บริโภค</b> เพิ่มปัจจัยแรงจูงใจ ราคา ความเคยชิน และสังคม นอกเหนือจาก TAM แบบสอบถามยาวกว่า มักใช้ในงานวิจัย / วิทยานิพนธ์</p></div>
+    </div>
+  </div>
+  <p class="note">Source: Venkatesh, Thong &amp; Xu (2012), <i>MIS Quarterly</i> 36(1); extends UTAUT (Venkatesh et al., 2003).</p>
+</section>
+
+<!-- 13 · SUS -->
+<section>
+  <p class="kicker red">Acceptance · System Usability Scale (Brooke, 1996)</p>
+  <h2><span class="en">SUS: ten questions → one score out of 100</span><span class="th">SUS: สิบคำถาม → คะแนนเดียวเต็ม 100</span></h2>
+  <div class="grid g2">
+    <ol class="nlist card">
+      <li><span class="num">1</span><div><h3><span class="en">Ask 10 statements</span><span class="th">ถาม 10 ข้อความ</span></h3>
+        <p class="d en">Alternating positive / negative, each rated 1–5 (strongly disagree → agree).</p><p class="d th">สลับข้อบวก / ข้อลบ ให้คะแนนแต่ละข้อ 1–5 (ไม่เห็นด้วยอย่างยิ่ง → เห็นด้วยอย่างยิ่ง)</p></div></li>
+      <li><span class="num" style="background:var(--green)">2</span><div><h3><span class="en">Score each item</span><span class="th">คิดคะแนนแต่ละข้อ</span></h3>
+        <p class="d en">Odd (positive): response − 1 · Even (negative): 5 − response.</p><p class="d th">ข้อคี่ (บวก): คำตอบ − 1 · ข้อคู่ (ลบ): 5 − คำตอบ</p></div></li>
+      <li><span class="num" style="background:var(--amber)">3</span><div><h3><span class="en">Sum × 2.5</span><span class="th">รวมแล้ว × 2.5</span></h3>
+        <p class="d en">Gives one number from <b>0 to 100</b>. It is <i>not</i> a percentage.</p><p class="d th">ได้ตัวเลขเดียวตั้งแต่ <b>0 ถึง 100</b> ซึ่ง<i>ไม่ใช่</i>เปอร์เซ็นต์</p></div></li>
+      <li><span class="num" style="background:var(--red)">4</span><div><h3><span class="en">Interpret</span><span class="th">แปลผล</span></h3>
+        <p class="d en">~68 = average · 80+ = excellent · under 50 = poor.</p><p class="d th">~68 = ค่าเฉลี่ย · 80+ = ดีเยี่ยม · ต่ำกว่า 50 = แย่</p></div></li>
+    </ol>
+    <div>
+      <div class="plain g" style="margin-top:0"><div class="lbl">When to use SUS · ใช้ SUS เมื่อไร</div>
+        <p class="en">Short, free, battle-tested: run it on <b>any</b> prototype. 5–10 users after a week → a number you compare across versions and put in your report.</p>
+        <p class="th">สั้น ฟรี ผ่านการพิสูจน์มาแล้ว ใช้ได้กับ prototype <b>ทุกแบบ</b> ให้ผู้ใช้ 5–10 คนทำหลังใช้งานหนึ่งสัปดาห์ → ได้ตัวเลขที่เทียบข้ามเวอร์ชันได้และใส่ในรายงานได้</p></div>
+      <div class="card" style="margin-top:14px">
+        <div class="susbar" aria-hidden="true">
+          <span style="width:50%;background:#1b1f27">poor</span>
+          <span style="width:18%;background:#2d323c"></span>
+          <span style="width:12%;background:#7fd1a4"></span>
+          <span style="width:20%;background:#1b1f27">excellent</span>
+        </div>
+        <div class="susticks"><span>0</span><span style="position:absolute;left:50%;transform:translateX(-50%)">50</span><span style="position:absolute;left:68%;transform:translateX(-50%);font-weight:700;color:var(--ink)">68 avg</span><span style="position:absolute;left:80%;transform:translateX(-50%)">80</span><span>100</span></div>
+        <p class="mono" style="font-size:11.5px;color:var(--muted);margin-top:10px;text-align:center"><span class="en">Aim above the ~68 average (Bangor et al., 2009)</span><span class="th">ตั้งเป้าให้สูงกว่าค่าเฉลี่ย ~68</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 · USABILITY TEST ORDER -->
+<section>
+  <p class="kicker red">Acceptance · How to run a usability test (SUS comes last)</p>
+  <h2><span class="en">Users do real tasks first, then fill the SUS</span><span class="th">ให้ผู้ใช้ทำงานจริงก่อน แล้วค่อยกรอก SUS</span></h2>
+  <div class="grid g2">
+    <div>
+      <p class="mono" style="color:var(--muted);font-size:12.5px;margin-bottom:6px"><span class="en">The order of a session</span><span class="th">ลำดับขั้นของหนึ่งรอบการทดสอบ</span></p>
+      <ol class="nlist card">
+        <li><span class="num">1</span><div><b class="en">Write task scenarios</b><b class="th">เขียนสถานการณ์งาน</b><p class="d en">Realistic goals a user should be able to accomplish.</p><p class="d th">เป้าหมายสมจริงที่ผู้ใช้ควรทำสำเร็จได้</p></div></li>
+        <li><span class="num">2</span><div><b class="en">Recruit 5–10 target users</b><b class="th">หาผู้ใช้เป้าหมาย 5–10 คน</b><p class="d en">Here: students who'd actually use StudyMate.</p><p class="d th">ในที่นี้คือนักศึกษาที่จะใช้ StudyMate จริง</p></div></li>
+        <li><span class="num">3</span><div><b class="en">Brief: "think aloud"</b><b class="th">ชี้แจง: "คิดออกเสียง"</b><p class="d en">They narrate; <b>you don't help or hint</b>.</p><p class="d th">ให้ผู้ใช้พูดสิ่งที่คิดออกมา <b>ผู้ทดสอบห้ามช่วยหรือใบ้</b></p></div></li>
+        <li><span class="num">4</span><div><b class="en">They do each task, you observe</b><b class="th">ผู้ใช้ทำทีละงาน ผู้ทดสอบสังเกต</b><p class="d en">Note success / time / errors / where they get stuck.</p><p class="d th">จดว่าสำเร็จไหม / ใช้เวลาเท่าไร / ผิดพลาดตรงไหน / ติดตรงไหน</p></div></li>
+        <li><span class="num" style="background:var(--red)">5</span><div><b class="en">Then fill the SUS</b><b class="th">จากนั้นกรอก SUS</b><p class="d en">Right after the tasks: 10 items, rated 1–5.</p><p class="d th">ทันทีหลังทำงานเสร็จ: 10 ข้อ ให้คะแนน 1–5</p></div></li>
+        <li><span class="num" style="background:var(--green)">6</span><div><b class="en">Score + fix + retest</b><b class="th">คิดคะแนน + แก้ไข + ทดสอบซ้ำ</b><p class="d en">SUS 0–100 with your notes → fix worst spots, repeat.</p><p class="d th">ใช้คะแนน SUS 0–100 คู่กับบันทึก → แก้จุดที่แย่ที่สุด แล้วทำซ้ำ</p></div></li>
+      </ol>
+    </div>
+    <div>
+      <p class="mono" style="color:var(--muted);font-size:12.5px;margin-bottom:6px"><span class="en">Example task scenarios (StudyMate)</span><span class="th">ตัวอย่างสถานการณ์งาน (StudyMate)</span></p>
+      <ol class="nlist card">
+        <li><span class="num" style="width:30px">T1</span><div><b class="en">Add a task due Friday</b><b class="th">เพิ่มงานที่ครบกำหนดวันศุกร์</b><p class="d en">Create "Submit report" with this Friday's date. <span class="why">· done without help?</span></p><p class="d th">สร้างงาน "ส่งรายงาน" ด้วยวันที่ศุกร์นี้ <span class="why">· ทำได้เองไหม?</span></p></div></li>
+        <li><span class="num" style="width:30px">T2</span><div><b class="en">Turn on a reminder</b><b class="th">เปิดการแจ้งเตือน</b><p class="d en">Set it to remind 1 day before due. <span class="why">· finds the setting?</span></p><p class="d th">ตั้งให้เตือนล่วงหน้า 1 วัน <span class="why">· หาเมนูตั้งค่าเจอไหม?</span></p></div></li>
+        <li><span class="num" style="width:30px">T3</span><div><b class="en">Mark a task done</b><b class="th">ทำเครื่องหมายว่างานเสร็จ</b><p class="d en">Complete an existing task. <span class="why">· obvious control?</span></p><p class="d th">ปิดงานที่มีอยู่ <span class="why">· ปุ่มเห็นชัดไหม?</span></p></div></li>
+        <li><span class="num" style="width:30px">T4</span><div><b class="en">Find overdue tasks</b><b class="th">หางานที่เลยกำหนด</b><p class="d en">Show which tasks are past due. <span class="why">· can they tell?</span></p><p class="d th">แสดงว่างานไหนเลยกำหนดแล้ว <span class="why">· ดูออกไหม?</span></p></div></li>
+        <li><span class="num" style="width:30px">T5</span><div><b class="en">Change a due date</b><b class="th">เปลี่ยนวันครบกำหนด</b><p class="d en">Move a task to next week. <span class="why">· edit discoverable?</span></p><p class="d th">เลื่อนงานไปสัปดาห์หน้า <span class="why">· หาวิธีแก้ไขเจอไหม?</span></p></div></li>
+      </ol>
+    </div>
+  </div>
+  <div class="plain g"><div class="lbl">Why this order · ทำไมต้องลำดับนี้</div>
+    <p class="en">SUS measures the <i>feeling</i> of usability; the <b>task observations tell you where it broke</b>. You need both, and SUS is only meaningful <b>after</b> people have actually used it on real tasks.</p>
+    <p class="th">SUS วัด<i>ความรู้สึก</i>ด้านการใช้งาน ส่วน<b>การสังเกตขณะทำงานบอกว่าพังตรงไหน</b> ต้องมีทั้งสองอย่าง และ SUS จะมีความหมายก็ต่อเมื่อผู้ใช้<b>ได้ใช้งานจริง</b>กับงานจริงมาแล้วเท่านั้น</p>
+  </div>
+</section>
+
+<!-- 15 · SUS QUESTIONNAIRE + CALCULATOR -->
+<section>
+  <p class="kicker red">Acceptance · The 10 SUS items, written for StudyMate · rated 1–5</p>
+  <h2><span class="en">The SUS questionnaire for StudyMate (try it)</span><span class="th">แบบสอบถาม SUS ของ StudyMate (ลองทำดู)</span></h2>
+  <p class="lead en" style="margin-bottom:14px">Pick 1 (strongly disagree) to 5 (strongly agree) for each item. The score is calculated live.</p>
+  <p class="lead th" style="margin-bottom:14px">เลือก 1 (ไม่เห็นด้วยอย่างยิ่ง) ถึง 5 (เห็นด้วยอย่างยิ่ง) ในแต่ละข้อ ระบบจะคำนวณคะแนนให้ทันที</p>
+  <div class="card calc">
+    <table><tbody id="sus"></tbody></table>
+    <div class="score">
+      <span class="big" id="sus-score">–</span>
+      <span id="sus-band" style="color:var(--muted)"></span>
+    </div>
+    <div class="susbar" style="margin-top:22px">
+      <span style="width:50%;background:#1b1f27">poor</span>
+      <span style="width:18%;background:#2d323c"></span>
+      <span style="width:12%;background:#7fd1a4"></span>
+      <span style="width:20%;background:#1b1f27">excellent</span>
+      <span class="marker" id="sus-mark" style="left:-50px">▼</span>
+    </div>
+  </div>
+  <div class="plain"><div class="lbl">How to use these · วิธีใช้</div>
+    <p class="en">Each rated <b>1 (strongly disagree) – 5 (strongly agree)</b>, filled <b>right after the tasks</b>. Convert (odd: −1 · even: 5−), sum, × 2.5 → a 0–100 score.</p>
+    <p class="th">ให้คะแนนแต่ละข้อ <b>1 (ไม่เห็นด้วยอย่างยิ่ง) – 5 (เห็นด้วยอย่างยิ่ง)</b> กรอก<b>ทันทีหลังทำงานเสร็จ</b> แปลงค่า (ข้อคี่: −1 · ข้อคู่: 5−) รวม แล้ว × 2.5 → ได้คะแนน 0–100</p>
+  </div>
+  <p class="note"><span class="en">The 10 standard items (Brooke, 1996) with "the system" replaced by "StudyMate." Keep the wording &amp; the alternating +/− pattern.</span><span class="th"> ข้อคำถามมาตรฐาน 10 ข้อ โดยเปลี่ยน "ระบบ" เป็น "StudyMate" ควรคงถ้อยคำและรูปแบบสลับ +/− ไว้</span></p>
+</section>
+
+<!-- 16 · GOOD TESTS -->
+<section id="good">
+  <p class="kicker">Writing tests that are worth keeping</p>
+  <h2><span class="en">A good test is small, clear, and about one thing</span><span class="th">เทสต์ที่ดีต้องเล็ก ชัดเจน และตรวจเรื่องเดียว</span></h2>
+  <div class="grid g2">
+    <div class="card"><span class="pill" style="background:var(--green)">DO · ควรทำ</span>
+      <div class="dl">
+        <div><h3><span class="en">Name it like a sentence</span><span class="th">ตั้งชื่อให้อ่านเหมือนประโยค</span></h3>
+          <p class="en"><code>test_does_not_remind_done_task</code>: the name says what should happen.</p><p class="th"><code>test_does_not_remind_done_task</code> ชื่อบอกเลยว่าควรเกิดอะไรขึ้น</p></div>
+        <div><h3><span class="en">Test the boundaries</span><span class="th">ทดสอบที่ขอบ</span></h3>
+          <p class="en">Empty list, the exact due date, a huge list. The edges are where bugs hide.</p><p class="th">ลิสต์ว่าง วันครบกำหนดพอดี ลิสต์ขนาดใหญ่มาก ขอบคือที่ซ่อนของบั๊ก</p></div>
+        <div><h3><span class="en">One reason to fail</span><span class="th">มีเหตุผลเดียวที่จะ fail</span></h3>
+          <p class="en">Each test checks one behaviour, so a failure points at one cause.</p><p class="th">แต่ละเทสต์ตรวจพฤติกรรมเดียว เมื่อ fail จึงชี้ไปที่สาเหตุเดียว</p></div>
+      </div></div>
+    <div class="card"><span class="pill" style="background:var(--red)">DON'T · ไม่ควรทำ</span>
+      <div class="dl">
+        <div><h3><span class="en">Test only the happy path</span><span class="th">ทดสอบแค่ happy path</span></h3>
+          <p class="en">"It works when everything is perfect" proves almost nothing.</p><p class="th">"มันทำงานได้เมื่อทุกอย่างสมบูรณ์แบบ" แทบไม่ได้พิสูจน์อะไรเลย</p></div>
+        <div><h3><span class="en">Assert twenty things at once</span><span class="th">assert ยี่สิบอย่างในทีเดียว</span></h3>
+          <p class="en">When it fails you won't know which part broke.</p><p class="th">เมื่อ fail จะไม่รู้ว่าส่วนไหนพัง</p></div>
+        <div><h3><span class="en">Depend on today's date / the network</span><span class="th">พึ่งวันที่ปัจจุบัน / เน็ตเวิร์ก</span></h3>
+          <p class="en">A test that passes Monday and fails Tuesday isn't a test. It's a coin flip.</p><p class="th">เทสต์ที่ผ่านวันจันทร์แต่ fail วันอังคาร ไม่ใช่เทสต์ แต่เป็นการโยนเหรียญ</p></div>
+      </div></div>
+  </div>
+  <div class="plain"><div class="lbl">In plain terms · พูดง่าย ๆ</div>
+    <p class="en">A good test is like a good exam question: it asks about <b>one</b> thing, and a wrong answer tells you exactly what the student (here, your code) got wrong.</p>
+    <p class="th">เทสต์ที่ดีเหมือนข้อสอบที่ดี ถามเรื่อง<b>เดียว</b> และถ้าตอบผิดก็บอกได้ทันทีว่านักเรียน (ในที่นี้คือโค้ด) ผิดตรงไหน</p>
+  </div>
+</section>
+
+<!-- 17 · AI -->
+<section id="ai">
+  <p class="kicker red">AI-first · Tests are how you catch the AI</p>
+  <h2><span class="en">AI writes the happy path; your tests find the edges</span><span class="th">AI เขียน happy path ส่วนเทสต์ของเราหาขอบ</span></h2>
+  <table class="tbl">
+    <thead><tr><th><span class="en">AI often misses…</span><span class="th">AI มักพลาด…</span></th><th><span class="en">…and the test that catches it</span><span class="th">…และเทสต์ที่จับได้</span></th></tr></thead>
+    <tbody>
+      <tr><td><span class="en">The empty case</span><span class="th pair">กรณีว่าง</span></td><td><span class="en">No tasks at all → should return <code>[]</code>, not crash.</span><span class="th pair">ไม่มีงานเลย → ควรคืนค่า <code>[]</code> ไม่ใช่แครช</span></td></tr>
+      <tr><td><span class="en">The "done" / excluded case</span><span class="th pair">กรณี "done" / ที่ต้องถูกตัดออก</span></td><td><span class="en">A completed task must <i>not</i> be reminded.</span><span class="th pair">งานที่เสร็จแล้วต้อง<i>ไม่</i>ถูกแจ้งเตือน</span></td></tr>
+      <tr><td><span class="en">The exact boundary</span><span class="th pair">ขอบพอดี</span></td><td><span class="en">Due <i>today</i> vs due <i>tomorrow</i>: off-by-one is the classic AI bug.</span><span class="th pair">ครบกำหนด<i>วันนี้</i> กับ<i>พรุ่งนี้</i>: off-by-one คือบั๊กคลาสสิกของ AI</span></td></tr>
+      <tr><td><span class="en">Silent wrong logic</span><span class="th pair">ตรรกะผิดแบบเงียบ ๆ</span></td><td><span class="en">Runs fine, returns the wrong list. Only an assertion reveals it.</span><span class="th pair">รันได้ปกติ แต่คืนรายการผิด มีแค่ assertion ที่เปิดโปงได้</span></td></tr>
+    </tbody>
+  </table>
+  <div class="plain r"><div class="lbl">The rule · กฎ</div>
+    <p class="en">Ask AI for the code <i>and</i> the tests, then <b>check the tests cover your acceptance criteria</b>. It almost always leaves one out. Finding that gap is the engineering, and it's what you're graded on.</p>
+    <p class="th">ให้ AI เขียนทั้งโค้ด<i>และ</i>เทสต์ แล้ว<b>ตรวจว่าเทสต์ครอบคลุม acceptance criteria ครบ</b> AI แทบจะลืมไปหนึ่งข้อเสมอ การหาช่องโหว่นั้นเจอคืองานวิศวกรรม และคือสิ่งที่ใช้ให้คะแนน</p>
+  </div>
+</section>
+
+<!-- 18 · ARIANE -->
+<section>
+  <p class="kicker red">Case study · When a reused unit went untested</p>
+  <h2><span class="en">Ariane 5, Flight 501: a 37-second, ~$370M bug</span><span class="th">Ariane 5 เที่ยวบิน 501: บั๊ก 37 วินาที มูลค่า ~370 ล้านดอลลาร์</span></h2>
+  <div class="grid g2">
+    <div class="card"><div class="lbl">What happened · เกิดอะไรขึ้น</div>
+      <h3><span class="en">Reused code, new rocket</span><span class="th">โค้ดเดิม จรวดใหม่</span></h3>
+      <p class="en">Inertial-reference software was <b>reused from Ariane 4</b>. Ariane 5 flew faster, so a horizontal-velocity value overflowed when a 64-bit number was converted into a 16-bit one. The unhandled error shut down <b>both</b> the primary and backup units; the rocket veered and self-destructed 37 s after liftoff.</p>
+      <p class="th">ซอฟต์แวร์ระบบนำร่องเฉื่อย<b>นำกลับมาใช้จาก Ariane 4</b> แต่ Ariane 5 บินเร็วกว่า ค่าความเร็วแนวนอนจึงล้น (overflow) ตอนแปลงตัวเลข 64 บิตเป็น 16 บิต error ที่ไม่ได้จัดการทำให้ทั้งเครื่อง<b>หลักและเครื่องสำรอง</b>ดับ จรวดเสียทิศทางและทำลายตัวเอง 37 วินาทีหลังปล่อย</p></div>
+    <div class="card"><div class="lbl">Why a test would have caught it · ทำไมเทสต์จะจับได้</div>
+      <h3><span class="en">The new range was never tested</span><span class="th">ไม่เคยทดสอบกับช่วงค่าใหม่</span></h3>
+      <p class="en">The conversion was <b>never tested with Ariane 5's larger velocity values</b>. The reused path had no test for the new operating range, and the code assumed the value could not overflow.</p>
+      <p class="th">การแปลงค่านี้<b>ไม่เคยถูกทดสอบกับความเร็วที่สูงขึ้นของ Ariane 5</b> โค้ดที่นำกลับมาใช้ไม่มีเทสต์สำหรับช่วงการทำงานใหม่ และโค้ดสันนิษฐานว่าค่าจะไม่มีทางล้น</p></div>
+  </div>
+  <div class="plain r"><div class="lbl">The lesson · บทเรียน</div>
+    <p class="en"><b>Reused code is not tested code.</b> Re-test every reused component against the <i>new</i> context's inputs and boundaries: exactly the edge cases that AI-generated code also skips.</p>
+    <p class="th"><b>โค้ดที่นำกลับมาใช้ ไม่ใช่โค้ดที่ผ่านการทดสอบแล้ว</b> ต้องทดสอบทุกส่วนที่นำกลับมาใช้ซ้ำกับ input และขอบเขตของบริบท<i>ใหม่</i> ซึ่งเป็น edge case แบบเดียวกับที่โค้ดจาก AI มักข้ามไป</p>
+  </div>
+  <p class="note">Source: ESA/CNES Ariane 501 Inquiry Board Report (Lions et al., 1996).</p>
+</section>
+
+<!-- 19 · STUDIO -->
+<section id="studio">
+  <p class="kicker">Team studio · ~45 min</p>
+  <h2><span class="en">Turn two acceptance criteria into two passing tests</span><span class="th">เปลี่ยน acceptance criteria สองข้อ ให้เป็นเทสต์สองตัวที่ผ่าน</span></h2>
+  <div class="grid g3">
+    <div class="card"><div class="lbl">Step A · 10 min</div>
+      <h3><span class="en">Pick the logic</span><span class="th">เลือกตรรกะ</span></h3>
+      <p class="en">Choose one function at the heart of an FR: the piece that decides something.</p>
+      <p class="th">เลือกฟังก์ชันหนึ่งที่เป็นหัวใจของ FR ส่วนที่ทำหน้าที่ตัดสินใจ</p></div>
+    <div class="card"><div class="lbl">Step B · 25 min</div>
+      <h3><span class="en">Write 2–3 tests</span><span class="th">เขียนเทสต์ 2–3 ตัว</span></h3>
+      <p class="en">One happy path, one edge, one "should-not". Prompt AI, then <b>read &amp; fix</b> them.</p>
+      <p class="th">happy path หนึ่งตัว edge case หนึ่งตัว "ต้องไม่เกิด" หนึ่งตัว ให้ AI ช่วยเขียน แล้ว<b>อ่านและแก้</b>เอง</p></div>
+    <div class="card"><div class="lbl">Step C · 10 min</div>
+      <h3><span class="en">Run until green</span><span class="th">รันจนเขียว</span></h3>
+      <p class="en">Make a test fail on purpose first to prove it actually checks something.</p>
+      <p class="th">ทำให้เทสต์ fail โดยตั้งใจก่อน เพื่อพิสูจน์ว่ามันตรวจอะไรบางอย่างจริง</p></div>
+  </div>
+  <p class="note en">Leave with at least one test that <b>failed, then passed</b> after you fixed the code. That is the whole loop in miniature.</p>
+  <p class="note th">ก่อนกลับต้องมีเทสต์อย่างน้อยหนึ่งตัวที่<b>เคย fail แล้วผ่าน</b>หลังแก้โค้ด นั่นคือวงจรทั้งหมดในรูปย่อ</p>
+
+  <h2 style="margin-top:40px"><span class="en">Use tests to harden your prototype</span><span class="th">ใช้เทสต์ทำให้ prototype แข็งแรง</span></h2>
+  <div class="grid g2">
+    <div class="card"><span class="pill" style="background:var(--green)">PROJECT STEP</span>
+      <div class="dl">
+        <div><h3><span class="en">Protect the core logic</span><span class="th">ปกป้องตรรกะหลัก</span></h3>
+          <p class="en">Write tests for the one or two functions your demo absolutely cannot get wrong.</p><p class="th">เขียนเทสต์ให้ฟังก์ชันหนึ่งหรือสองตัวที่เดโมผิดไม่ได้เด็ดขาด</p></div>
+        <div><h3><span class="en">Trace to the SRS</span><span class="th">โยงกลับไปที่ SRS</span></h3>
+          <p class="en">Point each test at an acceptance criterion. That's your evidence at the oral exam.</p><p class="th">ให้เทสต์แต่ละตัวชี้ไปที่ acceptance criterion หนึ่งข้อ นั่นคือหลักฐานตอนสอบปากเปล่า</p></div>
+      </div></div>
+    <div class="card"><span class="pill" style="background:var(--red)">AI-FIRST · VERIFY!</span>
+      <div class="dl">
+        <div><h3><span class="en">Ask AI for test cases</span><span class="th">ให้ AI ช่วยคิด test case</span></h3>
+          <p class="en">Then check they truly cover the edges, and add the one it forgot.</p><p class="th">แล้วตรวจว่าครอบคลุมขอบจริง และเพิ่มข้อที่ AI ลืม</p></div>
+        <div><h3><span class="en">Never ship a red bar</span><span class="th">ห้ามส่งงานที่เทสต์ยังแดง</span></h3>
+          <p class="en">If a test is failing, the feature is not done. Fix the code, not the test.</p><p class="th">ถ้ามีเทสต์ fail แปลว่าฟีเจอร์ยังไม่เสร็จ ให้แก้โค้ด ไม่ใช่แก้เทสต์</p></div>
+      </div></div>
+  </div>
+</section>
+
+<!-- 20 · AI CRITIQUE -->
+<section>
+  <p class="kicker red">AI Critique #7 · last 10 min · on A4</p>
+  <h2><span class="en">Spot it · explain it · fix it</span><span class="th">หาจุดผิด · อธิบาย · แก้ไข</span></h2>
+  <blockquote>"I added a test so you're covered: <code style="background:none;padding:0">assert add_task('Buy milk') is not None</code>. Green across the board, ship it."
+    <cite>an AI coding assistant, confidently</cite></blockquote>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="card"><div class="lbl">1 · Spot</div>
+      <h3><span class="en">What's weak?</span><span class="th">อะไรอ่อนแอ?</span></h3>
+      <p class="en">The test only checks "something came back." It never checks the task was stored correctly, with the right title or due date.</p>
+      <p class="th">เทสต์ตรวจแค่ว่า "มีอะไรคืนกลับมา" ไม่เคยตรวจว่างานถูกบันทึกถูกต้อง มีชื่อหรือวันครบกำหนดที่ถูก</p></div>
+    <div class="card"><div class="lbl">2 · Explain</div>
+      <h3><span class="en">Why is it wrong?</span><span class="th">ทำไมถึงผิด?</span></h3>
+      <p class="en">A test that can't fail for the real bug gives false confidence. "Not None" passes even if the data is garbage.</p>
+      <p class="th">เทสต์ที่ไม่มีทาง fail กับบั๊กจริงทำให้มั่นใจแบบผิด ๆ "Not None" ผ่านได้แม้ข้อมูลจะเป็นขยะ</p></div>
+    <div class="card"><div class="lbl">3 · Fix</div>
+      <h3><span class="en">The right way</span><span class="th">วิธีที่ถูก</span></h3>
+      <p class="en">Assert on the <i>result</i>: the stored task's title equals <code>'Buy milk'</code>, status is <code>open</code>, and an invalid input is rejected.</p>
+      <p class="th">assert ที่<i>ผลลัพธ์</i>: ชื่องานที่บันทึกต้องเท่ากับ <code>'Buy milk'</code> สถานะเป็น <code>open</code> และ input ที่ผิดต้องถูกปฏิเสธ</p></div>
+  </div>
+<pre style="margin-top:14px"><span class="c"># a stronger version · เวอร์ชันที่ดีกว่า</span>
+<span class="k">def</span> test_add_task_stores_title_and_open_status():
+    task = add_task(<span class="s">'Buy milk'</span>)
+    <span class="k">assert</span> task.title == <span class="s">'Buy milk'</span>
+    <span class="k">assert</span> task.status == <span class="s">'open'</span>
+
+<span class="k">def</span> test_add_task_rejects_empty_title():
+    <span class="k">with</span> pytest.raises(ValueError):
+        add_task(<span class="s">'   '</span>)</pre>
+  <p class="note en">Hand in your A4 before you leave. This is your attendance + AI-critique mark for the week.</p>
+  <p class="note th">ส่งกระดาษ A4 ก่อนออกจากห้อง ใช้เป็นคะแนนเข้าเรียน + คะแนน AI critique ของสัปดาห์นี้</p>
+</section>
+
+<!-- 21 · SUMMARY -->
+<div class="summary" id="summary">
+  <p class="kicker">Chapter 7 · In four lines</p>
+  <h2><span class="en">Running isn't working. Prove it with tests</span><span class="th">รันได้ไม่ใช่ใช้ได้ ต้องพิสูจน์ด้วยเทสต์</span></h2>
+  <div class="grid g2" style="gap:22px">
+    <div><div class="lbl">Why</div><h3><span class="en">Verification + validation</span><span class="th">Verification + Validation</span></h3>
+      <p class="en">Built it right, and built the right thing. Tests and demos cover both.</p><p class="th">สร้างถูกวิธี และสร้างสิ่งที่ถูกต้อง เทสต์และเดโมช่วยครอบคลุมทั้งสองอย่าง</p></div>
+    <div><div class="lbl">What</div><h3><span class="en">Input → expected output</span><span class="th">Input → ผลลัพธ์ที่คาดหวัง</span></h3>
+      <p class="en">A unit test checks one function in isolation: fast, precise, repeatable.</p><p class="th">unit test ตรวจฟังก์ชันเดียวแบบแยกเดี่ยว เร็ว แม่นยำ ทำซ้ำได้</p></div>
+    <div><div class="lbl">Thread</div><h3><span class="en">Acceptance criteria become tests</span><span class="th">Acceptance criteria กลายเป็นเทสต์</span></h3>
+      <p class="en">Every AC is a test: the Golden Thread reaching into your code.</p><p class="th">AC ทุกข้อคือเทสต์ คือเส้นด้ายทองที่ลากมาถึงโค้ด</p></div>
+    <div><div class="lbl">AI-first</div><h3><span class="en">Tests catch what AI missed</span><span class="th">เทสต์จับสิ่งที่ AI พลาด</span></h3>
+      <p class="en">Generate, then verify coverage. The gap it leaves is yours to find.</p><p class="th">ให้ AI สร้าง แล้วตรวจความครอบคลุม ช่องโหว่ที่เหลือเป็นหน้าที่ของเราที่ต้องหาให้เจอ</p></div>
+  </div>
+  <p style="margin-top:20px;font-size:14px"><span class="en">Reading: Sommerville Ch8 · Valente (Software Testing) · SWEBOK: Software Testing. Next: Ch8, Software Quality &amp; Basic Security.</span><span class="th"> อ่านเพิ่ม: Sommerville บทที่ 8 · Valente · SWEBOK ถัดไป: Ch8 คุณภาพซอฟต์แวร์และความปลอดภัยพื้นฐาน</span></p>
+</div>
+
+<!-- 22 · REFERENCES -->
+<section class="refs">
+  <p class="kicker">References · where this comes from</p>
+  <h2><span class="en">Textbook &amp; source references</span><span class="th">ตำราและแหล่งอ้างอิง</span></h2>
+  <ol class="nlist card">
+    <li><span class="num">1</span><div><b>Sommerville, I. (2011) Software Engineering, 9e</b><p class="d">Ch8 Software Testing: §8.1 Development testing, §8.2 TDD, §8.3 Release testing, §8.4 User testing.</p></div></li>
+    <li><span class="num" style="background:var(--green)">2</span><div><b>SWEBOK v4 (IEEE, 2024)</b><p class="d">Software Testing KA: test levels, techniques, test-driven development.</p></div></li>
+    <li><span class="num" style="background:var(--amber)">3</span><div><b>Boehm, B. (1979)</b><p class="d">Verification vs validation: "build it right" vs "build the right thing."</p></div></li>
+    <li><span class="num" style="background:var(--red)">4</span><div><b>Cohn, M. (2009) Succeeding with Agile</b><p class="d">The test pyramid: many unit tests, few end-to-end tests.</p></div></li>
+    <li><span class="num" style="background:var(--violet)">5</span><div><b>ESA/CNES (1996) Ariane 501 Inquiry Board Report</b><p class="d">The reused-and-untested overflow that destroyed Flight 501.</p></div></li>
+    <li><span class="num">6</span><div><b>Acceptance &amp; usability measurement</b><p class="d">Davis (1989) TAM; Venkatesh et al. (2003, 2012) UTAUT / UTAUT2; Brooke (1996) &amp; Bangor et al. (2009) SUS.</p></div></li>
+  </ol>
+  <p class="note en">Read §8 before the exam; SUS is the acceptance measure you can actually run.</p>
+  <p class="note th">อ่าน §8 ก่อนสอบ SUS คือเครื่องมือวัด acceptance ที่เราลงมือทำได้จริง</p>
+</section>
+
+<footer>Week 7 · Unit Testing · Intro to Software Engineering · MFU</footer>
+</main>
+
+<script>
+(function(){
+  // language toggle
+  var root=document.documentElement, btns=document.querySelectorAll('.seg button');
+  function setMode(m){
+    root.setAttribute('data-mode',m);
+    root.lang = m==='th' ? 'th' : 'en';
+    btns.forEach(function(b){b.setAttribute('aria-pressed', String(b.dataset.m===m));});
+    try{localStorage.setItem('w7-lang',m);}catch(e){}
+  }
+  btns.forEach(function(b){b.addEventListener('click',function(){setMode(b.dataset.m);});});
+  try{var saved=localStorage.getItem('w7-lang'); if(saved) setMode(saved);}catch(e){}
+
+  // level tabs
+  var tabs=document.querySelectorAll('.tabs button'), panels=document.querySelectorAll('.level');
+  tabs.forEach(function(t){t.addEventListener('click',function(){
+    tabs.forEach(function(x){x.setAttribute('aria-selected','false');});
+    panels.forEach(function(p){p.classList.remove('on');});
+    t.setAttribute('aria-selected','true');
+    panels[+t.dataset.l].classList.add('on');
+  });});
+
+  // SUS calculator
+  var items=[
+    ['I would like to use <b>StudyMate</b> frequently.','ฉันอยากใช้ <b>StudyMate</b> บ่อย ๆ'],
+    ['StudyMate was <b>unnecessarily complex</b>.','StudyMate <b>ซับซ้อนเกินความจำเป็น</b>'],
+    ['I thought StudyMate was <b>easy to use</b>.','ฉันคิดว่า StudyMate <b>ใช้งานง่าย</b>'],
+    ['I’d need <b>technical support</b> to use StudyMate.','ฉันต้องมี<b>คนช่วยด้านเทคนิค</b>จึงจะใช้ StudyMate ได้'],
+    ['The functions in StudyMate were <b>well integrated</b>.','ฟังก์ชันต่าง ๆ ใน StudyMate <b>ทำงานร่วมกันได้ดี</b>'],
+    ['There was <b>too much inconsistency</b> in StudyMate.','StudyMate <b>มีความไม่สอดคล้องกันมากเกินไป</b>'],
+    ['Most people would <b>learn StudyMate very quickly</b>.','คนส่วนใหญ่น่าจะ<b>เรียนรู้ StudyMate ได้เร็วมาก</b>'],
+    ['StudyMate was <b>very cumbersome</b> to use.','StudyMate <b>ใช้งานยุ่งยากมาก</b>'],
+    ['I felt <b>very confident</b> using StudyMate.','ฉัน<b>รู้สึกมั่นใจมาก</b>เมื่อใช้ StudyMate'],
+    ['I needed to <b>learn a lot</b> before I could get going.','ฉันต้อง<b>เรียนรู้หลายอย่าง</b>ก่อนจะเริ่มใช้งานได้']
+  ];
+  var tb=document.getElementById('sus'), html='';
+  items.forEach(function(it,i){
+    var n=i+1, pos=n%2===1, col=pos?'var(--green)':'var(--red)';
+    html+='<tr><td class="q"><span class="tag" style="background:'+col+'">'+n+'</span>'+
+      '<span class="en">'+it[0]+'</span> <span class="th pair">'+it[1]+'</span></td><td><div class="r" role="radiogroup" aria-label="Item '+n+'">';
+    for(var v=1;v<=5;v++){
+      var id='q'+n+'v'+v;
+      html+='<input type="radio" name="q'+n+'" id="'+id+'" value="'+v+'"><label for="'+id+'">'+v+'</label>';
+    }
+    html+='</div></td></tr>';
+  });
+  tb.innerHTML=html;
+  var scoreEl=document.getElementById('sus-score'), bandEl=document.getElementById('sus-band'), mark=document.getElementById('sus-mark');
+  tb.addEventListener('change',function(){
+    var sum=0, done=0;
+    for(var n=1;n<=10;n++){
+      var c=tb.querySelector('input[name="q'+n+'"]:checked');
+      if(c){done++; var v=+c.value; sum += n%2===1 ? v-1 : 5-v;}
+    }
+    if(done<10){scoreEl.textContent='–';
+      bandEl.innerHTML='<span class="en">'+done+' / 10 answered</span><span class="th"> ตอบแล้ว '+done+' / 10 ข้อ</span>';
+      mark.style.left='-50px';return;}
+    var s=sum*2.5;
+    scoreEl.textContent=s.toFixed(1).replace(/\.0$/,'');
+    var en,th;
+    if(s>=80){en='excellent';th='ดีเยี่ยม';}
+    else if(s>=68){en='above average';th='สูงกว่าค่าเฉลี่ย';}
+    else if(s>=50){en='below average';th='ต่ำกว่าค่าเฉลี่ย';}
+    else {en='poor';th='แย่';}
+    bandEl.innerHTML='<span class="en">/ 100 · '+en+'</span><span class="th"> / 100 · '+th+'</span>';
+    mark.style.left=s+'%';
+  });
+})();
+</script>
+</body>
+</html>
