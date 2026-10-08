@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="en" data-mode="both">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Week 7 Slides · Unit Testing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f5f8; --card:#ffffff; --ink:#0f1320; --ink-2:#394152; --muted:#6b7280; --line:#e4e6ec; --th:#4b5563;
+  --blue:#2f5bff; --blue-bg:#eaf0ff; --green:#15995a; --green-bg:#e3f5ea; --red:#e5483a; --red-bg:#fde8e5;
+  --amber:#c98a00; --amber-bg:#fff3d4; --violet:#7246f0; --violet-bg:#efe9ff;
+  --code-bg:#11163b; --code-ink:#dbe3ff; --dark:#0f1320; --dark-ink:#fff;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 6px 18px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1016; --card:#171b24; --ink:#eef1f6; --ink-2:#c6ccd7; --muted:#8c95a5; --line:#272d39; --th:#aab2c0;
+    --blue:#7090ff; --blue-bg:#1a2140; --green:#3ccf86; --green-bg:#11291e; --red:#ff7766; --red-bg:#341a17;
+    --amber:#f2bd3d; --amber-bg:#2e2510; --violet:#a58bff; --violet-bg:#221a3d;
+    --code-bg:#0a0e24; --dark:#eef1f6; --dark-ink:#0f1320; --shadow:0 1px 2px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1016; --card:#171b24; --ink:#eef1f6; --ink-2:#c6ccd7; --muted:#8c95a5; --line:#272d39; --th:#aab2c0;
+  --blue:#7090ff; --blue-bg:#1a2140; --green:#3ccf86; --green-bg:#11291e; --red:#ff7766; --red-bg:#341a17;
+  --amber:#f2bd3d; --amber-bg:#2e2510; --violet:#a58bff; --violet-bg:#221a3d;
+  --code-bg:#0a0e24; --dark:#eef1f6; --dark-ink:#0f1320; --shadow:0 1px 2px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.55 Inter,"IBM Plex Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em}
+code{background:var(--line);padding:1px 6px;border-radius:5px}
+b{font-weight:650}
+button{font:inherit;color:inherit}
+
+/* ---------- language modes ---------- */
+html[data-mode="en"] .th{display:none!important}
+html[data-mode="th"] .en{display:none!important}
+.th{font-family:"IBM Plex Sans Thai",Inter,sans-serif}
+html[data-mode="both"] .th{color:var(--th)}
+html[data-mode="both"] .en + .th{display:block;font-size:.86em;font-weight:inherit;margin-top:2px}
+html[data-mode="both"] h1 .en + .th,html[data-mode="both"] h2 .en + .th{font-weight:500;font-size:.62em;margin-top:6px}
+html[data-mode="th"] .th{font-size:1em}
+html[data-mode="both"] .nav .lbltxt .th{display:none!important}
+
+/* ---------- top bar ---------- */
+.top{flex-shrink:0;border-bottom:1px solid var(--line);background:var(--bg)}
+.top-in{max-width:1100px;margin:0 auto;padding:8px 16px;display:flex;gap:10px;align-items:center}
+.brand{font:600 13px "IBM Plex Mono",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.brand::before{content:"▶ ";color:var(--blue)}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px;flex-shrink:0}
+.seg button{border:0;background:none;color:var(--muted);font-weight:600;font-size:13px;padding:5px 11px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--blue);color:#fff}
+.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:10px;height:34px;padding:0 12px;cursor:pointer;font-size:14px;font-weight:600;flex-shrink:0}
+.progress{height:4px;background:var(--line)}
+.progress i{display:block;height:100%;background:var(--blue);width:0;transition:width .25s}
+
+/* ---------- slides ---------- */
+.stage{flex:1;position:relative;min-height:0}
+.slide{position:absolute;inset:0;overflow-y:auto;display:none;flex-direction:column;-webkit-overflow-scrolling:touch}
+.slide.on{display:flex;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.on{animation:none}}
+.inner{width:100%;max-width:1000px;margin:auto;padding:28px 20px 36px}
+.kicker{font:600 13px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:0 0 10px}
+.kicker.red{color:var(--red)}.kicker.green{color:var(--green)}.kicker.violet{color:var(--violet)}
+h1{font-size:clamp(40px,7vw,68px);line-height:1.05;letter-spacing:-.025em;margin:0 0 20px;font-weight:800}
+h2{font-size:clamp(28px,4.4vw,42px);line-height:1.12;letter-spacing:-.018em;margin:0 0 22px;font-weight:800}
+h3{font-size:20px;line-height:1.3;margin:0 0 6px;font-weight:700}
+p{margin:0}
+.big{font-size:clamp(19px,2.3vw,23px);color:var(--ink-2)}
+
+/* bullet points */
+.pts{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.pts li{display:flex;gap:14px;align-items:flex-start;font-size:clamp(18px,2.1vw,21px)}
+.pts li::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:.55em}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:14px;align-items:flex-start;font-size:clamp(17px,2vw,20px);counter-increment:s}
+.steps li::before{content:counter(s);width:30px;height:30px;border-radius:8px;background:var(--blue);color:#fff;font:700 15px Inter,sans-serif;display:grid;place-items:center;flex-shrink:0;margin-top:1px}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:760px){.g2,.g3{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.card p{color:var(--ink-2);font-size:17px}
+.card .tag{font:600 12px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.card.blue{border-top:5px solid var(--blue)}.card.green{border-top:5px solid var(--green)}.card.red{border-top:5px solid var(--red)}.card.amber{border-top:5px solid var(--amber)}.card.violet{border-top:5px solid var(--violet)}
+
+.box{margin-top:20px;border-left:5px solid var(--blue);background:var(--blue-bg);border-radius:0 12px 12px 0;padding:14px 18px;font-size:17px}
+.box .lbl{font:700 12px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.box.green{border-color:var(--green);background:var(--green-bg)}.box.green .lbl{color:var(--green)}
+.box.red{border-color:var(--red);background:var(--red-bg)}.box.red .lbl{color:var(--red)}
+.box.amber{border-color:var(--amber);background:var(--amber-bg)}.box.amber .lbl{color:var(--amber)}
+
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:18px 20px;overflow-x:auto;font:15px/1.7 "IBM Plex Mono",monospace;margin:0}
+pre .k{color:#8ea6ff}pre .s{color:#7ee2b0}pre .c{color:#8a93bd}
+
+/* flow diagram */
+.flow{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+.flow .card{flex:1 1 160px;text-align:center;padding:16px}
+.flow .ar{align-self:center;font-size:24px;color:var(--muted)}
+@media (max-width:760px){.flow{flex-direction:column}.flow .ar{transform:rotate(90deg)}}
+
+.thread{display:flex;gap:6px;flex-wrap:wrap}
+.thread div{flex:1 0 90px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;font-weight:650;font-size:16px}
+.thread small{display:block;color:var(--muted);font-weight:400;font-size:12.5px}
+.thread .on{background:var(--blue);border-color:var(--blue);color:#fff}.thread .on small{color:#dbe3ff}
+
+/* pyramid */
+.pyr{display:flex;flex-direction:column;align-items:center;gap:4px;max-width:420px;margin:0 auto}
+.pyr div{background:var(--dark);color:var(--dark-ink);text-align:center;font-weight:650;padding:14px 4px;font-size:15px}
+.pyr .a{width:40%;clip-path:polygon(20% 0,80% 0,100% 100%,0 100%);background:var(--red)}
+.pyr .b{width:68%;clip-path:polygon(11% 0,89% 0,100% 100%,0 100%);background:var(--amber)}
+.pyr .c{width:100%;clip-path:polygon(7% 0,93% 0,100% 100%,0 100%);background:var(--green);padding:22px 4px}
+.pyr div{color:#fff}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);font-size:16.5px}
+.tbl th{background:var(--dark);color:var(--dark-ink);text-align:left;font:600 12.5px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;padding:11px 14px}
+.tbl td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top}
+.tbl td:first-child{font-weight:650}
+.scroll-x{overflow-x:auto;border-radius:14px}
+@media (max-width:640px){.tbl.stack thead{display:none}.tbl.stack tr{display:block;border-top:1px solid var(--line);padding:8px 0}.tbl.stack td{display:block;border:0;padding:3px 14px}}
+
+.lvl{display:inline-block;min-width:26px;height:26px;border-radius:7px;color:#fff;font:700 13px Inter,sans-serif;text-align:center;line-height:26px;margin-right:8px}
+
+/* number line */
+.nl{width:100%;height:auto;display:block}
+.nl text{font:15px Inter,sans-serif;fill:var(--ink)}
+
+.calc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:17px}
+.calc span{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+.calc .ok{background:var(--green-bg);border-color:var(--green)}
+
+/* exam */
+.q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+.q + .q{margin-top:14px}
+.q .qn{font:700 13px "IBM Plex Mono",monospace;color:var(--blue);margin-bottom:4px}
+.q .qt{font-size:18.5px;font-weight:600;margin-bottom:12px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;border:1.5px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px;cursor:pointer;font-size:16.5px}
+.opt:hover:not(:disabled){border-color:var(--blue)}
+.opt .l{font:700 14px "IBM Plex Mono",monospace;color:var(--muted);flex-shrink:0;margin-top:2px}
+.opt.right{border-color:var(--green);background:var(--green-bg)}
+.opt.wrong{border-color:var(--red);background:var(--red-bg)}
+.opt:disabled{cursor:default}
+.why{display:none;margin-top:10px;font-size:16px;padding:10px 14px;border-radius:10px;background:var(--blue-bg)}
+.q.done .why{display:block}
+.scorebar{position:sticky;top:0;z-index:2;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--bg);padding:10px 0 12px;margin-bottom:6px;border-bottom:1px solid var(--line)}
+.scorebar .s{font-size:22px;font-weight:800}
+.btn{border:0;background:var(--blue);color:#fff;font-weight:650;font-size:15px;padding:9px 16px;border-radius:10px;cursor:pointer}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+details.sa{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-top:14px;box-shadow:var(--shadow)}
+details.sa summary{cursor:pointer;font-weight:650;font-size:17.5px}
+details.sa[open] summary{margin-bottom:12px}
+
+/* vocab */
+.vsearch{width:100%;font:inherit;font-size:17px;padding:12px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);margin-bottom:14px}
+.vsearch:focus{outline:none;border-color:var(--blue)}
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.vgrid{grid-template-columns:minmax(0,1fr)}}
+.v{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;box-shadow:var(--shadow)}
+.v .term{font-size:19px;font-weight:750}
+.v .thw{font-family:"IBM Plex Sans Thai",sans-serif;color:var(--blue);font-weight:600;font-size:16.5px}
+.v .mean{font-size:15.5px;color:var(--ink-2);margin-top:6px}
+.v .ex{font-size:14.5px;color:var(--muted);margin-top:6px}
+.v .cat{float:right;font:600 11px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 8px}
+
+/* bottom nav */
+.nav{flex-shrink:0;border-top:1px solid var(--line);background:var(--bg);padding-bottom:env(safe-area-inset-bottom)}
+.nav-in{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.nav button.go{border:0;background:var(--blue);color:#fff;font-weight:700;font-size:16px;padding:11px 20px;border-radius:12px;cursor:pointer;min-width:110px}
+.nav button.go.prev{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.nav button.go:disabled{opacity:.35;cursor:default}
+.count{flex:1;text-align:center;font:600 14px "IBM Plex Mono",monospace;color:var(--muted)}
+.count small{display:block;font:500 12.5px Inter,"IBM Plex Sans Thai",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:480px){.nav button.go{min-width:0;padding:11px 14px}.nav .lbltxt{display:none}}
+
+/* menu */
+.menu{position:fixed;inset:0;z-index:20;background:rgba(10,12,20,.45);display:none}
+.menu.on{display:block}
+.menu .panel{position:absolute;right:0;top:0;bottom:0;width:min(380px,92vw);background:var(--bg);overflow-y:auto;padding:16px;box-shadow:-8px 0 30px rgba(0,0,0,.2)}
+.menu ol{list-style:none;margin:10px 0 0;padding:0}
+.menu li button{display:flex;gap:10px;width:100%;text-align:left;border:0;background:none;padding:9px 10px;border-radius:10px;cursor:pointer;font-size:15.5px}
+.menu li button:hover{background:var(--card)}
+.menu li button.cur{background:var(--blue);color:#fff}
+.menu li .n{font:600 13px "IBM Plex Mono",monospace;opacity:.6;min-width:22px}
+.hint{font-size:14px;color:var(--muted);margin-top:22px}
+kbd{font:600 12px "IBM Plex Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;background:var(--card)}
+.dots{display:flex;gap:14px;margin-top:30px}
+.dots i{width:54px;height:54px;border-radius:50%}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Week 7 · Unit Testing</div>
+    <div class="seg" role="group" aria-label="Language">
+      <button data-m="en" aria-pressed="false">EN</button>
+      <button data-m="both" aria-pressed="true">EN+TH</button>
+      <button data-m="th" aria-pressed="false">TH</button>
+    </div>
+    <button class="iconbtn" id="menuBtn" aria-label="All slides">☰</button>
+  </div>
+  <div class="progress"><i id="bar"></i></div>
+</header>
+
+<main class="stage" id="stage"></main>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="go prev" id="prev">← <span class="lbltxt"><span class="en">Back</span><span class="th">ย้อนกลับ</span></span></button>
+    <div class="count"><span id="num">1 / 1</span><small id="ttl"></small></div>
+    <button class="go" id="next"><span class="lbltxt"><span class="en">Next</span><span class="th">ถัดไป</span></span> →</button>
+  </div>
+</nav>
+
+<div class="menu" id="menu"><div class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <b><span class="en">All slides</span><span class="th">สไลด์ทั้งหมด</span></b>
+    <button class="iconbtn" id="menuClose" aria-label="Close">✕</button>
+  </div>
+  <ol id="menuList"></ol>
+</div></div>
+
+<script>
+/* ---------- helpers ---------- */
+const L=(en,th)=>`<span class="en">${en}</span><span class="th">${th}</span>`;
+const P=(en,th,cls='')=>`<p class="en ${cls}">${en}</p><p class="th ${cls}">${th}</p>`;
+const pts=a=>`<ul class="pts">${a.map(x=>`<li><div>${L(x[0],x[1])}</div></li>`).join('')}</ul>`;
+const steps=a=>`<ol class="steps">${a.map(x=>`<li><div>${L(x[0],x[1])}</div></li>`).join('')}</ol>`;
+const box=(kind,en,th,lblEn,lblTh)=>`<div class="box ${kind}"><div class="lbl">${L(lblEn,lblTh)}</div>${P(en,th)}</div>`;
+const remember=(en,th)=>box('green',en,th,'Remember','จำไว้');
+const head=(k,en,th,kc='')=>`<p class="kicker ${kc}">${k}</p><h2>${L(en,th)}</h2>`;
+const card=(cls,tag,en,th,ben,bth)=>`<div class="card ${cls}">${tag?`<div class="tag">${tag}</div>`:''}<h3>${L(en,th)}</h3>${ben?P(ben,bth):''}</div>`;
+
+/* ---------- slides ---------- */
+const S=[];
+const add=(en,th,html)=>S.push({en,th,html});
+
+add('Welcome','ยินดีต้อนรับ',`
+<p class="kicker" style="color:var(--muted)">Chapter 7 · Intro to Software Engineering</p>
+<h1>${L('It runs.<br>But is it <i>right</i>?','มันรันได้<br>แต่มัน<i>ถูกต้อง</i>หรือเปล่า?')}</h1>
+${P('This week: how to <b>prove</b> your code works using <b>tests</b>, and how to catch mistakes that AI-written code makes.',
+    'สัปดาห์นี้: เรียนวิธี<b>พิสูจน์</b>ว่าโค้ดทำงานถูก ด้วย<b>การทดสอบ (test)</b> และวิธีจับข้อผิดพลาดในโค้ดที่ AI เขียน','big')}
+<div class="dots" aria-hidden="true"><i style="background:#2f5bff"></i><i style="background:#15995a"></i><i style="background:#e5483a"></i><i style="background:#ffc23a"></i></div>
+<p class="hint">${L('How to use: press <b>Next →</b>, use the <kbd>←</kbd> <kbd>→</kbd> keys, or swipe on your phone. Switch language at the top.',
+ 'วิธีใช้: กด <b>ถัดไป →</b> ใช้ปุ่มลูกศร <kbd>←</kbd> <kbd>→</kbd> หรือปัดหน้าจอบนมือถือ เปลี่ยนภาษาได้ที่ด้านบน')}</p>`);
+
+add("Today's plan",'แผนการเรียนวันนี้',`
+${head('Roadmap','What we will learn today','วันนี้เราจะเรียนอะไรบ้าง')}
+${steps([
+ ['<b>Why</b> we test: verification &amp; validation','<b>ทำไม</b>ต้องทดสอบ: verification และ validation'],
+ ['<b>What</b> a test is: input → expected output','test <b>คืออะไร</b>: input → ผลลัพธ์ที่คาดหวัง'],
+ ['<b>Unit tests</b>, and turning requirements into tests','<b>Unit test</b> และการแปลง requirement เป็นเทสต์'],
+ ['<b>Choosing inputs</b>: EP and BVA','<b>เลือก input</b> ให้ฉลาด: EP และ BVA'],
+ ['<b>5 levels</b> of testing, from one function to real users','<b>5 ระดับ</b>ของการทดสอบ จากฟังก์ชันเดียวถึงผู้ใช้จริง'],
+ ['<b>Do users like it?</b> TAM, UTAUT2, SUS','<b>ผู้ใช้ชอบไหม?</b> TAM, UTAUT2, SUS'],
+ ['<b>Good tests</b> and catching <b>AI mistakes</b>','<b>เทสต์ที่ดี</b> และการจับ<b>ความผิดพลาดของ AI</b>'],
+ ['Summary → <b>Exam practice</b> → <b>Vocabulary</b>','สรุป → <b>ฝึกทำข้อสอบ</b> → <b>คำศัพท์</b>']
+])}`);
+
+add('Where we are','เราอยู่ตรงไหน',`
+${head('The golden thread','Testing is the next step after code','การทดสอบคือขั้นถัดไปหลังเขียนโค้ด')}
+<div class="thread">
+ <div>Problem<small>Wk 3</small></div><div>FR / NFR<small>SRS</small></div><div>Model<small>UML</small></div>
+ <div>Design<small>Wk 5</small></div><div>Code<small>Wk 6</small></div><div class="on">Test<small>Ch 7 · today</small></div>
+ <div>Quality<small>Ch 8</small></div><div>PM<small>Ch 9</small></div><div>Ethics<small>Ch 10</small></div>
+</div>
+<div style="margin-top:24px">${pts([
+ ['We wrote <b>requirements</b> (what the app must do).','เราเขียน <b>requirement</b> แล้ว (แอปต้องทำอะไร)'],
+ ['We wrote <b>code</b> (how it does it).','เราเขียน<b>โค้ด</b>แล้ว (ทำอย่างไร)'],
+ ['Now we <b>test</b>: check the code really does what the requirements say.','ตอนนี้เรา<b>ทดสอบ</b>: ตรวจว่าโค้ดทำตามที่ requirement บอกจริง']
+])}</div>
+${box('amber','This term, testing is <b>understand-only</b>: learn the ideas and use them on your prototype. There is no separate graded test suite.',
+ 'เทอมนี้เรื่อง testing เป็นแบบ<b>เข้าใจอย่างเดียว</b>: เรียนแนวคิดแล้วใช้กับ prototype ไม่มีการให้คะแนนชุดเทสต์แยก','Note','หมายเหตุ')}`);
+
+add('Running ≠ working','รันได้ ≠ ใช้ได้',`
+${head('Idea 1 · Why test?','"It runs" does not mean "it works"','"รันได้" ไม่ได้แปลว่า "ทำงานถูก"')}
+<div class="grid g2">
+ ${card('red','Example','The reminder fires on the wrong day','การแจ้งเตือนเด้งผิดวัน','The app opens. No crash. It looks fine. But the reminder comes on the <b>wrong day</b>, so the student still misses the deadline.','แอปเปิดได้ ไม่แครช ดูเหมือนปกติ แต่แจ้งเตือน<b>ผิดวัน</b> นักศึกษาก็ยังพลาดกำหนดส่งอยู่ดี')}
+ ${card('green','Solution','A test checks the answer','เทสต์ตรวจคำตอบให้','A test says: "task due 10 Aug, today is 9 Aug → it <b>must</b> be in the reminder list." If not, the test fails and we find the bug.','เทสต์บอกว่า "งานครบกำหนด 10 ส.ค. วันนี้ 9 ส.ค. → <b>ต้อง</b>อยู่ในรายการแจ้งเตือน" ถ้าไม่อยู่ เทสต์ fail และเราเจอบั๊ก')}
+</div>
+${remember('Testing finds bugs <b>before users do</b>, when they are still cheap to fix.','การทดสอบช่วยหาบั๊ก<b>ก่อนผู้ใช้จะเจอ</b> ตอนที่ยังแก้ได้ง่ายและถูก')}`);
+
+add('Verification vs validation','Verification กับ Validation',`
+${head('Idea 1 · Two questions','Two questions every test answers','สองคำถามที่การทดสอบต้องตอบ')}
+<div class="grid g2">
+ ${card('blue','Verification','Did we build it <i>right</i>?','เราสร้าง<i>ถูกวิธี</i>ไหม?','Does the code follow the spec? No bugs? Checked by <b>unit tests</b> and code reviews.','โค้ดตรงตาม spec ไหม? ไม่มีบั๊กใช่ไหม? ตรวจด้วย <b>unit test</b> และการรีวิวโค้ด')}
+ ${card('violet','Validation','Did we build the <i>right thing</i>?','เราสร้าง<i>สิ่งที่ถูกต้อง</i>ไหม?','Is it what users really need? Checked by <b>demos</b>, <b>acceptance tests</b> and user feedback.','เป็นสิ่งที่ผู้ใช้ต้องการจริงไหม? ตรวจด้วย<b>การเดโม</b> <b>acceptance test</b> และ feedback จากผู้ใช้')}
+</div>
+${box('','<b>Memory trick:</b> <b>Ver</b>ification = the code is <b>ver</b>y correct. <b>Val</b>idation = it has <b>val</b>ue for the user. You need <b>both</b>.',
+ '<b>เทคนิคจำ:</b> <b>Ver</b>ification = โค้ดถูกต้อง (ตรงตาม spec) · <b>Val</b>idation = มี<b>คุณค่า (value)</b> กับผู้ใช้ ต้องมี<b>ทั้งสองอย่าง</b>','Easy way to remember','วิธีจำง่าย ๆ')}`);
+
+add('The V-model','V-model',`
+${head('Idea 1b · The V-model (Sommerville §8)','Every build step has a matching check','ทุกขั้นตอนการสร้าง มีการตรวจที่คู่กัน')}
+<div class="scroll-x"><table class="tbl">
+ <thead><tr><th>${L('We build (left side)','เราสร้าง (ฝั่งซ้าย)')}</th><th>${L('We check with (right side)','เราตรวจด้วย (ฝั่งขวา)')}</th></tr></thead>
+ <tbody>
+  <tr><td>Requirements</td><td>System / acceptance tests <span style="color:var(--violet)">· validation</span></td></tr>
+  <tr><td>Design / architecture</td><td>Integration tests</td></tr>
+  <tr><td>Detailed design</td><td>Unit tests <span style="color:var(--blue)">· verification</span></td></tr>
+  <tr><td colspan="2" style="text-align:center">↓ Code ↑</td></tr>
+ </tbody></table></div>
+${box('green','Like <b>writing</b> an essay (left) and <b>proofreading</b> it (right). Each part you write gets checked against what you planned.',
+ 'เหมือน<b>เขียน</b>เรียงความ (ซ้าย) แล้ว<b>ตรวจทาน</b> (ขวา) ทุกส่วนที่เขียนจะถูกตรวจเทียบกับสิ่งที่วางแผนไว้','In plain words','พูดง่าย ๆ')}`);
+
+add('What is a test?','Test คืออะไร?',`
+${head('Idea 2 · What a test is','A test = known input + expected output','Test = input ที่รู้ค่า + ผลลัพธ์ที่คาดหวัง')}
+<div class="flow">
+ <div class="card"><h3>Input</h3><p>${L('task due 10 Aug<br>today = 9 Aug','งานครบกำหนด 10 ส.ค.<br>วันนี้ = 9 ส.ค.')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>Function</h3><p class="mono">tasks_due_for_<br>reminder()</p></div><span class="ar">→</span>
+ <div class="card"><h3>Output</h3><p>${L('the real result','ผลลัพธ์จริง')}</p></div>
+</div>
+<div class="grid g2" style="margin-top:16px">
+ ${card('green','','Output = expected → ✓ PASS','ตรงกับที่คาด → ✓ ผ่าน','The code works for this case.','โค้ดทำงานถูกสำหรับกรณีนี้')}
+ ${card('red','','Output ≠ expected → ✗ FAIL','ไม่ตรง → ✗ ไม่ผ่าน','You found a bug, cheaply and early.','เราเจอบั๊กแล้ว ตั้งแต่เนิ่น ๆ และแก้ได้ถูก')}
+</div>
+${box('','A calculator: you type 2 + 2 and <b>expect</b> 4. If it shows 5, it has a bug. A test writes down "expect 4" once, and the computer checks it for you every time.',
+ 'เครื่องคิดเลข: กด 2 + 2 เรา<b>คาดหวัง</b> 4 ถ้าขึ้น 5 แปลว่ามีบั๊ก เทสต์คือการจด "คาดหวัง 4" ไว้ครั้งเดียว แล้วคอมพิวเตอร์ตรวจให้ทุกครั้ง','Example','ตัวอย่าง')}`);
+
+add('Unit tests','Unit test',`
+${head('Idea 3 · The smallest test','A unit test checks ONE small piece, alone','Unit test ตรวจชิ้นเล็ก ๆ ชิ้นเดียว แบบแยกเดี่ยว')}
+<div class="grid g3">
+ ${card('blue','One unit','Usually one function','ปกติคือฟังก์ชันเดียว','No database, no screen, no internet. Just the function.','ไม่มีฐานข้อมูล ไม่มีหน้าจอ ไม่มีอินเทอร์เน็ต มีแค่ฟังก์ชัน')}
+ ${card('green','Fast','Runs in milliseconds','รันเสร็จในเสี้ยววินาที','So you can run them after <b>every</b> change.','จึงรันได้หลังแก้โค้ด<b>ทุกครั้ง</b>')}
+ ${card('amber','Precise','Shows exactly what broke','บอกได้เลยว่าพังตรงไหน','If it fails, you know which piece is wrong. No searching.','ถ้า fail ก็รู้ทันทีว่าชิ้นไหนผิด ไม่ต้องไล่หา')}
+</div>
+${box('green','Like checking each <b>LEGO brick</b> before building the castle. Finding one bad brick now is easier than rebuilding the whole castle later.',
+ 'เหมือนเช็กตัวต่อ <b>LEGO</b> ทีละชิ้นก่อนต่อปราสาท เจอชิ้นที่เสียตอนนี้ ง่ายกว่ารื้อปราสาททั้งหลังทีหลัง','In plain words','พูดง่าย ๆ')}`);
+
+add('Requirement → test','Requirement → เทสต์',`
+${head('Idea 4 · AC becomes a test','Each acceptance criterion becomes one test','Acceptance criterion แต่ละข้อ = เทสต์หนึ่งตัว')}
+<div class="grid g2">
+ <div>
+  <div class="card">
+   <div class="tag">From your SRS</div>
+   <p style="margin-bottom:10px"><b>FR-1</b>: ${L('remind an open task 1 day before it is due','แจ้งเตือนงานที่ยังไม่เสร็จ ล่วงหน้า 1 วันก่อนครบกำหนด')}</p>
+   <p style="margin-bottom:8px">🟢 ${L('<b>AC 1:</b> open task due tomorrow → <b>appears</b> in reminders','<b>AC 1:</b> งาน open ที่ครบกำหนดพรุ่งนี้ → <b>ต้องอยู่</b>ในรายการแจ้งเตือน')}</p>
+   <p>🔴 ${L('<b>AC 2:</b> a <code>done</code> task → does <b>not</b> appear','<b>AC 2:</b> งานที่ <code>done</code> แล้ว → <b>ต้องไม่อยู่</b>')}</p>
+  </div>
+  ${box('','The criterion and the test say the <b>same sentence</b>: once in English, once in code.','criterion กับเทสต์คือ<b>ประโยคเดียวกัน</b> เขียนเป็นภาษาคนครั้งหนึ่ง เป็นโค้ดอีกครั้งหนึ่ง','Key idea','แนวคิดหลัก')}
+ </div>
+<pre><span class="c"># AC 1</span>
+<span class="k">def</span> test_reminds_open_task_1_day_before():
+    tasks = [Task(due=date(2026,8,10), status=<span class="s">'open'</span>)]
+    <span class="k">assert</span> tasks_due_for_reminder(tasks, date(2026,8,9)) == tasks
+
+<span class="c"># AC 2</span>
+<span class="k">def</span> test_does_not_remind_done_task():
+    tasks = [Task(due=date(2026,8,10), status=<span class="s">'done'</span>)]
+    <span class="k">assert</span> tasks_due_for_reminder(tasks, date(2026,8,9)) == []</pre>
+</div>`);
+
+add('How to read a test','วิธีอ่านเทสต์',`
+${head('Idea 4 · Reading test code','Every test has 3 simple parts','ทุกเทสต์มี 3 ส่วนง่าย ๆ')}
+<div class="grid g2">
+<pre><span class="k">def</span> test_does_not_remind_done_task():
+    <span class="c"># 1. Arrange: prepare the data</span>
+    tasks = [Task(due=date(2026,8,10),
+                  status=<span class="s">'done'</span>)]
+
+    <span class="c"># 2. Act: run the function</span>
+    result = tasks_due_for_reminder(
+                 tasks, date(2026,8,9))
+
+    <span class="c"># 3. Assert: check the answer</span>
+    <span class="k">assert</span> result == []</pre>
+ <div>${steps([
+  ['<b>Arrange</b>: make the input. Here: one task that is already done.','<b>Arrange (เตรียม)</b>: สร้าง input ในที่นี้คืองานหนึ่งงานที่เสร็จแล้ว'],
+  ['<b>Act</b>: call the function you are testing.','<b>Act (ลงมือ)</b>: เรียกฟังก์ชันที่ต้องการทดสอบ'],
+  ['<b>Assert</b>: say what the answer <b>must</b> be. <code>[]</code> means "empty list: nothing to remind."','<b>Assert (ยืนยัน)</b>: บอกว่าคำตอบ<b>ต้อง</b>เป็นอะไร <code>[]</code> แปลว่า "ลิสต์ว่าง ไม่มีอะไรต้องเตือน"']
+ ])}
+ ${box('green','Name the test like a sentence: <code>test_does_not_remind_done_task</code> tells you what should happen.','ตั้งชื่อเทสต์ให้อ่านเหมือนประโยค <code>test_does_not_remind_done_task</code> บอกเลยว่าควรเกิดอะไร','Tip','เคล็ดลับ')}</div>
+</div>`);
+
+add('Equivalence partitioning','Equivalence Partitioning (EP)',`
+${head('Choosing inputs · technique 1','EP: group inputs that behave the same','EP: จัดกลุ่ม input ที่ทำงานเหมือนกัน')}
+${P('You can’t test every possible input. So split inputs into <b>groups</b>, and test <b>one value from each group</b>.','เราทดสอบทุก input ไม่ได้ จึงแบ่ง input เป็น<b>กลุ่ม</b> แล้วทดสอบ<b>ค่าเดียวจากแต่ละกลุ่ม</b>','big')}
+<p style="margin:18px 0 10px;font-weight:650">${L('Example: a task title must be 1–100 characters.','ตัวอย่าง: ชื่องานต้องยาว 1–100 ตัวอักษร')}</p>
+<div class="grid g3">
+ ${card('red','Group 1 · invalid','Too short','สั้นเกินไป','Test with <b>0</b> chars (empty) → ✗ rejected','ทดสอบด้วย <b>0</b> ตัวอักษร (ว่าง) → ✗ ปฏิเสธ')}
+ ${card('green','Group 2 · valid','Just right','ยาวพอดี','Test with <b>50</b> chars → ✓ accepted','ทดสอบด้วย <b>50</b> ตัวอักษร → ✓ ยอมรับ')}
+ ${card('red','Group 3 · invalid','Too long','ยาวเกินไป','Test with <b>101</b> chars → ✗ rejected','ทดสอบด้วย <b>101</b> ตัวอักษร → ✗ ปฏิเสธ')}
+</div>
+${remember('3 tests now cover <b>every</b> length. One test stands for a whole group.','เทสต์แค่ 3 ตัวครอบคลุมความยาว<b>ทุกแบบ</b> เทสต์ 1 ตัวเป็นตัวแทนของทั้งกลุ่ม')}`);
+
+add('Boundary value analysis','Boundary Value Analysis (BVA)',`
+${head('Choosing inputs · technique 2','BVA: bugs hide at the edges','BVA: บั๊กชอบซ่อนอยู่ที่ขอบ')}
+${P('Test <b>on</b> the edge and <b>just outside</b> it. Mistakes like <code>&lt;</code> instead of <code>&lt;=</code> (off-by-one) live here.','ทดสอบ<b>ตรงขอบ</b>และ<b>เลยขอบไปนิดเดียว</b> ความผิดพลาดแบบใช้ <code>&lt;</code> แทน <code>&lt;=</code> (off-by-one) อยู่ตรงนี้','big')}
+<div class="card" style="margin-top:18px">
+<svg class="nl" viewBox="0 0 820 130" role="img" aria-label="Number line: 0 invalid, 1 valid, 50 valid, 100 valid, 101 invalid">
+ <rect x="10" y="40" width="200" height="34" fill="var(--red-bg)"/><rect x="210" y="40" width="400" height="34" fill="var(--green-bg)"/><rect x="610" y="40" width="200" height="34" fill="var(--red-bg)"/>
+ <text x="110" y="28" text-anchor="middle">too short</text><text x="410" y="28" text-anchor="middle" style="fill:var(--green)">valid · 1–100</text><text x="710" y="28" text-anchor="middle">too long</text>
+ <line x1="10" y1="57" x2="810" y2="57" stroke="var(--ink)" stroke-width="2"/>
+ <g text-anchor="middle">
+  <circle cx="110" cy="57" r="7" fill="var(--ink)"/><text x="110" y="98">0 ✗</text>
+  <circle cx="210" cy="57" r="9" fill="var(--blue)"/><text x="210" y="98" style="font-weight:700">1 ✓</text><text x="210" y="120" style="fill:var(--blue);font-size:12px">edge</text>
+  <circle cx="410" cy="57" r="7" fill="var(--green)"/><text x="410" y="98">50 ✓</text>
+  <circle cx="610" cy="57" r="9" fill="var(--blue)"/><text x="610" y="98" style="font-weight:700">100 ✓</text><text x="610" y="120" style="fill:var(--blue);font-size:12px">edge</text>
+  <circle cx="710" cy="57" r="7" fill="var(--ink)"/><text x="710" y="98">101 ✗</text>
+ </g>
+</svg></div>
+<div class="grid g2" style="margin-top:14px">
+ ${card('','','EP picks: 0 · 50 · 101','EP เลือก: 0 · 50 · 101','One from each group.','หนึ่งค่าจากแต่ละกลุ่ม')}
+ ${card('blue','','BVA adds: 1 · 100','BVA เพิ่ม: 1 · 100','The first and last allowed values.','ค่าแรกและค่าสุดท้ายที่ยอมรับได้')}
+</div>
+${remember('5 smart tests beat 100 random ones. Works for dates too: <b>past / today / future</b>.','เทสต์ฉลาด 5 ตัว ดีกว่าเทสต์สุ่ม 100 ตัว ใช้กับวันที่ได้ด้วย: <b>อดีต / วันนี้ / อนาคต</b>')}`);
+
+add('The test pyramid','พีระมิดการทดสอบ',`
+${head('Idea 3b · Levels of testing','Many small tests at the bottom, few big ones on top','เทสต์เล็กจำนวนมากที่ฐาน เทสต์ใหญ่ไม่กี่ตัวด้านบน')}
+<div class="grid g2" style="align-items:center">
+ <div><div class="pyr"><div class="a">System</div><div class="b">Integration</div><div class="c">Unit tests</div></div>
+  <p class="mono" style="text-align:center;color:var(--muted);margin-top:8px">${L('top: few · slow · expensive<br>bottom: many · fast · cheap','บน: น้อย · ช้า · แพง<br>ล่าง: เยอะ · เร็ว · ถูก')}</p></div>
+ <div>${pts([
+  ['<b>Unit tests</b> (bottom): lots of them. Cheap and fast.','<b>Unit test</b> (ฐาน): มีจำนวนมาก ถูกและเร็ว'],
+  ['<b>Integration tests</b> (middle): check pieces work together.','<b>Integration test</b> (กลาง): ตรวจว่าชิ้นส่วนทำงานร่วมกันได้'],
+  ['<b>System tests</b> (top): the whole app. Few, because they are slow.','<b>System test</b> (ยอด): ทั้งแอป มีไม่กี่ตัวเพราะช้า']
+ ])}</div>
+</div>
+${box('green','Like a car factory: test each part on the bench many times (unit), then do a few full test-drives (system).','เหมือนโรงงานรถยนต์: ทดสอบชิ้นส่วนบนโต๊ะหลาย ๆ รอบ (unit) แล้วค่อยลองขับจริงไม่กี่รอบ (system)','In plain words','พูดง่าย ๆ')}
+<p class="hint">Source: Cohn (2009); Sommerville §8.1–8.4</p>`);
+
+add('5 levels of testing','การทดสอบ 5 ระดับ',`
+${head('Levels of testing · StudyMate','5 levels, from one function to real users','5 ระดับ จากฟังก์ชันเดียวถึงผู้ใช้จริง')}
+<div class="scroll-x"><table class="tbl stack">
+ <thead><tr><th>${L('Level','ระดับ')}</th><th>${L('What is tested?','ทดสอบอะไร?')}</th><th>${L('StudyMate example','ตัวอย่าง StudyMate')}</th></tr></thead>
+ <tbody>
+  <tr><td><span class="lvl" style="background:var(--green)">1</span>Unit</td><td>${L('One function, alone','ฟังก์ชันเดียว แยกเดี่ยว')}</td><td>${L('<code>days_until_due</code>: due 10 Aug, today 8 Aug → 2','<code>days_until_due</code>: ครบ 10 ส.ค. วันนี้ 8 ส.ค. → 2')}</td></tr>
+  <tr><td><span class="lvl" style="background:var(--blue)">2</span>Integration</td><td>${L('A few modules together','หลายโมดูลทำงานร่วมกัน')}</td><td>${L('Add a task via TaskService → it is saved and can be read back','เพิ่มงานผ่าน TaskService → ถูกบันทึกและอ่านกลับได้')}</td></tr>
+  <tr><td><span class="lvl" style="background:var(--violet)">3</span>System</td><td>${L('The whole app, end to end','ทั้งแอป ตั้งแต่ต้นจนจบ')}</td><td>${L('Add a task → it shows on the Today screen → reminder arrives','เพิ่มงาน → แสดงบนหน้า Today → มีการแจ้งเตือน')}</td></tr>
+  <tr><td><span class="lvl" style="background:var(--amber)">4</span>Release</td><td>${L('Full version, by a separate team, before shipping','เวอร์ชันเต็ม โดยทีมแยก ก่อนปล่อยจริง')}</td><td>${L('Works on iOS + Android; old saved tasks still load','ใช้ได้บน iOS + Android; งานเก่าที่บันทึกไว้ยังโหลดได้')}</td></tr>
+  <tr><td><span class="lvl" style="background:var(--red)">5</span>Acceptance</td><td>${L('Real users decide: do we accept it?','ผู้ใช้จริงตัดสิน: ยอมรับไหม?')}</td><td>${L('A student uses it for a week: do reminders really help?','นักศึกษาใช้ 1 สัปดาห์: การแจ้งเตือนช่วยได้จริงไหม?')}</td></tr>
+ </tbody></table></div>
+${box('','In this course you <b>build</b> levels 1–2 on your prototype. Levels 3–5: <b>understand</b> what they are. Level 5 is the only one that proves <b>validation</b>.',
+ 'ในวิชานี้เรา<b>ลงมือทำ</b>ระดับ 1–2 กับ prototype ส่วนระดับ 3–5 แค่<b>เข้าใจ</b> ระดับ 5 เป็นระดับเดียวที่พิสูจน์ <b>validation</b> ได้','For this course','สำหรับวิชานี้')}`);
+
+add('TAM','TAM',`
+${head('Acceptance · Davis (1989)','TAM: will people use it? 2 questions decide','TAM: คนจะใช้ไหม? ตัดสินด้วย 2 คำถาม','red')}
+<div class="flow">
+ <div class="card"><h3>PU</h3><p>${L('Perceived Usefulness<br>"Is it useful?"','การรับรู้ว่ามีประโยชน์<br>"มีประโยชน์ไหม?"')}</p></div>
+ <span class="ar">+</span>
+ <div class="card"><h3>PEOU</h3><p>${L('Perceived Ease of Use<br>"Is it easy?"','การรับรู้ว่าใช้ง่าย<br>"ใช้ง่ายไหม?"')}</p></div>
+ <span class="ar">→</span>
+ <div class="card" style="background:var(--dark);color:var(--dark-ink)"><h3>${L('Intention → Use','ตั้งใจใช้ → ใช้จริง')}</h3></div>
+</div>
+${box('','Ask users to rate 1–5:<br><b>PU:</b> "StudyMate helps me not miss deadlines."<br><b>PEOU:</b> "Adding a task is easy." → take the average of each.',
+ 'ให้ผู้ใช้ให้คะแนน 1–5:<br><b>PU:</b> "StudyMate ช่วยให้ฉันไม่พลาดกำหนดส่ง"<br><b>PEOU:</b> "การเพิ่มงานทำได้ง่าย" → หาค่าเฉลี่ยของแต่ละข้อ','Example survey','ตัวอย่างแบบสอบถาม')}
+${remember('TAM is <b>short and simple</b>: only 2 factors. Good for a quick check of a work/productivity tool. Also: easier to use → feels more useful.','TAM <b>สั้นและง่าย</b>: มีแค่ 2 ปัจจัย เหมาะกับการเช็กเร็ว ๆ สำหรับเครื่องมือด้านการทำงาน และยิ่งใช้ง่าย → ยิ่งรู้สึกว่ามีประโยชน์')}`);
+
+add('UTAUT2','UTAUT2',`
+${head('Acceptance · Venkatesh, Thong & Xu (2012)','UTAUT2: 7 reasons people use an app','UTAUT2: 7 เหตุผลที่คนใช้แอป','red')}
+<div class="scroll-x"><table class="tbl">
+ <thead><tr><th>${L('Factor','ปัจจัย')}</th><th>${L('Simple question','คำถามง่าย ๆ')}</th></tr></thead>
+ <tbody>
+  <tr><td>PE · Performance Expectancy</td><td>${L('Will it help me? ("helps my grades")','ช่วยฉันได้ไหม? ("ช่วยให้เกรดดีขึ้น")')}</td></tr>
+  <tr><td>EE · Effort Expectancy</td><td>${L('Is it easy to learn?','เรียนรู้ง่ายไหม?')}</td></tr>
+  <tr><td>SI · Social Influence</td><td>${L('Do my friends use it?','เพื่อน ๆ ใช้ไหม?')}</td></tr>
+  <tr><td>FC · Facilitating Conditions</td><td>${L('Do I have what I need to use it (phone, internet, help)?','มีสิ่งที่จำเป็นพร้อมไหม (มือถือ เน็ต คนช่วย)?')}</td></tr>
+  <tr><td>HM · Hedonic Motivation</td><td>${L('Is it fun or enjoyable?','สนุกหรือเพลินไหม?')}</td></tr>
+  <tr><td>PV · Price Value</td><td>${L('Is it worth the price?','คุ้มราคาไหม?')}</td></tr>
+  <tr><td>HB · Habit</td><td>${L('Do I open it automatically?','เปิดใช้จนเป็นนิสัยไหม?')}</td></tr>
+ </tbody></table></div>
+${remember('TAM = 2 factors (quick). UTAUT2 = 7 factors (fuller picture, longer survey; used in research and theses). Effects can differ by age, gender and experience.','TAM = 2 ปัจจัย (เร็ว) · UTAUT2 = 7 ปัจจัย (ภาพครบกว่า แบบสอบถามยาวกว่า ใช้ในงานวิจัย/วิทยานิพนธ์) ผลอาจต่างกันตามอายุ เพศ และประสบการณ์')}`);
+
+add('SUS: how to score','SUS: วิธีคิดคะแนน',`
+${head('Acceptance · Brooke (1996)','SUS: 10 questions → 1 score out of 100','SUS: 10 คำถาม → คะแนนเดียวเต็ม 100','red')}
+${steps([
+ ['Users rate <b>10 statements</b> from 1 (strongly disagree) to 5 (strongly agree).','ผู้ใช้ให้คะแนน<b>ข้อความ 10 ข้อ</b> จาก 1 (ไม่เห็นด้วยอย่างยิ่ง) ถึง 5 (เห็นด้วยอย่างยิ่ง)'],
+ ['<b>Odd</b> items (1,3,5,7,9) are positive → score = answer <b>− 1</b>','ข้อ<b>คี่</b> (1,3,5,7,9) เป็นข้อบวก → คะแนน = คำตอบ <b>− 1</b>'],
+ ['<b>Even</b> items (2,4,6,8,10) are negative → score = <b>5 −</b> answer','ข้อ<b>คู่</b> (2,4,6,8,10) เป็นข้อลบ → คะแนน = <b>5 −</b> คำตอบ'],
+ ['Add all 10 scores, then <b>× 2.5</b> → 0 to 100 (not a percentage!)','รวมคะแนนทั้ง 10 ข้อ แล้ว <b>× 2.5</b> → ได้ 0 ถึง 100 (ไม่ใช่เปอร์เซ็นต์!)']
+])}
+<div class="card" style="margin-top:18px">
+ <div class="tag">${L('Worked example','ตัวอย่างการคำนวณ')}</div>
+ <p style="margin-bottom:8px">${L('Answers: 4, 2, 5, 1, 4, 2, 4, 1, 5, 2','คำตอบ: 4, 2, 5, 1, 4, 2, 4, 1, 5, 2')}</p>
+ <div class="calc"><span>${L('Odd','คี่')}: 3+4+3+3+4 = <b>17</b></span><span>${L('Even','คู่')}: 3+4+3+4+3 = <b>17</b></span><span>(17+17) × 2.5 = </span><span class="ok"><b>85</b> · ${L('excellent','ดีเยี่ยม')}</span></div>
+</div>
+${box('amber','<b>~68</b> = average · <b>80+</b> = excellent · <b>under 50</b> = poor (Bangor et al., 2009)','<b>~68</b> = ค่าเฉลี่ย · <b>80 ขึ้นไป</b> = ดีเยี่ยม · <b>ต่ำกว่า 50</b> = แย่','How to read the score','วิธีอ่านคะแนน')}`);
+
+add('Running a usability test','การทำ usability test',`
+${head('Acceptance · usability test','Users do real tasks first, then fill the SUS','ให้ผู้ใช้ทำงานจริงก่อน แล้วค่อยกรอก SUS','red')}
+<div class="grid g2">
+ <div>${steps([
+  ['Write <b>task scenarios</b> (e.g. "Add a task due Friday").','เขียน<b>สถานการณ์งาน</b> (เช่น "เพิ่มงานที่ครบกำหนดวันศุกร์")'],
+  ['Find <b>5–10 real users</b> (students).','หา<b>ผู้ใช้จริง 5–10 คน</b> (นักศึกษา)'],
+  ['Ask them to <b>think aloud</b>. You don’t help or give hints.','ให้ผู้ใช้<b>พูดสิ่งที่คิดออกมา</b> ห้ามช่วยหรือใบ้'],
+  ['<b>Watch</b>: success? time? errors? where stuck?','<b>สังเกต</b>: ทำได้ไหม? ใช้เวลาเท่าไร? ผิดตรงไหน? ติดตรงไหน?'],
+  ['<b>Then</b> they fill the SUS (10 items).','<b>จากนั้น</b>ให้กรอก SUS (10 ข้อ)'],
+  ['Score → fix the worst parts → test again.','คิดคะแนน → แก้จุดที่แย่ที่สุด → ทดสอบใหม่']
+ ])}</div>
+ <div class="card">
+  <div class="tag">${L('Example tasks for StudyMate','ตัวอย่างงานสำหรับ StudyMate')}</div>
+  ${pts([['T1 · Add a task due Friday','T1 · เพิ่มงานที่ครบกำหนดวันศุกร์'],['T2 · Turn on a reminder 1 day before','T2 · เปิดการแจ้งเตือนล่วงหน้า 1 วัน'],['T3 · Mark a task done','T3 · ทำเครื่องหมายว่างานเสร็จ'],['T4 · Find overdue tasks','T4 · หางานที่เลยกำหนด'],['T5 · Change a due date','T5 · เปลี่ยนวันครบกำหนด']])}
+ </div>
+</div>
+${remember('SUS measures the <b>feeling</b>. Watching the tasks shows <b>where it broke</b>. You need both, and SUS only means something <b>after</b> real use.','SUS วัด<b>ความรู้สึก</b> การสังเกตบอกว่า<b>พังตรงไหน</b> ต้องมีทั้งสองอย่าง และ SUS มีความหมายก็ต่อเมื่อ<b>ใช้งานจริงแล้ว</b>')}`);
+
+add('Good test vs bad test','เทสต์ดี vs เทสต์แย่',`
+${head('Writing good tests','A good test is small, clear, and about one thing','เทสต์ที่ดี: เล็ก ชัด และตรวจเรื่องเดียว')}
+<div class="grid g2">
+ <div class="card green"><div class="tag" style="color:var(--green)">✓ DO · ควรทำ</div>${pts([
+  ['Name it like a sentence: <code>test_does_not_remind_done_task</code>','ตั้งชื่อให้อ่านเหมือนประโยค: <code>test_does_not_remind_done_task</code>'],
+  ['Test the edges: empty list, exact due date, huge list','ทดสอบที่ขอบ: ลิสต์ว่าง วันครบกำหนดพอดี ลิสต์ใหญ่มาก'],
+  ['One test = one behaviour → one reason to fail','1 เทสต์ = 1 พฤติกรรม → มีเหตุผลเดียวที่จะ fail']
+ ])}</div>
+ <div class="card red"><div class="tag" style="color:var(--red)">✗ DON'T · ไม่ควรทำ</div>${pts([
+  ['Only test the happy path (when everything is perfect)','ทดสอบแค่ happy path (ตอนทุกอย่างสมบูรณ์แบบ)'],
+  ['Check 20 things in one test: you won’t know what broke','ตรวจ 20 อย่างในเทสต์เดียว: จะไม่รู้ว่าอะไรพัง'],
+  ['Depend on today’s date or the internet: passes Monday, fails Tuesday','พึ่งวันที่ปัจจุบันหรืออินเทอร์เน็ต: ผ่านวันจันทร์ fail วันอังคาร']
+ ])}</div>
+</div>
+${box('','A good test is like a good exam question: it asks about <b>one</b> thing, and a wrong answer shows exactly what is wrong.','เทสต์ที่ดีเหมือนข้อสอบที่ดี: ถามเรื่อง<b>เดียว</b> และถ้าตอบผิดก็รู้ทันทีว่าผิดตรงไหน','In plain words','พูดง่าย ๆ')}`);
+
+add('Testing AI code','ทดสอบโค้ดจาก AI',`
+${head('AI-first · tests catch the AI','AI writes the happy path. Your tests find the edges.','AI เขียน happy path ส่วนเทสต์ของเราหาขอบ','red')}
+<div class="scroll-x"><table class="tbl stack">
+ <thead><tr><th>${L('AI often forgets…','AI มักลืม…')}</th><th>${L('…the test that catches it','…เทสต์ที่จับได้')}</th></tr></thead>
+ <tbody>
+  <tr><td>${L('The empty case','กรณีว่าง')}</td><td>${L('No tasks at all → return <code>[]</code>, don’t crash','ไม่มีงานเลย → คืนค่า <code>[]</code> ห้ามแครช')}</td></tr>
+  <tr><td>${L('The "done" case','กรณี "เสร็จแล้ว"')}</td><td>${L('A done task must <b>not</b> be reminded','งานที่เสร็จแล้วต้อง<b>ไม่</b>ถูกเตือน')}</td></tr>
+  <tr><td>${L('The exact edge','ขอบพอดี')}</td><td>${L('Due today vs due tomorrow (off-by-one)','ครบกำหนดวันนี้ กับ พรุ่งนี้ (off-by-one)')}</td></tr>
+  <tr><td>${L('Silent wrong logic','ตรรกะผิดแบบเงียบ ๆ')}</td><td>${L('Runs fine but returns the wrong list. Only an <code>assert</code> shows it','รันได้ปกติแต่คืนรายการผิด มีแค่ <code>assert</code> ที่เปิดโปงได้')}</td></tr>
+ </tbody></table></div>
+${box('red','Ask AI for the code <b>and</b> the tests. Then check: do the tests cover <b>every</b> acceptance criterion? AI almost always misses one. Finding it is your job.',
+ 'ให้ AI เขียนทั้งโค้ด<b>และ</b>เทสต์ แล้วตรวจว่าเทสต์ครอบคลุม acceptance criteria <b>ทุกข้อ</b>ไหม AI แทบจะพลาดไปหนึ่งข้อเสมอ การหาให้เจอคือหน้าที่ของเรา','The rule','กฎ')}`);
+
+add('Case study: Ariane 5','กรณีศึกษา: Ariane 5',`
+${head('Case study · 1996','Ariane 5: a 37-second, ~$370 million bug','Ariane 5: บั๊ก 37 วินาที มูลค่า ~370 ล้านดอลลาร์','red')}
+${steps([
+ ['Engineers <b>reused</b> software from the older Ariane 4 rocket.','วิศวกร<b>นำซอฟต์แวร์เดิม</b>จากจรวด Ariane 4 รุ่นเก่ามาใช้'],
+ ['Ariane 5 was <b>faster</b>, so a speed number became too big.','Ariane 5 <b>เร็วกว่า</b> ตัวเลขความเร็วจึงใหญ่เกินไป'],
+ ['Putting a 64-bit number into a 16-bit space → <b>overflow</b> error.','ใส่ตัวเลข 64 บิตลงในที่ 16 บิต → เกิด <b>overflow</b>'],
+ ['Both main and backup computers stopped. The rocket blew up after <b>37 seconds</b>.','คอมพิวเตอร์หลักและสำรองหยุดทำงานทั้งคู่ จรวดระเบิดหลังปล่อย <b>37 วินาที</b>']
+])}
+${box('','Nobody tested the old code with Ariane 5’s <b>new, bigger speed values</b>, so the edge case was never checked.','ไม่มีใครทดสอบโค้ดเก่ากับ<b>ค่าความเร็วใหม่ที่สูงขึ้น</b>ของ Ariane 5 ขอบเขตนั้นจึงไม่เคยถูกตรวจ','Why a test would have caught it','ทำไมเทสต์จะจับได้')}
+${box('red','<b>Reused code is not tested code.</b> When you reuse code (or copy it from AI), test it again with the <b>new</b> inputs and edges.','<b>โค้ดที่นำกลับมาใช้ ไม่ใช่โค้ดที่ทดสอบแล้ว</b> เมื่อใช้โค้ดซ้ำ (หรือก๊อปจาก AI) ต้องทดสอบใหม่กับ input และขอบเขต<b>ใหม่</b>','The lesson','บทเรียน')}
+<p class="hint">Source: ESA/CNES Ariane 501 Inquiry Board Report (Lions et al., 1996)</p>`);
+
+add('Team studio','กิจกรรมกลุ่ม',`
+${head('Team studio · ~45 min','Turn 2 acceptance criteria into 2 passing tests','เปลี่ยน AC 2 ข้อ ให้เป็นเทสต์ 2 ตัวที่ผ่าน')}
+<div class="grid g3">
+ ${card('blue','Step A · 10 min','Pick the logic','เลือกตรรกะ','Choose one function that <b>decides</b> something in an FR.','เลือกฟังก์ชันหนึ่งที่<b>ตัดสินใจ</b>อะไรบางอย่างใน FR')}
+ ${card('green','Step B · 25 min','Write 2–3 tests','เขียนเทสต์ 2–3 ตัว','One happy path, one edge, one "should-not". Let AI help, then <b>read &amp; fix</b>.','happy path 1 ตัว ขอบ 1 ตัว "ต้องไม่เกิด" 1 ตัว ให้ AI ช่วยได้ แล้ว<b>อ่านและแก้</b>เอง')}
+ ${card('amber','Step C · 10 min','Run until green','รันจนผ่าน (เขียว)','First make a test <b>fail on purpose</b>, to prove it really checks something.','ทำให้เทสต์ <b>fail โดยตั้งใจ</b>ก่อน เพื่อพิสูจน์ว่ามันตรวจอะไรจริง')}
+</div>
+<h3 style="margin-top:26px">${L('For your project','สำหรับโปรเจกต์')}</h3>
+${pts([
+ ['<b>Protect</b> the 1–2 functions your demo must never get wrong.','<b>ปกป้อง</b>ฟังก์ชัน 1–2 ตัวที่เดโมผิดไม่ได้เด็ดขาด'],
+ ['<b>Link</b> each test to an acceptance criterion in your SRS. That’s your evidence in the oral exam.','<b>โยง</b>เทสต์แต่ละตัวกับ AC ใน SRS นั่นคือหลักฐานตอนสอบปากเปล่า'],
+ ['<b>Never ship a red bar.</b> If a test fails, fix the code, not the test.','<b>ห้ามส่งงานที่เทสต์ยังแดง</b> ถ้าเทสต์ fail ให้แก้โค้ด ไม่ใช่แก้เทสต์']
+])}`);
+
+add('AI Critique #7','AI Critique #7',`
+${head('AI Critique #7 · last 10 min · on A4','Spot it · explain it · fix it','หาจุดผิด · อธิบาย · แก้ไข','red')}
+<div class="card" style="border-left:5px solid var(--red)">
+ <p style="font-size:19px;color:var(--ink)">${L('An AI says: "I added a test so you’re covered. Green across the board, ship it!"','AI บอกว่า: "ผมเพิ่มเทสต์ให้แล้ว ผ่านหมดทุกตัว ส่งงานได้เลย!"')}</p>
+ <pre style="margin-top:10px"><span class="k">assert</span> add_task(<span class="s">'Buy milk'</span>) <span class="k">is not</span> None</pre>
+</div>
+<div class="grid g3" style="margin-top:14px">
+ ${card('red','1 · Spot','What’s weak?','อะไรอ่อน?','It only checks "something came back". It never checks the title, status, or due date.','ตรวจแค่ว่า "มีอะไรคืนกลับมา" ไม่เคยตรวจชื่อ สถานะ หรือวันครบกำหนด')}
+ ${card('amber','2 · Explain','Why is it wrong?','ทำไมผิด?','It can’t fail for real bugs. Even garbage data is "not None", so it gives <b>false confidence</b>.','มันไม่มีทาง fail กับบั๊กจริง ข้อมูลขยะก็ "not None" ได้ ทำให้<b>มั่นใจแบบผิด ๆ</b>')}
+ ${card('green','3 · Fix','The right way','วิธีที่ถูก','Check the real result, and that bad input is rejected:','ตรวจผลลัพธ์จริง และตรวจว่า input ที่ผิดถูกปฏิเสธ:')}
+</div>
+<pre style="margin-top:14px">task = add_task(<span class="s">'Buy milk'</span>)
+<span class="k">assert</span> task.title == <span class="s">'Buy milk'</span>
+<span class="k">assert</span> task.status == <span class="s">'open'</span>
+<span class="k">with</span> pytest.raises(ValueError):
+    add_task(<span class="s">'   '</span>)   <span class="c"># empty title must be rejected</span></pre>
+<p class="hint">${L('Hand in your A4 before you leave: attendance + AI-critique mark.','ส่ง A4 ก่อนออกจากห้อง: คะแนนเข้าเรียน + AI critique')}</p>`);
+
+add('Summary','สรุป',`
+${head('Chapter 7 · in 4 lines','Running isn’t working. Prove it with tests.','รันได้ไม่ใช่ใช้ได้ ต้องพิสูจน์ด้วยเทสต์','green')}
+<div class="grid g2">
+ ${card('blue','Why','Verification + validation','Verification + Validation','Built it right <b>and</b> built the right thing.','สร้างถูกวิธี <b>และ</b>สร้างสิ่งที่ถูกต้อง')}
+ ${card('green','What','Input → expected output','Input → ผลลัพธ์ที่คาดหวัง','A unit test checks one function alone: fast, precise, repeatable.','unit test ตรวจฟังก์ชันเดียว: เร็ว แม่นยำ ทำซ้ำได้')}
+ ${card('amber','Thread','Acceptance criteria → tests','AC → เทสต์','Every AC becomes a test: requirements reach your code.','AC ทุกข้อกลายเป็นเทสต์: requirement ลากมาถึงโค้ด')}
+ ${card('red','AI-first','Tests catch what AI missed','เทสต์จับสิ่งที่ AI พลาด','Let AI generate, then check coverage. The gap is yours to find.','ให้ AI สร้าง แล้วตรวจความครอบคลุม ช่องโหว่เป็นหน้าที่ของเรา')}
+</div>
+<p class="hint">${L('Reading: Sommerville Ch 8 · SWEBOK: Software Testing. Next week: Ch 8, Software Quality &amp; Basic Security.','อ่านเพิ่ม: Sommerville บทที่ 8 · SWEBOK ถัดไป: Ch 8 คุณภาพซอฟต์แวร์และความปลอดภัยพื้นฐาน')}</p>
+${box('','Next: test yourself on the <b>Exam practice</b> slide, then review the <b>Vocabulary</b>.','ถัดไป: ลองทำ<b>ข้อสอบฝึกหัด</b> แล้วทบทวน<b>คำศัพท์</b>','Up next','ต่อไป')}`);
+
+/* ---------- exam ---------- */
+const Q=[
+ ['Checking "does the code match the spec, with no bugs?" is called…','การตรวจว่า "โค้ดตรงตาม spec และไม่มีบั๊กไหม?" เรียกว่า…',
+  [['Validation','Validation'],['Verification','Verification'],['Usability','Usability'],['Release','Release']],1,
+  'Verification = "did we build it <b>right</b>?" (matches the spec).','Verification = "เราสร้าง<b>ถูกวิธี</b>ไหม?" (ตรงตาม spec)'],
+ ['A feature is coded perfectly, but no user needs it. Which check does it fail?','ฟีเจอร์เขียนโค้ดได้สมบูรณ์แบบ แต่ไม่มีผู้ใช้ต้องการ ไม่ผ่านการตรวจแบบไหน?',
+  [['Verification','Verification'],['Unit testing','Unit testing'],['Validation','Validation'],['Integration testing','Integration testing']],2,
+  'Validation = "did we build the <b>right thing</b>?" A useless feature fails it.','Validation = "เราสร้าง<b>สิ่งที่ถูกต้อง</b>ไหม?" ฟีเจอร์ที่ไม่มีใครต้องการจึงไม่ผ่าน'],
+ ['A test is made of…','เทสต์ประกอบด้วย…',
+  [['Code + comments','โค้ด + คอมเมนต์'],['A known input + the expected output','input ที่รู้ค่า + ผลลัพธ์ที่คาดหวัง'],['A user + a survey','ผู้ใช้ + แบบสอบถาม'],['A bug + a fix','บั๊ก + การแก้']],1,
+  'Give known input, then check the result equals what you expect.','ใส่ input ที่รู้ค่า แล้วตรวจว่าผลลัพธ์ตรงกับที่คาดหวัง'],
+ ['A unit test checks…','Unit test ตรวจ…',
+  [['The whole app with real users','ทั้งแอปกับผู้ใช้จริง'],['Several modules working together','หลายโมดูลทำงานร่วมกัน'],['One function, in isolation','ฟังก์ชันเดียว แบบแยกเดี่ยว'],['The app on iOS and Android','แอปบน iOS และ Android']],2,
+  'Unit = one small piece, with no database, UI or network.','Unit = ชิ้นเล็กชิ้นเดียว ไม่มีฐานข้อมูล UI หรือเน็ตเวิร์ก'],
+ ['A title must be 1–100 characters. Which set of test values uses Boundary Value Analysis?','ชื่อต้องยาว 1–100 ตัวอักษร ชุดค่าทดสอบไหนใช้ Boundary Value Analysis?',
+  [['10, 20, 30','10, 20, 30'],['50 only','50 อย่างเดียว'],['0, 1, 100, 101','0, 1, 100, 101'],['500, 1000','500, 1000']],2,
+  'BVA tests on and just outside each edge: 0 | 1 … 100 | 101.','BVA ทดสอบตรงขอบและเลยขอบ: 0 | 1 … 100 | 101'],
+ ['In the test pyramid, which tests should you have the MOST of?','ในพีระมิดการทดสอบ เทสต์แบบไหนควรมีมากที่สุด?',
+  [['System tests','System test'],['Unit tests','Unit test'],['Acceptance tests','Acceptance test'],['Release tests','Release test']],1,
+  'Unit tests are at the base: many, fast and cheap.','Unit test อยู่ที่ฐาน: เยอะ เร็ว และถูก'],
+ ['At which level do real users or the customer decide whether to accept the system?','ระดับไหนที่ผู้ใช้จริงหรือลูกค้าตัดสินว่าจะยอมรับระบบหรือไม่?',
+  [['Unit','Unit'],['Integration','Integration'],['Acceptance','Acceptance'],['Component','Component']],2,
+  'Acceptance testing is the only level that proves validation.','Acceptance testing เป็นระดับเดียวที่พิสูจน์ validation ได้'],
+ ['SUS item 1 (odd, positive). A user answers 4. What is the item score?','SUS ข้อ 1 (ข้อคี่ ข้อบวก) ผู้ใช้ตอบ 4 คะแนนของข้อนี้คือ?',
+  [['4','4'],['3','3'],['1','1'],['10','10']],1,
+  'Odd item: answer − 1 = 4 − 1 = <b>3</b>.','ข้อคี่: คำตอบ − 1 = 4 − 1 = <b>3</b>'],
+ ['SUS item 2 (even, negative). A user answers 2. What is the item score?','SUS ข้อ 2 (ข้อคู่ ข้อลบ) ผู้ใช้ตอบ 2 คะแนนของข้อนี้คือ?',
+  [['2','2'],['1','1'],['3','3'],['5','5']],2,
+  'Even item: 5 − answer = 5 − 2 = <b>3</b>.','ข้อคู่: 5 − คำตอบ = 5 − 2 = <b>3</b>'],
+ ['The 10 item scores add up to 30. What is the SUS score?','คะแนนทั้ง 10 ข้อรวมกันได้ 30 คะแนน SUS คือเท่าไร?',
+  [['30','30'],['60','60'],['75','75'],['300','300']],2,
+  '30 × 2.5 = <b>75</b>, which is above the ~68 average.','30 × 2.5 = <b>75</b> ซึ่งสูงกว่าค่าเฉลี่ย ~68'],
+ ['When should users fill in the SUS questionnaire?','ผู้ใช้ควรกรอกแบบสอบถาม SUS เมื่อไร?',
+  [['Before they see the app','ก่อนเห็นแอป'],['Right after doing real tasks with the app','ทันทีหลังทำงานจริงกับแอป'],['One year later','หนึ่งปีต่อมา'],['Only if they find a bug','เฉพาะเมื่อเจอบั๊ก']],1,
+  'SUS only means something after real use: tasks first, then SUS.','SUS มีความหมายหลังใช้งานจริงเท่านั้น: ทำงานก่อน แล้วค่อย SUS'],
+ ['TAM says two things decide whether people adopt a tool. Which two?','TAM บอกว่ามี 2 อย่างที่ตัดสินว่าคนจะใช้เครื่องมือหรือไม่ คืออะไร?',
+  [['Price and habit','ราคาและความเคยชิน'],['Perceived usefulness and perceived ease of use','การรับรู้ประโยชน์และการรับรู้ความง่าย'],['Age and gender','อายุและเพศ'],['Speed and security','ความเร็วและความปลอดภัย']],1,
+  'PU ("is it useful?") + PEOU ("is it easy?") → intention to use.','PU ("มีประโยชน์ไหม?") + PEOU ("ใช้ง่ายไหม?") → ความตั้งใจใช้'],
+ ['Why is <code>assert add_task(\'Buy milk\') is not None</code> a weak test?','ทำไม <code>assert add_task(\'Buy milk\') is not None</code> จึงเป็นเทสต์ที่อ่อน?',
+  [['It is too long','มันยาวเกินไป'],['It never checks the real data (title, status), so it can’t catch real bugs','มันไม่ตรวจข้อมูลจริง (ชื่อ สถานะ) จึงจับบั๊กจริงไม่ได้'],['It uses Python','มันใช้ Python'],['It tests too many things','มันทดสอบหลายอย่างเกินไป']],1,
+  'A test that can’t fail for the real bug gives false confidence.','เทสต์ที่ไม่มีทาง fail กับบั๊กจริง ทำให้มั่นใจแบบผิด ๆ'],
+ ['What is the main lesson of Ariane 5 Flight 501?','บทเรียนหลักของ Ariane 5 เที่ยวบิน 501 คืออะไร?',
+  [['Rockets should not use software','จรวดไม่ควรใช้ซอฟต์แวร์'],['Reused code is not tested code: re-test it with the new inputs','โค้ดที่นำกลับมาใช้ไม่ใช่โค้ดที่ทดสอบแล้ว ต้องทดสอบใหม่กับ input ใหม่'],['16-bit is always better','16 บิตดีกว่าเสมอ'],['Only test the happy path','ทดสอบแค่ happy path']],1,
+  'The old code was never tested with Ariane 5’s bigger speed values.','โค้ดเก่าไม่เคยถูกทดสอบกับค่าความเร็วที่สูงขึ้นของ Ariane 5'],
+ ['Which case does AI-generated code most often forget?','โค้ดที่ AI เขียนมักลืมกรณีไหนมากที่สุด?',
+  [['The happy path','happy path'],['Edge cases: empty list, exact boundary, "done" tasks','กรณีขอบ: ลิสต์ว่าง ขอบพอดี งานที่เสร็จแล้ว'],['Variable names','ชื่อตัวแปร'],['Comments','คอมเมนต์']],1,
+  'AI writes the happy path well. Your tests must find the edges.','AI เขียน happy path ได้ดี เทสต์ของเราต้องหาขอบ']
+];
+const LET='ABCD';
+Q.forEach(q=>{const right=q[2][q[3]];const o=q[2].slice();
+  for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]];}
+  q[2]=o;q[3]=o.indexOf(right);});
+add('Exam practice','ฝึกทำข้อสอบ',`
+<p class="kicker violet">Exam practice · ${Q.length} questions + 2 written</p>
+<h2>${L('Test yourself','ทดสอบตัวเอง')}</h2>
+${P('Tap an answer. You will see right away if it is correct, with a short explanation.','แตะเลือกคำตอบ แล้วจะรู้ทันทีว่าถูกหรือผิด พร้อมคำอธิบายสั้น ๆ')}
+<div class="scorebar"><span class="s" id="qscore">0 / ${Q.length}</span><span id="qleft" style="color:var(--muted);font-size:15px"></span><button class="btn ghost" id="qreset">${L('Start again','เริ่มใหม่')}</button></div>
+<div id="quiz">${Q.map((q,i)=>`<div class="q" data-i="${i}">
+  <div class="qn">Q${i+1}</div><div class="qt">${L(q[0],q[1])}</div>
+  <div class="opts">${q[2].map((o,j)=>`<button class="opt" data-j="${j}"><span class="l">${LET[j]}</span><span>${L(o[0],o[1])}</span></button>`).join('')}</div>
+  <div class="why">${L(q[4],q[5])}</div></div>`).join('')}</div>
+<h3 style="margin-top:28px">${L('Written practice','ฝึกเขียนตอบ')}</h3>
+<details class="sa"><summary>${L('W1. Write a unit test for: "an open task due tomorrow appears in the reminders."','W1. เขียน unit test สำหรับ: "งาน open ที่ครบกำหนดพรุ่งนี้ต้องอยู่ในรายการแจ้งเตือน"')}</summary>
+<pre><span class="k">def</span> test_reminds_open_task_due_tomorrow():
+    tasks = [Task(due=date(2026,8,10), status=<span class="s">'open'</span>)]   <span class="c"># Arrange</span>
+    result = tasks_due_for_reminder(tasks, date(2026,8,9))  <span class="c"># Act</span>
+    <span class="k">assert</span> result == tasks                                  <span class="c"># Assert</span></pre></details>
+<details class="sa"><summary>${L('W2. Explain the difference between verification and validation, with a StudyMate example.','W2. อธิบายความต่างระหว่าง verification กับ validation พร้อมตัวอย่าง StudyMate')}</summary>
+${P('<b>Verification</b> asks "did we build it right?": the code matches the spec. Example: a unit test proves the reminder appears exactly 1 day before the due date.<br><b>Validation</b> asks "did we build the right thing?": it meets users’ real needs. Example: students use StudyMate for a week and say the reminders really help them not miss deadlines.',
+ '<b>Verification</b> ถามว่า "สร้างถูกวิธีไหม?" คือโค้ดตรงตาม spec ตัวอย่าง: unit test พิสูจน์ว่าการแจ้งเตือนขึ้นก่อนครบกำหนด 1 วันพอดี<br><b>Validation</b> ถามว่า "สร้างสิ่งที่ถูกต้องไหม?" คือตรงกับความต้องการจริงของผู้ใช้ ตัวอย่าง: นักศึกษาใช้ StudyMate 1 สัปดาห์แล้วบอกว่าการแจ้งเตือนช่วยให้ไม่พลาดกำหนดส่งจริง')}</details>`);
+
+/* ---------- vocab ---------- */
+const V=[
+ ['Testing','การทดสอบ','Running the code to check it does what it should.','รันโค้ดเพื่อตรวจว่าทำงานตามที่ควร','Basics'],
+ ['Verification','การตรวจสอบความถูกต้อง','"Did we build it right?" The code matches the spec.','"สร้างถูกวิธีไหม?" โค้ดตรงตาม spec','Basics'],
+ ['Validation','การยืนยันความเหมาะสม','"Did we build the right thing?" It meets users’ real needs.','"สร้างสิ่งที่ถูกต้องไหม?" ตรงกับความต้องการจริงของผู้ใช้','Basics'],
+ ['Bug / Defect','บั๊ก / ข้อบกพร่อง','A mistake in the code that makes it behave wrongly.','ความผิดพลาดในโค้ดที่ทำให้ทำงานผิด','Basics'],
+ ['Expected output','ผลลัพธ์ที่คาดหวัง','The answer the code should give for an input.','คำตอบที่โค้ดควรให้สำหรับ input หนึ่ง','Basics'],
+ ['Pass / Fail','ผ่าน / ไม่ผ่าน','Pass = output equals expected. Fail = they differ (a bug).','ผ่าน = ผลลัพธ์ตรงกับที่คาด · ไม่ผ่าน = ไม่ตรง (มีบั๊ก)','Basics'],
+ ['Assert / Assertion','การยืนยันค่า','A line in a test that says what the result must be.','บรรทัดในเทสต์ที่บอกว่าผลลัพธ์ต้องเป็นอะไร','Code','<code>assert result == []</code>'],
+ ['Unit test','การทดสอบหน่วยย่อย','A test of one function or class, in isolation.','เทสต์ฟังก์ชันหรือคลาสเดียวแบบแยกเดี่ยว','Levels'],
+ ['Isolation','การแยกเดี่ยว','Testing a piece alone: no database, UI or network.','ทดสอบชิ้นเดียวโดยไม่มีฐานข้อมูล UI หรือเน็ตเวิร์ก','Levels'],
+ ['Integration testing','การทดสอบการรวมระบบ','Testing several modules together through their interfaces.','ทดสอบหลายโมดูลร่วมกันผ่าน interface','Levels'],
+ ['System testing','การทดสอบทั้งระบบ','Testing the whole app end to end.','ทดสอบทั้งแอปตั้งแต่ต้นจนจบ','Levels'],
+ ['Release testing','การทดสอบก่อนปล่อย','A separate team tests the full version before shipping.','ทีมแยกทดสอบเวอร์ชันเต็มก่อนปล่อยจริง','Levels'],
+ ['Acceptance testing','การทดสอบการยอมรับ','Real users or the customer decide whether to accept the system.','ผู้ใช้จริงหรือลูกค้าตัดสินว่ายอมรับระบบหรือไม่','Levels'],
+ ['Test pyramid','พีระมิดการทดสอบ','Many unit tests at the base, few system tests on top.','unit test จำนวนมากที่ฐาน system test ไม่กี่ตัวด้านบน','Levels'],
+ ['V-model','V-model','Each build step (left) has a matching test level (right).','ทุกขั้นการสร้าง (ซ้าย) มีระดับการทดสอบที่คู่กัน (ขวา)','Levels'],
+ ['Acceptance criterion (AC)','เกณฑ์การยอมรับ','A clear, testable condition for a requirement.','เงื่อนไขที่ชัดเจนและทดสอบได้ของ requirement','Requirements','"A done task is not reminded."'],
+ ['Functional requirement (FR)','ความต้องการเชิงฟังก์ชัน','What the system must do.','สิ่งที่ระบบต้องทำได้','Requirements','FR-1: remind 1 day before'],
+ ['Non-functional requirement (NFR)','ความต้องการที่ไม่ใช่ฟังก์ชัน','How well it must work: speed, security, usability.','ระบบต้องทำงานดีแค่ไหน: ความเร็ว ความปลอดภัย ความง่าย','Requirements','Today screen loads in < 2 s'],
+ ['Happy path','เส้นทางปกติ','The normal case where everything goes right.','กรณีปกติที่ทุกอย่างเป็นไปตามคาด','Inputs'],
+ ['Edge case','กรณีขอบ','An unusual or extreme input: empty, zero, maximum.','input ที่แปลกหรือสุดขั้ว: ว่าง ศูนย์ ค่าสูงสุด','Inputs'],
+ ['Boundary','ขอบเขต','The limit between valid and invalid values.','เส้นแบ่งระหว่างค่าที่ใช้ได้และใช้ไม่ได้','Inputs','1 and 100 for a 1–100 title'],
+ ['Off-by-one error','ความผิดพลาดคลาดไปหนึ่ง','A bug where a limit is wrong by one (e.g. < instead of <=).','บั๊กที่ขอบเขตผิดไปหนึ่ง (เช่นใช้ < แทน <=)','Inputs'],
+ ['Equivalence partitioning (EP)','การแบ่งกลุ่มสมมูล','Split inputs into groups that behave the same; test one per group.','แบ่ง input เป็นกลุ่มที่ทำงานเหมือนกัน ทดสอบกลุ่มละหนึ่งค่า','Inputs'],
+ ['Boundary value analysis (BVA)','การวิเคราะห์ค่าขอบเขต','Test at and just outside each boundary.','ทดสอบที่ขอบและเลยขอบไปนิดเดียว','Inputs'],
+ ['Regression','การถดถอย','When new code breaks something that used to work.','เมื่อโค้ดใหม่ทำให้สิ่งที่เคยใช้ได้พัง','Quality'],
+ ['Overflow','การล้นของค่า','A number too big for the space it is stored in.','ตัวเลขใหญ่เกินกว่าที่ที่เก็บจะรับได้','Quality','Ariane 5: 64-bit → 16-bit'],
+ ['Usability','ความง่ายในการใช้งาน','How easy and pleasant a system is to use.','ระบบใช้งานง่ายและน่าใช้แค่ไหน','Users'],
+ ['Think aloud','การคิดออกเสียง','Users say what they are thinking while doing tasks.','ผู้ใช้พูดสิ่งที่คิดออกมาขณะทำงาน','Users'],
+ ['SUS (System Usability Scale)','มาตรวัดความง่ายในการใช้งาน','10 questions → one usability score from 0 to 100.','10 คำถาม → คะแนนความง่ายในการใช้ 0–100','Users','~68 = average'],
+ ['TAM','แบบจำลองการยอมรับเทคโนโลยี','Technology Acceptance Model: usefulness + ease of use → use.','ประโยชน์ + ความง่าย → การใช้งาน','Users'],
+ ['UTAUT2','ทฤษฎีการยอมรับและใช้เทคโนโลยี 2','7 factors (PE, EE, SI, FC, HM, PV, HB) that predict use.','7 ปัจจัย (PE, EE, SI, FC, HM, PV, HB) ที่ทำนายการใช้งาน','Users'],
+ ['Prototype','ต้นแบบ','An early working version of the app.','แอปเวอร์ชันแรก ๆ ที่ใช้งานได้','Project']
+];
+add('Vocabulary','คำศัพท์',`
+<p class="kicker violet">Vocabulary · ${V.length} words you should know</p>
+<h2>${L('Vocabulary you should know','คำศัพท์ที่ควรรู้')}</h2>
+<input class="vsearch" id="vq" type="search" placeholder="Search · ค้นหา (e.g. boundary, ขอบ)" aria-label="Search vocabulary">
+<div class="vgrid" id="vgrid">${V.map(v=>`<div class="v" data-s="${(v[0]+' '+v[1]+' '+v[2]+' '+v[3]).toLowerCase().replace(/"/g,'')}">
+ <span class="cat">${v[4]}</span><div class="term">${v[0]}</div><div class="thw">${v[1]}</div>
+ <div class="mean">${L(v[2],v[3])}</div>${v[5]?`<div class="ex">e.g. ${v[5]}</div>`:''}</div>`).join('')}</div>
+<p id="vnone" class="hint" style="display:none">${L('No matching words.','ไม่พบคำที่ค้นหา')}</p>`);
+
+add('References','แหล่งอ้างอิง',`
+${head('References','Where this lesson comes from','แหล่งที่มาของบทเรียนนี้')}
+${steps([
+ ['<b>Sommerville, I. (2011)</b> Software Engineering 9e, Ch 8: §8.1 Development, §8.2 TDD, §8.3 Release, §8.4 User testing','<b>Sommerville, I. (2011)</b> Software Engineering 9e บทที่ 8'],
+ ['<b>SWEBOK v4</b> (IEEE, 2024): Software Testing KA','<b>SWEBOK v4</b> (IEEE, 2024): Software Testing KA'],
+ ['<b>Boehm, B. (1979)</b>: verification vs validation','<b>Boehm, B. (1979)</b>: verification กับ validation'],
+ ['<b>Cohn, M. (2009)</b> Succeeding with Agile: the test pyramid','<b>Cohn, M. (2009)</b> Succeeding with Agile: พีระมิดการทดสอบ'],
+ ['<b>ESA/CNES (1996)</b> Ariane 501 Inquiry Board Report','<b>ESA/CNES (1996)</b> รายงานสอบสวน Ariane 501'],
+ ['<b>Davis (1989)</b> TAM · <b>Venkatesh et al. (2003, 2012)</b> UTAUT/UTAUT2 · <b>Brooke (1996)</b> &amp; <b>Bangor et al. (2009)</b> SUS','<b>Davis (1989)</b> TAM · <b>Venkatesh et al.</b> UTAUT2 · <b>Brooke (1996)</b> SUS']
+])}
+<p class="hint">${L('Read §8 before the exam. Prefer a long reading page? Open <a href="week07-unit-testing.html">week07-unit-testing.html</a>.','อ่าน §8 ก่อนสอบ ต้องการแบบหน้าอ่านยาว? เปิด <a href="week07-unit-testing.html">week07-unit-testing.html</a>')}</p>`);
+
+/* ---------- render ---------- */
+const stage=document.getElementById('stage');
+stage.innerHTML=S.map((s,i)=>`<section class="slide" aria-roledescription="slide" aria-label="${i+1} of ${S.length}"><div class="inner">${s.html}</div></section>`).join('');
+const slides=[...stage.querySelectorAll('.slide')];
+const root=document.documentElement;
+let cur=0;
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+function show(i){
+  i=Math.max(0,Math.min(S.length-1,i));
+  slides[cur].classList.remove('on'); cur=i; slides[cur].classList.add('on'); slides[cur].scrollTop=0;
+  document.getElementById('num').textContent=`${cur+1} / ${S.length}`;
+  document.getElementById('ttl').innerHTML=L(S[cur].en,S[cur].th);
+  document.getElementById('bar').style.width=((cur+1)/S.length*100)+'%';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===S.length-1;
+  history.replaceState(null,'','#'+(cur+1));
+  store.set('w7-slide',cur);
+  renderMenu();
+}
+document.getElementById('prev').onclick=()=>show(cur-1);
+document.getElementById('next').onclick=()=>show(cur+1);
+document.addEventListener('keydown',e=>{
+  if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown')show(cur+1);
+  else if(e.key==='ArrowLeft'||e.key==='PageUp')show(cur-1);
+  else if(e.key==='Escape')menu.classList.remove('on');
+});
+let tx=0,ty=0,skip=false;
+stage.addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY;skip=!!e.target.closest('pre,.scroll-x,input,svg');},{passive:true});
+stage.addEventListener('touchend',e=>{if(skip)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;
+  if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.6)show(cur+(dx<0?1:-1));},{passive:true});
+
+/* menu */
+const menu=document.getElementById('menu'),menuList=document.getElementById('menuList');
+function renderMenu(){menuList.innerHTML=S.map((s,i)=>`<li><button class="${i===cur?'cur':''}" data-i="${i}"><span class="n">${i+1}</span><span>${L(s.en,s.th)}</span></button></li>`).join('');}
+menuList.onclick=e=>{const b=e.target.closest('button');if(b){show(+b.dataset.i);menu.classList.remove('on');}};
+document.getElementById('menuBtn').onclick=()=>menu.classList.add('on');
+document.getElementById('menuClose').onclick=()=>menu.classList.remove('on');
+menu.onclick=e=>{if(e.target===menu)menu.classList.remove('on');};
+
+/* language */
+const segBtns=document.querySelectorAll('.seg button');
+function setMode(m){root.dataset.mode=m;root.lang=m==='th'?'th':'en';segBtns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.m===m)));store.set('w7-lang',m);}
+segBtns.forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+const savedLang=store.get('w7-lang'); if(savedLang)setMode(savedLang);
+
+/* quiz */
+const quiz=document.getElementById('quiz');
+function updScore(){
+  const done=quiz.querySelectorAll('.q.done').length, right=quiz.querySelectorAll('.opt.right.picked').length;
+  document.getElementById('qscore').textContent=`${right} / ${Q.length}`;
+  document.getElementById('qleft').innerHTML=done<Q.length?L(`${Q.length-done} left`,`เหลือ ${Q.length-done} ข้อ`):L(right>=12?'Excellent! 🎉':right>=8?'Good. Review the ones you missed.':'Review the slides and try again.',right>=12?'ยอดเยี่ยม! 🎉':right>=8?'ดี ลองทบทวนข้อที่ผิด':'ทบทวนสไลด์แล้วลองใหม่');
+}
+quiz.addEventListener('click',e=>{
+  const b=e.target.closest('.opt'); if(!b)return; const q=b.closest('.q'); if(q.classList.contains('done'))return;
+  const ans=Q[+q.dataset.i][3];
+  q.querySelectorAll('.opt').forEach((o,j)=>{o.disabled=true;if(j===ans)o.classList.add('right');});
+  b.classList.add('picked'); if(+b.dataset.j!==ans)b.classList.add('wrong');
+  q.classList.add('done'); updScore();
+});
+document.getElementById('qreset').onclick=()=>{quiz.querySelectorAll('.q').forEach(q=>{q.classList.remove('done');q.querySelectorAll('.opt').forEach(o=>{o.disabled=false;o.className='opt';});});updScore();slides[cur].scrollTop=0;};
+updScore();
+
+/* vocab search */
+document.getElementById('vq').addEventListener('input',e=>{
+  const s=e.target.value.trim().toLowerCase(); let n=0;
+  document.querySelectorAll('#vgrid .v').forEach(v=>{const m=!s||v.dataset.s.includes(s);v.style.display=m?'':'none';if(m)n++;});
+  document.getElementById('vnone').style.display=n?'none':'block';
+});
+
+/* start */
+const fromHash=parseInt(location.hash.slice(1),10);
+const saved=parseInt(store.get('w7-slide'),10);
+slides[0].classList.add('on');
+show(!isNaN(fromHash)?fromHash-1:(!isNaN(saved)?saved:0));
+</script>
+</body>
+</html>

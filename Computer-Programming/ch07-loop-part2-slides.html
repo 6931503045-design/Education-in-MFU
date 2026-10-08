@@ -1,0 +1,1262 @@
+<!doctype html>
+<html lang="en" data-mode="both">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chapter 7 Slides · Loop Part 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f5f8; --card:#ffffff; --ink:#0f1320; --ink-2:#394152; --muted:#6b7280; --line:#e4e6ec; --th:#4b5563;
+  --blue:#2f5bff; --blue-bg:#eaf0ff; --green:#15995a; --green-bg:#e3f5ea; --red:#e5483a; --red-bg:#fde8e5;
+  --amber:#c98a00; --amber-bg:#fff3d4; --violet:#7246f0; --violet-bg:#efe9ff;
+  --code-bg:#11163b; --code-ink:#dbe3ff; --dark:#0f1320; --dark-ink:#fff;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 6px 18px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1016; --card:#171b24; --ink:#eef1f6; --ink-2:#c6ccd7; --muted:#8c95a5; --line:#272d39; --th:#aab2c0;
+    --blue:#7090ff; --blue-bg:#1a2140; --green:#3ccf86; --green-bg:#11291e; --red:#ff7766; --red-bg:#341a17;
+    --amber:#f2bd3d; --amber-bg:#2e2510; --violet:#a58bff; --violet-bg:#221a3d;
+    --code-bg:#0a0e24; --dark:#eef1f6; --dark-ink:#0f1320; --shadow:0 1px 2px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1016; --card:#171b24; --ink:#eef1f6; --ink-2:#c6ccd7; --muted:#8c95a5; --line:#272d39; --th:#aab2c0;
+  --blue:#7090ff; --blue-bg:#1a2140; --green:#3ccf86; --green-bg:#11291e; --red:#ff7766; --red-bg:#341a17;
+  --amber:#f2bd3d; --amber-bg:#2e2510; --violet:#a58bff; --violet-bg:#221a3d;
+  --code-bg:#0a0e24; --dark:#eef1f6; --dark-ink:#0f1320; --shadow:0 1px 2px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.55 Inter,"IBM Plex Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em}
+code{background:var(--line);padding:1px 6px;border-radius:5px}
+b{font-weight:650}
+button{font:inherit;color:inherit}
+
+/* ---------- language modes ---------- */
+html[data-mode="en"] .th{display:none!important}
+html[data-mode="th"] .en{display:none!important}
+.th{font-family:"IBM Plex Sans Thai",Inter,sans-serif}
+html[data-mode="both"] .th{color:var(--th)}
+html[data-mode="both"] .en + .th{display:block;font-size:.86em;font-weight:inherit;margin-top:2px}
+html[data-mode="both"] h1 .en + .th,html[data-mode="both"] h2 .en + .th{font-weight:500;font-size:.62em;margin-top:6px}
+html[data-mode="th"] .th{font-size:1em}
+html[data-mode="both"] .nav .lbltxt .th{display:none!important}
+
+/* ---------- top bar ---------- */
+.top{flex-shrink:0;border-bottom:1px solid var(--line);background:var(--bg)}
+.top-in{max-width:1100px;margin:0 auto;padding:8px 16px;display:flex;gap:10px;align-items:center}
+.brand{font:600 13px "IBM Plex Mono",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.brand::before{content:"▶ ";color:var(--blue)}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px;flex-shrink:0}
+.seg button{border:0;background:none;color:var(--muted);font-weight:600;font-size:13px;padding:5px 11px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--blue);color:#fff}
+.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:10px;height:34px;padding:0 12px;cursor:pointer;font-size:14px;font-weight:600;flex-shrink:0}
+.progress{height:4px;background:var(--line)}
+.progress i{display:block;height:100%;background:var(--blue);width:0;transition:width .25s}
+
+/* ---------- slides ---------- */
+.stage{flex:1;position:relative;min-height:0}
+.slide{position:absolute;inset:0;overflow-y:auto;display:none;flex-direction:column;-webkit-overflow-scrolling:touch}
+.slide.on{display:flex;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.on{animation:none}}
+.inner{width:100%;max-width:1000px;margin:auto;padding:28px 20px 36px}
+.kicker{font:600 13px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:0 0 10px}
+.kicker.red{color:var(--red)}.kicker.green{color:var(--green)}.kicker.violet{color:var(--violet)}
+h1{font-size:clamp(40px,7vw,68px);line-height:1.05;letter-spacing:-.025em;margin:0 0 20px;font-weight:800}
+h2{font-size:clamp(28px,4.4vw,42px);line-height:1.12;letter-spacing:-.018em;margin:0 0 22px;font-weight:800}
+h3{font-size:20px;line-height:1.3;margin:0 0 6px;font-weight:700}
+p{margin:0}
+.big{font-size:clamp(19px,2.3vw,23px);color:var(--ink-2)}
+
+/* bullet points */
+.pts{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.pts li{display:flex;gap:14px;align-items:flex-start;font-size:clamp(18px,2.1vw,21px)}
+.pts li::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:.55em}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:14px;align-items:flex-start;font-size:clamp(17px,2vw,20px);counter-increment:s}
+.steps li::before{content:counter(s);width:30px;height:30px;border-radius:8px;background:var(--blue);color:#fff;font:700 15px Inter,sans-serif;display:grid;place-items:center;flex-shrink:0;margin-top:1px}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:760px){.g2,.g3{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.card p{color:var(--ink-2);font-size:17px}
+.card .tag{font:600 12px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.card.blue{border-top:5px solid var(--blue)}.card.green{border-top:5px solid var(--green)}.card.red{border-top:5px solid var(--red)}.card.amber{border-top:5px solid var(--amber)}.card.violet{border-top:5px solid var(--violet)}
+
+.box{margin-top:20px;border-left:5px solid var(--blue);background:var(--blue-bg);border-radius:0 12px 12px 0;padding:14px 18px;font-size:17px}
+.box .lbl{font:700 12px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.box.green{border-color:var(--green);background:var(--green-bg)}.box.green .lbl{color:var(--green)}
+.box.red{border-color:var(--red);background:var(--red-bg)}.box.red .lbl{color:var(--red)}
+.box.amber{border-color:var(--amber);background:var(--amber-bg)}.box.amber .lbl{color:var(--amber)}
+
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:18px 20px;overflow-x:auto;font:15px/1.7 "IBM Plex Mono",monospace;margin:0}
+pre .k{color:#8ea6ff}pre .s{color:#7ee2b0}pre .c{color:#8a93bd}
+
+/* flow diagram */
+.flow{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+.flow .card{flex:1 1 160px;text-align:center;padding:16px}
+.flow .ar{align-self:center;font-size:24px;color:var(--muted)}
+@media (max-width:760px){.flow{flex-direction:column}.flow .ar{transform:rotate(90deg)}}
+
+.thread{display:flex;gap:6px;flex-wrap:wrap}
+.thread div{flex:1 0 90px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;font-weight:650;font-size:16px}
+.thread small{display:block;color:var(--muted);font-weight:400;font-size:12.5px}
+.thread .on{background:var(--blue);border-color:var(--blue);color:#fff}.thread .on small{color:#dbe3ff}
+
+/* pyramid */
+.pyr{display:flex;flex-direction:column;align-items:center;gap:4px;max-width:420px;margin:0 auto}
+.pyr div{background:var(--dark);color:var(--dark-ink);text-align:center;font-weight:650;padding:14px 4px;font-size:15px}
+.pyr .a{width:40%;clip-path:polygon(20% 0,80% 0,100% 100%,0 100%);background:var(--red)}
+.pyr .b{width:68%;clip-path:polygon(11% 0,89% 0,100% 100%,0 100%);background:var(--amber)}
+.pyr .c{width:100%;clip-path:polygon(7% 0,93% 0,100% 100%,0 100%);background:var(--green);padding:22px 4px}
+.pyr div{color:#fff}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);font-size:16.5px}
+.tbl th{background:var(--dark);color:var(--dark-ink);text-align:left;font:600 12.5px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;padding:11px 14px}
+.tbl td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top}
+.tbl td:first-child{font-weight:650}
+.scroll-x{overflow-x:auto;border-radius:14px}
+@media (max-width:640px){.tbl.stack thead{display:none}.tbl.stack tr{display:block;border-top:1px solid var(--line);padding:8px 0}.tbl.stack td{display:block;border:0;padding:3px 14px}}
+
+.lvl{display:inline-block;min-width:26px;height:26px;border-radius:7px;color:#fff;font:700 13px Inter,sans-serif;text-align:center;line-height:26px;margin-right:8px}
+
+/* number line */
+.nl{width:100%;height:auto;display:block}
+.nl text{font:15px Inter,sans-serif;fill:var(--ink)}
+
+.calc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:17px}
+.calc span{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+.calc .ok{background:var(--green-bg);border-color:var(--green)}
+
+/* exam */
+.q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+.q + .q{margin-top:14px}
+.q .qn{font:700 13px "IBM Plex Mono",monospace;color:var(--blue);margin-bottom:4px}
+.q .qt{font-size:18.5px;font-weight:600;margin-bottom:12px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;border:1.5px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px;cursor:pointer;font-size:16.5px}
+.opt:hover:not(:disabled){border-color:var(--blue)}
+.opt .l{font:700 14px "IBM Plex Mono",monospace;color:var(--muted);flex-shrink:0;margin-top:2px}
+.opt.right{border-color:var(--green);background:var(--green-bg)}
+.opt.wrong{border-color:var(--red);background:var(--red-bg)}
+.opt:disabled{cursor:default}
+.why{display:none;margin-top:10px;font-size:16px;padding:10px 14px;border-radius:10px;background:var(--blue-bg)}
+.q.done .why{display:block}
+.scorebar{position:sticky;top:0;z-index:2;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--bg);padding:10px 0 12px;margin-bottom:6px;border-bottom:1px solid var(--line)}
+.scorebar .s{font-size:22px;font-weight:800}
+.btn{border:0;background:var(--blue);color:#fff;font-weight:650;font-size:15px;padding:9px 16px;border-radius:10px;cursor:pointer}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+details.sa{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-top:14px;box-shadow:var(--shadow)}
+details.sa summary{cursor:pointer;font-weight:650;font-size:17.5px}
+details.sa[open] summary{margin-bottom:12px}
+
+/* vocab */
+.vsearch{width:100%;font:inherit;font-size:17px;padding:12px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);margin-bottom:14px}
+.vsearch:focus{outline:none;border-color:var(--blue)}
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.vgrid{grid-template-columns:minmax(0,1fr)}}
+.v{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;box-shadow:var(--shadow)}
+.v .term{font-size:19px;font-weight:750}
+.v .thw{font-family:"IBM Plex Sans Thai",sans-serif;color:var(--blue);font-weight:600;font-size:16.5px}
+.v .mean{font-size:15.5px;color:var(--ink-2);margin-top:6px}
+.v .ex{font-size:14.5px;color:var(--muted);margin-top:6px}
+.v .cat{float:right;font:600 11px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 8px}
+
+/* bottom nav */
+.nav{flex-shrink:0;border-top:1px solid var(--line);background:var(--bg);padding-bottom:env(safe-area-inset-bottom)}
+.nav-in{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.nav button.go{border:0;background:var(--blue);color:#fff;font-weight:700;font-size:16px;padding:11px 20px;border-radius:12px;cursor:pointer;min-width:110px}
+.nav button.go.prev{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.nav button.go:disabled{opacity:.35;cursor:default}
+.count{flex:1;text-align:center;font:600 14px "IBM Plex Mono",monospace;color:var(--muted)}
+.count small{display:block;font:500 12.5px Inter,"IBM Plex Sans Thai",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:480px){.nav button.go{min-width:0;padding:11px 14px}.nav .lbltxt{display:none}}
+
+/* menu */
+.menu{position:fixed;inset:0;z-index:20;background:rgba(10,12,20,.45);display:none}
+.menu.on{display:block}
+.menu .panel{position:absolute;right:0;top:0;bottom:0;width:min(380px,92vw);background:var(--bg);overflow-y:auto;padding:16px;box-shadow:-8px 0 30px rgba(0,0,0,.2)}
+.menu ol{list-style:none;margin:10px 0 0;padding:0}
+.menu li button{display:flex;gap:10px;width:100%;text-align:left;border:0;background:none;padding:9px 10px;border-radius:10px;cursor:pointer;font-size:15.5px}
+.menu li button:hover{background:var(--card)}
+.menu li button.cur{background:var(--blue);color:#fff}
+.menu li .n{font:600 13px "IBM Plex Mono",monospace;opacity:.6;min-width:22px}
+.hint{font-size:14px;color:var(--muted);margin-top:22px}
+kbd{font:600 12px "IBM Plex Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;background:var(--card)}
+.dots{display:flex;gap:14px;margin-top:30px}
+.dots i{width:54px;height:54px;border-radius:50%}
+/* trace tables + C# extras */
+.tt{border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);font:15.5px "IBM Plex Mono",monospace}
+.tt th{background:var(--dark);color:var(--dark-ink);padding:8px 14px;font-weight:600;font-size:13px;text-align:center}
+.tt td{padding:8px 14px;border-top:1px solid var(--line);text-align:center}
+.tt td.q{color:var(--blue);font-weight:700}
+.out{background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:10px 14px;font:15px/1.6 "IBM Plex Mono",monospace;white-space:pre;overflow-x:auto;margin-top:8px}
+.out::before{content:"OUTPUT";display:block;font:700 11px "IBM Plex Mono",monospace;letter-spacing:.1em;color:var(--muted);margin-bottom:2px}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+@media (max-width:760px){.pair{grid-template-columns:minmax(0,1fr)}}
+.pair .lab{font:700 12px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;color:var(--muted)}
+.three{display:flex;gap:8px;flex-wrap:wrap}
+.three div{flex:1 1 140px;border-radius:14px;padding:14px;color:#fff;font-weight:700;text-align:center}
+.three small{display:block;font-weight:500;opacity:.92;margin-top:4px;font-size:14px}
+.grid2d{display:inline-grid;gap:4px;margin:6px 0}
+.grid2d i{width:26px;height:26px;border-radius:6px;background:var(--blue);display:block}
+.grid2d i.o{background:var(--line)}
+pre .t{color:#f2bd3d}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Ch 7 · Loop Part 2</div>
+    <div class="seg" role="group" aria-label="Language">
+      <button data-m="en" aria-pressed="false">EN</button>
+      <button data-m="both" aria-pressed="true">EN+TH</button>
+      <button data-m="th" aria-pressed="false">TH</button>
+    </div>
+    <button class="iconbtn" id="menuBtn" aria-label="All slides">☰</button>
+  </div>
+  <div class="progress"><i id="bar"></i></div>
+</header>
+
+<main class="stage" id="stage"></main>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="go prev" id="prev">← <span class="lbltxt"><span class="en">Back</span><span class="th">ย้อนกลับ</span></span></button>
+    <div class="count"><span id="num">1 / 1</span><small id="ttl"></small></div>
+    <button class="go" id="next"><span class="lbltxt"><span class="en">Next</span><span class="th">ถัดไป</span></span> →</button>
+  </div>
+</nav>
+
+<div class="menu" id="menu"><div class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <b><span class="en">All slides</span><span class="th">สไลด์ทั้งหมด</span></b>
+    <button class="iconbtn" id="menuClose" aria-label="Close">✕</button>
+  </div>
+  <ol id="menuList"></ol>
+</div></div>
+
+<script>
+/* ---------- helpers ---------- */
+const L=(en,th)=>`<span class="en">${en}</span><span class="th">${th}</span>`;
+const P=(en,th,cls='')=>`<p class="en ${cls}">${en}</p><p class="th ${cls}">${th}</p>`;
+const pts=a=>`<ul class="pts">${a.map(x=>`<li><div>${L(x[0],x[1])}</div></li>`).join('')}</ul>`;
+const steps=a=>`<ol class="steps">${a.map(x=>`<li><div>${L(x[0],x[1])}</div></li>`).join('')}</ol>`;
+const box=(kind,en,th,lblEn,lblTh)=>`<div class="box ${kind}"><div class="lbl">${L(lblEn,lblTh)}</div>${P(en,th)}</div>`;
+const remember=(en,th)=>box('green',en,th,'Remember','จำไว้');
+const head=(k,en,th,kc='')=>`<p class="kicker ${kc}">${k}</p><h2>${L(en,th)}</h2>`;
+const card=(cls,tag,en,th,ben,bth)=>`<div class="card ${cls}">${tag?`<div class="tag">${tag}</div>`:''}<h3>${L(en,th)}</h3>${ben?P(ben,bth):''}</div>`;
+
+/* C# code helper: escape + light highlighting */
+const KW='int|double|string|bool|char|var|for|foreach|while|do|if|else|break|continue|true|false|in|static|void|new|return';
+const cs=code=>code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+ .replace(new RegExp('(\\/\\/[^\\n]*)|("[^"\\n]*")|\\b('+KW+')\\b|\\b(Console|Math)\\b','g'),(m,c,s,k,t)=>c?`<span class="c">${c}</span>`:s?`<span class="s">${s}</span>`:k?`<span class="k">${k}</span>`:`<span class="t">${t}</span>`);
+const code=(c,st='')=>`<pre${st?` style="${st}"`:''}>${cs(c)}</pre>`;
+const out=t=>`<div class="out">${t}</div>`;
+const tbl=(h,rows)=>`<table class="tt"><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td${String(c).startsWith('?')?' class="q"':''}>${String(c).replace(/^\?/,'')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+const ans=(sum,body)=>`<details class="sa"><summary>${sum}</summary>${body}</details>`;
+
+/* ---------- slides ---------- */
+const S=[];
+const add=(en,th,html)=>S.push({en,th,html});
+
+add('Welcome','ยินดีต้อนรับ',`
+<p class="kicker" style="color:var(--muted)">Chapter 7 · Computer Programming · C#</p>
+<h1>${L('Do it again,<br>and again… <i>then stop</i>.','ทำซ้ำ แล้วซ้ำอีก…<br><i>แล้วหยุด</i>ให้เป็น')}</h1>
+${P('This week: <b>Loop Part 2</b>. You will learn <code>do…while</code>, how to stop or skip inside a loop (<code>break</code>, <code>continue</code>), and how to put a loop inside a loop.',
+    'สัปดาห์นี้: <b>Loop ตอนที่ 2</b> เรียน <code>do…while</code> วิธีหยุดหรือข้ามรอบในลูป (<code>break</code>, <code>continue</code>) และการใส่ลูปซ้อนลูป','big')}
+<div class="dots" aria-hidden="true"><i style="background:#2f5bff"></i><i style="background:#15995a"></i><i style="background:#e5483a"></i><i style="background:#ffc23a"></i></div>
+<p class="hint">${L('How to use: press <b>Next →</b>, use the <kbd>←</kbd> <kbd>→</kbd> keys, or swipe on your phone. Switch language at the top.',
+ 'วิธีใช้: กด <b>ถัดไป →</b> ใช้ปุ่มลูกศร <kbd>←</kbd> <kbd>→</kbd> หรือปัดหน้าจอบนมือถือ เปลี่ยนภาษาได้ที่ด้านบน')}</p>`);
+
+add("Today's plan",'แผนการเรียนวันนี้',`
+${head('Roadmap','What we will learn today','วันนี้เราจะเรียนอะไรบ้าง')}
+${steps([
+ ['<b>Review</b>: 4 kinds of loops, and START / STOP / STEP','<b>ทบทวน</b>: ลูป 4 แบบ และ START / STOP / STEP'],
+ ['<b>Pretest vs posttest</b> loops','ลูป <b>pretest กับ posttest</b>'],
+ ['<code>do…while</code>: check <b>after</b> the loop body','<code>do…while</code>: ตรวจเงื่อนไข<b>หลัง</b>ทำงานในลูป'],
+ ['<b>Infinite loops</b> and common errors','<b>ลูปไม่รู้จบ</b>และข้อผิดพลาดที่พบบ่อย'],
+ ['<code>break</code> and <code>continue</code>','<code>break</code> และ <code>continue</code>'],
+ ['<b>Nested loops</b>: rows and columns','<b>ลูปซ้อนลูป</b>: แถวและคอลัมน์'],
+ ['Summary → <b>Exam practice</b> → <b>Vocabulary</b>','สรุป → <b>ฝึกทำข้อสอบ</b> → <b>คำศัพท์</b>']
+])}
+${box('amber','Final exam: <b>Thursday 26 November 2026, 09:00–12:00</b>. Next week: Chapter 8, Methods.','สอบปลายภาค: <b>วันพฤหัสบดีที่ 26 พฤศจิกายน 2569 เวลา 09:00–12:00</b> สัปดาห์หน้า: Chapter 8 Methods','Note','หมายเหตุ')}`);
+
+add('Review: control statements','ทบทวน: control statement',`
+${head('Review','3 kinds of control statements in C#','control statement ใน C# มี 3 แบบ')}
+<div class="grid g3">
+ ${card('blue','1 · Selection','Choose a path','เลือกเส้นทาง','<code>if</code>, <code>else</code>, <code>switch</code>, <code>case</code>','<code>if</code>, <code>else</code>, <code>switch</code>, <code>case</code>')}
+ ${card('green','2 · Iteration','Repeat','ทำซ้ำ','<code>while</code>, <code>do</code>, <code>for</code>, <code>foreach</code>','<code>while</code>, <code>do</code>, <code>for</code>, <code>foreach</code>')}
+ ${card('amber','3 · Jump','Move somewhere else','กระโดดไปที่อื่น','<code>break</code>, <code>continue</code>, <code>return</code>, <code>goto</code>','<code>break</code>, <code>continue</code>, <code>return</code>, <code>goto</code>')}
+</div>
+${box('','Today we study the <b>second</b> and <b>third</b> kinds: the last loop (<code>do…while</code>), and the jump statements <code>break</code> and <code>continue</code>.','วันนี้เราเรียนแบบที่ <b>2</b> และ <b>3</b>: ลูปตัวสุดท้าย (<code>do…while</code>) และ jump statement <code>break</code> กับ <code>continue</code>','Today','วันนี้')}`);
+
+add('Why loops?','ทำไมต้องมีลูป',`
+${head('Idea 0 · Why do we need loops?','Do not copy and paste. Let the computer repeat.','ไม่ต้องก๊อปปี้วาง ให้คอมพิวเตอร์ทำซ้ำให้','blue')}
+<div class="pair">
+ <div><div class="lab" style="color:var(--red)">${L('Without a loop','ไม่ใช้ลูป')}</div>${code(`Console.WriteLine("Hi");
+Console.WriteLine("Hi");
+Console.WriteLine("Hi");
+Console.WriteLine("Hi");
+Console.WriteLine("Hi");`)}
+ <p class="hint">${L('5 lines for 5 times. What about 1,000 times?','5 บรรทัดสำหรับ 5 ครั้ง ถ้า 1,000 ครั้งล่ะ?')}</p></div>
+ <div><div class="lab" style="color:var(--green)">${L('With a loop','ใช้ลูป')}</div>${code(`for (int i = 1; i <= 5; i++)
+{
+    Console.WriteLine("Hi");
+}`)}
+ <p class="hint">${L('Same result. For 1,000 times, change only <code>5</code> to <code>1000</code>.','ผลเหมือนกัน ถ้าอยากได้ 1,000 ครั้ง แก้แค่ <code>5</code> เป็น <code>1000</code>')}</p></div>
+</div>
+${box('green','Real life: a washing machine repeats “spin” until the timer ends. An ATM repeats “show menu” until you press Exit. A teacher calls every name in the class list, one by one.','ในชีวิตจริง: เครื่องซักผ้าหมุนซ้ำจนหมดเวลา ตู้ ATM แสดงเมนูซ้ำจนกว่าจะกดออก ครูขานชื่อนักเรียนทุกคนในรายชื่อทีละคน','Real-life examples','ตัวอย่างในชีวิตจริง')}
+<p class="hint">${L('Quick question: what is better when you must print “Hi” 1,000 times, copy-paste or a loop? Why?','ลองตอบ: ถ้าต้องพิมพ์ “Hi” 1,000 ครั้ง ก๊อปปี้วางกับใช้ลูป แบบไหนดีกว่า เพราะอะไร?')}</p>`);
+
+add('4 kinds of loops','ลูป 4 แบบ',`
+${head('Review','4 kinds of iteration statements','คำสั่งทำซ้ำ 4 แบบ')}
+<div class="scroll-x"><table class="tbl stack">
+ <thead><tr><th>Loop</th><th>${L('When it checks','ตรวจเงื่อนไขเมื่อไร')}</th><th>${L('Use it when…','ใช้เมื่อ…')}</th></tr></thead>
+ <tbody>
+  <tr><td><code>while</code></td><td>${L('<b>Before</b> each round (pretest)','<b>ก่อน</b>ทุกรอบ (pretest)')}</td><td>${L('The most basic loop. You do not know how many rounds.','ลูปพื้นฐานที่สุด ไม่รู้ว่าจะวนกี่รอบ')}</td></tr>
+  <tr><td><code>do…while</code></td><td>${L('<b>After</b> each round (posttest)','<b>หลัง</b>ทุกรอบ (posttest)')}</td><td>${L('The body must run <b>at least once</b>.','ต้องทำงานในลูป<b>อย่างน้อย 1 รอบ</b>')}</td></tr>
+  <tr><td><code>for</code></td><td>${L('<b>Before</b> each round (pretest)','<b>ก่อน</b>ทุกรอบ (pretest)')}</td><td>${L('Most common. START, STOP, STEP in one line.','พบบ่อยที่สุด START, STOP, STEP อยู่ในบรรทัดเดียว')}</td></tr>
+  <tr><td><code>foreach</code></td><td>${L('Goes through every item','วนผ่านทุกชิ้นข้อมูล')}</td><td>${L('Loop over a collection or an array.','วนผ่าน collection หรือ array')}</td></tr>
+ </tbody></table></div>
+${box('green','<b>while</b>, <b>for</b>, <b>foreach</b> = pretest (check first). Only <b>do…while</b> is posttest (check last).','<b>while</b>, <b>for</b>, <b>foreach</b> = pretest (ตรวจก่อน) มีแค่ <b>do…while</b> ที่เป็น posttest (ตรวจทีหลัง)','Remember','จำไว้')}`);
+
+add('START · STOP · STEP','START · STOP · STEP',`
+${head('Review · Components of a loop','Every loop needs 3 things','ลูปทุกแบบต้องมี 3 อย่าง')}
+<div class="three">
+ <div style="background:var(--green)">START<small>${L('Initialization: where to begin','Initialization: เริ่มที่ไหน')}</small></div>
+ <div style="background:var(--red)">STOP<small>${L('Condition: when to end','Condition: หยุดเมื่อไร')}</small></div>
+ <div style="background:var(--blue)">STEP<small>${L('Update: move to the next round','Update: ขยับไปรอบถัดไป')}</small></div>
+</div>
+${code(`for (int i = 1; i <= 10; i++)
+//   START      STOP     STEP
+{
+    Console.WriteLine("Hi");
+}`,'margin-top:18px')}
+${box('','Like walking up stairs: <b>START</b> at step 1, <b>STOP</b> after step 10, and each time you take <b>one step</b> up. No step → you stay on the same stair forever.','เหมือนเดินขึ้นบันได: <b>START</b> ที่ขั้น 1, <b>STOP</b> หลังขั้น 10 และทุกครั้ง<b>ก้าวขึ้นหนึ่งขั้น</b> ถ้าไม่ก้าว ก็ยืนขั้นเดิมตลอดไป','Real-life example','ตัวอย่างในชีวิตจริง')}`);
+
+add('How a for loop runs','for ทำงานอย่างไร',`
+${head('Review · Step by step','The order a <code>for</code> loop runs','ลำดับการทำงานของ <code>for</code>')}
+<div class="pair">
+ <div>${code(`for (int i = 1; i <= 3; i++)
+{
+    Console.WriteLine(i);
+}`)}
+ ${out('1\n2\n3')}</div>
+ <div>${steps([
+  ['<b>START</b> runs <b>once only</b>: <code>int i = 1</code>.','<b>START</b> ทำงาน<b>ครั้งเดียว</b>: <code>int i = 1</code>'],
+  ['Check <b>STOP</b>: is <code>i &lt;= 3</code> true? If false → leave the loop.','ตรวจ <b>STOP</b>: <code>i &lt;= 3</code> จริงไหม? ถ้าเท็จ → ออกจากลูป'],
+  ['If true → run the <b>body</b> (print <code>i</code>).','ถ้าจริง → ทำ<b>ตัวลูป</b> (พิมพ์ <code>i</code>)'],
+  ['Run <b>STEP</b>: <code>i++</code>. Then go back to step 2.','ทำ <b>STEP</b>: <code>i++</code> แล้วกลับไปข้อ 2']
+ ])}</div>
+</div>
+${box('amber','<b>Common mistake:</b> thinking START runs every round. It does not. Only STOP, body and STEP repeat.','<b>ข้อผิดพลาดที่พบบ่อย:</b> คิดว่า START ทำทุกรอบ ไม่ใช่ มีแค่ STOP, ตัวลูป และ STEP ที่วนซ้ำ','Careful','ระวัง')}
+<p class="hint">${L('Check: in <code>for (int i = 1; i &lt;= 3; i++)</code>, how many times is the check <code>i &lt;= 3</code> done? (Answer: 4 times: i = 1, 2, 3, then 4 → false.)','ลองตอบ: ใน <code>for (int i = 1; i &lt;= 3; i++)</code> ตรวจ <code>i &lt;= 3</code> ทั้งหมดกี่ครั้ง? (เฉลย: 4 ครั้ง คือ i = 1, 2, 3 และ 4 → เท็จ)')}</p>`);
+
+add('Pretest vs posttest','Pretest กับ posttest',`
+${head('Idea 1 · When do we check?','Check BEFORE or check AFTER?','ตรวจ “ก่อน” หรือ “หลัง”?')}
+<div class="pair">
+ <div><div class="lab">Pretest · while, for</div>
+ ${card('blue','','Check → then act','ตรวจ → แล้วทำ','If the condition is false at the start, the body runs <b>0 times</b>.','ถ้าเงื่อนไขเป็นเท็จตั้งแต่แรก ลูปจะทำ<b> 0 รอบ</b>')}</div>
+ <div><div class="lab">Posttest · do…while</div>
+ ${card('green','','Act → then check','ทำ → แล้วตรวจ','The body runs <b>at least 1 time</b>, even if the condition is false.','ลูปทำ<b>อย่างน้อย 1 รอบ</b> แม้เงื่อนไขเป็นเท็จ')}</div>
+</div>
+${box('green','A <b>pretest</b> is a door with a guard: no ticket, you cannot enter. A <b>posttest</b> is a shop: you walk in first, and pay on the way out.','<b>pretest</b> เหมือนประตูมียาม: ไม่มีบัตรก็เข้าไม่ได้ <b>posttest</b> เหมือนร้านค้า: เดินเข้าไปก่อน แล้วค่อยจ่ายเงินตอนออก','Real-life example','ตัวอย่างในชีวิตจริง')}
+<p class="hint">${L('Quick check: which loop would you use to show a menu that must appear at least once?','ลองคิด: ถ้าต้องแสดงเมนูอย่างน้อย 1 ครั้ง จะใช้ลูปแบบไหน?')}</p>`);
+
+add('while ↔ for','while ↔ for',`
+${head('Idea 2 · Same loop, two styles','while and for can do the same job','while กับ for ทำงานเดียวกันได้')}
+<div class="pair">
+ <div><div class="lab">while</div>${code(`int i = 1;           // START
+while (i <= 10)      // STOP
+{
+    Console.WriteLine("Hi");
+    i++;             // STEP
+}`)}</div>
+ <div><div class="lab">for</div>${code(`for (int i = 1; i <= 10; i++)
+{
+    Console.WriteLine("Hi");
+}`)}</div>
+</div>
+<div class="pair" style="margin-top:16px">
+ <div>${code(`int i = 10;
+while (i >= 1)
+{
+    Console.WriteLine(i);
+    i--;
+}`)}</div>
+ <div>${code(`for (int i = 10; i >= 1; i--)
+{
+    Console.WriteLine(i);
+}`)}</div>
+</div>
+${box('','Moving a loop from <code>while</code> to <code>for</code>: take the 3 parts (START, STOP, STEP) and put them inside the <code>for ( ; ; )</code> brackets.','เปลี่ยน <code>while</code> เป็น <code>for</code>: เอา 3 ส่วน (START, STOP, STEP) ไปใส่ในวงเล็บ <code>for ( ; ; )</code>','How to convert','วิธีแปลง')}`);
+
+add('Which loop to use?','จะเลือกใช้ลูปไหน',`
+${head('Idea 2b · Choosing','Which loop should I choose?','ควรเลือกใช้ลูปแบบไหน','blue')}
+<div class="scroll-x"><table class="tbl stack">
+ <thead><tr><th>${L('Situation','สถานการณ์')}</th><th>${L('Use','ใช้')}</th><th>${L('Example','ตัวอย่าง')}</th></tr></thead>
+ <tbody>
+  <tr><td>${L('I know how many times','รู้จำนวนรอบแน่นอน')}</td><td><code>for</code></td><td>${L('Print 1 to 10','พิมพ์ 1 ถึง 10')}</td></tr>
+  <tr><td>${L('I do not know how many times; it may be 0','ไม่รู้จำนวนรอบ และอาจเป็น 0 รอบ')}</td><td><code>while</code></td><td>${L('Read numbers until the user types 0','รับตัวเลขไปเรื่อย ๆ จนผู้ใช้พิมพ์ 0')}</td></tr>
+  <tr><td>${L('It must run at least once','ต้องทำอย่างน้อย 1 รอบ')}</td><td><code>do…while</code></td><td>${L('Show a menu, ask a password','แสดงเมนู ถามรหัสผ่าน')}</td></tr>
+  <tr><td>${L('Go through every item in a group','วนผ่านทุกชิ้นในกลุ่มข้อมูล')}</td><td><code>foreach</code></td><td>${L('Print every name in a list','พิมพ์ทุกชื่อในลิสต์')}</td></tr>
+ </tbody></table></div>
+${box('','All of them can be rewritten as another loop. Pick the one that is <b>easiest to read</b> for your problem.','ทุกแบบเขียนแทนกันได้ ให้เลือกแบบที่ <b>อ่านง่ายที่สุด</b> สำหรับโจทย์ของเรา','Tip','เคล็ดลับ')}`);
+
+add('Off-by-one','คลาดไปหนึ่ง (off-by-one)',`
+${head('Idea 2c · A very common bug','&lt; or &lt;= ? The off-by-one error','&lt; หรือ &lt;= ? บั๊กคลาดไปหนึ่ง','red')}
+<div class="grid g3">
+ <div>${code(`for (i = 1; i < 5; i++)
+    Console.Write(i + " ");`)}${out('1 2 3 4')}<p class="hint">${L('4 rounds. 5 is not printed.','4 รอบ ไม่พิมพ์ 5')}</p></div>
+ <div>${code(`for (i = 1; i <= 5; i++)
+    Console.Write(i + " ");`)}${out('1 2 3 4 5')}<p class="hint">${L('5 rounds.','5 รอบ')}</p></div>
+ <div>${code(`for (i = 0; i < 5; i++)
+    Console.Write(i + " ");`)}${out('0 1 2 3 4')}<p class="hint">${L('5 rounds, from 0.','5 รอบ เริ่มจาก 0')}</p></div>
+</div>
+${box('green','<b>How to count the rounds:</b> for <code>i = a</code> up to <code>i &lt;= b</code> → <code>b − a + 1</code> rounds. For <code>i &lt; b</code> → <code>b − a</code> rounds.','<b>วิธีนับรอบ:</b> <code>i = a</code> ถึง <code>i &lt;= b</code> → <code>b − a + 1</code> รอบ ถ้าเป็น <code>i &lt; b</code> → <code>b − a</code> รอบ','Rule','กฎ')}`);
+
+add('Trace a loop','ไล่ดูทีละรอบ (trace)',`
+${head('Idea 3 · Tracing','Run the loop in your head, round by round','ลองรันลูปในหัว ทีละรอบ')}
+<div class="pair">
+ <div>${code(`int i = 1;
+while (i <= 3)
+{
+    Console.WriteLine("Hi");
+    i++;
+}`)}</div>
+ <div>${tbl(['Round','i','Result'],[[1,1,'Hi'],[2,2,'Hi'],[3,3,'Hi'],[4,4,'(stop)']])}
+ <p class="hint" style="margin-top:8px">${L('Round 4: <code>i = 4</code>, the condition is false, so the loop ends.','รอบที่ 4: <code>i = 4</code> เงื่อนไขเป็นเท็จ ลูปจึงจบ')}</p></div>
+</div>
+${box('amber','<b>Your turn.</b> Trace the next two slides on paper first, then open the answer.','<b>ถึงตาคุณ</b> ลอง trace สองสไลด์ถัดไปบนกระดาษก่อน แล้วค่อยเปิดดูเฉลย','Tip','เคล็ดลับ')}`);
+
+add('Trace practice','ฝึก trace',`
+${head('Idea 3 · Your turn','Trace these two loops','ลอง trace สองลูปนี้')}
+<div class="pair">
+ <div><div class="lab">Ex 2</div>${code(`int i = 1, sum = 0;
+while (i <= 3)
+{
+    sum += i;
+    i++;
+}`)}
+ ${ans(L('Show answer','ดูเฉลย'),tbl(['Round','i','sum'],[[1,1,1],[2,2,3],[3,3,6],[4,4,'6 (stop)']])+`<p class="hint">${L('<code>sum += i</code> means <code>sum = sum + i</code>. Final sum = 6.','<code>sum += i</code> คือ <code>sum = sum + i</code> ผลรวมสุดท้าย = 6')}</p>`)}</div>
+ <div><div class="lab">Ex 3</div>${code(`int k;
+for (k = 1; k <= 3; k++)
+{
+    if (k % 2 == 1)
+    {
+        Console.WriteLine(k);
+    }
+}`)}
+ ${ans(L('Show answer','ดูเฉลย'),tbl(['Round','k','Result'],[[1,1,'1'],[2,2,'(nothing)'],[3,3,'3'],[4,4,'(stop)']])+`<p class="hint">${L('<code>k % 2 == 1</code> is true for odd numbers only.','<code>k % 2 == 1</code> เป็นจริงเฉพาะเลขคี่')}</p>`)}</div>
+</div>`);
+
+add('do…while','do…while',`
+${head('Idea 4 · The posttest loop','do { … } while ( condition );','do { … } while ( เงื่อนไข );','green')}
+<div class="pair">
+ <div>${code(`START;
+do
+{
+    STATEMENTS;
+    STEP;
+} while (CONDITION);   // ← semicolon!`)}</div>
+ <div>${steps([
+  ['Do the statements <b>first</b>.','ทำคำสั่งในลูป<b>ก่อน</b>'],
+  ['Do the STEP.','ทำ STEP'],
+  ['Check the condition. <b>True</b> → go back to step 1. <b>False</b> → stop.','ตรวจเงื่อนไข <b>จริง</b> → กลับไปข้อ 1 <b>เท็จ</b> → หยุด']
+ ])}</div>
+</div>
+${box('red','Do not forget the <b>semicolon <code>;</code></b> after <code>while (…)</code> in <code>do…while</code>. It is the only loop that needs it.','อย่าลืม <b>เครื่องหมาย <code>;</code></b> หลัง <code>while (…)</code> ของ <code>do…while</code> เป็นลูปเดียวที่ต้องมี','Common mistake','ข้อผิดพลาดที่พบบ่อย')}`);
+
+add('do…while step by step','do…while ทีละขั้น',`
+${head('Idea 4 · Trace it','Follow <code>do…while</code> round by round','ไล่ <code>do…while</code> ทีละรอบ','green')}
+<div class="pair">
+ <div>${code(`int i = 1;
+do
+{
+    Console.WriteLine("Round " + i);
+    i++;
+} while (i <= 3);`)}
+ ${out('Round 1\nRound 2\nRound 3')}</div>
+ <div>${tbl(['Round','i (at start)','Prints','i after i++','i <= 3 ?'],[[1,1,'Round 1',2,'true → repeat'],[2,2,'Round 2',3,'true → repeat'],[3,3,'Round 3',4,'false → stop']])}
+ <p class="hint" style="margin-top:8px">${L('The check happens at the <b>end</b> of every round, not at the start.','การตรวจเงื่อนไขเกิดที่ <b>ท้าย</b>ทุกรอบ ไม่ใช่ตอนต้น')}</p></div>
+</div>
+${box('','Compare with <code>while</code>: the same output, but <code>while</code> checks <code>i &lt;= 3</code> <b>before</b> Round 1. With <code>do…while</code>, Round 1 starts with no check at all.','เทียบกับ <code>while</code>: ผลเหมือนกัน แต่ <code>while</code> ตรวจ <code>i &lt;= 3</code> <b>ก่อน</b>รอบที่ 1 ส่วน <code>do…while</code> รอบที่ 1 เริ่มโดยไม่ตรวจเลย','Compare','เปรียบเทียบ')}`);
+
+add('do…while example 1','ตัวอย่าง do…while 1',`
+${head('Idea 4 · Example','Print 1 to 10','พิมพ์ 1 ถึง 10','green')}
+<div class="pair">
+ <div>${code(`int i = 1;              // START
+do
+{
+    Console.WriteLine(i);
+    i++;                // STEP
+} while (i <= 10);      // STOP?`)}</div>
+ <div>${steps([
+  ['<code>i = 1</code>: the body runs and prints <b>1</b>.','<code>i = 1</code>: ทำในลูป พิมพ์ <b>1</b>'],
+  ['<code>i++</code> makes <code>i = 2</code>. Is <code>2 &lt;= 10</code>? Yes → repeat.','<code>i++</code> ทำให้ <code>i = 2</code> จริงไหมที่ <code>2 &lt;= 10</code>? จริง → วนอีก'],
+  ['…after printing 10, <code>i = 11</code>. <code>11 &lt;= 10</code> is false → stop.','…พิมพ์ 10 แล้ว <code>i = 11</code> <code>11 &lt;= 10</code> เป็นเท็จ → หยุด']
+ ])}</div>
+</div>
+${out('1\n2\n3\n…\n10')}`);
+
+add('do…while: menu','do…while: เมนู',`
+${head('Idea 4 · A real use','A menu that shows until the user picks Exit','เมนูที่แสดงจนกว่าผู้ใช้จะเลือก Exit','green')}
+<div class="pair">
+ <div>${code(`int menu = 0;
+do
+{
+    Console.WriteLine("--Menu--");
+    Console.WriteLine("1. Cake");
+    Console.WriteLine("2. Tea");
+    Console.WriteLine("3. Exit");
+    menu = int.Parse(Console.ReadLine());
+
+    if (menu == 1)
+        Console.WriteLine("50 baht");
+    else if (menu == 2)
+        Console.WriteLine("30 baht");
+    else if (menu == 3)
+        Console.WriteLine("Thanks");
+} while (menu != 3);`)}</div>
+ <div>${pts([
+  ['The menu must show <b>at least once</b>, before we know the user’s choice. That is a perfect job for <code>do…while</code>.','เมนูต้องแสดง<b>อย่างน้อย 1 ครั้ง</b> ก่อนที่เราจะรู้ว่าผู้ใช้เลือกอะไร เหมาะกับ <code>do…while</code> มาก'],
+  ['<code>menu != 3</code>: keep repeating until the user types 3.','<code>menu != 3</code>: วนต่อไปจนกว่าผู้ใช้จะพิมพ์ 3'],
+  ['<code>int.Parse</code> turns the typed text into a number.','<code>int.Parse</code> แปลงข้อความที่พิมพ์เป็นตัวเลข']
+ ])}
+ <p class="hint">${L('The slide in class shows only part of this code. The “30 baht” price is just an example I filled in.','สไลด์ในห้องแสดงโค้ดบางส่วน ราคา “30 baht” คือตัวอย่างที่เราเติมเอง')}</p></div>
+</div>`);
+
+add('do…while: check input','do…while: ตรวจข้อมูลที่รับ',`
+${head('Idea 4 · Another real use','Ask again until the answer is valid','ถามซ้ำจนกว่าคำตอบจะถูกต้อง','green')}
+<div class="pair">
+ <div>${code(`int age;
+do
+{
+    Console.Write("Enter age (1-120): ");
+    age = int.Parse(Console.ReadLine());
+} while (age < 1 || age > 120);
+
+Console.WriteLine("Age = " + age);`)}</div>
+ <div>${tbl(['User types','Condition','Result'],[['500','500 > 120 → true','ask again'],['-3','-3 < 1 → true','ask again'],['21','false','stop · Age = 21']])}
+ ${pts([
+  ['We must ask <b>at least once</b>, so <code>do…while</code> fits.','ต้องถาม<b>อย่างน้อย 1 ครั้ง</b> จึงเหมาะกับ <code>do…while</code>'],
+  ['<code>||</code> means <b>OR</b>: bad if too small <b>or</b> too big.','<code>||</code> แปลว่า <b>หรือ</b>: ผิดถ้าน้อยไป <b>หรือ</b>มากไป']
+ ])}</div>
+</div>
+${box('amber','If the user types letters like <code>abc</code>, <code>int.Parse</code> crashes. Handling that is a later topic. For now, assume the user types numbers.','ถ้าผู้ใช้พิมพ์ตัวอักษร เช่น <code>abc</code> <code>int.Parse</code> จะ error ไว้เรียนวิธีแก้ทีหลัง ตอนนี้สมมติว่าผู้ใช้พิมพ์ตัวเลข','Note','หมายเหตุ')}`);
+
+add('Runs at least once','ทำอย่างน้อย 1 รอบ',`
+${head('Idea 4 · The key difference','Same condition, different result','เงื่อนไขเดียวกัน แต่ผลต่างกัน','green')}
+<div class="pair">
+ <div><div class="lab">while (pretest)</div>${code(`int i = 20;
+while (i <= 10)
+{
+    Console.WriteLine("Hi");
+    i++;
+}`)}${out('(nothing)')}
+ <p class="hint">${L('<code>20 &lt;= 10</code> is false at the start → 0 rounds.','<code>20 &lt;= 10</code> เป็นเท็จตั้งแต่แรก → 0 รอบ')}</p></div>
+ <div><div class="lab">do…while (posttest)</div>${code(`int i = 20;
+do
+{
+    Console.WriteLine("Hi");
+    i++;
+} while (i <= 10);`)}${out('Hi')}
+ <p class="hint">${L('The body runs once <b>before</b> the check → 1 round.','ลูปทำงาน 1 รอบ<b>ก่อน</b>ตรวจเงื่อนไข → 1 รอบ')}</p></div>
+</div>
+${remember('If the condition could be false at the start, <code>while</code> may run 0 times, but <code>do…while</code> always runs at least once.','ถ้าเงื่อนไขอาจเป็นเท็จตั้งแต่แรก <code>while</code> อาจไม่ทำเลย แต่ <code>do…while</code> ทำอย่างน้อย 1 รอบเสมอ')}`);
+
+add('Quick check 1','เช็กความเข้าใจ 1',`
+${head('Check yourself','Try these before you continue','ลองทำก่อนไปต่อ','violet')}
+${ans(L('1. Which loop checks the condition <b>after</b> the body?','1. ลูปไหนตรวจเงื่อนไข<b>หลัง</b>ตัวลูป?'),P('<code>do…while</code>. It is the only posttest loop.','<code>do…while</code> เป็น posttest ตัวเดียว'))}
+${ans(L('2. What does <code>int i = 5; while (i &lt; 3) { … }</code> do?','2. <code>int i = 5; while (i &lt; 3) { … }</code> ทำอะไร?'),P('Nothing. <code>5 &lt; 3</code> is false at the start, so the body runs 0 times.','ไม่ทำอะไรเลย <code>5 &lt; 3</code> เป็นเท็จตั้งแต่แรก ตัวลูปทำ 0 รอบ'))}
+${ans(L('3. Would you use <code>for</code>, <code>while</code> or <code>do…while</code> to show a menu at least once?','3. จะใช้ <code>for</code>, <code>while</code> หรือ <code>do…while</code> แสดงเมนูอย่างน้อย 1 ครั้ง?'),P('<code>do…while</code>: the menu must appear before we check the choice.','<code>do…while</code> เพราะเมนูต้องขึ้นก่อนที่จะตรวจตัวเลือก'))}
+${ans(L('4. Write the missing part: <code>do { … } while (x &gt; 0)</code>','4. เติมส่วนที่ขาด: <code>do { … } while (x &gt; 0)</code>'),P('A semicolon: <code>while (x &gt; 0);</code>','เครื่องหมาย <code>;</code> คือ <code>while (x &gt; 0);</code>'))}
+<p class="hint">${L('Try to answer in your head first. If you are unsure, go back to the slide.','ลองตอบในใจก่อน ถ้าไม่แน่ใจให้กลับไปดูสไลด์นั้น')}</p>`);
+
+add('Common loop errors','ข้อผิดพลาดที่พบบ่อย',`
+${head('Idea 5 · Watch out','5 common mistakes with loops','5 ข้อผิดพลาดที่พบบ่อยของลูป','red')}
+<div class="grid g2">
+ ${card('red','1','Forget START, STOP or STEP','ลืม START, STOP หรือ STEP','Missing STEP = the loop may never end.','ไม่มี STEP = ลูปอาจไม่จบ')}
+ ${card('red','2','Extra <code>;</code> after <code>while</code> / <code>for</code>','<code>;</code> เกินหลัง <code>while</code> / <code>for</code>','<code>while (i &lt;= 3);</code> ends the loop at once. The body below is not the loop body.','<code>while (i &lt;= 3);</code> ทำให้ลูปจบทันที โค้ดด้านล่างไม่ใช่ตัวลูป')}
+ ${card('red','3','Forget <code>;</code> after <code>do…while</code>','ลืม <code>;</code> หลัง <code>do…while</code>','Compile error. Only this loop needs it.','compile error ลูปเดียวที่ต้องมี')}
+ ${card('red','4','Use <code>,</code> instead of <code>;</code> in <code>for</code>','ใช้ <code>,</code> แทน <code>;</code> ใน <code>for</code>','Write <code>for (a; b; c)</code>, not <code>for (a, b, c)</code>.','ต้องเขียน <code>for (a; b; c)</code> ไม่ใช่ <code>for (a, b, c)</code>')}
+ ${card('red','5','Forget <code>{ }</code>','ลืม <code>{ }</code>','Without braces, only the <b>first</b> line is in the loop.','ถ้าไม่มีปีกกา มีแค่บรรทัด<b>แรก</b>ที่อยู่ในลูป')}
+</div>`);
+
+add('Mistakes in real code','ข้อผิดพลาดในโค้ดจริง',`
+${head('Idea 5b · See the bug','What do these 3 codes really do?','โค้ด 3 ตัวนี้ทำงานอย่างไรจริง ๆ','red')}
+<div class="grid g3">
+ <div><div class="lab">${L('Extra ;','; เกิน')}</div>${code(`for (int i = 1; i <= 3; i++);
+{
+    Console.WriteLine("Hi");
+}`)}${out('Hi')}<p class="hint">${L('The <code>;</code> is an empty loop body. The loop runs 3 times doing nothing, then the block prints <b>once</b>.','<code>;</code> คือตัวลูปว่างเปล่า ลูปวน 3 รอบโดยไม่ทำอะไร แล้วบล็อกด้านล่างพิมพ์ <b>ครั้งเดียว</b>')}</p></div>
+ <div><div class="lab">${L('No braces','ไม่มีปีกกา')}</div>${code(`for (int i = 1; i <= 3; i++)
+    Console.WriteLine("A");
+    Console.WriteLine("B");`)}${out('A\nA\nA\nB')}<p class="hint">${L('Only the first line belongs to the loop. “B” prints once. Indentation does not matter in C#.','มีแค่บรรทัดแรกที่อยู่ในลูป “B” พิมพ์ครั้งเดียว C# ไม่สนใจการย่อหน้า')}</p></div>
+ <div><div class="lab">${L('Extra ; on while','; เกินที่ while')}</div>${code(`int i = 1;
+while (i <= 3);
+{
+    i++;
+}`)}${out('(freezes)')}<p class="hint">${L('The loop body is empty, so <code>i</code> never changes: infinite loop!','ตัวลูปว่าง <code>i</code> จึงไม่เปลี่ยน: ลูปไม่รู้จบ!')}</p></div>
+</div>
+${remember('Always write <code>{ }</code>, even for one line. Never put <code>;</code> right after <code>for (…)</code> or <code>while (…)</code>.','เขียน <code>{ }</code> เสมอ แม้มีบรรทัดเดียว และอย่าใส่ <code>;</code> หลัง <code>for (…)</code> หรือ <code>while (…)</code>')}`);
+
+add('Infinite loops','ลูปไม่รู้จบ',`
+${head('Idea 6 · Infinite loops','A loop that never stops','ลูปที่ไม่มีวันหยุด','red')}
+<div class="grid g2">
+ ${card('red','What','Infinite / forever / perpetual loop','ลูปไม่รู้จบ','The loop runs without stopping. The program looks frozen.','ลูปทำงานไม่หยุด โปรแกรมดูเหมือนค้าง')}
+ ${card('amber','Causes','Why it happens','เกิดจากอะไร','Missing START, STOP or STEP · wrong order · or you did it on purpose.','ขาด START, STOP หรือ STEP · ลำดับผิด · หรือตั้งใจทำ')}
+</div>
+${box('red','Generally, we should <b>prevent</b> infinite loops. If your program hangs, press <kbd>Ctrl</kbd>+<kbd>C</kbd> in the console to stop it.','โดยทั่วไปเรา<b>ต้องหลีกเลี่ยง</b>ลูปไม่รู้จบ ถ้าโปรแกรมค้าง กด <kbd>Ctrl</kbd>+<kbd>C</kbd> ในหน้าคอนโซลเพื่อหยุด','Careful','ระวัง')}`);
+
+add('Infinite: missing','ไม่รู้จบ: ขาดส่วนสำคัญ',`
+${head('Idea 6 · Missing a part','Find the missing part','หาส่วนที่ขาดหายไป','red')}
+<div class="pair">
+ <div>${code(`for (int i = 1; i <= 10; )
+{
+    Console.WriteLine("Hi");
+}`)}
+ ${ans(L('Which part is missing?','ขาดส่วนไหน?'),P('<b>STEP</b>. <code>i</code> never changes, so <code>i &lt;= 10</code> is always true. Fix: <code>i++</code>.','<b>STEP</b> ค่า <code>i</code> ไม่เปลี่ยน <code>i &lt;= 10</code> จึงจริงตลอด แก้: ใส่ <code>i++</code>'))}</div>
+ <div>${code(`int i = 1;
+while (i <= 10)
+{
+    Console.WriteLine("Hi");
+}`)}
+ ${ans(L('Which part is missing?','ขาดส่วนไหน?'),P('Also <b>STEP</b>. Add <code>i++;</code> inside the braces.','<b>STEP</b> เหมือนกัน ใส่ <code>i++;</code> ในปีกกา'))}</div>
+</div>`);
+
+add('Infinite: order & intention','ไม่รู้จบ: ผิดทิศ และตั้งใจ',`
+${head('Idea 6 · Wrong direction, or on purpose','Unordered and intentional','ผิดทิศทาง และแบบที่ตั้งใจ','red')}
+<div class="pair">
+ <div><div class="lab">${L('Wrong direction','ผิดทิศทาง')}</div>${code(`int i = 1;
+while (i <= 10)
+{
+    Console.WriteLine("Hi");
+    i--;       // goes down!
+}`)}
+ <p class="hint">${L('<code>i</code> goes 1, 0, −1… so it is always <code>&lt;= 10</code>.','<code>i</code> เป็น 1, 0, −1… จึง <code>&lt;= 10</code> ตลอด')}</p>
+ ${code(`int i = 1;
+while (i > 0)
+{
+    Console.WriteLine("Hi");
+    i++;       // goes up!
+}`,'margin-top:8px')}
+ <p class="hint">${L('<code>i</code> goes 1, 2, 3… so it is always <code>&gt; 0</code>. Never stops!','<code>i</code> เป็น 1, 2, 3… จึง <code>&gt; 0</code> ตลอด ไม่มีวันหยุด!')}</p></div>
+ <div><div class="lab">${L('On purpose','ตั้งใจ')}</div>${code(`for (;;)
+{
+    Console.WriteLine("Hi");
+}
+
+while (true)
+{
+    Console.WriteLine("Hi");
+}
+
+do
+{
+    Console.WriteLine("Hi");
+} while (true);`)}
+ <p class="hint">${L('These three are infinite on purpose. You leave them with <code>break</code> (coming next).','ทั้งสามแบบตั้งใจให้ไม่รู้จบ ออกจากลูปด้วย <code>break</code> (สไลด์ถัดไป)')}</p></div>
+</div>`);
+
+add('Fix an infinite loop','แก้ลูปไม่รู้จบ',`
+${head('Idea 6b · Debug checklist','Loop stuck? Ask these 5 questions','ลูปค้าง? ถาม 5 ข้อนี้','red')}
+${steps([
+ ['Is there a <b>START</b>? Is the counter given a value?','มี <b>START</b> ไหม? ตัวนับมีค่าเริ่มต้นหรือยัง'],
+ ['Can the <b>STOP</b> condition ever become <b>false</b>?','เงื่อนไข <b>STOP</b> มีโอกาสเป็น <b>เท็จ</b> ไหม'],
+ ['Is there a <b>STEP</b> inside the loop?','มี <b>STEP</b> ในลูปไหม'],
+ ['Does the STEP go in the <b>right direction</b>? (<code>i++</code> with <code>i &gt; 0</code> never ends.)','STEP ไป<b>ถูกทิศ</b>ไหม (<code>i++</code> กับ <code>i &gt; 0</code> ไม่มีวันจบ)'],
+ ['Is there a stray <code>;</code> after <code>while (…)</code>, or a <code>continue</code> before the STEP?','มี <code>;</code> เกินหลัง <code>while (…)</code> หรือ <code>continue</code> ก่อน STEP หรือเปล่า']
+])}
+${box('','A trick: add <code>Console.WriteLine(i);</code> inside the loop. If the number does not change, or goes the wrong way, you found the problem.','เคล็ดลับ: ใส่ <code>Console.WriteLine(i);</code> ในลูป ถ้าเลขไม่เปลี่ยนหรือไปผิดทิศ แปลว่าเจอปัญหาแล้ว','Debug tip','เคล็ดลับดีบั๊ก')}`);
+
+add('Jump statements','Jump statement',`
+${head('Idea 7 · Jump statements','Change what the loop does','เปลี่ยนการทำงานของลูป','violet')}
+<div class="grid g2">
+ ${card('red','break','Stop the whole loop','หยุดลูปทั้งหมด','Leave the loop completely and continue after it. Needed to exit an infinite loop.','ออกจากลูปทันที แล้วไปทำคำสั่งหลังลูป ใช้ออกจากลูปไม่รู้จบ')}
+ ${card('amber','continue','Skip this round only','ข้ามเฉพาะรอบนี้','Stop this round, jump to the next round of the same loop.','ข้ามรอบนี้ แล้วไปรอบถัดไปของลูปเดิม')}
+</div>
+${box('','Running a race: <b>break</b> = you leave the track and go home. <b>continue</b> = you skip one hurdle and keep running.','วิ่งแข่ง: <b>break</b> = ออกจากสนามกลับบ้าน <b>continue</b> = ข้ามรั้วหนึ่งอัน แล้ววิ่งต่อ','Real-life example','ตัวอย่างในชีวิตจริง')}`);
+
+add('break','break',`
+${head('Idea 7 · break','break leaves the loop','break ออกจากลูป','violet')}
+<div class="pair">
+ <div><div class="lab">${L('Without break','ไม่มี break')}</div>${code(`int i = -5;
+while (i <= 5)
+{
+    Console.WriteLine(10.0 / i);
+    i++;
+}`)}
+ <p class="hint">${L('At <code>i = 0</code> it divides by zero. With <code>double</code>, C# prints <b>Infinity</b> (no crash), which is still a wrong answer.','เมื่อ <code>i = 0</code> จะหารด้วยศูนย์ ถ้าเป็น <code>double</code> C# จะแสดง <b>Infinity</b> (ไม่ crash) แต่ก็เป็นคำตอบที่ผิดอยู่ดี')}</p></div>
+ <div><div class="lab">${L('With break','มี break')}</div>${code(`int i = -5;
+while (i <= 5)
+{
+    if (i == 0)
+    {
+        break;      // leave the loop
+    }
+    Console.WriteLine(10.0 / i);
+    i++;
+}`)}
+ ${out('-2\n-2.5\n-3.3333333333333335\n-5\n-10')}</div>
+</div>`);
+
+add('break: a puzzle','break: โจทย์คิด',`
+${head('Idea 7 · Think','Will these two give the same output?','สองโค้ดนี้ให้ผลเหมือนกันไหม?','violet')}
+<div class="pair">
+ <div>${code(`int i = -5;
+while (i <= 5)
+{
+    if (i == 0)
+    {
+        i = 5;
+    }
+    else
+    {
+        Console.WriteLine(10.0 / i);
+    }
+    i++;
+}`)}</div>
+ <div>${code(`int i = -5;
+while (i <= 5)
+{
+    if (i == 0)
+    {
+        break;
+    }
+    Console.WriteLine(10.0 / i);
+    i++;
+}`)}</div>
+</div>
+${ans(L('Show answer','ดูเฉลย'),P('<b>Yes, same output</b> (−2, −2.5, −3.33…, −5, −10). On the left, at <code>i = 0</code> we set <code>i = 5</code>, then <code>i++</code> makes it 6, so the loop ends by itself. It is a longer way to do what <code>break</code> does.','<b>ใช่ ผลเหมือนกัน</b> (−2, −2.5, −3.33…, −5, −10) ฝั่งซ้ายเมื่อ <code>i = 0</code> เราตั้ง <code>i = 5</code> แล้ว <code>i++</code> ทำให้เป็น 6 ลูปจึงจบเอง เป็นวิธีที่ยาวกว่าเพื่อให้ได้ผลแบบ <code>break</code>'))}`);
+
+add('break: search','break: ค้นหา',`
+${head('Idea 7 · A useful break','Stop as soon as you find it','เจอแล้วหยุดทันที','violet')}
+<div class="pair">
+ <div>${code(`// find the first number
+// divisible by 7
+for (int i = 1; i <= 100; i++)
+{
+    if (i % 7 == 0)
+    {
+        Console.WriteLine("First = " + i);
+        break;
+    }
+}`)}${out('First = 7')}</div>
+ <div>${pts([
+  ['<code>i % 7 == 0</code>: the remainder is 0, so <code>i</code> is divisible by 7.','<code>i % 7 == 0</code>: เศษเป็น 0 แปลว่า <code>i</code> หารด้วย 7 ลงตัว'],
+  ['At <code>i = 7</code> we print and <code>break</code>. The loop does <b>not</b> go on to 100.','ที่ <code>i = 7</code> เราพิมพ์แล้ว <code>break</code> ลูป<b>ไม่</b>วนต่อถึง 100'],
+  ['Without <code>break</code>, it would print 7, 14, 21, … up to 98.','ถ้าไม่มี <code>break</code> จะพิมพ์ 7, 14, 21, … ถึง 98']
+ ])}</div>
+</div>
+${box('amber','<b>In nested loops</b>, <code>break</code> leaves only the <b>inner</b> loop that contains it. The outer loop keeps going.','<b>ในลูปซ้อน</b> <code>break</code> ออกจากแค่ลูป<b>ใน</b>ที่มันอยู่ ลูปนอกยังทำงานต่อ','Careful','ระวัง')}`);
+
+add('break in nested loops','break ในลูปซ้อน',`
+${head('Idea 7 · break + nested','break leaves only the inner loop','break ออกแค่ลูปใน','violet')}
+<div class="pair">
+ <div>${code(`for (int r = 1; r <= 3; r++)
+{
+    for (int c = 1; c <= 3; c++)
+    {
+        if (c == 2)
+        {
+            break;      // leaves the c loop
+        }
+        Console.Write(c);
+    }
+    Console.WriteLine();
+}`)}</div>
+ <div>${out('1\n1\n1')}
+ ${steps([
+  ['<code>r = 1</code>: <code>c = 1</code> prints 1. At <code>c = 2</code> → <code>break</code>.','<code>r = 1</code>: <code>c = 1</code> พิมพ์ 1 ที่ <code>c = 2</code> → <code>break</code>'],
+  ['The outer loop goes to <code>r = 2</code> and the inner loop starts again from <code>c = 1</code>.','ลูปนอกไป <code>r = 2</code> ลูปในเริ่มใหม่จาก <code>c = 1</code>'],
+  ['Same for <code>r = 3</code>. So 3 lines of “1”.','<code>r = 3</code> ก็เหมือนกัน ได้ “1” 3 บรรทัด']
+ ])}</div>
+</div>`);
+
+add('continue','continue',`
+${head('Idea 7 · continue','continue skips one round','continue ข้ามไปหนึ่งรอบ','violet')}
+<div class="pair">
+ <div><div class="lab">${L('Without continue','ไม่มี continue')}</div>${code(`for (int i = 1; i <= 10; i++)
+{
+    Console.Write(i + " ");
+}`)}${out('1 2 3 4 5 6 7 8 9 10')}</div>
+ <div><div class="lab">${L('With continue','มี continue')}</div>${code(`for (int i = 1; i <= 10; i++)
+{
+    if (i == 5)
+    {
+        continue;   // skip the rest
+    }
+    Console.Write(i + " ");
+}`)}${out('1 2 3 4 6 7 8 9 10')}</div>
+</div>
+${box('','When <code>i == 5</code>, <code>continue</code> jumps straight to the next round, so <code>Console.Write</code> is skipped. 5 is missing from the output.','เมื่อ <code>i == 5</code> <code>continue</code> จะไปรอบถัดไปทันที <code>Console.Write</code> จึงถูกข้าม ผลลัพธ์เลยไม่มีเลข 5','What happens','เกิดอะไรขึ้น')}
+<p class="hint">${L('<code>continue</code> is not used often. You can usually write <code>if (i != 5) { … }</code> instead.','<code>continue</code> ไม่ค่อยพบ มักเขียน <code>if (i != 5) { … }</code> แทนได้')}</p>`);
+
+add('continue: skip bad data','continue: ข้ามข้อมูลที่ไม่ต้องการ',`
+${head('Idea 7 · A useful continue','Add only the numbers you want','บวกเฉพาะตัวเลขที่ต้องการ','violet')}
+<div class="pair">
+ <div>${code(`int sum = 0;
+for (int i = -3; i <= 3; i++)
+{
+    if (i < 0)
+    {
+        continue;   // skip negatives
+    }
+    sum += i;
+}
+Console.WriteLine(sum);`)}${out('6')}</div>
+ <div>${tbl(['i','i < 0 ?','sum after'],[[-3,'yes → skip',0],[-2,'yes → skip',0],[-1,'yes → skip',0],[0,'no',0],[1,'no',1],[2,'no',3],[3,'no',6]])}</div>
+</div>
+${box('','Negative numbers are skipped, so <code>sum = 0 + 1 + 2 + 3 = 6</code>.','เลขติดลบถูกข้าม จึงได้ <code>sum = 0 + 1 + 2 + 3 = 6</code>','Result','ผลลัพธ์')}`);
+
+add('break vs continue','break กับ continue',`
+${head('Idea 7 · Compare','break vs continue','break เทียบกับ continue','violet')}
+<div class="pair">
+ <div><div class="lab" style="color:var(--red)">break · ${L('stop when i = 0','หยุดเมื่อ i = 0')}</div>${code(`for (i = -5; i <= 5; i++)
+{
+    if (i == 0) { break; }
+    Console.Write(i + " ");
+}`)}${out('-5 -4 -3 -2 -1')}</div>
+ <div><div class="lab" style="color:var(--amber)">continue · ${L('skip when i = 0','ข้ามเมื่อ i = 0')}</div>${code(`for (i = -5; i <= 5; i++)
+{
+    if (i == 0) { continue; }
+    Console.Write(i + " ");
+}`)}${out('-5 -4 -3 -2 -1 1 2 3 4 5')}</div>
+</div>
+${remember('<b>break</b> = the loop is over. <b>continue</b> = only this round is over.','<b>break</b> = ลูปจบเลย <b>continue</b> = จบแค่รอบนี้')}`);
+
+add('continue trap','กับดักของ continue',`
+${head('Idea 7 · Careful!','continue in while / do…while: STEP first!','continue ใน while / do…while: ต้องทำ STEP ก่อน!','red')}
+<div class="pair">
+ <div><div class="lab" style="color:var(--green)">for ✓ ${L('safe','ปลอดภัย')}</div>${code(`for (int i = 1; i <= 10; i++)
+{
+    if (i == 5) { continue; }
+    Console.Write(i + " ");
+}`)}
+ <p class="hint">${L('<code>i++</code> is in the <code>for</code> line, so <code>continue</code> still runs it.','<code>i++</code> อยู่ในบรรทัด <code>for</code> <code>continue</code> จึงยังทำ STEP ให้')}</p></div>
+ <div><div class="lab" style="color:var(--green)">while ✓ ${L('step before continue','STEP ก่อน continue')}</div>${code(`int i = 1;
+while (i <= 10)
+{
+    if (i == 5)
+    {
+        i++;        // STEP first!
+        continue;
+    }
+    Console.Write(i + " ");
+    i++;
+}`)}</div>
+</div>
+${box('red','In <code>while</code> or <code>do…while</code>, put the STEP <b>before</b> <code>continue</code>. If not, <code>i</code> stays 5 forever → infinite loop.','ใน <code>while</code> หรือ <code>do…while</code> ให้ใส่ STEP <b>ก่อน</b> <code>continue</code> ถ้าไม่ทำ <code>i</code> จะค้างที่ 5 ตลอด → ลูปไม่รู้จบ','Common mistake','ข้อผิดพลาดที่พบบ่อย')}`);
+
+add('Quick check 2','เช็กความเข้าใจ 2',`
+${head('Check yourself','Jump statements and infinite loops','jump statement และลูปไม่รู้จบ','violet')}
+${ans(L('1. What is the difference between <code>break</code> and <code>continue</code>?','1. <code>break</code> กับ <code>continue</code> ต่างกันอย่างไร?'),P('<code>break</code> ends the whole loop. <code>continue</code> ends only the current round.','<code>break</code> จบทั้งลูป <code>continue</code> จบแค่รอบปัจจุบัน'))}
+${ans(L('2. <code>for (int i = 1; i &lt;= 5; i++) { if (i == 3) break; Console.Write(i); }</code> prints?','2. <code>for (int i = 1; i &lt;= 5; i++) { if (i == 3) break; Console.Write(i); }</code> พิมพ์อะไร?'),P('<code>12</code>. At <code>i = 3</code> the loop ends before printing.','<code>12</code> ที่ <code>i = 3</code> ลูปจบก่อนพิมพ์'))}
+${ans(L('3. Same code with <code>continue</code> instead of <code>break</code>?','3. โค้ดเดียวกันแต่ใช้ <code>continue</code> แทน <code>break</code>?'),P('<code>1245</code>. Only the round with 3 is skipped.','<code>1245</code> ข้ามแค่รอบที่ 3'))}
+${ans(L('4. <code>int i = 1; while (i &lt;= 3) { Console.Write(i); }</code> What is wrong?','4. <code>int i = 1; while (i &lt;= 3) { Console.Write(i); }</code> ผิดตรงไหน?'),P('No STEP. It prints <code>111111…</code> forever. Add <code>i++;</code>.','ไม่มี STEP จะพิมพ์ <code>111111…</code> ไม่หยุด ต้องเพิ่ม <code>i++;</code>'))}`);
+
+add('Nested loops','ลูปซ้อนลูป',`
+${head('Idea 8 · Nested loops','A loop inside a loop','ลูปอยู่ในลูป','blue')}
+<div class="grid g2">
+ <div>${pts([
+  ['The <b>inside</b> loop runs completely for each round of the <b>outside</b> loop.','ลูป<b>ข้างใน</b>ทำครบทุกรอบ ในทุกหนึ่งรอบของลูป<b>ข้างนอก</b>'],
+  ['Total rounds = outer × inner. Example: 3 × 3 = <b>9</b>.','จำนวนรอบรวม = นอก × ใน ตัวอย่าง: 3 × 3 = <b>9</b>'],
+  ['Think of <b>rows</b> (outer) and <b>columns</b> (inner).','ให้คิดเป็น <b>แถว</b> (นอก) และ <b>คอลัมน์</b> (ใน)']
+ ])}</div>
+ <div class="card" style="text-align:center"><div class="tag">Row = 3 · Column = 3</div>
+  <div class="grid2d" style="grid-template-columns:repeat(3,26px)">${'<i></i>'.repeat(9)}</div>
+  <p>3 × 3 = 9</p></div>
+</div>
+${box('green','A <b>clock</b>: the minute hand (inside) goes around 60 times for each step of the hour hand (outside).','<b>นาฬิกา</b>: เข็มนาที (ข้างใน) วนครบ 60 ครั้งต่อการขยับของเข็มชั่วโมง (ข้างนอก) หนึ่งครั้ง','Real-life example','ตัวอย่างในชีวิตจริง')}`);
+
+add('Trace a nested loop','ไล่ลูปซ้อนทีละรอบ',`
+${head('Idea 8b · Trace','The inner loop finishes first','ลูปในต้องจบก่อน','blue')}
+<div class="pair">
+ <div>${code(`for (int r = 1; r <= 2; r++)
+{
+    for (int c = 1; c <= 3; c++)
+    {
+        Console.Write("(" + r + "," + c + ") ");
+    }
+    Console.WriteLine();
+}`)}${out('(1,1) (1,2) (1,3)\n(2,1) (2,2) (2,3)')}</div>
+ <div>${tbl(['Step','r','c','Prints'],[[1,1,1,'(1,1)'],[2,1,2,'(1,2)'],[3,1,3,'(1,3)'],[4,2,1,'(2,1)'],[5,2,2,'(2,2)'],[6,2,3,'(2,3)']])}
+ <p class="hint" style="margin-top:8px">${L('<code>r</code> changes slowly (once per row). <code>c</code> changes fast (every step). Total = 2 × 3 = 6 steps.','<code>r</code> เปลี่ยนช้า (ทุกแถว) <code>c</code> เปลี่ยนเร็ว (ทุกขั้น) รวม = 2 × 3 = 6 ขั้น')}</p></div>
+</div>
+${box('green','Like a clock: the minute hand (<code>c</code>) goes round fully before the hour hand (<code>r</code>) moves one step.','เหมือนนาฬิกา: เข็มนาที (<code>c</code>) วนครบรอบก่อน เข็มชั่วโมง (<code>r</code>) ถึงขยับไปหนึ่งช่อง','Real-life example','ตัวอย่างในชีวิตจริง')}`);
+
+add('Nested: rectangles','ลูปซ้อน: สี่เหลี่ยม',`
+${head('Idea 8 · Sample 1 and 2','Draw a rectangle of x','วาดสี่เหลี่ยมจาก x','blue')}
+<div class="pair">
+ <div>${code(`int row, col;
+for (row = 1; row <= 3; row++)
+{
+    for (col = 1; col <= 5; col++)
+    {
+        Console.Write("x");
+    }
+    Console.WriteLine();
+}`)}</div>
+ <div>${out('xxxxx\nxxxxx\nxxxxx')}
+  ${steps([
+   ['Outer loop: 3 rows.','ลูปนอก: 3 แถว'],
+   ['Inner loop: 5 × <code>Write("x")</code> on the same line.','ลูปใน: พิมพ์ x 5 ตัวในบรรทัดเดียวกัน'],
+   ['<code>WriteLine()</code>: go to a new line after each row.','<code>WriteLine()</code>: ขึ้นบรรทัดใหม่หลังจบแต่ละแถว']
+  ])}</div>
+</div>
+${box('','Sample 2: change <code>row &lt;= 3</code> to <code>r &lt;= 5</code> and you get a 5 × 5 square.','Sample 2: เปลี่ยน <code>row &lt;= 3</code> เป็น <code>r &lt;= 5</code> จะได้สี่เหลี่ยมจัตุรัส 5 × 5','Try it','ลองดู')}`);
+
+add('Nested: triangles','ลูปซ้อน: สามเหลี่ยม',`
+${head('Idea 8 · Sample 3 and 4','The inner loop depends on the outer one','ลูปในขึ้นกับลูปนอก','blue')}
+<div class="pair">
+ <div>${code(`for (r = 1; r <= 5; r++)
+{
+    for (c = 1; c <= r; c++)   // c up to r
+    {
+        Console.Write("x");
+    }
+    Console.WriteLine();
+}`)}${out('x\nxx\nxxx\nxxxx\nxxxxx')}</div>
+ <div>${code(`for (r = 5; r >= 1; r--)   // count down
+{
+    for (c = 1; c <= r; c++)
+    {
+        Console.Write("x");
+    }
+    Console.WriteLine();
+}`)}${out('xxxxx\nxxxx\nxxx\nxx\nx')}</div>
+</div>
+${remember('In row <code>r</code>, the inner loop runs <code>r</code> times. So row 1 has 1 x, row 2 has 2 x, and so on.','ในแถวที่ <code>r</code> ลูปในทำ <code>r</code> รอบ แถว 1 มี x 1 ตัว แถว 2 มี 2 ตัว และต่อไปเรื่อย ๆ')}`);
+
+add('Nested: multiplication table','ลูปซ้อน: ตารางสูตรคูณ',`
+${head('Idea 8c · A classic','A multiplication table','ตารางสูตรคูณ','blue')}
+<div class="pair">
+ <div>${code(`for (int r = 1; r <= 3; r++)
+{
+    for (int c = 1; c <= 3; c++)
+    {
+        Console.Write(r * c + "\\t");
+    }
+    Console.WriteLine();
+}`)}${out('1\t2\t3\n2\t4\t6\n3\t6\t9')}</div>
+ <div>${pts([
+  ['Each cell is <code>r * c</code>: row 2, column 3 → <code>2 × 3 = 6</code>.','แต่ละช่องคือ <code>r * c</code>: แถว 2 คอลัมน์ 3 → <code>2 × 3 = 6</code>'],
+  ['<code>"\\t"</code> is a tab. It puts space between the numbers.','<code>"\\t"</code> คือ tab ใช้เว้นระยะระหว่างตัวเลข'],
+  ['Change <code>3</code> to <code>9</code> in both loops to get a 9 × 9 table.','เปลี่ยน <code>3</code> เป็น <code>9</code> ทั้งสองลูป จะได้ตาราง 9 × 9']
+ ])}</div>
+</div>`);
+
+add('Exercise: number patterns','แบบฝึกหัด: ลวดลายตัวเลข',`
+${head('Idea 8 · Exercise 1','Print number patterns','พิมพ์ลวดลายตัวเลข','blue')}
+<div class="pair">
+ <div><div class="lab">1.1</div>${out('11111\n1111\n111\n11\n1')}
+ ${ans(L('Show answer','ดูเฉลย'),code(`for (r = 5; r >= 1; r--)
+{
+    for (c = 1; c <= r; c++)
+    {
+        Console.Write("1");
+    }
+    Console.WriteLine();
+}`))}</div>
+ <div><div class="lab">1.2</div>${out('1\n12\n123\n1234\n12345')}
+ ${ans(L('Show answer','ดูเฉลย'),code(`for (r = 1; r <= 5; r++)
+{
+    for (c = 1; c <= r; c++)
+    {
+        Console.Write(c);   // print c, not "1"
+    }
+    Console.WriteLine();
+}`)+`<p class="hint">${L('Outer <code>r</code>: 1…5. Inner <code>c</code>: 1 to <code>r</code>.','ลูปนอก <code>r</code>: 1…5 ลูปใน <code>c</code>: 1 ถึง <code>r</code>')}</p>`)}</div>
+</div>
+<p class="hint">${L('Try to write them yourself first, then open the answer.','ลองเขียนเองก่อน แล้วค่อยเปิดดูเฉลย')}</p>`);
+
+add('Nested while: reset','while ซ้อนกัน: รีเซ็ตค่า',`
+${head('Appendix · Nested while','Reset the inner counter each time','ต้องรีเซ็ตตัวนับของลูปใน','amber')}
+<div class="pair">
+ <div><div class="lab">${L('Correct','ถูกต้อง')}</div>${code(`int i = 1, j = 5;
+while (i <= 3)
+{
+    while (j >= 1)
+    {
+        Console.WriteLine(i + "  " + j);
+        j--;
+    }
+    i++;
+    j = 5;     // reset j!
+}`)}${out('1  5 … 1  1\n2  5 … 2  1\n3  5 … 3  1')}</div>
+ <div><div class="lab">${L('Forgot j = 5','ลืม j = 5')}</div>${code(`int i = 1, j = 5;
+while (i <= 3)
+{
+    while (j >= 1)
+    {
+        Console.WriteLine(i + "  " + j);
+        j--;
+    }
+    i++;
+}`)}${out('1  5\n1  4\n1  3\n1  2\n1  1')}</div>
+</div>
+${box('amber','After the first round <code>j = 0</code>, so the inner loop never runs again. A <code>for</code> loop avoids this: <code>for (j = 5; j &gt;= 1; j--)</code> sets <code>j</code> again every time.','หลังรอบแรก <code>j = 0</code> ลูปในจึงไม่ทำงานอีก ใช้ <code>for</code> จะไม่เจอปัญหานี้ เพราะ <code>for (j = 5; j &gt;= 1; j--)</code> ตั้งค่า <code>j</code> ใหม่ทุกครั้ง','Why','ทำไม')}`);
+
+add('Mini exercises','แบบฝึกหัดย่อย',`
+${head('Practice','Try to write each one yourself first','ลองเขียนเองก่อนทุกข้อ','amber')}
+${ans(L('E1. Print the sum of 1 to 5. (Hint: <code>sum += i</code>)','E1. พิมพ์ผลรวมของ 1 ถึง 5 (คำใบ้: <code>sum += i</code>)'),code(`int sum = 0;
+for (int i = 1; i <= 5; i++)
+{
+    sum += i;
+}
+Console.WriteLine(sum);   // 15`))}
+${ans(L('E2. Print the even numbers 2, 4, 6, 8, 10. (Hint: STEP can be <code>i += 2</code>)','E2. พิมพ์เลขคู่ 2, 4, 6, 8, 10 (คำใบ้: STEP เป็น <code>i += 2</code> ได้)'),code(`for (int i = 2; i <= 10; i += 2)
+{
+    Console.Write(i + " ");
+}`))}
+${ans(L('E3. Count down: 5 4 3 2 1 Go! (Hint: START at 5, STEP <code>i--</code>)','E3. นับถอยหลัง: 5 4 3 2 1 Go! (คำใบ้: START ที่ 5, STEP <code>i--</code>)'),code(`for (int i = 5; i >= 1; i--)
+{
+    Console.Write(i + " ");
+}
+Console.WriteLine("Go!");`))}
+${ans(L('E4. Factorial of 5 (5 × 4 × 3 × 2 × 1). (Hint: start the result at 1, not 0)','E4. แฟกทอเรียลของ 5 (5 × 4 × 3 × 2 × 1) (คำใบ้: ให้ผลลัพธ์เริ่มที่ 1 ไม่ใช่ 0)'),code(`int f = 1;
+for (int i = 1; i <= 5; i++)
+{
+    f *= i;
+}
+Console.WriteLine(f);   // 120`)+`<p class="hint">${L('If <code>f</code> starts at 0, the answer is always 0.','ถ้า <code>f</code> เริ่มที่ 0 คำตอบจะเป็น 0 ตลอด')}</p>`)}
+${ans(L('E5. Ask for a password until the user types “1234” (use <code>do…while</code>).','E5. ถามรหัสผ่านจนกว่าผู้ใช้จะพิมพ์ “1234” (ใช้ <code>do…while</code>)'),code(`string pw;
+do
+{
+    Console.Write("Password: ");
+    pw = Console.ReadLine();
+} while (pw != "1234");
+Console.WriteLine("Welcome!");`))}
+${ans(L('E6. Print this with nested loops: <code>*** / *** / ***</code>','E6. พิมพ์ด้วยลูปซ้อน: <code>*** / *** / ***</code>'),P('Same as the x rectangle: 3 rows, 3 columns, and <code>Write("*")</code>.','เหมือนสี่เหลี่ยม x: 3 แถว 3 คอลัมน์ และใช้ <code>Write("*")</code>'))}
+<p class="hint">${L('These are for you to learn. Do not look at the answer before you try.','แบบฝึกหัดนี้เพื่อให้เราเรียนรู้ ห้ามดูเฉลยก่อนลองทำ')}</p>`);
+
+add('Summary','สรุป',`
+${head('Chapter 7 · in 4 lines','Repeat, skip, stop, and nest.','ทำซ้ำ ข้าม หยุด และซ้อน','green')}
+<div class="grid g2">
+ ${card('blue','Loops','4 loops, 3 parts','ลูป 4 แบบ 3 ส่วน','<code>while</code>, <code>do…while</code>, <code>for</code>, <code>foreach</code>. Each needs START, STOP, STEP.','<code>while</code>, <code>do…while</code>, <code>for</code>, <code>foreach</code> ทุกแบบต้องมี START, STOP, STEP')}
+ ${card('green','Posttest','do…while runs at least once','do…while ทำอย่างน้อย 1 รอบ','It checks <b>after</b> the body. Do not forget the <code>;</code>.','ตรวจ<b>หลัง</b>ทำงานในลูป อย่าลืม <code>;</code>')}
+ ${card('amber','Jump','break and continue','break และ continue','<code>break</code> ends the loop. <code>continue</code> skips one round. In <code>while</code>, STEP before <code>continue</code>.','<code>break</code> จบลูป <code>continue</code> ข้ามหนึ่งรอบ ใน <code>while</code> ต้อง STEP ก่อน <code>continue</code>')}
+ ${card('red','Nested','Outer × inner','นอก × ใน','Inner loop finishes for each outer round. Rows and columns.','ลูปในทำครบทุกรอบของลูปนอก คิดเป็นแถวและคอลัมน์')}
+</div>
+${box('','Class review questions: How many loop statements are there? What is the difference between pretest and posttest? How do we break a loop? Can we put a loop inside another loop?','คำถามทบทวนในห้อง: ลูปมีกี่แบบ? pretest กับ posttest ต่างกันอย่างไร? หยุดลูปได้อย่างไร? ใส่ลูปในลูปได้ไหม?','Self-check','ตรวจสอบตัวเอง')}
+${box('','Next: test yourself on the <b>Exam practice</b> slide, then review the <b>Vocabulary</b>.','ถัดไป: ลองทำ<b>ข้อสอบฝึกหัด</b> แล้วทบทวน<b>คำศัพท์</b>','Up next','ต่อไป')}`);
+
+/* ---------- exam ---------- */
+const Q=[
+ ['How many times does <code>for (int i = 1; i &lt; 5; i++)</code> run its body?','<code>for (int i = 1; i &lt; 5; i++)</code> ทำตัวลูปกี่รอบ?',
+  [['4','4'],['5','5'],['6','6'],['0','0']],0,
+  'i = 1, 2, 3, 4. With <code>&lt;</code> the number 5 is not included.','i = 1, 2, 3, 4 ถ้าใช้ <code>&lt;</code> จะไม่รวม 5'],
+ ['What does <code>for (int i = 1; i &lt;= 3; i++); { Console.WriteLine("Hi"); }</code> print?','<code>for (int i = 1; i &lt;= 3; i++); { Console.WriteLine("Hi"); }</code> พิมพ์อะไร?',
+  [['Hi (3 times)','Hi (3 ครั้ง)'],['Hi (once)','Hi (1 ครั้ง)'],['Nothing','ไม่พิมพ์'],['Compile error','compile error']],1,
+  'The <code>;</code> is the empty loop body. The block after it runs once.','<code>;</code> คือตัวลูปว่าง บล็อกด้านล่างทำครั้งเดียว'],
+ ['A <code>break</code> is inside the <b>inner</b> loop of two nested loops. What does it leave?','<code>break</code> อยู่ใน<b>ลูปใน</b>ของลูปซ้อนสองชั้น มันออกจากอะไร?',
+  [['Only the inner loop','เฉพาะลูปใน'],['Both loops','ทั้งสองลูป'],['The program','โปรแกรม'],['Only the outer loop','เฉพาะลูปนอก']],0,
+  '<code>break</code> leaves only the loop it is directly inside.','<code>break</code> ออกจากลูปที่มันอยู่โดยตรงเท่านั้น'],
+ ['In the multiplication table code (<code>r * c</code>), what is printed in row 2, column 3?','ในโค้ดตารางสูตรคูณ (<code>r * c</code>) แถว 2 คอลัมน์ 3 พิมพ์อะไร?',
+  [['5','5'],['6','6'],['23','23'],['8','8']],1,
+  '<code>2 * 3 = 6</code>.','<code>2 * 3 = 6</code>'],
+ ['Which loop is best to ask for a password again and again until it is correct?','ลูปไหนเหมาะที่สุดในการถามรหัสผ่านซ้ำจนกว่าจะถูก?',
+  [['<code>do…while</code>','<code>do…while</code>'],['<code>foreach</code>','<code>foreach</code>'],['<code>for</code> with a fixed count','<code>for</code> ที่กำหนดจำนวนรอบ'],['None','ไม่มี']],0,
+  'We must ask at least once, and we do not know how many times: <code>do…while</code>.','ต้องถามอย่างน้อย 1 ครั้ง และไม่รู้จำนวนรอบ: <code>do…while</code>'],
+ ['Which loop always runs its body at least once?','ลูปไหนทำงานในลูป<b>อย่างน้อยหนึ่งรอบ</b>เสมอ?',
+  [['<code>while</code>','<code>while</code>'],['<code>for</code>','<code>for</code>'],['<code>do…while</code>','<code>do…while</code>'],['<code>foreach</code>','<code>foreach</code>']],2,
+  '<code>do…while</code> checks the condition <b>after</b> the body, so it runs once first.','<code>do…while</code> ตรวจเงื่อนไข<b>หลัง</b>ทำงานในลูป จึงทำ 1 รอบก่อนเสมอ'],
+ ['Which loops are <b>pretest</b> loops?','ลูปไหนเป็น <b>pretest</b>?',
+  [['<code>while</code> and <code>for</code>','<code>while</code> และ <code>for</code>'],['<code>do…while</code> only','เฉพาะ <code>do…while</code>'],['All loops','ทุกลูป'],['None','ไม่มี']],0,
+  'Pretest = check <b>before</b> each round: <code>while</code>, <code>for</code> (and <code>foreach</code>).','Pretest = ตรวจ<b>ก่อน</b>ทุกรอบ: <code>while</code>, <code>for</code> (และ <code>foreach</code>)'],
+ ['What does <code>int i = 20; do { Console.WriteLine("Hi"); i++; } while (i &lt;= 10);</code> print?','<code>int i = 20; do { Console.WriteLine("Hi"); i++; } while (i &lt;= 10);</code> พิมพ์อะไร?',
+  [['Nothing','ไม่พิมพ์อะไร'],['Hi (once)','Hi (1 ครั้ง)'],['Hi (10 times)','Hi (10 ครั้ง)'],['It never stops','ไม่รู้จบ']],1,
+  'The body runs once before the check. Then <code>21 &lt;= 10</code> is false, so it stops.','ทำในลูป 1 รอบก่อนตรวจ แล้ว <code>21 &lt;= 10</code> เป็นเท็จ จึงหยุด'],
+ ['What is wrong with <code>do { i++; } while (i &lt; 5)</code> ?','<code>do { i++; } while (i &lt; 5)</code> ผิดตรงไหน?',
+  [['Missing <code>;</code> after <code>while (…)</code>','ไม่มี <code>;</code> หลัง <code>while (…)</code>'],['Missing <code>{ }</code>','ไม่มี <code>{ }</code>'],['<code>i++</code> is not allowed','ห้ามใช้ <code>i++</code>'],['Nothing is wrong','ไม่มีอะไรผิด']],0,
+  '<code>do…while</code> is the only loop that needs a semicolon at the end.','<code>do…while</code> เป็นลูปเดียวที่ต้องมี <code>;</code> ตอนท้าย'],
+ ['Which part is missing? <code>for (int i = 1; i &lt;= 10; )</code>','ขาดส่วนไหน? <code>for (int i = 1; i &lt;= 10; )</code>',
+  [['START','START'],['STOP','STOP'],['STEP','STEP'],['Nothing','ไม่ขาดอะไร']],2,
+  'There is no update (like <code>i++</code>), so the loop never ends.','ไม่มีการอัปเดตค่า (เช่น <code>i++</code>) ลูปจึงไม่จบ'],
+ ['Which loop is infinite? (<code>int i = 1;</code> before each)','ลูปไหนไม่รู้จบ? (ก่อนหน้ามี <code>int i = 1;</code>)',
+  [['<code>while (i &lt;= 10) { i++; }</code>','<code>while (i &lt;= 10) { i++; }</code>'],['<code>while (i &gt; 0) { i++; }</code>','<code>while (i &gt; 0) { i++; }</code>'],['<code>while (i &lt;= 3) { i += 2; }</code>','<code>while (i &lt;= 3) { i += 2; }</code>'],['<code>for (; i &lt; 5; i++) { }</code>','<code>for (; i &lt; 5; i++) { }</code>']],1,
+  '<code>i</code> grows 1, 2, 3… so <code>i &gt; 0</code> is always true.','<code>i</code> เพิ่ม 1, 2, 3… จึง <code>i &gt; 0</code> เป็นจริงตลอด'],
+ ['How do you leave <code>while (true)</code> on purpose?','จะออกจาก <code>while (true)</code> อย่างตั้งใจได้อย่างไร?',
+  [['<code>continue</code>','<code>continue</code>'],['<code>break</code>','<code>break</code>'],['<code>i++</code>','<code>i++</code>'],['You cannot','ทำไม่ได้']],1,
+  '<code>break</code> ends the loop immediately.','<code>break</code> จบลูปทันที'],
+ ['What does this print? <code>for (int i = 1; i &lt;= 10; i++) { if (i == 5) continue; Console.Write(i + " "); }</code>','โค้ดนี้พิมพ์อะไร? <code>for (int i = 1; i &lt;= 10; i++) { if (i == 5) continue; Console.Write(i + " "); }</code>',
+  [['1 2 3 4','1 2 3 4'],['1 2 3 4 5 6 7 8 9 10','1 2 3 4 5 6 7 8 9 10'],['1 2 3 4 6 7 8 9 10','1 2 3 4 6 7 8 9 10'],['5','5']],2,
+  '<code>continue</code> skips only the round where <code>i == 5</code>.','<code>continue</code> ข้ามเฉพาะรอบที่ <code>i == 5</code>'],
+ ['What does this print? <code>for (i = -5; i &lt;= 5; i++) { if (i == 0) break; Console.Write(i + " "); }</code>','โค้ดนี้พิมพ์อะไร? <code>for (i = -5; i &lt;= 5; i++) { if (i == 0) break; Console.Write(i + " "); }</code>',
+  [['-5 -4 -3 -2 -1','-5 -4 -3 -2 -1'],['-5 … 5 (all)','-5 … 5 (ทั้งหมด)'],['-5 -4 -3 -2 -1 1 2 3 4 5','-5 -4 -3 -2 -1 1 2 3 4 5'],['0','0']],0,
+  '<code>break</code> ends the whole loop at <code>i == 0</code>.','<code>break</code> จบทั้งลูปเมื่อ <code>i == 0</code>'],
+ ['Using <code>continue</code> in a <code>while</code> loop, where must the STEP be?','ใช้ <code>continue</code> ใน <code>while</code> ต้องวาง STEP ไว้ที่ไหน?',
+  [['After <code>continue</code>','หลัง <code>continue</code>'],['Before <code>continue</code>','ก่อน <code>continue</code>'],['It does not matter','ไม่สำคัญ'],['No STEP is needed','ไม่ต้องมี STEP']],1,
+  '<code>continue</code> skips everything after it. If STEP is after it, <code>i</code> never changes.','<code>continue</code> ข้ามทุกอย่างที่อยู่หลังมัน ถ้า STEP อยู่หลัง <code>i</code> จะไม่เปลี่ยน'],
+ ['An outer loop runs 3 times and an inner loop runs 4 times. How many times does the inner body run in total?','ลูปนอกทำ 3 รอบ ลูปในทำ 4 รอบ โดยรวมตัวลูปในทำงานกี่ครั้ง?',
+  [['7','7'],['12','12'],['3','3'],['4','4']],1,
+  'Outer × inner = 3 × 4 = <b>12</b>.','นอก × ใน = 3 × 4 = <b>12</b>'],
+ ['In the triangle program, the inner loop is <code>for (c = 1; c &lt;= r; c++)</code>. How many x are in row 4?','ในโปรแกรมสามเหลี่ยม ลูปในคือ <code>for (c = 1; c &lt;= r; c++)</code> แถวที่ 4 มี x กี่ตัว?',
+  [['1','1'],['4','4'],['5','5'],['10','10']],1,
+  'The inner loop runs <code>r</code> times, so row 4 has 4 x.','ลูปในทำ <code>r</code> รอบ แถวที่ 4 จึงมี x 4 ตัว'],
+ ['Trace: <code>int i = 1, sum = 0; while (i &lt;= 3) { sum += i; i++; }</code> What is <code>sum</code> at the end?','Trace: <code>int i = 1, sum = 0; while (i &lt;= 3) { sum += i; i++; }</code> ตอนจบ <code>sum</code> เท่าไร?',
+  [['3','3'],['5','5'],['6','6'],['10','10']],2,
+  '1 + 2 + 3 = <b>6</b>.','1 + 2 + 3 = <b>6</b>'],
+ ['Which <code>for</code> is the same as <code>int i = 10; while (i &gt;= 1) { Console.WriteLine(i); i--; }</code>?','<code>for</code> ไหนเหมือนกับ <code>int i = 10; while (i &gt;= 1) { Console.WriteLine(i); i--; }</code>?',
+  [['<code>for (int i = 10; i &gt;= 1; i--)</code>','<code>for (int i = 10; i &gt;= 1; i--)</code>'],['<code>for (int i = 1; i &lt;= 10; i++)</code>','<code>for (int i = 1; i &lt;= 10; i++)</code>'],['<code>for (int i = 10; i &lt;= 1; i--)</code>','<code>for (int i = 10; i &lt;= 1; i--)</code>'],['<code>for (int i = 10, i &gt;= 1, i--)</code>','<code>for (int i = 10, i &gt;= 1, i--)</code>']],0,
+  'START <code>i = 10</code>, STOP <code>i &gt;= 1</code>, STEP <code>i--</code>. The last one wrongly uses commas.','START <code>i = 10</code>, STOP <code>i &gt;= 1</code>, STEP <code>i--</code> ข้อสุดท้ายใช้ , ผิด']
+];
+const LET='ABCD';
+Q.forEach(q=>{const right=q[2][q[3]];const o=q[2].slice();
+  for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]];}
+  q[2]=o;q[3]=o.indexOf(right);});
+add('Exam practice','ฝึกทำข้อสอบ',`
+<p class="kicker violet">Exam practice · ${Q.length} questions + 2 written</p>
+<h2>${L('Test yourself','ทดสอบตัวเอง')}</h2>
+${P('Tap an answer. You will see right away if it is correct, with a short explanation.','แตะเลือกคำตอบ แล้วจะรู้ทันทีว่าถูกหรือผิด พร้อมคำอธิบายสั้น ๆ')}
+<div class="scorebar"><span class="s" id="qscore">0 / ${Q.length}</span><span id="qleft" style="color:var(--muted);font-size:15px"></span><button class="btn ghost" id="qreset">${L('Start again','เริ่มใหม่')}</button></div>
+<div id="quiz">${Q.map((q,i)=>`<div class="q" data-i="${i}">
+  <div class="qn">Q${i+1}</div><div class="qt">${L(q[0],q[1])}</div>
+  <div class="opts">${q[2].map((o,j)=>`<button class="opt" data-j="${j}"><span class="l">${LET[j]}</span><span>${L(o[0],o[1])}</span></button>`).join('')}</div>
+  <div class="why">${L(q[4],q[5])}</div></div>`).join('')}</div>
+<h3 style="margin-top:28px">${L('Written practice','ฝึกเขียนตอบ')}</h3>
+${ans(L('W1. Write a loop that prints 1 to 5 using <code>do…while</code>.','W1. เขียนลูปพิมพ์ 1 ถึง 5 ด้วย <code>do…while</code>'),code(`int i = 1;               // START
+do
+{
+    Console.WriteLine(i);
+    i++;                 // STEP
+} while (i <= 5);        // STOP, and the ;`))}
+${ans(L('W2. Write nested loops to print this:  <code>1 / 22 / 333</code> (3 rows).','W2. เขียนลูปซ้อนให้พิมพ์: <code>1 / 22 / 333</code> (3 แถว)'),code(`for (int r = 1; r <= 3; r++)
+{
+    for (int c = 1; c <= r; c++)
+    {
+        Console.Write(r);   // print the row number
+    }
+    Console.WriteLine();
+}`)+`<p class="hint">${L('Row 1 prints "1" once, row 2 prints "2" twice, row 3 prints "3" three times.','แถว 1 พิมพ์ "1" หนึ่งครั้ง แถว 2 พิมพ์ "2" สองครั้ง แถว 3 พิมพ์ "3" สามครั้ง')}</p>`)}`);
+
+/* ---------- vocab ---------- */
+const V=[
+ ['Iteration / Loop','การทำซ้ำ / ลูป','Doing the same code again and again.','ทำโค้ดเดิมซ้ำ ๆ','Basics'],
+ ['Control statement','คำสั่งควบคุม','A statement that controls the order the program runs.','คำสั่งที่ควบคุมลำดับการทำงานของโปรแกรม','Basics'],
+ ['Selection statement','คำสั่งเลือก','Chooses a path: <code>if</code>, <code>switch</code>.','เลือกเส้นทาง: <code>if</code>, <code>switch</code>','Basics'],
+ ['Jump statement','คำสั่งกระโดด','Moves the program somewhere else: <code>break</code>, <code>continue</code>.','พาโปรแกรมไปทำที่อื่น: <code>break</code>, <code>continue</code>','Basics'],
+ ['Initialization (START)','การกำหนดค่าเริ่มต้น','Where the loop begins.','จุดที่ลูปเริ่มต้น','Loop parts','<code>int i = 1</code>'],
+ ['Condition (STOP)','เงื่อนไข','Decides if the loop continues. False = stop.','ตัดสินว่าลูปจะต่อไหม เท็จ = หยุด','Loop parts','<code>i &lt;= 10</code>'],
+ ['Update (STEP)','การปรับค่า','Changes the counter for the next round.','เปลี่ยนค่าตัวนับสำหรับรอบถัดไป','Loop parts','<code>i++</code>'],
+ ['Counter','ตัวนับ','A variable that counts the rounds.','ตัวแปรที่นับรอบ','Loop parts','<code>i</code>'],
+ ['Round / Iteration','รอบ','One time the loop body runs.','การทำงานในลูปหนึ่งครั้ง','Loop parts'],
+ ['Loop body','ตัวลูป','The code inside <code>{ }</code> that repeats.','โค้ดในปีกกา <code>{ }</code> ที่ทำซ้ำ','Loop parts'],
+ ['Pretest loop','ลูปตรวจก่อน','Checks the condition <b>before</b> each round.','ตรวจเงื่อนไข<b>ก่อน</b>ทุกรอบ','Loops','while, for'],
+ ['Posttest loop','ลูปตรวจหลัง','Checks the condition <b>after</b> each round.','ตรวจเงื่อนไข<b>หลัง</b>ทุกรอบ','Loops','do…while'],
+ ['<code>foreach</code>','foreach','Goes through every item in a collection or array.','วนผ่านทุกชิ้นใน collection หรือ array','Loops'],
+ ['Collection / Array','ชุดข้อมูล / อาร์เรย์','A group of items stored together.','กลุ่มข้อมูลที่เก็บไว้ด้วยกัน','Loops'],
+ ['Infinite loop','ลูปไม่รู้จบ','A loop that never stops.','ลูปที่ไม่หยุด','Errors'],
+ ['Trace','การไล่ดูโค้ด','Following the code round by round, writing each value.','ไล่ดูโค้ดทีละรอบและจดค่าของตัวแปร','Skills'],
+ ['<code>break</code>','break','Leaves the whole loop at once.','ออกจากลูปทั้งหมดทันที','Jump'],
+ ['<code>continue</code>','continue','Skips the rest of this round, goes to the next.','ข้ามที่เหลือของรอบนี้ ไปรอบถัดไป','Jump'],
+ ['Nested loop','ลูปซ้อนลูป','A loop inside another loop.','ลูปที่อยู่ในลูปอีกชั้น','Nested'],
+ ['Outer loop','ลูปนอก','The loop on the outside. Often the <b>rows</b>.','ลูปชั้นนอก มักเป็น<b>แถว</b>','Nested'],
+ ['Inner loop','ลูปใน','The loop on the inside. Often the <b>columns</b>.','ลูปชั้นใน มักเป็น<b>คอลัมน์</b>','Nested'],
+ ['Row / Column','แถว / คอลัมน์','Row = across, column = down.','แถว = แนวนอน คอลัมน์ = แนวตั้ง','Nested'],
+ ['<code>Console.Write</code>','Console.Write','Prints on the same line (no new line).','พิมพ์ต่อในบรรทัดเดิม (ไม่ขึ้นบรรทัดใหม่)','C#'],
+ ['<code>Console.WriteLine</code>','Console.WriteLine','Prints, then goes to a new line.','พิมพ์ แล้วขึ้นบรรทัดใหม่','C#'],
+ ['<code>int.Parse</code>','int.Parse','Turns text into an integer.','แปลงข้อความเป็นจำนวนเต็ม','C#','<code>int.Parse("5")</code>'],
+ ['Increment / Decrement','เพิ่มค่า / ลดค่า','<code>i++</code> adds 1. <code>i--</code> subtracts 1.','<code>i++</code> บวก 1 · <code>i--</code> ลบ 1','C#'],
+ ['Semicolon <code>;</code>','เซมิโคลอน','Ends a statement. Needed after <code>do…while (…)</code>.','จบคำสั่ง ต้องมีหลัง <code>do…while (…)</code>','C#']
+];
+add('Vocabulary','คำศัพท์',`
+<p class="kicker violet">Vocabulary · ${V.length} words you should know</p>
+<h2>${L('Vocabulary you should know','คำศัพท์ที่ควรรู้')}</h2>
+<input class="vsearch" id="vq" type="search" placeholder="Search · ค้นหา (e.g. loop, ลูป)" aria-label="Search vocabulary">
+<div class="vgrid" id="vgrid">${V.map(v=>`<div class="v" data-s="${(v[0]+' '+v[1]+' '+v[2]+' '+v[3]).toLowerCase().replace(/<[^>]*>/g,'').replace(/"/g,'')}">
+ <span class="cat">${v[4]}</span><div class="term">${v[0]}</div><div class="thw">${v[1]}</div>
+ <div class="mean">${L(v[2],v[3])}</div>${v[5]?`<div class="ex">e.g. ${v[5]}</div>`:''}</div>`).join('')}</div>
+<p id="vnone" class="hint" style="display:none">${L('No matching words.','ไม่พบคำที่ค้นหา')}</p>`);
+
+/* ---------- render ---------- */
+const stage=document.getElementById('stage');
+stage.innerHTML=S.map((s,i)=>`<section class="slide" aria-roledescription="slide" aria-label="${i+1} of ${S.length}"><div class="inner">${s.html}</div></section>`).join('');
+const slides=[...stage.querySelectorAll('.slide')];
+const root=document.documentElement;
+let cur=0;
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+function show(i){
+  i=Math.max(0,Math.min(S.length-1,i));
+  slides[cur].classList.remove('on'); cur=i; slides[cur].classList.add('on'); slides[cur].scrollTop=0;
+  document.getElementById('num').textContent=`${cur+1} / ${S.length}`;
+  document.getElementById('ttl').innerHTML=L(S[cur].en,S[cur].th);
+  document.getElementById('bar').style.width=((cur+1)/S.length*100)+'%';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===S.length-1;
+  history.replaceState(null,'','#'+(cur+1));
+  store.set('cp7-slide',cur);
+  renderMenu();
+}
+document.getElementById('prev').onclick=()=>show(cur-1);
+document.getElementById('next').onclick=()=>show(cur+1);
+document.addEventListener('keydown',e=>{
+  if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown')show(cur+1);
+  else if(e.key==='ArrowLeft'||e.key==='PageUp')show(cur-1);
+  else if(e.key==='Escape')menu.classList.remove('on');
+});
+let tx=0,ty=0,skip=false;
+stage.addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY;skip=!!e.target.closest('pre,.scroll-x,input,svg');},{passive:true});
+stage.addEventListener('touchend',e=>{if(skip)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;
+  if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.6)show(cur+(dx<0?1:-1));},{passive:true});
+
+/* menu */
+const menu=document.getElementById('menu'),menuList=document.getElementById('menuList');
+function renderMenu(){menuList.innerHTML=S.map((s,i)=>`<li><button class="${i===cur?'cur':''}" data-i="${i}"><span class="n">${i+1}</span><span>${L(s.en,s.th)}</span></button></li>`).join('');}
+menuList.onclick=e=>{const b=e.target.closest('button');if(b){show(+b.dataset.i);menu.classList.remove('on');}};
+document.getElementById('menuBtn').onclick=()=>menu.classList.add('on');
+document.getElementById('menuClose').onclick=()=>menu.classList.remove('on');
+menu.onclick=e=>{if(e.target===menu)menu.classList.remove('on');};
+
+/* language */
+const segBtns=document.querySelectorAll('.seg button');
+function setMode(m){root.dataset.mode=m;root.lang=m==='th'?'th':'en';segBtns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.m===m)));store.set('cp7-lang',m);}
+segBtns.forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+const savedLang=store.get('cp7-lang'); if(savedLang)setMode(savedLang);
+
+/* quiz */
+const quiz=document.getElementById('quiz');
+function updScore(){
+  const done=quiz.querySelectorAll('.q.done').length, right=quiz.querySelectorAll('.opt.right.picked').length;
+  document.getElementById('qscore').textContent=`${right} / ${Q.length}`;
+  document.getElementById('qleft').innerHTML=done<Q.length?L(`${Q.length-done} left`,`เหลือ ${Q.length-done} ข้อ`):L(right>=16?'Excellent! 🎉':right>=11?'Good. Review the ones you missed.':'Review the slides and try again.',right>=16?'ยอดเยี่ยม! 🎉':right>=8?'ดี ลองทบทวนข้อที่ผิด':'ทบทวนสไลด์แล้วลองใหม่');
+}
+quiz.addEventListener('click',e=>{
+  const b=e.target.closest('.opt'); if(!b)return; const q=b.closest('.q'); if(q.classList.contains('done'))return;
+  const ans=Q[+q.dataset.i][3];
+  q.querySelectorAll('.opt').forEach((o,j)=>{o.disabled=true;if(j===ans)o.classList.add('right');});
+  b.classList.add('picked'); if(+b.dataset.j!==ans)b.classList.add('wrong');
+  q.classList.add('done'); updScore();
+});
+document.getElementById('qreset').onclick=()=>{quiz.querySelectorAll('.q').forEach(q=>{q.classList.remove('done');q.querySelectorAll('.opt').forEach(o=>{o.disabled=false;o.className='opt';});});updScore();slides[cur].scrollTop=0;};
+updScore();
+
+/* vocab search */
+document.getElementById('vq').addEventListener('input',e=>{
+  const s=e.target.value.trim().toLowerCase(); let n=0;
+  document.querySelectorAll('#vgrid .v').forEach(v=>{const m=!s||v.dataset.s.includes(s);v.style.display=m?'':'none';if(m)n++;});
+  document.getElementById('vnone').style.display=n?'none':'block';
+});
+
+/* start */
+const fromHash=parseInt(location.hash.slice(1),10);
+const saved=parseInt(store.get('cp7-slide'),10);
+slides[0].classList.add('on');
+show(!isNaN(fromHash)?fromHash-1:(!isNaN(saved)?saved:0));
+</script>
+</body>
+</html>
