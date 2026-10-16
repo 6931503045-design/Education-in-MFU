@@ -62,10 +62,9 @@ vocab-exam-web/
 └── audio/            ไฟล์เพลง (ยังไม่มี)
 ```
 
-## 6. Deploy บน GitHub Pages ✅
-- ใช้ GitHub Actions (`.github/workflows/pages.yml`) deploy เฉพาะโฟลเดอร์ `vocab-exam-web` ทำให้ได้ลิงก์สั้น
-- ลิงก์: https://6931503045-design.github.io/Education-in-MFU/
-- วิธีตั้งค่าดูที่ [README.md](README.md)
+## 6. Deploy บน GitHub Pages ✅ ออนไลน์แล้ว
+- ใช้ Pages ที่เปิดไว้แล้วของรีโป (Deploy from a branch: `main`)
+- ลิงก์: https://6931503045-design.github.io/Education-in-MFU/English-Communication/vocab-exam-web/
 
 ## 7. คำถามที่ต้องตอบก่อนเริ่มทำ
 1. ~~คำศัพท์มาจากไหน~~ → Vocabulary Lists ของวิชา
