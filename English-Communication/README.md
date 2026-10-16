@@ -45,5 +45,5 @@ https://claude.ai/artifact/84aWHxqLp8mgfcYBZNFAFv
 - [x] เว็บต้นแบบ + Presenter mode + QR code (ออนไลน์แล้ว)
 - [x] สไลด์ตัวอย่างพร้อมการ์ดคำยาก 18 ใบ
 - [ ] โทนและการตกแต่งเว็บ (รอทีม)
-- [ ] ภาพประกอบจริง (ตอนนี้ใช้อีโมจิแทน)
+- [x] ภาพประกอบครบ 67 คำ (Microsoft Fluent Emoji, MIT) เปลี่ยนเป็นภาพของทีมเองได้ ดู [images/README.md](vocab-exam-web/images/README.md)
 - [ ] ไฟล์เพลง `song-th.mp3` / `song-en.mp3`

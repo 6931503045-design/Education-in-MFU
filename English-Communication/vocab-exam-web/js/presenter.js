@@ -14,7 +14,8 @@
   };
 
   function freshState(group, lang) {
-    const quiz = App.buildQuiz({ hard: 2, medium: 2, easy: 1 });
+    // Only words taught at this station: 3 hard words + 2 word-family words.
+    const quiz = App.buildQuizFrom([{ words: Lesson.HARD, n: 3 }, { words: Lesson.FAMILY, n: 2 }], Lesson.TAUGHT);
     const used = quiz.map((q) => q.word);
     const warm = App.buildQuiz({ easy: 3 }, used);
     return {
