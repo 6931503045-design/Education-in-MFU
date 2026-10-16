@@ -47,9 +47,10 @@
   }
 
   // One multiple-choice question: picture + lyric with a blank, 4 choices of the same word type when possible.
-  function makeQuestion(v) {
+  // `pool` = the words wrong choices may come from (default: every quiz word).
+  function makeQuestion(v, pool) {
     // Skip words that already appear in this lyric line, so no wrong choice is printed in the question.
-    const others = quizWords().filter((o) => o.word !== v.word && !v.lyric.toLowerCase().includes(o.word.toLowerCase()));
+    const others = (pool || quizWords()).filter((o) => o.quiz && o.word !== v.word && !v.lyric.toLowerCase().includes(o.word.toLowerCase()));
     const samePos = shuffle(others.filter((o) => posKey(o) === posKey(v)));
     const rest = shuffle(others.filter((o) => posKey(o) !== posKey(v)));
     const wrong = samePos.concat(rest).slice(0, 3).map((o) => o.word);
@@ -64,7 +65,17 @@
     for (const [level, n] of Object.entries(counts || { hard: 2, medium: 2, easy: 1 })) {
       picked.push(...shuffle(quizWords(level).filter((v) => !skip.has(v.word))).slice(0, n));
     }
-    return shuffle(picked).map(makeQuestion);
+    return shuffle(picked).map((v) => makeQuestion(v));
+  }
+
+  // Random quiz from fixed groups, e.g. [{ words: hardWords, n: 3 }, { words: familyWords, n: 2 }].
+  // Wrong choices come from `pool`, so every choice is a word the group has seen.
+  function buildQuizFrom(groups, pool) {
+    const picked = [];
+    for (const g of groups) {
+      picked.push(...shuffle(g.words.filter((v) => v.quiz && !picked.includes(v))).slice(0, g.n));
+    }
+    return shuffle(picked).map((v) => makeQuestion(v, pool));
   }
 
   function blankLyric(v) {
@@ -97,5 +108,5 @@
     speechSynthesis.speak(u);
   }
 
-  window.App = { VOCAB, byWord, TEXT, esc, shuffle, posLabel, quizWords, makeQuestion, buildQuiz, blankLyric, picture, speak };
+  window.App = { VOCAB, byWord, TEXT, esc, shuffle, posLabel, quizWords, makeQuestion, buildQuiz, buildQuizFrom, blankLyric, picture, speak };
 })();

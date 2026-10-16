@@ -3,6 +3,9 @@
   const { VOCAB, byWord, TEXT, esc, posLabel, blankLyric, picture } = window.App;
 
   const HARD = VOCAB.filter((v) => v.level === "hard");
+  // Words taught at the station: hard words (picture cards + song) and the word-family words.
+  const FAMILY = window.FAMILIES.flat().map((w) => byWord[w]).filter((v) => v.level !== "hard");
+  const TAUGHT = HARD.concat(FAMILY);
 
   const STEPS = [
     { id: "welcome", th: "ต้อนรับ", en: "Welcome", minute: "0:00" },
@@ -157,5 +160,5 @@
     return { notes: "" };
   }
 
-  window.Lesson = { STEPS, HARD, itemCount, renderStage, presenterInfo, score, songLines };
+  window.Lesson = { STEPS, HARD, FAMILY, TAUGHT, itemCount, renderStage, presenterInfo, score, songLines };
 })();
