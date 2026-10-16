@@ -1,0 +1,33 @@
+/*
+  THEME: change the website's tone here only.
+  Every page reads its colors, fonts and roundness from these variables.
+*/
+:root {
+  /* Fonts (Thai + Latin). Without internet they fall back to Tahoma/system fonts. */
+  --font-display: "Mitr", Tahoma, sans-serif;
+  --font-body: "Prompt", Tahoma, sans-serif;
+
+  /* Base colors */
+  --bg: #fbf7ef;          /* page background */
+  --surface: #fffdf8;     /* cards */
+  --surface-2: #f1eadb;   /* second background tone */
+  --line: #e4dccb;        /* borders */
+  --ink: #1f2a44;         /* main text, dark panels */
+  --muted: #4a5568;       /* secondary text */
+  --on-dark: #fbf7ef;     /* text on dark panels */
+  --on-dark-muted: #aeb9cf;
+
+  /* Accent and level colors */
+  --accent: #c2410c;
+  --accent-soft: #fbe3c8;
+  --hard: #c2410c;
+  --medium: #f4c542;      /* use dark text on it */
+  --easy: #2f7d4a;
+  --good: #2f7d4a;
+  --bad: #b42318;
+
+  /* Shape */
+  --radius: 20px;
+  --radius-sm: 12px;
+  --shadow: 0 6px 24px rgba(31, 42, 68, 0.08);
+}
