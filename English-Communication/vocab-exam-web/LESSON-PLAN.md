@@ -29,44 +29,16 @@
 3. หลักการเขียนเนื้อร้อง: **1 บรรทัด = 1 คำ + ความหมายสั้น ๆ** และวางคำศัพท์ไว้ท้ายบรรทัดเพื่อให้สัมผัสกัน
 4. เพลงยาวไม่ควรเกิน 3 นาที ใช้โครงสร้าง ฮุก → ท่อน 1 → ฮุก → ท่อน 2 → ฮุก
 
-## ตัวอย่างเนื้อร้องร่าง (คำ🔴ยาก)
-> ร่างแรก ปรับให้เข้ากับทำนองที่เลือกได้
-
-**ฮุก**
-```
-Proofread, proofread, check it twice,
-Constructive words are kind advice.
-Alleviate the pain, make it light,
-Enhance your work and make it bright!
-```
-
-**ท่อน 1: เรียนและเรื่องในมหาวิทยาลัย (บทที่ 1)**
-```
-Diligently, I work so hard,
-Attentively, I'm on my guard.
-Enthusiastically, I shout hooray,
-Extracurricular clubs after class each day.
-Pandemic spread around the land,
-Remarkably, we still made our plans.
-```
-
-**ท่อน 2: วัฒนธรรมและมารยาท (บทที่ 2–3)**
-```
-Etiquette means polite and right,
-Reciprocal: help on both sides.
-Severance: cut the tie,
-Misperception: wrong in your mind.
-Minimise it, make it small,
-Assortment is a mix of all.
-Intruder sneaking in at night,
-Learn these words and you'll be all right!
-```
-*(obscene ไม่ใส่ในเพลง ให้สอนในสไลด์แทน)*
+## เนื้อเพลงและภาพ
+- เนื้อเพลง 2 เวอร์ชัน (🇹🇭 ไทย / 🌏 English) อยู่ใน [SONG-LYRICS.md](SONG-LYRICS.md)
+- ไอเดียภาพประกอบทุกคำ อยู่ใน [VISUAL-IDEAS.md](VISUAL-IDEAS.md)
+- ลำดับเวลาด้านบนใช้ได้ทั้งสองเวอร์ชัน เปลี่ยนแค่เพลงและข้อความบนสไลด์
 
 ## ต้องเตรียม
 - [ ] เลือกทำนองเพลง หรือเลือกว่าจะใช้ AI สร้างเพลง
-- [ ] เกลาเนื้อร้องให้เข้ากับจังหวะ
-- [ ] สไลด์คำยาก 18 ใบ (คำ + ภาพ + ความหมายไทย)
+- [ ] เกลาเนื้อร้องทั้ง 2 เวอร์ชันให้เข้ากับจังหวะ
+- [ ] ภาพประกอบ 1 ชุด (ใช้ร่วมกันทั้ง 2 เวอร์ชัน)
+- [ ] สไลด์คำยาก 18 ใบ × 2 ภาษา
 - [ ] วิดีโอเนื้อร้องขึ้นจอ (lyric video)
 - [ ] ชุดคำถาม Quiz
 - [ ] เว็บ + QR code

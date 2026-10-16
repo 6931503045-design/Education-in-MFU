@@ -4,468 +4,624 @@
     "pos": "v.",
     "meaning": "to make something less severe",
     "chapter": 1,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "บรรเทา, ทำให้เบาลง",
+    "image_idea": "ภาพก่อน/หลัง: คนปวดหัวหน้าเหยเก กินยาแล้วยิ้ม",
+    "memory_trick": "ก้อนหินหนักบนหลัง ถูกยกออก"
   },
   {
     "word": "attentively",
     "pos": "adv.",
     "meaning": "carefully, in a way that shows a lot of interest",
     "chapter": 1,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "อย่างตั้งใจ, อย่างใส่ใจ",
+    "image_idea": "นักศึกษาฟังเลกเชอร์ ตาโต หูขยายใหญ่",
+    "memory_trick": "attention! = ตั้งใจ!"
   },
   {
     "word": "constructive",
     "pos": "adj.",
     "meaning": "intended to help someone or improve understanding",
     "chapter": 1,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "สร้างสรรค์ (ติเพื่อก่อ)",
+    "image_idea": "ครูวงงานด้วยปากกาแดง ในมือถือค้อนช่างก่อสร้าง",
+    "memory_trick": "construct = ก่อสร้าง → ติเพื่อก่อ"
   },
   {
     "word": "diligently",
     "pos": "adv.",
     "meaning": "in a way that is careful and uses a lot of effort",
     "chapter": 1,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "อย่างขยันขันแข็ง",
+    "image_idea": "มดแบกอาหารเป็นแถว / นักศึกษาทำการบ้านตอนดึก",
+    "memory_trick": "มดคือสัญลักษณ์ความขยัน"
   },
   {
     "word": "enhance",
     "pos": "v.",
     "meaning": "to increase or further improve the good quality, value or status of somebody/something",
     "chapter": 1,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "ทำให้ดีขึ้น, เพิ่มคุณภาพ",
+    "image_idea": "รูปก่อน/หลังใส่ฟิลเตอร์ หรือปุ่ม HD",
+    "memory_trick": "en + hance → ยกระดับ (higher)"
   },
   {
     "word": "enthusiastically",
     "pos": "adv.",
     "meaning": "in a way that shows a lot of excitement and interest about somebody/something",
     "chapter": 1,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "อย่างกระตือรือร้น",
+    "image_idea": "เชียร์ลีดเดอร์กระโดดโห่ร้อง ยกมือสุด",
+    "memory_trick": "เทียบกับ enthusiasm / enthusiastic ในชุดเดียวกัน"
   },
   {
     "word": "extracurricular",
     "pos": "adj.",
     "meaning": "(of activities or subjects) not part of the usual school or college course",
     "chapter": 1,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "นอกหลักสูตร (กิจกรรม)",
+    "image_idea": "นักศึกษาเล่นดนตรี/กีฬา นอกห้องเรียน",
+    "memory_trick": "extra = นอกเหนือ, curriculum = หลักสูตร"
   },
   {
     "word": "pandemic",
     "pos": "adj.",
     "meaning": "(of a disease) existing in almost all of the whole country or the world",
     "chapter": 1,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "โรคระบาดใหญ่ (ทั่วโลก)",
+    "image_idea": "ลูกโลกใส่หน้ากากอนามัย",
+    "memory_trick": "pan = ทั้งหมด (ทั้งโลก)"
   },
   {
     "word": "proofread",
     "pos": "v.",
     "meaning": "to read and correct a piece of written work",
     "chapter": 1,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "ตรวจทาน, พิสูจน์อักษร",
+    "image_idea": "แว่นขยายส่องกระดาษ มีปากกาแดงวงคำผิด",
+    "memory_trick": "proof (พิสูจน์) + read (อ่าน)"
   },
   {
     "word": "intruder",
     "pos": "n.",
     "meaning": "someone who enters a place without permission in order to commit a crime",
     "chapter": 2,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "ผู้บุกรุก",
+    "image_idea": "โจรใส่หน้ากากปีนหน้าต่างตอนกลางคืน",
+    "memory_trick": "in (เข้า) + rude (หยาบคาย) = เข้ามาแบบไม่ขออนุญาต"
   },
   {
     "word": "assortment",
     "pos": "n.",
     "meaning": "a miscellaneous collection of things or people",
     "chapter": 3,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "ของหลายอย่างรวมกัน, ของคละ",
+    "image_idea": "กล่องช็อกโกแลตรวมรส / ถุงขนมคละ",
+    "memory_trick": "กล่องเดียวมีหลาย sort (หลายแบบ)"
   },
   {
     "word": "etiquette",
     "pos": "n.",
     "meaning": "the customary code of polite behaviour in society or among members of a particular profession or group",
     "chapter": 3,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "มารยาท, ธรรมเนียมที่สุภาพ",
+    "image_idea": "โต๊ะอาหารฝรั่งจัดมีดส้อม คู่กับภาพไหว้แบบไทย",
+    "memory_trick": "ออกเสียงเหมือน 'เอ-ทิ-เค็ท' ติดป้าย (ticket) ว่าสุภาพ"
   },
   {
     "word": "minimise",
     "pos": "v.",
     "meaning": "to reduce something, especially something bad, to the lowest possible level",
     "chapter": 3,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "ลดให้น้อยที่สุด",
+    "image_idea": "ปุ่มย่อหน้าต่าง [–] บนจอคอมพิวเตอร์",
+    "memory_trick": "ปุ่ม minimise บนคอม = ย่อให้เล็กสุด"
   },
   {
     "word": "misperception",
     "pos": "n.",
     "meaning": "a wrong or incorrect understanding or interpretation",
     "chapter": 3,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "การเข้าใจผิด, การรับรู้ผิด",
+    "image_idea": "ภาพลวงตาเป็ด/กระต่าย หรือคนเห็นเชือกเป็นงู",
+    "memory_trick": "mis (ผิด) + perception (การรับรู้)"
   },
   {
     "word": "obscene",
     "pos": "adj.",
     "meaning": "(of the portrayal or description of sexual matters) offensive or disgusting by accepted standards of morality and decency",
     "chapter": 3,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "ลามก, อนาจาร, หยาบคาย",
+    "image_idea": "ป้าย 18+ หรือแถบเซ็นเซอร์ดำ (ห้ามใช้ภาพจริง)",
+    "memory_trick": "มีแถบเซ็นเซอร์ = obscene"
   },
   {
     "word": "reciprocal",
     "pos": "adj.",
     "meaning": "involving two people or groups who agree to help each other or behave in the same way to each other",
     "chapter": 3,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "ซึ่งกันและกัน, ตอบแทนกัน",
+    "image_idea": "สองคนเกาหลังให้กัน / ลูกศรวนไป-กลับ",
+    "memory_trick": "ให้ไป ↔ ได้คืน"
   },
   {
     "word": "remarkably",
     "pos": "adv.",
     "meaning": "in a way that is unusual or surprising and causes people to take notice",
     "chapter": 3,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "อย่างน่าทึ่ง, อย่างโดดเด่น",
+    "image_idea": "คนอ้าปากค้าง 'WOW!' ข้างปากกาไฮไลต์",
+    "memory_trick": "re-mark = ควรค่าแก่การทำเครื่องหมาย"
   },
   {
     "word": "severance",
     "pos": "n.",
     "meaning": "the action of ending a connection or relationship",
     "chapter": 3,
-    "level": "hard"
+    "level": "hard",
+    "meaning_th": "การตัดขาด (ความสัมพันธ์)",
+    "image_idea": "กรรไกรตัดเชือกที่ผูกคนสองคนไว้",
+    "memory_trick": "sever ≈ ตัดให้ขาด"
   },
   {
     "word": "assign",
     "pos": "v.",
     "meaning": "to give a particular job or piece of work to someone",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "มอบหมาย",
+    "image_idea": "ครูยื่นแฟ้มงานให้นักศึกษา"
   },
   {
     "word": "assignment",
     "pos": "n.",
     "meaning": "a task or piece of work assigned to someone as part of a job or course of study",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "งานที่ได้รับมอบหมาย",
+    "image_idea": "กองการบ้านบนโต๊ะ",
+    "memory_trick": "assign + ment = สิ่งที่ถูกมอบหมาย"
   },
   {
     "word": "catch up",
     "pos": "v.",
     "meaning": "to do something you did not have time to do earlier",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "ตามให้ทัน",
+    "image_idea": "นักวิ่งที่วิ่งตามกลุ่มให้ทัน"
   },
   {
     "word": "challenging",
     "pos": "adj.",
     "meaning": "difficult in an interesting way that tests your ability",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "ท้าทาย",
+    "image_idea": "คนปีนหน้าผา"
   },
   {
     "word": "deadline",
     "pos": "n.",
     "meaning": "a time or day by which something must be done",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "กำหนดส่ง",
+    "image_idea": "นาฬิกาจับเวลา + ปฏิทินวงแดง",
+    "memory_trick": "dead + line = เส้นตาย"
   },
   {
     "word": "distraction",
     "pos": "n.",
     "meaning": "something that prevents someone from giving their attention to something else",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "สิ่งที่ทำให้ไขว้เขว",
+    "image_idea": "คนอ่านหนังสือ แต่มือถือเด้งแจ้งเตือน"
   },
   {
     "word": "diversity",
     "pos": "n.",
     "meaning": "a range of many people or things that are very different from each other",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "ความหลากหลาย",
+    "image_idea": "มือหลายสีผิวมารวมกัน"
   },
   {
     "word": "eagerly",
     "pos": "adv.",
     "meaning": "in a way that shows that you want to do or have something very much, especially something interesting or enjoyable",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "อย่างใจจดใจจ่อ, อย่างกระตือรือร้น",
+    "image_idea": "เด็กรอเปิดของขวัญตาเป็นประกาย"
   },
   {
     "word": "effective",
     "pos": "adj.",
     "meaning": "successful or achieving the results that you want",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "ได้ผล, มีประสิทธิภาพ",
+    "image_idea": "ลูกดอกปักกลางเป้า"
   },
   {
     "word": "enthusiasm",
     "pos": "n.",
     "meaning": "a feeling of energetic interest in a particular subject or activity and an eagerness to be involved in it",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "ความกระตือรือร้น",
+    "image_idea": "คนยกมืออาสาเต็มห้อง"
   },
   {
     "word": "enthusiastic",
     "pos": "adj.",
     "meaning": "showing a lot of excitement and interest about somebody/something",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "กระตือรือร้น",
+    "image_idea": "คนยิ้มกว้างกำหมัดสู้"
   },
   {
     "word": "financial",
     "pos": "adj.",
     "meaning": "relating to money or how money is managed",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "เกี่ยวกับการเงิน",
+    "image_idea": "กระปุกออมสิน + กราฟเงิน"
   },
   {
     "word": "get along",
     "pos": "v.",
     "meaning": "have a harmonious or friendly relationship",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "เข้ากันได้ดี",
+    "image_idea": "เพื่อนสองคนกอดคอหัวเราะ"
   },
   {
     "word": "internship",
     "pos": "n.",
     "meaning": "a period of time during which a student or new graduate gets practical experience in a job",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "การฝึกงาน",
+    "image_idea": "นักศึกษาใส่บัตร Intern ในออฟฟิศ"
   },
   {
     "word": "outline",
     "pos": "n./v.",
     "meaning": "a description of the main facts about something; to give the main facts about something",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "โครงร่าง; สรุปใจความหลัก",
+    "image_idea": "ภาพร่างเส้นขอบ / bullet points"
   },
   {
     "word": "participate",
     "pos": "v.",
     "meaning": "to take part in or become involved in an activity",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "เข้าร่วม",
+    "image_idea": "หลายคนยกมือร่วมกิจกรรมกลุ่ม"
   },
   {
     "word": "pursue",
     "pos": "v.",
     "meaning": "to do something or try to achieve something over a period of time",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "มุ่งไล่ตาม (เป้าหมาย)",
+    "image_idea": "คนวิ่งไล่ตามดาว/ธงเส้นชัย"
   },
   {
     "word": "submit",
     "pos": "v.",
     "meaning": "to give a document to somebody in authority so that they can study or consider it",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "ส่ง (งาน)",
+    "image_idea": "กดปุ่ม Submit บนจอ"
   },
   {
     "word": "various",
     "pos": "adj.",
     "meaning": "several and different",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "หลากหลาย",
+    "image_idea": "ผลไม้หลายชนิดในตะกร้า"
   },
   {
     "word": "visual aids",
     "pos": "n.",
     "meaning": "something that you are shown, such as a picture, film, or map, in order to help you understand or remember information",
     "chapter": 1,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "สื่อภาพประกอบการสอน",
+    "image_idea": "สไลด์ แผนที่ กราฟ บนกระดาน"
   },
   {
     "word": "abandoned",
     "pos": "adj.",
     "meaning": "1. left without needed protection, care, or support 2. left by the owner",
     "chapter": 2,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "ถูกทิ้งร้าง",
+    "image_idea": "บ้านร้างมีหยากไย่ / ลูกหมาในกล่องข้างทาง"
   },
   {
     "word": "cemetery",
     "pos": "n.",
     "meaning": "a burial ground",
     "chapter": 2,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "สุสาน",
+    "image_idea": "ป้ายหลุมศพเรียงแถวยามเย็น"
   },
   {
     "word": "inform",
     "pos": "v.",
     "meaning": "to tell someone about particular facts",
     "chapter": 2,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "แจ้งให้ทราบ",
+    "image_idea": "โทรโข่งประกาศ / ป้ายประกาศ",
+    "memory_trick": "in + form = ใส่ข้อมูล"
   },
   {
     "word": "instruct",
     "pos": "v.",
     "meaning": "1. to give knowledge 2. to give an order or command",
     "chapter": 2,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "สอน, สั่งการ",
+    "image_idea": "ครูฝึกชี้นิ้วสั่ง"
   },
   {
     "word": "shelter",
     "pos": "n.",
     "meaning": "(a building designed to give) protection from bad weather, danger, or attack",
     "chapter": 2,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "ที่หลบภัย",
+    "image_idea": "คนหลบฝนใต้ศาลา"
   },
   {
     "word": "underneath",
     "pos": "prep.",
     "meaning": "under or below",
     "chapter": 2,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "ข้างใต้",
+    "image_idea": "แมวซ่อนอยู่ใต้โต๊ะ"
   },
   {
     "word": "appreciate",
     "pos": "v.",
     "meaning": "recognize the full worth of",
     "chapter": 3,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "เห็นคุณค่า, ชื่นชม",
+    "image_idea": "คนยื่นดอกไม้ขอบคุณ หัวใจลอย"
   },
   {
     "word": "appropriate",
     "pos": "adj.",
     "meaning": "suitable or proper in the circumstances",
     "chapter": 3,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "เหมาะสม",
+    "image_idea": "ชุดถูกกาลเทศะ ✔ vs ชุดนอนไปงานแต่ง ✘"
   },
   {
     "word": "associate",
     "pos": "v.",
     "meaning": "to make a connection between people or things in your mind",
     "chapter": 3,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "เชื่อมโยง (ในความคิด)",
+    "image_idea": "หลอดไฟในหัว เส้นโยงระหว่างภาพสองภาพ"
   },
   {
     "word": "donation",
     "pos": "n.",
     "meaning": "something that is given to a charity, especially a sum of money",
     "chapter": 3,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "การบริจาค",
+    "image_idea": "มือหยอดเหรียญลงกล่องบริจาค"
   },
   {
     "word": "household",
     "pos": "n.",
     "meaning": "a house and its occupants regarded as a unit",
     "chapter": 3,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "ครัวเรือน",
+    "image_idea": "บ้านหนึ่งหลังมีครอบครัวอยู่ข้างใน",
+    "memory_trick": "house + hold = บ้านที่โอบคนไว้"
   },
   {
     "word": "insult",
     "pos": "v.",
     "meaning": "speak to or treat with disrespect or scornful abuse",
     "chapter": 3,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "ดูถูก",
+    "image_idea": "คนชี้หน้าหัวเราะเยาะ อีกคนเสียใจ"
   },
   {
     "word": "manner",
     "pos": "n.",
     "meaning": "a way in which a thing is done or happens",
     "chapter": 3,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "ลักษณะ, วิธีการ",
+    "image_idea": "คนทำสิ่งเดียวกันสองแบบ"
   },
   {
     "word": "occasion",
     "pos": "n.",
     "meaning": "a particular event, or the time at which it takes place",
     "chapter": 3,
-    "level": "medium"
+    "level": "medium",
+    "meaning_th": "โอกาส, เทศกาล, งาน",
+    "image_idea": "เค้กวันเกิด / ลูกโป่งงานฉลอง"
   },
   {
     "word": "appointment",
     "pos": "n.",
     "meaning": "an arrangement to meet someone at a particular time and place",
     "chapter": 1,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "การนัดหมาย",
+    "image_idea": "ปฏิทินมีวงนัด + นาฬิกา"
   },
   {
     "word": "cafeteria",
     "pos": "n.",
     "meaning": "a restaurant (often in a factory, a college, or an office building) where people collect food and drink from a serving area and take it to a table themselves after paying for it",
     "chapter": 1,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "โรงอาหาร",
+    "image_idea": "ถาดอาหารในโรงอาหาร"
   },
   {
     "word": "campus",
     "pos": "n.",
     "meaning": "the grounds and buildings of a university or college",
     "chapter": 1,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "วิทยาเขต, บริเวณมหาวิทยาลัย",
+    "image_idea": "ภาพมุมกว้างของ มฟล."
   },
   {
     "word": "instructions",
     "pos": "n.",
     "meaning": "detailed information on how to do or use something",
     "chapter": 1,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "คำแนะนำ, วิธีใช้",
+    "image_idea": "คู่มือประกอบของมีรูปขั้นตอน"
   },
   {
     "word": "mistake",
     "pos": "n./v.",
     "meaning": "an action or an opinion that is not correct, or that produces a result that you did not want; to be wrong about or to fail to recognize something or someone",
     "chapter": 1,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "ความผิดพลาด; ทำผิด",
+    "image_idea": "กากบาทแดง ❌ บนกระดาษคำตอบ"
   },
   {
     "word": "nervous",
     "pos": "adj.",
     "meaning": "worried and anxious",
     "chapter": 1,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "ประหม่า, กังวล",
+    "image_idea": "คนเหงื่อตกมือสั่นก่อนพรีเซนต์"
   },
   {
     "word": "perhaps",
     "pos": "adv.",
     "meaning": "used to show that something is possible or that you are not certain about something",
     "chapter": 1,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "บางที",
+    "image_idea": "คนยักไหล่ มีเครื่องหมาย ?"
   },
   {
     "word": "attend",
     "pos": "v.",
     "meaning": "to be present at",
     "chapter": 2,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "เข้าร่วม (เรียน, งาน)",
+    "image_idea": "นักศึกษาเช็คชื่อเข้าห้องเรียน"
   },
   {
     "word": "backyard",
     "pos": "n.",
     "meaning": "an area at the rear of a house",
     "chapter": 2,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "สวนหลังบ้าน",
+    "image_idea": "สนามหญ้าหลังบ้านมีชิงช้า"
   },
   {
     "word": "fetch",
     "pos": "v.",
     "meaning": "to go and bring back something",
     "chapter": 2,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "ไปเอามา",
+    "image_idea": "หมาคาบลูกบอลกลับมา"
   },
   {
     "word": "lasagna",
     "pos": "n.",
     "meaning": "pasta in the form of broad often ruffled ribbons",
     "chapter": 2,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "ลาซานญ่า",
+    "image_idea": "จานลาซานญ่าเป็นชั้น ๆ"
   },
   {
     "word": "neighbor",
     "pos": "n.",
     "meaning": "one living or located near another",
     "chapter": 2,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "เพื่อนบ้าน",
+    "image_idea": "สองบ้านติดกัน คนโบกมือทักกัน"
   },
   {
     "word": "reach",
     "pos": "v.",
     "meaning": "to arrive at a place, especially after spending a long time or a lot of effort travelling",
     "chapter": 2,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "ไปถึง",
+    "image_idea": "นักเดินทางถึงยอดเขาปักธง"
   },
   {
     "word": "receive",
     "pos": "v.",
     "meaning": "to get or accept something that is given, sent, or delivered to you",
     "chapter": 2,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "ได้รับ",
+    "image_idea": "มือรับกล่องพัสดุ"
   },
   {
     "word": "thirsty",
     "pos": "adj.",
     "meaning": "feeling a strong need or desire for liquid, usually water",
     "chapter": 2,
-    "level": "easy"
+    "level": "easy",
+    "meaning_th": "กระหายน้ำ",
+    "image_idea": "คนกลางทะเลทรายมองแก้วน้ำ"
   }
 ]
