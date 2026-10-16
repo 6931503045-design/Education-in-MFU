@@ -7,7 +7,10 @@
     "level": "hard",
     "meaning_th": "บรรเทา, ทำให้เบาลง",
     "image_idea": "ภาพก่อน/หลัง: คนปวดหัวหน้าเหยเก กินยาแล้วยิ้ม",
-    "memory_trick": "ก้อนหินหนักบนหลัง ถูกยกออก"
+    "memory_trick": "ก้อนหินหนักบนหลัง ถูกยกออก",
+    "lyric": "Alleviate! Make the pain less severe!",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "attentively",
@@ -17,7 +20,10 @@
     "level": "hard",
     "meaning_th": "อย่างตั้งใจ, อย่างใส่ใจ",
     "image_idea": "นักศึกษาฟังเลกเชอร์ ตาโต หูขยายใหญ่",
-    "memory_trick": "attention! = ตั้งใจ!"
+    "memory_trick": "attention! = ตั้งใจ!",
+    "lyric": "I listen attentively to what my teachers say",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "constructive",
@@ -27,7 +33,10 @@
     "level": "hard",
     "meaning_th": "สร้างสรรค์ (ติเพื่อก่อ)",
     "image_idea": "ครูวงงานด้วยปากกาแดง ในมือถือค้อนช่างก่อสร้าง",
-    "memory_trick": "construct = ก่อสร้าง → ติเพื่อก่อ"
+    "memory_trick": "construct = ก่อสร้าง → ติเพื่อก่อ",
+    "lyric": "Constructive! Feedback that helps you get it!",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "diligently",
@@ -37,7 +46,10 @@
     "level": "hard",
     "meaning_th": "อย่างขยันขันแข็ง",
     "image_idea": "มดแบกอาหารเป็นแถว / นักศึกษาทำการบ้านตอนดึก",
-    "memory_trick": "มดคือสัญลักษณ์ความขยัน"
+    "memory_trick": "มดคือสัญลักษณ์ความขยัน",
+    "lyric": "I study diligently, with effort every day",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "enhance",
@@ -47,7 +59,10 @@
     "level": "hard",
     "meaning_th": "ทำให้ดีขึ้น, เพิ่มคุณภาพ",
     "image_idea": "รูปก่อน/หลังใส่ฟิลเตอร์ หรือปุ่ม HD",
-    "memory_trick": "en + hance → ยกระดับ (higher)"
+    "memory_trick": "en + hance → ยกระดับ (higher)",
+    "lyric": "Enhance! Make it better, make it clear!",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "enthusiastically",
@@ -57,7 +72,10 @@
     "level": "hard",
     "meaning_th": "อย่างกระตือรือร้น",
     "image_idea": "เชียร์ลีดเดอร์กระโดดโห่ร้อง ยกมือสุด",
-    "memory_trick": "เทียบกับ enthusiasm / enthusiastic ในชุดเดียวกัน"
+    "memory_trick": "เทียบกับ enthusiasm / enthusiastic ในชุดเดียวกัน",
+    "lyric": "I join the club enthusiastically: hip hip hooray!",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "extracurricular",
@@ -67,7 +85,10 @@
     "level": "hard",
     "meaning_th": "นอกหลักสูตร (กิจกรรม)",
     "image_idea": "นักศึกษาเล่นดนตรี/กีฬา นอกห้องเรียน",
-    "memory_trick": "extra = นอกเหนือ, curriculum = หลักสูตร"
+    "memory_trick": "extra = นอกเหนือ, curriculum = หลักสูตร",
+    "lyric": "Extracurricular: outside the class I play",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "pandemic",
@@ -77,7 +98,10 @@
     "level": "hard",
     "meaning_th": "โรคระบาดใหญ่ (ทั่วโลก)",
     "image_idea": "ลูกโลกใส่หน้ากากอนามัย",
-    "memory_trick": "pan = ทั้งหมด (ทั้งโลก)"
+    "memory_trick": "pan = ทั้งหมด (ทั้งโลก)",
+    "lyric": "When the pandemic spread across the world so wide",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "proofread",
@@ -87,7 +111,10 @@
     "level": "hard",
     "meaning_th": "ตรวจทาน, พิสูจน์อักษร",
     "image_idea": "แว่นขยายส่องกระดาษ มีปากกาแดงวงคำผิด",
-    "memory_trick": "proof (พิสูจน์) + read (อ่าน)"
+    "memory_trick": "proof (พิสูจน์) + read (อ่าน)",
+    "lyric": "Proofread! Check it before you submit!",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "intruder",
@@ -97,7 +124,10 @@
     "level": "hard",
     "meaning_th": "ผู้บุกรุก",
     "image_idea": "โจรใส่หน้ากากปีนหน้าต่างตอนกลางคืน",
-    "memory_trick": "in (เข้า) + rude (หยาบคาย) = เข้ามาแบบไม่ขออนุญาต"
+    "memory_trick": "in (เข้า) + rude (หยาบคาย) = เข้ามาแบบไม่ขออนุญาต",
+    "lyric": "Intruder at the window, sneaking in at night!",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "assortment",
@@ -107,7 +137,10 @@
     "level": "hard",
     "meaning_th": "ของหลายอย่างรวมกัน, ของคละ",
     "image_idea": "กล่องช็อกโกแลตรวมรส / ถุงขนมคละ",
-    "memory_trick": "กล่องเดียวมีหลาย sort (หลายแบบ)"
+    "memory_trick": "กล่องเดียวมีหลาย sort (หลายแบบ)",
+    "lyric": "Assortment: a mix, a little bit of all",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "etiquette",
@@ -117,7 +150,10 @@
     "level": "hard",
     "meaning_th": "มารยาท, ธรรมเนียมที่สุภาพ",
     "image_idea": "โต๊ะอาหารฝรั่งจัดมีดส้อม คู่กับภาพไหว้แบบไทย",
-    "memory_trick": "ออกเสียงเหมือน 'เอ-ทิ-เค็ท' ติดป้าย (ticket) ว่าสุภาพ"
+    "memory_trick": "ออกเสียงเหมือน 'เอ-ทิ-เค็ท' ติดป้าย (ticket) ว่าสุภาพ",
+    "lyric": "Etiquette! Good manners!",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "minimise",
@@ -127,7 +163,10 @@
     "level": "hard",
     "meaning_th": "ลดให้น้อยที่สุด",
     "image_idea": "ปุ่มย่อหน้าต่าง [–] บนจอคอมพิวเตอร์",
-    "memory_trick": "ปุ่ม minimise บนคอม = ย่อให้เล็กสุด"
+    "memory_trick": "ปุ่ม minimise บนคอม = ย่อให้เล็กสุด",
+    "lyric": "Minimise the problem, make it small",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "misperception",
@@ -137,7 +176,10 @@
     "level": "hard",
     "meaning_th": "การเข้าใจผิด, การรับรู้ผิด",
     "image_idea": "ภาพลวงตาเป็ด/กระต่าย หรือคนเห็นเชือกเป็นงู",
-    "memory_trick": "mis (ผิด) + perception (การรับรู้)"
+    "memory_trick": "mis (ผิด) + perception (การรับรู้)",
+    "lyric": "Misperception: a wrong idea in your mind",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "obscene",
@@ -147,7 +189,8 @@
     "level": "hard",
     "meaning_th": "ลามก, อนาจาร, หยาบคาย",
     "image_idea": "ป้าย 18+ หรือแถบเซ็นเซอร์ดำ (ห้ามใช้ภาพจริง)",
-    "memory_trick": "มีแถบเซ็นเซอร์ = obscene"
+    "memory_trick": "มีแถบเซ็นเซอร์ = obscene",
+    "quiz": false
   },
   {
     "word": "reciprocal",
@@ -157,7 +200,10 @@
     "level": "hard",
     "meaning_th": "ซึ่งกันและกัน, ตอบแทนกัน",
     "image_idea": "สองคนเกาหลังให้กัน / ลูกศรวนไป-กลับ",
-    "memory_trick": "ให้ไป ↔ ได้คืน"
+    "memory_trick": "ให้ไป ↔ ได้คืน",
+    "lyric": "Reciprocal: you help me, I help you, that's right!",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "remarkably",
@@ -167,7 +213,10 @@
     "level": "hard",
     "meaning_th": "อย่างน่าทึ่ง, อย่างโดดเด่น",
     "image_idea": "คนอ้าปากค้าง 'WOW!' ข้างปากกาไฮไลต์",
-    "memory_trick": "re-mark = ควรค่าแก่การทำเครื่องหมาย"
+    "memory_trick": "re-mark = ควรค่าแก่การทำเครื่องหมาย",
+    "lyric": "Remarkably, we made it, learning side by side",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "severance",
@@ -177,7 +226,10 @@
     "level": "hard",
     "meaning_th": "การตัดขาด (ความสัมพันธ์)",
     "image_idea": "กรรไกรตัดเชือกที่ผูกคนสองคนไว้",
-    "memory_trick": "sever ≈ ตัดให้ขาด"
+    "memory_trick": "sever ≈ ตัดให้ขาด",
+    "lyric": "Severance: it's over, cut the tie",
+    "lyric_source": "song",
+    "quiz": true
   },
   {
     "word": "assign",
@@ -186,7 +238,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "มอบหมาย",
-    "image_idea": "ครูยื่นแฟ้มงานให้นักศึกษา"
+    "image_idea": "ครูยื่นแฟ้มงานให้นักศึกษา",
+    "lyric": "The teacher will assign us work to do",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "assignment",
@@ -196,7 +251,10 @@
     "level": "medium",
     "meaning_th": "งานที่ได้รับมอบหมาย",
     "image_idea": "กองการบ้านบนโต๊ะ",
-    "memory_trick": "assign + ment = สิ่งที่ถูกมอบหมาย"
+    "memory_trick": "assign + ment = สิ่งที่ถูกมอบหมาย",
+    "lyric": "Finish your assignment before the night is through",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "catch up",
@@ -205,7 +263,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "ตามให้ทัน",
-    "image_idea": "นักวิ่งที่วิ่งตามกลุ่มให้ทัน"
+    "image_idea": "นักวิ่งที่วิ่งตามกลุ่มให้ทัน",
+    "lyric": "I missed a class, so now I need to catch up",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "challenging",
@@ -214,7 +275,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "ท้าทาย",
-    "image_idea": "คนปีนหน้าผา"
+    "image_idea": "คนปีนหน้าผา",
+    "lyric": "This test is challenging, but I'll give it a try",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "deadline",
@@ -224,7 +288,10 @@
     "level": "medium",
     "meaning_th": "กำหนดส่ง",
     "image_idea": "นาฬิกาจับเวลา + ปฏิทินวงแดง",
-    "memory_trick": "dead + line = เส้นตาย"
+    "memory_trick": "dead + line = เส้นตาย",
+    "lyric": "The deadline is Friday, don't be late!",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "distraction",
@@ -233,7 +300,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "สิ่งที่ทำให้ไขว้เขว",
-    "image_idea": "คนอ่านหนังสือ แต่มือถือเด้งแจ้งเตือน"
+    "image_idea": "คนอ่านหนังสือ แต่มือถือเด้งแจ้งเตือน",
+    "lyric": "My phone is a distraction, put it away",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "diversity",
@@ -242,7 +312,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "ความหลากหลาย",
-    "image_idea": "มือหลายสีผิวมารวมกัน"
+    "image_idea": "มือหลายสีผิวมารวมกัน",
+    "lyric": "Diversity on campus, friends from every land",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "eagerly",
@@ -251,7 +324,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "อย่างใจจดใจจ่อ, อย่างกระตือรือร้น",
-    "image_idea": "เด็กรอเปิดของขวัญตาเป็นประกาย"
+    "image_idea": "เด็กรอเปิดของขวัญตาเป็นประกาย",
+    "lyric": "I eagerly wait for the weekend to come",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "effective",
@@ -260,7 +336,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "ได้ผล, มีประสิทธิภาพ",
-    "image_idea": "ลูกดอกปักกลางเป้า"
+    "image_idea": "ลูกดอกปักกลางเป้า",
+    "lyric": "An effective plan will get the job done",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "enthusiasm",
@@ -269,7 +348,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "ความกระตือรือร้น",
-    "image_idea": "คนยกมืออาสาเต็มห้อง"
+    "image_idea": "คนยกมืออาสาเต็มห้อง",
+    "lyric": "Full of enthusiasm, ready to start",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "enthusiastic",
@@ -278,7 +360,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "กระตือรือร้น",
-    "image_idea": "คนยิ้มกว้างกำหมัดสู้"
+    "image_idea": "คนยิ้มกว้างกำหมัดสู้",
+    "lyric": "An enthusiastic student with a happy heart",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "financial",
@@ -287,7 +372,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "เกี่ยวกับการเงิน",
-    "image_idea": "กระปุกออมสิน + กราฟเงิน"
+    "image_idea": "กระปุกออมสิน + กราฟเงิน",
+    "lyric": "Financial problems, money's running low",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "get along",
@@ -296,7 +384,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "เข้ากันได้ดี",
-    "image_idea": "เพื่อนสองคนกอดคอหัวเราะ"
+    "image_idea": "เพื่อนสองคนกอดคอหัวเราะ",
+    "lyric": "Thai and international, we get along, you know",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "internship",
@@ -305,7 +396,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "การฝึกงาน",
-    "image_idea": "นักศึกษาใส่บัตร Intern ในออฟฟิศ"
+    "image_idea": "นักศึกษาใส่บัตร Intern ในออฟฟิศ",
+    "lyric": "An internship this summer, working for real",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "outline",
@@ -314,7 +408,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "โครงร่าง; สรุปใจความหลัก",
-    "image_idea": "ภาพร่างเส้นขอบ / bullet points"
+    "image_idea": "ภาพร่างเส้นขอบ / bullet points",
+    "lyric": "Write an outline first, then write the rest",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "participate",
@@ -323,7 +420,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "เข้าร่วม",
-    "image_idea": "หลายคนยกมือร่วมกิจกรรมกลุ่ม"
+    "image_idea": "หลายคนยกมือร่วมกิจกรรมกลุ่ม",
+    "lyric": "Participate in class, raise your hand up high",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "pursue",
@@ -332,7 +432,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "มุ่งไล่ตาม (เป้าหมาย)",
-    "image_idea": "คนวิ่งไล่ตามดาว/ธงเส้นชัย"
+    "image_idea": "คนวิ่งไล่ตามดาว/ธงเส้นชัย",
+    "lyric": "Pursue your dreams and never say goodbye",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "submit",
@@ -341,7 +444,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "ส่ง (งาน)",
-    "image_idea": "กดปุ่ม Submit บนจอ"
+    "image_idea": "กดปุ่ม Submit บนจอ",
+    "lyric": "Submit your homework, click and send it in",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "various",
@@ -350,7 +456,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "หลากหลาย",
-    "image_idea": "ผลไม้หลายชนิดในตะกร้า"
+    "image_idea": "ผลไม้หลายชนิดในตะกร้า",
+    "lyric": "Various fruits in the basket, green and red",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "visual aids",
@@ -359,7 +468,10 @@
     "chapter": 1,
     "level": "medium",
     "meaning_th": "สื่อภาพประกอบการสอน",
-    "image_idea": "สไลด์ แผนที่ กราฟ บนกระดาน"
+    "image_idea": "สไลด์ แผนที่ กราฟ บนกระดาน",
+    "lyric": "Visual aids: pictures help us see",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "abandoned",
@@ -368,7 +480,10 @@
     "chapter": 2,
     "level": "medium",
     "meaning_th": "ถูกทิ้งร้าง",
-    "image_idea": "บ้านร้างมีหยากไย่ / ลูกหมาในกล่องข้างทาง"
+    "image_idea": "บ้านร้างมีหยากไย่ / ลูกหมาในกล่องข้างทาง",
+    "lyric": "An abandoned house, nobody lives inside",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "cemetery",
@@ -377,7 +492,10 @@
     "chapter": 2,
     "level": "medium",
     "meaning_th": "สุสาน",
-    "image_idea": "ป้ายหลุมศพเรียงแถวยามเย็น"
+    "image_idea": "ป้ายหลุมศพเรียงแถวยามเย็น",
+    "lyric": "Quiet in the cemetery, where the old graves lie",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "inform",
@@ -387,7 +505,10 @@
     "level": "medium",
     "meaning_th": "แจ้งให้ทราบ",
     "image_idea": "โทรโข่งประกาศ / ป้ายประกาศ",
-    "memory_trick": "in + form = ใส่ข้อมูล"
+    "memory_trick": "in + form = ใส่ข้อมูล",
+    "lyric": "Please inform the teacher if you miss a class",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "instruct",
@@ -396,7 +517,10 @@
     "chapter": 2,
     "level": "medium",
     "meaning_th": "สอน, สั่งการ",
-    "image_idea": "ครูฝึกชี้นิ้วสั่ง"
+    "image_idea": "ครูฝึกชี้นิ้วสั่ง",
+    "lyric": "Coaches instruct us how to play the game",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "shelter",
@@ -405,7 +529,10 @@
     "chapter": 2,
     "level": "medium",
     "meaning_th": "ที่หลบภัย",
-    "image_idea": "คนหลบฝนใต้ศาลา"
+    "image_idea": "คนหลบฝนใต้ศาลา",
+    "lyric": "Run to the shelter when the storm comes in",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "underneath",
@@ -414,7 +541,10 @@
     "chapter": 2,
     "level": "medium",
     "meaning_th": "ข้างใต้",
-    "image_idea": "แมวซ่อนอยู่ใต้โต๊ะ"
+    "image_idea": "แมวซ่อนอยู่ใต้โต๊ะ",
+    "lyric": "The cat is hiding underneath the bed",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "appreciate",
@@ -423,7 +553,10 @@
     "chapter": 3,
     "level": "medium",
     "meaning_th": "เห็นคุณค่า, ชื่นชม",
-    "image_idea": "คนยื่นดอกไม้ขอบคุณ หัวใจลอย"
+    "image_idea": "คนยื่นดอกไม้ขอบคุณ หัวใจลอย",
+    "lyric": "I appreciate your help, thank you, my friend",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "appropriate",
@@ -432,7 +565,10 @@
     "chapter": 3,
     "level": "medium",
     "meaning_th": "เหมาะสม",
-    "image_idea": "ชุดถูกกาลเทศะ ✔ vs ชุดนอนไปงานแต่ง ✘"
+    "image_idea": "ชุดถูกกาลเทศะ ✔ vs ชุดนอนไปงานแต่ง ✘",
+    "lyric": "Wear appropriate clothes when you go to class",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "associate",
@@ -441,7 +577,10 @@
     "chapter": 3,
     "level": "medium",
     "meaning_th": "เชื่อมโยง (ในความคิด)",
-    "image_idea": "หลอดไฟในหัว เส้นโยงระหว่างภาพสองภาพ"
+    "image_idea": "หลอดไฟในหัว เส้นโยงระหว่างภาพสองภาพ",
+    "lyric": "I associate this song with every word I know",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "donation",
@@ -450,7 +589,10 @@
     "chapter": 3,
     "level": "medium",
     "meaning_th": "การบริจาค",
-    "image_idea": "มือหยอดเหรียญลงกล่องบริจาค"
+    "image_idea": "มือหยอดเหรียญลงกล่องบริจาค",
+    "lyric": "Give a donation, lend a helping hand",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "household",
@@ -460,7 +602,10 @@
     "level": "medium",
     "meaning_th": "ครัวเรือน",
     "image_idea": "บ้านหนึ่งหลังมีครอบครัวอยู่ข้างใน",
-    "memory_trick": "house + hold = บ้านที่โอบคนไว้"
+    "memory_trick": "house + hold = บ้านที่โอบคนไว้",
+    "lyric": "Every household has its own house rules",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "insult",
@@ -469,7 +614,10 @@
     "chapter": 3,
     "level": "medium",
     "meaning_th": "ดูถูก",
-    "image_idea": "คนชี้หน้าหัวเราะเยาะ อีกคนเสียใจ"
+    "image_idea": "คนชี้หน้าหัวเราะเยาะ อีกคนเสียใจ",
+    "lyric": "Don't insult your friends, don't call them names",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "manner",
@@ -478,7 +626,10 @@
     "chapter": 3,
     "level": "medium",
     "meaning_th": "ลักษณะ, วิธีการ",
-    "image_idea": "คนทำสิ่งเดียวกันสองแบบ"
+    "image_idea": "คนทำสิ่งเดียวกันสองแบบ",
+    "lyric": "Speak in a friendly manner, that's the deal",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "occasion",
@@ -487,7 +638,10 @@
     "chapter": 3,
     "level": "medium",
     "meaning_th": "โอกาส, เทศกาล, งาน",
-    "image_idea": "เค้กวันเกิด / ลูกโป่งงานฉลอง"
+    "image_idea": "เค้กวันเกิด / ลูกโป่งงานฉลอง",
+    "lyric": "A birthday is a special occasion, let's celebrate",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "appointment",
@@ -496,7 +650,10 @@
     "chapter": 1,
     "level": "easy",
     "meaning_th": "การนัดหมาย",
-    "image_idea": "ปฏิทินมีวงนัด + นาฬิกา"
+    "image_idea": "ปฏิทินมีวงนัด + นาฬิกา",
+    "lyric": "I have an appointment with the doctor at three",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "cafeteria",
@@ -505,7 +662,10 @@
     "chapter": 1,
     "level": "easy",
     "meaning_th": "โรงอาหาร",
-    "image_idea": "ถาดอาหารในโรงอาหาร"
+    "image_idea": "ถาดอาหารในโรงอาหาร",
+    "lyric": "Lunchtime! Let's go to the cafeteria",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "campus",
@@ -514,7 +674,10 @@
     "chapter": 1,
     "level": "easy",
     "meaning_th": "วิทยาเขต, บริเวณมหาวิทยาลัย",
-    "image_idea": "ภาพมุมกว้างของ มฟล."
+    "image_idea": "ภาพมุมกว้างของ มฟล.",
+    "lyric": "Walking around the campus with my friends",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "instructions",
@@ -523,7 +686,10 @@
     "chapter": 1,
     "level": "easy",
     "meaning_th": "คำแนะนำ, วิธีใช้",
-    "image_idea": "คู่มือประกอบของมีรูปขั้นตอน"
+    "image_idea": "คู่มือประกอบของมีรูปขั้นตอน",
+    "lyric": "Read the instructions before you start",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "mistake",
@@ -532,7 +698,10 @@
     "chapter": 1,
     "level": "easy",
     "meaning_th": "ความผิดพลาด; ทำผิด",
-    "image_idea": "กากบาทแดง ❌ บนกระดาษคำตอบ"
+    "image_idea": "กากบาทแดง ❌ บนกระดาษคำตอบ",
+    "lyric": "Everybody makes a mistake sometimes",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "nervous",
@@ -541,7 +710,10 @@
     "chapter": 1,
     "level": "easy",
     "meaning_th": "ประหม่า, กังวล",
-    "image_idea": "คนเหงื่อตกมือสั่นก่อนพรีเซนต์"
+    "image_idea": "คนเหงื่อตกมือสั่นก่อนพรีเซนต์",
+    "lyric": "I feel nervous before I speak",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "perhaps",
@@ -550,7 +722,10 @@
     "chapter": 1,
     "level": "easy",
     "meaning_th": "บางที",
-    "image_idea": "คนยักไหล่ มีเครื่องหมาย ?"
+    "image_idea": "คนยักไหล่ มีเครื่องหมาย ?",
+    "lyric": "Perhaps it will rain, so bring your umbrella",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "attend",
@@ -559,7 +734,10 @@
     "chapter": 2,
     "level": "easy",
     "meaning_th": "เข้าร่วม (เรียน, งาน)",
-    "image_idea": "นักศึกษาเช็คชื่อเข้าห้องเรียน"
+    "image_idea": "นักศึกษาเช็คชื่อเข้าห้องเรียน",
+    "lyric": "Attend every class, don't skip a day",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "backyard",
@@ -568,7 +746,10 @@
     "chapter": 2,
     "level": "easy",
     "meaning_th": "สวนหลังบ้าน",
-    "image_idea": "สนามหญ้าหลังบ้านมีชิงช้า"
+    "image_idea": "สนามหญ้าหลังบ้านมีชิงช้า",
+    "lyric": "Playing football in the backyard after school",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "fetch",
@@ -577,7 +758,10 @@
     "chapter": 2,
     "level": "easy",
     "meaning_th": "ไปเอามา",
-    "image_idea": "หมาคาบลูกบอลกลับมา"
+    "image_idea": "หมาคาบลูกบอลกลับมา",
+    "lyric": "Throw the ball, and the dog will fetch it back",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "lasagna",
@@ -586,7 +770,10 @@
     "chapter": 2,
     "level": "easy",
     "meaning_th": "ลาซานญ่า",
-    "image_idea": "จานลาซานญ่าเป็นชั้น ๆ"
+    "image_idea": "จานลาซานญ่าเป็นชั้น ๆ",
+    "lyric": "Lasagna for dinner, layer after layer",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "neighbor",
@@ -595,7 +782,10 @@
     "chapter": 2,
     "level": "easy",
     "meaning_th": "เพื่อนบ้าน",
-    "image_idea": "สองบ้านติดกัน คนโบกมือทักกัน"
+    "image_idea": "สองบ้านติดกัน คนโบกมือทักกัน",
+    "lyric": "Say hello to the neighbor next door",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "reach",
@@ -604,7 +794,10 @@
     "chapter": 2,
     "level": "easy",
     "meaning_th": "ไปถึง",
-    "image_idea": "นักเดินทางถึงยอดเขาปักธง"
+    "image_idea": "นักเดินทางถึงยอดเขาปักธง",
+    "lyric": "We finally reach the top of the hill",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "receive",
@@ -613,7 +806,10 @@
     "chapter": 2,
     "level": "easy",
     "meaning_th": "ได้รับ",
-    "image_idea": "มือรับกล่องพัสดุ"
+    "image_idea": "มือรับกล่องพัสดุ",
+    "lyric": "I receive a letter in the mail",
+    "lyric_source": "quiz-only",
+    "quiz": true
   },
   {
     "word": "thirsty",
@@ -622,6 +818,9 @@
     "chapter": 2,
     "level": "easy",
     "meaning_th": "กระหายน้ำ",
-    "image_idea": "คนกลางทะเลทรายมองแก้วน้ำ"
+    "image_idea": "คนกลางทะเลทรายมองแก้วน้ำ",
+    "lyric": "So hot today, I'm thirsty, give me water",
+    "lyric_source": "quiz-only",
+    "quiz": true
   }
 ]
