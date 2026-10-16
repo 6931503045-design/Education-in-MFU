@@ -1,6 +1,8 @@
-# เนื้อเพลงท่องศัพท์: 2 เวอร์ชัน
+# เนื้อเพลงท่องศัพท์: 3 เวอร์ชัน
 
-ทั้งสองเวอร์ชันสอน **คำ🔴ยาก 17 คำชุดเดียวกัน** (ไม่รวม *obscene* ซึ่งสอนในสไลด์แทน) แต่ใช้สไตล์ต่างกันตามผู้ฟัง
+> **ห้องเรียนจริงใช้เวอร์ชันผสม** (คนไทยกับคนต่างชาติอยู่ห้องเดียวกัน) ส่วนเวอร์ชันไทยและอังกฤษล้วนเก็บไว้ใช้ทำคลิปหรือใช้บนเว็บ
+
+ทุกเวอร์ชันสอน **คำ🔴ยาก 17 คำชุดเดียวกัน** (ไม่รวม *obscene* ซึ่งสอนในสไลด์แทน) แต่ใช้สไตล์ต่างกันตามผู้ฟัง
 
 | | 🇹🇭 เวอร์ชันไทย | 🌏 English Version |
 |---|---|---|
@@ -92,12 +94,84 @@ Learn these words with me, and you'll be doing right!
 
 ---
 
+## 🇹🇭🌏 เวอร์ชันผสม (ใช้จริงในห้อง): "Say It, Mean It! / พูดเลย จำเลย"
+> ⭐ **เวอร์ชันหลัก** เพราะในห้องมีทั้งคนไทยและคนต่างชาติ
+
+**แนวคิด**
+- **ร้องเป็นภาษาอังกฤษ** ทุกคนจึงร้องตามได้ และได้ฝึกออกเสียงคำศัพท์จริง
+- **ซับไทยใต้ทุกบรรทัด** บนจอ ให้คนไทยเข้าใจความหมายทันที
+- **ท่อน Bridge แบ่งห้องเป็น 2 ฝั่ง** ผู้นำตะโกนคำ แล้วฝั่งไทยตอบความหมายไทย ฝั่งต่างชาติตอบความหมายอังกฤษ เป็นการแลกภาษากัน เข้ากับบทที่ 3 *When in Rome* พอดี
+- **สไตล์:** Pop-rap สนุก ประมาณ 105 BPM (อยู่ระหว่างลูกทุ่งแดนซ์กับฮิปฮอป) ความยาวประมาณ 3 นาที
+
+**[Hook: Call & Response]**
+```
+Leader: Alleviate!      All: Make the pain less severe!
+                             (บรรเทา ทำให้เบาลง)
+Leader: Enhance!        All: Make it better, make it clear!
+                             (ทำให้ดีขึ้น)
+Leader: Proofread!      All: Check it before you submit!
+                             (ตรวจทานก่อนส่ง)
+Leader: Constructive!   All: Feedback that helps you get it!
+                             (ติเพื่อก่อ)
+```
+
+**[Verse 1: Campus Life]**
+```
+I study diligently, with effort every day,
+        (อย่างขยันขันแข็ง)
+I listen attentively to what my teachers say,
+        (อย่างตั้งใจ)
+I join the club enthusiastically: hip hip hooray!
+        (อย่างกระตือรือร้น)
+Extracurricular: outside the class I play.
+        (กิจกรรมนอกหลักสูตร)
+When the pandemic spread across the world so wide,
+        (โรคระบาดทั่วโลก)
+Remarkably, we made it, learning side by side.
+        (อย่างน่าทึ่ง)
+```
+
+**[Hook]**
+
+**[Verse 2: Culture & Manners]**
+```
+Reciprocal: you help me, I help you, that's right!
+        (ซึ่งกันและกัน)
+Severance: it's over, cut the tie,
+        (การตัดขาด)
+Misperception: a wrong idea in your mind,
+        (การเข้าใจผิด)
+Minimise the problem, make it small,
+        (ลดให้น้อยที่สุด)
+Assortment: a mix, a little bit of all,
+        (ของคละหลายอย่าง)
+Intruder at the window, sneaking in at night!
+        (ผู้บุกรุก)
+```
+
+**[Bridge: Language Swap (แบ่งห้องเป็น 2 ฝั่ง)]**
+```
+Leader: Etiquette!      🇹🇭 Thai side: มารยาท!        🌏 International: Good manners!
+Leader: Reciprocal!     🇹🇭 Thai side: ซึ่งกันและกัน!   🌏 International: Both sides!
+Leader: Minimise!       🇹🇭 Thai side: ลดให้น้อยสุด!    🌏 International: Make it small!
+Leader: Intruder!       🇹🇭 Thai side: ผู้บุกรุก!       🌏 International: A thief at night!
+All: Two languages, one class, we learn it all tonight!
+```
+*(ฝั่งไทยตอบก่อน แล้วฝั่งต่างชาติตอบตามในจังหวะถัดไป ไม่ต้องตะโกนพร้อมกัน)*
+
+**[Hook × 2: Everyone]**
+
+> *etiquette* ย้ายไปอยู่ในท่อน Bridge แทนท่อน 2 เพื่อให้ทั้งสองฝั่งได้พูดคำนี้
+
+---
+
 ## ถ้าจะใช้ AI สร้างเพลง (เช่น Suno)
 ให้วางเนื้อร้อง (ไม่ต้องใส่คำอ่านในวงเล็บ) ในช่อง Lyrics แล้วใส่สไตล์ประมาณนี้
 
 | เวอร์ชัน | Style prompt |
 |---|---|
 | 🇹🇭 ไทย | `Thai pop luk thung dance, upbeat, 120 bpm, catchy sing-along chorus, clear female vocal, fun classroom song` |
+| 🇹🇭🌏 ผสม | `Upbeat pop rap, 105 bpm, call and response, catchy shout-along chorus, energetic classroom anthem, clear vocals` |
 | 🌏 English | `Educational hip-hop, call and response, 95 bpm, punchy drums, clear male lead rapper, crowd shout-backs in chorus` |
 
 ## ใช้ร่วมกับภาพ (lyric video)
