@@ -1,0 +1,471 @@
+[
+  {
+    "word": "alleviate",
+    "pos": "v.",
+    "meaning": "to make something less severe",
+    "chapter": 1,
+    "level": "hard"
+  },
+  {
+    "word": "attentively",
+    "pos": "adv.",
+    "meaning": "carefully, in a way that shows a lot of interest",
+    "chapter": 1,
+    "level": "hard"
+  },
+  {
+    "word": "constructive",
+    "pos": "adj.",
+    "meaning": "intended to help someone or improve understanding",
+    "chapter": 1,
+    "level": "hard"
+  },
+  {
+    "word": "diligently",
+    "pos": "adv.",
+    "meaning": "in a way that is careful and uses a lot of effort",
+    "chapter": 1,
+    "level": "hard"
+  },
+  {
+    "word": "enhance",
+    "pos": "v.",
+    "meaning": "to increase or further improve the good quality, value or status of somebody/something",
+    "chapter": 1,
+    "level": "hard"
+  },
+  {
+    "word": "enthusiastically",
+    "pos": "adv.",
+    "meaning": "in a way that shows a lot of excitement and interest about somebody/something",
+    "chapter": 1,
+    "level": "hard"
+  },
+  {
+    "word": "extracurricular",
+    "pos": "adj.",
+    "meaning": "(of activities or subjects) not part of the usual school or college course",
+    "chapter": 1,
+    "level": "hard"
+  },
+  {
+    "word": "pandemic",
+    "pos": "adj.",
+    "meaning": "(of a disease) existing in almost all of the whole country or the world",
+    "chapter": 1,
+    "level": "hard"
+  },
+  {
+    "word": "proofread",
+    "pos": "v.",
+    "meaning": "to read and correct a piece of written work",
+    "chapter": 1,
+    "level": "hard"
+  },
+  {
+    "word": "intruder",
+    "pos": "n.",
+    "meaning": "someone who enters a place without permission in order to commit a crime",
+    "chapter": 2,
+    "level": "hard"
+  },
+  {
+    "word": "assortment",
+    "pos": "n.",
+    "meaning": "a miscellaneous collection of things or people",
+    "chapter": 3,
+    "level": "hard"
+  },
+  {
+    "word": "etiquette",
+    "pos": "n.",
+    "meaning": "the customary code of polite behaviour in society or among members of a particular profession or group",
+    "chapter": 3,
+    "level": "hard"
+  },
+  {
+    "word": "minimise",
+    "pos": "v.",
+    "meaning": "to reduce something, especially something bad, to the lowest possible level",
+    "chapter": 3,
+    "level": "hard"
+  },
+  {
+    "word": "misperception",
+    "pos": "n.",
+    "meaning": "a wrong or incorrect understanding or interpretation",
+    "chapter": 3,
+    "level": "hard"
+  },
+  {
+    "word": "obscene",
+    "pos": "adj.",
+    "meaning": "(of the portrayal or description of sexual matters) offensive or disgusting by accepted standards of morality and decency",
+    "chapter": 3,
+    "level": "hard"
+  },
+  {
+    "word": "reciprocal",
+    "pos": "adj.",
+    "meaning": "involving two people or groups who agree to help each other or behave in the same way to each other",
+    "chapter": 3,
+    "level": "hard"
+  },
+  {
+    "word": "remarkably",
+    "pos": "adv.",
+    "meaning": "in a way that is unusual or surprising and causes people to take notice",
+    "chapter": 3,
+    "level": "hard"
+  },
+  {
+    "word": "severance",
+    "pos": "n.",
+    "meaning": "the action of ending a connection or relationship",
+    "chapter": 3,
+    "level": "hard"
+  },
+  {
+    "word": "assign",
+    "pos": "v.",
+    "meaning": "to give a particular job or piece of work to someone",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "assignment",
+    "pos": "n.",
+    "meaning": "a task or piece of work assigned to someone as part of a job or course of study",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "catch up",
+    "pos": "v.",
+    "meaning": "to do something you did not have time to do earlier",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "challenging",
+    "pos": "adj.",
+    "meaning": "difficult in an interesting way that tests your ability",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "deadline",
+    "pos": "n.",
+    "meaning": "a time or day by which something must be done",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "distraction",
+    "pos": "n.",
+    "meaning": "something that prevents someone from giving their attention to something else",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "diversity",
+    "pos": "n.",
+    "meaning": "a range of many people or things that are very different from each other",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "eagerly",
+    "pos": "adv.",
+    "meaning": "in a way that shows that you want to do or have something very much, especially something interesting or enjoyable",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "effective",
+    "pos": "adj.",
+    "meaning": "successful or achieving the results that you want",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "enthusiasm",
+    "pos": "n.",
+    "meaning": "a feeling of energetic interest in a particular subject or activity and an eagerness to be involved in it",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "enthusiastic",
+    "pos": "adj.",
+    "meaning": "showing a lot of excitement and interest about somebody/something",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "financial",
+    "pos": "adj.",
+    "meaning": "relating to money or how money is managed",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "get along",
+    "pos": "v.",
+    "meaning": "have a harmonious or friendly relationship",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "internship",
+    "pos": "n.",
+    "meaning": "a period of time during which a student or new graduate gets practical experience in a job",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "outline",
+    "pos": "n./v.",
+    "meaning": "a description of the main facts about something; to give the main facts about something",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "participate",
+    "pos": "v.",
+    "meaning": "to take part in or become involved in an activity",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "pursue",
+    "pos": "v.",
+    "meaning": "to do something or try to achieve something over a period of time",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "submit",
+    "pos": "v.",
+    "meaning": "to give a document to somebody in authority so that they can study or consider it",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "various",
+    "pos": "adj.",
+    "meaning": "several and different",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "visual aids",
+    "pos": "n.",
+    "meaning": "something that you are shown, such as a picture, film, or map, in order to help you understand or remember information",
+    "chapter": 1,
+    "level": "medium"
+  },
+  {
+    "word": "abandoned",
+    "pos": "adj.",
+    "meaning": "1. left without needed protection, care, or support 2. left by the owner",
+    "chapter": 2,
+    "level": "medium"
+  },
+  {
+    "word": "cemetery",
+    "pos": "n.",
+    "meaning": "a burial ground",
+    "chapter": 2,
+    "level": "medium"
+  },
+  {
+    "word": "inform",
+    "pos": "v.",
+    "meaning": "to tell someone about particular facts",
+    "chapter": 2,
+    "level": "medium"
+  },
+  {
+    "word": "instruct",
+    "pos": "v.",
+    "meaning": "1. to give knowledge 2. to give an order or command",
+    "chapter": 2,
+    "level": "medium"
+  },
+  {
+    "word": "shelter",
+    "pos": "n.",
+    "meaning": "(a building designed to give) protection from bad weather, danger, or attack",
+    "chapter": 2,
+    "level": "medium"
+  },
+  {
+    "word": "underneath",
+    "pos": "prep.",
+    "meaning": "under or below",
+    "chapter": 2,
+    "level": "medium"
+  },
+  {
+    "word": "appreciate",
+    "pos": "v.",
+    "meaning": "recognize the full worth of",
+    "chapter": 3,
+    "level": "medium"
+  },
+  {
+    "word": "appropriate",
+    "pos": "adj.",
+    "meaning": "suitable or proper in the circumstances",
+    "chapter": 3,
+    "level": "medium"
+  },
+  {
+    "word": "associate",
+    "pos": "v.",
+    "meaning": "to make a connection between people or things in your mind",
+    "chapter": 3,
+    "level": "medium"
+  },
+  {
+    "word": "donation",
+    "pos": "n.",
+    "meaning": "something that is given to a charity, especially a sum of money",
+    "chapter": 3,
+    "level": "medium"
+  },
+  {
+    "word": "household",
+    "pos": "n.",
+    "meaning": "a house and its occupants regarded as a unit",
+    "chapter": 3,
+    "level": "medium"
+  },
+  {
+    "word": "insult",
+    "pos": "v.",
+    "meaning": "speak to or treat with disrespect or scornful abuse",
+    "chapter": 3,
+    "level": "medium"
+  },
+  {
+    "word": "manner",
+    "pos": "n.",
+    "meaning": "a way in which a thing is done or happens",
+    "chapter": 3,
+    "level": "medium"
+  },
+  {
+    "word": "occasion",
+    "pos": "n.",
+    "meaning": "a particular event, or the time at which it takes place",
+    "chapter": 3,
+    "level": "medium"
+  },
+  {
+    "word": "appointment",
+    "pos": "n.",
+    "meaning": "an arrangement to meet someone at a particular time and place",
+    "chapter": 1,
+    "level": "easy"
+  },
+  {
+    "word": "cafeteria",
+    "pos": "n.",
+    "meaning": "a restaurant (often in a factory, a college, or an office building) where people collect food and drink from a serving area and take it to a table themselves after paying for it",
+    "chapter": 1,
+    "level": "easy"
+  },
+  {
+    "word": "campus",
+    "pos": "n.",
+    "meaning": "the grounds and buildings of a university or college",
+    "chapter": 1,
+    "level": "easy"
+  },
+  {
+    "word": "instructions",
+    "pos": "n.",
+    "meaning": "detailed information on how to do or use something",
+    "chapter": 1,
+    "level": "easy"
+  },
+  {
+    "word": "mistake",
+    "pos": "n./v.",
+    "meaning": "an action or an opinion that is not correct, or that produces a result that you did not want; to be wrong about or to fail to recognize something or someone",
+    "chapter": 1,
+    "level": "easy"
+  },
+  {
+    "word": "nervous",
+    "pos": "adj.",
+    "meaning": "worried and anxious",
+    "chapter": 1,
+    "level": "easy"
+  },
+  {
+    "word": "perhaps",
+    "pos": "adv.",
+    "meaning": "used to show that something is possible or that you are not certain about something",
+    "chapter": 1,
+    "level": "easy"
+  },
+  {
+    "word": "attend",
+    "pos": "v.",
+    "meaning": "to be present at",
+    "chapter": 2,
+    "level": "easy"
+  },
+  {
+    "word": "backyard",
+    "pos": "n.",
+    "meaning": "an area at the rear of a house",
+    "chapter": 2,
+    "level": "easy"
+  },
+  {
+    "word": "fetch",
+    "pos": "v.",
+    "meaning": "to go and bring back something",
+    "chapter": 2,
+    "level": "easy"
+  },
+  {
+    "word": "lasagna",
+    "pos": "n.",
+    "meaning": "pasta in the form of broad often ruffled ribbons",
+    "chapter": 2,
+    "level": "easy"
+  },
+  {
+    "word": "neighbor",
+    "pos": "n.",
+    "meaning": "one living or located near another",
+    "chapter": 2,
+    "level": "easy"
+  },
+  {
+    "word": "reach",
+    "pos": "v.",
+    "meaning": "to arrive at a place, especially after spending a long time or a lot of effort travelling",
+    "chapter": 2,
+    "level": "easy"
+  },
+  {
+    "word": "receive",
+    "pos": "v.",
+    "meaning": "to get or accept something that is given, sent, or delivered to you",
+    "chapter": 2,
+    "level": "easy"
+  },
+  {
+    "word": "thirsty",
+    "pos": "adj.",
+    "meaning": "feeling a strong need or desire for liquid, usually water",
+    "chapter": 2,
+    "level": "easy"
+  }
+]
