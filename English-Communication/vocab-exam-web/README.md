@@ -37,9 +37,10 @@ python3 -m http.server
 แล้วเปิด http://localhost:8000
 
 ## Deploy บน GitHub Pages
-ตั้งค่าไว้แล้วใน `.github/workflows/pages.yml` ทุกครั้งที่มีการแก้ไฟล์ในโฟลเดอร์นี้บน branch `main` เว็บจะอัปเดตเองภายใน 1–2 นาที
+รีโปนี้เปิด GitHub Pages แบบ **Deploy from a branch (`main`)** อยู่แล้ว (ใช้ร่วมกับสไลด์ของวิชาอื่น) แก้ไฟล์แล้วรวมเข้า `main` เว็บจะอัปเดตเองภายในประมาณ 1 นาที ไม่ต้องตั้งค่าอะไรเพิ่ม
 
-- ลิงก์เว็บ: **https://6931503045-design.github.io/Education-in-MFU/**
-- ลิงก์ให้นักศึกษาฝึกเอง (ใช้ทำ QR code): https://6931503045-design.github.io/Education-in-MFU/study.html
-- ตั้งค่าครั้งแรกครั้งเดียว: Settings → Pages → Build and deployment → Source: **GitHub Actions**
-- ถ้าต้องการสั่ง deploy เอง: แท็บ Actions → "Deploy vocab website to GitHub Pages" → Run workflow
+- เว็บ: **https://6931503045-design.github.io/Education-in-MFU/English-Communication/vocab-exam-web/**
+- Presenter mode: https://6931503045-design.github.io/Education-in-MFU/English-Communication/vocab-exam-web/presenter.html
+- ให้นักศึกษาฝึกเอง (ใช้ทำ QR code): https://6931503045-design.github.io/Education-in-MFU/English-Communication/vocab-exam-web/study.html
+
+⚠️ อย่าเปลี่ยน Settings → Pages → Source เป็น "GitHub Actions" เพราะลิงก์สไลด์ของวิชาอื่นจะใช้ไม่ได้
