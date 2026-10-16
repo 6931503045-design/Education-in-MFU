@@ -1,4 +1,6 @@
-[
+// Vocabulary data for Sing the Words! (1006134 English for Communication 1, Chapters 1-3).
+// Edit this file to add or change words. Loaded as a script so the site also works offline (file://).
+window.VOCAB = [
   {
     "word": "alleviate",
     "pos": "v.",
@@ -10,7 +12,9 @@
     "memory_trick": "ก้อนหินหนักบนหลัง ถูกยกออก",
     "lyric": "Alleviate! Make the pain less severe!",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "💊",
+    "read_th": "อะ-ลี-วี-เอท"
   },
   {
     "word": "attentively",
@@ -23,7 +27,9 @@
     "memory_trick": "attention! = ตั้งใจ!",
     "lyric": "I listen attentively to what my teachers say",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "👂",
+    "read_th": "อะ-เท็น-ทิฟ-ลี่"
   },
   {
     "word": "constructive",
@@ -36,7 +42,9 @@
     "memory_trick": "construct = ก่อสร้าง → ติเพื่อก่อ",
     "lyric": "Constructive! Feedback that helps you get it!",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🛠️",
+    "read_th": "คอน-สตรัค-ทิฟ"
   },
   {
     "word": "diligently",
@@ -49,7 +57,9 @@
     "memory_trick": "มดคือสัญลักษณ์ความขยัน",
     "lyric": "I study diligently, with effort every day",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🐜",
+    "read_th": "ดิ-ลิ-เจ้นท์-ลี่"
   },
   {
     "word": "enhance",
@@ -62,7 +72,9 @@
     "memory_trick": "en + hance → ยกระดับ (higher)",
     "lyric": "Enhance! Make it better, make it clear!",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "✨",
+    "read_th": "เอ็น-แฮนซ์"
   },
   {
     "word": "enthusiastically",
@@ -75,7 +87,9 @@
     "memory_trick": "เทียบกับ enthusiasm / enthusiastic ในชุดเดียวกัน",
     "lyric": "I join the club enthusiastically: hip hip hooray!",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🙌",
+    "read_th": "เอ็น-ทู-ซี-แอส-ติ-คอล-ลี่"
   },
   {
     "word": "extracurricular",
@@ -88,7 +102,9 @@
     "memory_trick": "extra = นอกเหนือ, curriculum = หลักสูตร",
     "lyric": "Extracurricular: outside the class I play",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🎸",
+    "read_th": "เอ็กซ์-ตร้า-เคอ-ริ-คิว-ล่าร์"
   },
   {
     "word": "pandemic",
@@ -101,7 +117,9 @@
     "memory_trick": "pan = ทั้งหมด (ทั้งโลก)",
     "lyric": "When the pandemic spread across the world so wide",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "😷🌍",
+    "read_th": "แพน-เด็ม-มิค"
   },
   {
     "word": "proofread",
@@ -114,7 +132,9 @@
     "memory_trick": "proof (พิสูจน์) + read (อ่าน)",
     "lyric": "Proofread! Check it before you submit!",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🔍",
+    "read_th": "พรูฟ-รีด"
   },
   {
     "word": "intruder",
@@ -127,7 +147,9 @@
     "memory_trick": "in (เข้า) + rude (หยาบคาย) = เข้ามาแบบไม่ขออนุญาต",
     "lyric": "Intruder at the window, sneaking in at night!",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🥷",
+    "read_th": "อิน-ทรู-เดอร์"
   },
   {
     "word": "assortment",
@@ -140,7 +162,9 @@
     "memory_trick": "กล่องเดียวมีหลาย sort (หลายแบบ)",
     "lyric": "Assortment: a mix, a little bit of all",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🍫",
+    "read_th": "อะ-ซอร์ท-เมินท์"
   },
   {
     "word": "etiquette",
@@ -153,7 +177,9 @@
     "memory_trick": "ออกเสียงเหมือน 'เอ-ทิ-เค็ท' ติดป้าย (ticket) ว่าสุภาพ",
     "lyric": "Etiquette! Good manners!",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🍽️",
+    "read_th": "เอ-ทิ-เค็ท"
   },
   {
     "word": "minimise",
@@ -166,7 +192,9 @@
     "memory_trick": "ปุ่ม minimise บนคอม = ย่อให้เล็กสุด",
     "lyric": "Minimise the problem, make it small",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "➖",
+    "read_th": "มิ-นิ-ไมซ์"
   },
   {
     "word": "misperception",
@@ -179,7 +207,9 @@
     "memory_trick": "mis (ผิด) + perception (การรับรู้)",
     "lyric": "Misperception: a wrong idea in your mind",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🦆🐇",
+    "read_th": "มิส-เพอร์-เซ็พ-ชั่น"
   },
   {
     "word": "obscene",
@@ -190,7 +220,9 @@
     "meaning_th": "ลามก, อนาจาร, หยาบคาย",
     "image_idea": "ป้าย 18+ หรือแถบเซ็นเซอร์ดำ (ห้ามใช้ภาพจริง)",
     "memory_trick": "มีแถบเซ็นเซอร์ = obscene",
-    "quiz": false
+    "quiz": false,
+    "emoji": "🔞",
+    "read_th": "อ็อบ-ซีน"
   },
   {
     "word": "reciprocal",
@@ -203,7 +235,9 @@
     "memory_trick": "ให้ไป ↔ ได้คืน",
     "lyric": "Reciprocal: you help me, I help you, that's right!",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🤝",
+    "read_th": "รี-ซิพ-โพร-เคิล"
   },
   {
     "word": "remarkably",
@@ -216,7 +250,9 @@
     "memory_trick": "re-mark = ควรค่าแก่การทำเครื่องหมาย",
     "lyric": "Remarkably, we made it, learning side by side",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "😲",
+    "read_th": "รี-มาร์ค-คะ-บลี่"
   },
   {
     "word": "severance",
@@ -229,7 +265,9 @@
     "memory_trick": "sever ≈ ตัดให้ขาด",
     "lyric": "Severance: it's over, cut the tie",
     "lyric_source": "song",
-    "quiz": true
+    "quiz": true,
+    "emoji": "✂️",
+    "read_th": "เซฟ-เวอ-เรินซ์"
   },
   {
     "word": "assign",
@@ -241,7 +279,8 @@
     "image_idea": "ครูยื่นแฟ้มงานให้นักศึกษา",
     "lyric": "The teacher will assign us work to do",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "📋"
   },
   {
     "word": "assignment",
@@ -254,7 +293,8 @@
     "memory_trick": "assign + ment = สิ่งที่ถูกมอบหมาย",
     "lyric": "Finish your assignment before the night is through",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "📚"
   },
   {
     "word": "catch up",
@@ -266,7 +306,8 @@
     "image_idea": "นักวิ่งที่วิ่งตามกลุ่มให้ทัน",
     "lyric": "I missed a class, so now I need to catch up",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🏃"
   },
   {
     "word": "challenging",
@@ -278,7 +319,8 @@
     "image_idea": "คนปีนหน้าผา",
     "lyric": "This test is challenging, but I'll give it a try",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🧗"
   },
   {
     "word": "deadline",
@@ -291,7 +333,8 @@
     "memory_trick": "dead + line = เส้นตาย",
     "lyric": "The deadline is Friday, don't be late!",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "⏰"
   },
   {
     "word": "distraction",
@@ -303,7 +346,8 @@
     "image_idea": "คนอ่านหนังสือ แต่มือถือเด้งแจ้งเตือน",
     "lyric": "My phone is a distraction, put it away",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "📱"
   },
   {
     "word": "diversity",
@@ -315,7 +359,8 @@
     "image_idea": "มือหลายสีผิวมารวมกัน",
     "lyric": "Diversity on campus, friends from every land",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🌈"
   },
   {
     "word": "eagerly",
@@ -327,7 +372,8 @@
     "image_idea": "เด็กรอเปิดของขวัญตาเป็นประกาย",
     "lyric": "I eagerly wait for the weekend to come",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🎁"
   },
   {
     "word": "effective",
@@ -339,7 +385,8 @@
     "image_idea": "ลูกดอกปักกลางเป้า",
     "lyric": "An effective plan will get the job done",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🎯"
   },
   {
     "word": "enthusiasm",
@@ -351,7 +398,8 @@
     "image_idea": "คนยกมืออาสาเต็มห้อง",
     "lyric": "Full of enthusiasm, ready to start",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🔥"
   },
   {
     "word": "enthusiastic",
@@ -363,7 +411,8 @@
     "image_idea": "คนยิ้มกว้างกำหมัดสู้",
     "lyric": "An enthusiastic student with a happy heart",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "😄"
   },
   {
     "word": "financial",
@@ -375,7 +424,8 @@
     "image_idea": "กระปุกออมสิน + กราฟเงิน",
     "lyric": "Financial problems, money's running low",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "💰"
   },
   {
     "word": "get along",
@@ -387,7 +437,8 @@
     "image_idea": "เพื่อนสองคนกอดคอหัวเราะ",
     "lyric": "Thai and international, we get along, you know",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "👫"
   },
   {
     "word": "internship",
@@ -399,7 +450,8 @@
     "image_idea": "นักศึกษาใส่บัตร Intern ในออฟฟิศ",
     "lyric": "An internship this summer, working for real",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "💼"
   },
   {
     "word": "outline",
@@ -411,7 +463,8 @@
     "image_idea": "ภาพร่างเส้นขอบ / bullet points",
     "lyric": "Write an outline first, then write the rest",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "📝"
   },
   {
     "word": "participate",
@@ -423,7 +476,8 @@
     "image_idea": "หลายคนยกมือร่วมกิจกรรมกลุ่ม",
     "lyric": "Participate in class, raise your hand up high",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🙋"
   },
   {
     "word": "pursue",
@@ -435,7 +489,8 @@
     "image_idea": "คนวิ่งไล่ตามดาว/ธงเส้นชัย",
     "lyric": "Pursue your dreams and never say goodbye",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🏁"
   },
   {
     "word": "submit",
@@ -447,7 +502,8 @@
     "image_idea": "กดปุ่ม Submit บนจอ",
     "lyric": "Submit your homework, click and send it in",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "📤"
   },
   {
     "word": "various",
@@ -459,7 +515,8 @@
     "image_idea": "ผลไม้หลายชนิดในตะกร้า",
     "lyric": "Various fruits in the basket, green and red",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🍎🍌🍇"
   },
   {
     "word": "visual aids",
@@ -471,7 +528,8 @@
     "image_idea": "สไลด์ แผนที่ กราฟ บนกระดาน",
     "lyric": "Visual aids: pictures help us see",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🖼️"
   },
   {
     "word": "abandoned",
@@ -483,7 +541,8 @@
     "image_idea": "บ้านร้างมีหยากไย่ / ลูกหมาในกล่องข้างทาง",
     "lyric": "An abandoned house, nobody lives inside",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🏚️"
   },
   {
     "word": "cemetery",
@@ -495,7 +554,8 @@
     "image_idea": "ป้ายหลุมศพเรียงแถวยามเย็น",
     "lyric": "Quiet in the cemetery, where the old graves lie",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🪦"
   },
   {
     "word": "inform",
@@ -508,7 +568,8 @@
     "memory_trick": "in + form = ใส่ข้อมูล",
     "lyric": "Please inform the teacher if you miss a class",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "📢"
   },
   {
     "word": "instruct",
@@ -520,7 +581,8 @@
     "image_idea": "ครูฝึกชี้นิ้วสั่ง",
     "lyric": "Coaches instruct us how to play the game",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🧑‍🏫"
   },
   {
     "word": "shelter",
@@ -532,7 +594,8 @@
     "image_idea": "คนหลบฝนใต้ศาลา",
     "lyric": "Run to the shelter when the storm comes in",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "⛺"
   },
   {
     "word": "underneath",
@@ -544,7 +607,8 @@
     "image_idea": "แมวซ่อนอยู่ใต้โต๊ะ",
     "lyric": "The cat is hiding underneath the bed",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🐈"
   },
   {
     "word": "appreciate",
@@ -556,7 +620,8 @@
     "image_idea": "คนยื่นดอกไม้ขอบคุณ หัวใจลอย",
     "lyric": "I appreciate your help, thank you, my friend",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "💐"
   },
   {
     "word": "appropriate",
@@ -568,7 +633,8 @@
     "image_idea": "ชุดถูกกาลเทศะ ✔ vs ชุดนอนไปงานแต่ง ✘",
     "lyric": "Wear appropriate clothes when you go to class",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "👔"
   },
   {
     "word": "associate",
@@ -580,7 +646,8 @@
     "image_idea": "หลอดไฟในหัว เส้นโยงระหว่างภาพสองภาพ",
     "lyric": "I associate this song with every word I know",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🔗"
   },
   {
     "word": "donation",
@@ -592,7 +659,8 @@
     "image_idea": "มือหยอดเหรียญลงกล่องบริจาค",
     "lyric": "Give a donation, lend a helping hand",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🪙"
   },
   {
     "word": "household",
@@ -605,7 +673,8 @@
     "memory_trick": "house + hold = บ้านที่โอบคนไว้",
     "lyric": "Every household has its own house rules",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🏠"
   },
   {
     "word": "insult",
@@ -617,7 +686,8 @@
     "image_idea": "คนชี้หน้าหัวเราะเยาะ อีกคนเสียใจ",
     "lyric": "Don't insult your friends, don't call them names",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "😠"
   },
   {
     "word": "manner",
@@ -629,7 +699,8 @@
     "image_idea": "คนทำสิ่งเดียวกันสองแบบ",
     "lyric": "Speak in a friendly manner, that's the deal",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🙇"
   },
   {
     "word": "occasion",
@@ -641,7 +712,8 @@
     "image_idea": "เค้กวันเกิด / ลูกโป่งงานฉลอง",
     "lyric": "A birthday is a special occasion, let's celebrate",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🎂"
   },
   {
     "word": "appointment",
@@ -653,7 +725,8 @@
     "image_idea": "ปฏิทินมีวงนัด + นาฬิกา",
     "lyric": "I have an appointment with the doctor at three",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "📅"
   },
   {
     "word": "cafeteria",
@@ -665,7 +738,8 @@
     "image_idea": "ถาดอาหารในโรงอาหาร",
     "lyric": "Lunchtime! Let's go to the cafeteria",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🍱"
   },
   {
     "word": "campus",
@@ -677,7 +751,8 @@
     "image_idea": "ภาพมุมกว้างของ มฟล.",
     "lyric": "Walking around the campus with my friends",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🏫"
   },
   {
     "word": "instructions",
@@ -689,7 +764,8 @@
     "image_idea": "คู่มือประกอบของมีรูปขั้นตอน",
     "lyric": "Read the instructions before you start",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "📖"
   },
   {
     "word": "mistake",
@@ -701,7 +777,8 @@
     "image_idea": "กากบาทแดง ❌ บนกระดาษคำตอบ",
     "lyric": "Everybody makes a mistake sometimes",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "❌"
   },
   {
     "word": "nervous",
@@ -713,7 +790,8 @@
     "image_idea": "คนเหงื่อตกมือสั่นก่อนพรีเซนต์",
     "lyric": "I feel nervous before I speak",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "😰"
   },
   {
     "word": "perhaps",
@@ -725,7 +803,8 @@
     "image_idea": "คนยักไหล่ มีเครื่องหมาย ?",
     "lyric": "Perhaps it will rain, so bring your umbrella",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🤷"
   },
   {
     "word": "attend",
@@ -737,7 +816,8 @@
     "image_idea": "นักศึกษาเช็คชื่อเข้าห้องเรียน",
     "lyric": "Attend every class, don't skip a day",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "✅"
   },
   {
     "word": "backyard",
@@ -749,7 +829,8 @@
     "image_idea": "สนามหญ้าหลังบ้านมีชิงช้า",
     "lyric": "Playing football in the backyard after school",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🏡"
   },
   {
     "word": "fetch",
@@ -761,7 +842,8 @@
     "image_idea": "หมาคาบลูกบอลกลับมา",
     "lyric": "Throw the ball, and the dog will fetch it back",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🐕"
   },
   {
     "word": "lasagna",
@@ -773,7 +855,8 @@
     "image_idea": "จานลาซานญ่าเป็นชั้น ๆ",
     "lyric": "Lasagna for dinner, layer after layer",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🍝"
   },
   {
     "word": "neighbor",
@@ -785,7 +868,8 @@
     "image_idea": "สองบ้านติดกัน คนโบกมือทักกัน",
     "lyric": "Say hello to the neighbor next door",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🏘️"
   },
   {
     "word": "reach",
@@ -797,7 +881,8 @@
     "image_idea": "นักเดินทางถึงยอดเขาปักธง",
     "lyric": "We finally reach the top of the hill",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🏔️"
   },
   {
     "word": "receive",
@@ -809,7 +894,8 @@
     "image_idea": "มือรับกล่องพัสดุ",
     "lyric": "I receive a letter in the mail",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "📦"
   },
   {
     "word": "thirsty",
@@ -821,6 +907,7 @@
     "image_idea": "คนกลางทะเลทรายมองแก้วน้ำ",
     "lyric": "So hot today, I'm thirsty, give me water",
     "lyric_source": "quiz-only",
-    "quiz": true
+    "quiz": true,
+    "emoji": "🥤"
   }
-]
+];

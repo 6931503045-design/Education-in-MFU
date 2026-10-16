@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sing the Words! · Presenter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Prompt:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="presenter">
+  <div class="p-root">
+    <main class="p-main">
+      <div class="p-bar">
+        <strong id="group-label"></strong>
+        <button id="lang-th">🇹🇭 ไทย</button>
+        <button id="lang-en">🌏 English</button>
+        <button id="new-group" class="accent">➕ กลุ่มใหม่</button>
+        <span class="spacer"></span>
+        <span id="stage-status" class="kbd"></span>
+        <button id="open-stage" class="primary">🖥️ เปิดจอผู้เรียน</button>
+      </div>
+      <div class="p-preview"><iframe id="preview" src="stage.html" title="Preview of the audience screen"></iframe></div>
+      <div class="p-bar">
+        <button id="prev">◀ ก่อนหน้า</button>
+        <div class="p-steps" id="steps"></div>
+        <span class="spacer"></span>
+        <button id="next" class="primary">ถัดไป ▶</button>
+      </div>
+    </main>
+
+    <aside class="p-side">
+      <section class="panel">
+        <h3>⏱️ เวลาฐานนี้</h3>
+        <div class="timer" id="timer">10:00</div>
+        <p class="kbd" id="plan-hint"></p>
+        <div class="row-btns">
+          <button id="timer-toggle">▶ เริ่ม</button>
+          <button id="timer-reset">↺ 10:00</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3 id="step-title">โน้ตผู้สอน</h3>
+        <p class="answer" id="answer"></p>
+        <p class="notes" id="notes"></p>
+        <div class="row-btns" id="question-btns">
+          <button id="reveal">👁️ เฉลย (R)</button>
+          <button id="hint">💡 คำใบ้ (H)</button>
+          <button id="mark-ok">✔ ถูก (C)</button>
+          <button id="mark-no">✘ ผิด (X)</button>
+        </div>
+        <div class="row-btns" id="song-btns">
+          <button id="play">▶ เล่นเพลง (P)</button>
+          <span class="kbd" id="audio-status"></span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3>🏆 คะแนน</h3>
+        <p>กลุ่มนี้: <strong id="score"></strong></p>
+        <table class="results">
+          <thead><tr><th>กลุ่ม</th><th>ภาษา</th><th>คะแนน</th></tr></thead>
+          <tbody id="results"></tbody>
+        </table>
+        <button id="clear-results">ล้างตารางคะแนน</button>
+      </section>
+
+      <p class="kbd">คีย์ลัด: → / Space ถัดไป · ← ก่อนหน้า · R เฉลย · H คำใบ้ · C ถูก · X ผิด · P เพลง</p>
+    </aside>
+  </div>
+  <audio id="audio" preload="auto"></audio>
+
+  <script src="data/vocab.js"></script>
+  <script src="data/songs.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/lesson.js"></script>
+  <script src="js/presenter.js"></script>
+</body>
+</html>
