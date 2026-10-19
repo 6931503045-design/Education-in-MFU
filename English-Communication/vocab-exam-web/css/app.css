@@ -191,3 +191,10 @@ table.results td, table.results th { border-bottom: 1px solid var(--line); paddi
 .q-card .opts { margin-top: 0; }
 .q-card .opt { font-size: 18px; padding: 12px; }
 @media (max-width: 480px) { .q-card .opts { grid-template-columns: 1fr; } }
+
+.song-line {
+  display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: center;
+  width: 100%; text-align: left; font-size: 18px; padding: 8px; border-radius: var(--radius-sm);
+}
+.song-line .pic { width: 64px; border-radius: var(--radius-sm); }
+.song-line .pic .emoji { font-size: 36px; }

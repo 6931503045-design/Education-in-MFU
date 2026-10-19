@@ -148,10 +148,14 @@
       }
       case "cards": {
         const v = HARD[state.sub];
-        return { notes: `${v.word} · ${v.meaning_th}\nภาพ: ${v.image_idea}${v.memory_trick ? "\nช่วยจำ: " + v.memory_trick : ""}\nทำท่ามือประกอบ แล้วให้กลุ่มพูดตาม` };
+        return { notes: `${v.word} · ${v.meaning_th}` +
+          (v.gesture ? `\n✋ ท่ามือ: ${v.gesture}` : "") +
+          (v.example ? `\n💬 ตัวอย่าง: ${v.example}` : "") +
+          (v.memory_trick ? `\n💡 ช่วยจำ: ${v.memory_trick}` : "") +
+          "\nทำท่าประกอบ แล้วให้กลุ่มพูดคำตาม" };
       }
       case "song":
-        return { notes: "กด P เล่น/หยุดเพลง แล้วกด → เลื่อนเนื้อเพลงตามจังหวะ\nท่อนฮุก: ให้ทั้งกลุ่มร้องตาม", song: true };
+        return { notes: "ไม่มีไฟล์เสียง: ผู้สอนอ่านท่อนบนจอเป็นจังหวะ (ปรบมือ 4 จังหวะ) แล้วให้กลุ่มพูดตาม\nทำท่ามือของคำนั้นไปด้วย แล้วกด → ไปท่อนถัดไป\n18 ท่อน ประมาณ 10 วินาทีต่อท่อน" };
       case "family":
         return { notes: "ท่องพร้อมปรบมือ: noun (แปะ) adjective (แปะ) adverb!\nสังเกตท้ายคำ -ism / -ic / -ally, -ment, -ions" };
       case "recap":
