@@ -95,7 +95,6 @@
   function newGroup() {
     if (state.step > 0 && !confirm("เริ่มกลุ่มใหม่? (คะแนนกลุ่มนี้จะถูกบันทึก)")) return;
     saveResult();
-    stopAudio();
     state = freshState(state.group + 1, state.lang);
     broadcast();
   }
@@ -103,7 +102,6 @@
   function setLang(lang) {
     state.lang = lang;
     if (stepId() === "song") state.sub = Math.min(state.sub, count() - 1);
-    stopAudio();
     broadcast();
   }
 
@@ -143,19 +141,6 @@
     $("plan-hint").textContent = state.timer.running || left < STATION_MS ? "ตามแผนควรอยู่ช่วง: " + planned.th : "เริ่มนับเมื่อกด ถัดไป ครั้งแรก";
   }
 
-  // ---------- audio ----------
-  const audio = $("audio");
-  function stopAudio() { audio.pause(); }
-  function toggleAudio() {
-    const src = window.SONGS[state.lang].audio;
-    if (!audio.src.endsWith(src)) audio.src = src;
-    if (audio.paused) audio.play().catch(() => { $("audio-status").textContent = "ยังไม่มีไฟล์เพลง: " + src; });
-    else audio.pause();
-  }
-  audio.addEventListener("play", () => { $("play").textContent = "⏸ หยุดเพลง (P)"; $("audio-status").textContent = ""; });
-  audio.addEventListener("pause", () => { $("play").textContent = "▶ เล่นเพลง (P)"; });
-  audio.addEventListener("error", () => { $("audio-status").textContent = "ยังไม่มีไฟล์เพลง: " + window.SONGS[state.lang].audio; });
-
   // ---------- presenter UI ----------
   function render() {
     $("group-label").textContent = "กลุ่มที่ " + state.group;
@@ -172,7 +157,6 @@
     $("notes").textContent = info.notes || "";
     $("answer").textContent = info.answer ? "เฉลย: " + info.answer : "";
     $("question-btns").style.display = info.question ? "" : "none";
-    $("song-btns").style.display = info.song ? "" : "none";
     $("reveal").classList.toggle("on", state.reveal);
     $("hint").classList.toggle("on", state.hint);
     const key = questionKey();
@@ -202,7 +186,6 @@
   $("hint").onclick = () => { state.hint = !state.hint; broadcast(); };
   $("mark-ok").onclick = () => mark(true);
   $("mark-no").onclick = () => mark(false);
-  $("play").onclick = toggleAudio;
   $("timer-toggle").onclick = toggleTimer;
   $("timer-reset").onclick = resetTimer;
   $("clear-results").onclick = () => {
@@ -226,7 +209,6 @@
     else if (k === "h") { state.hint = !state.hint; broadcast(); }
     else if (k === "c") mark(true);
     else if (k === "x") mark(false);
-    else if (k === "p") toggleAudio();
   });
 
   setInterval(() => {

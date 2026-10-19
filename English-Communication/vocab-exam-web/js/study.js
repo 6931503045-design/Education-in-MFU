@@ -76,13 +76,27 @@
     $("q-new").onclick = () => { newQuiz(); render(); window.scrollTo(0, 0); };
   }
 
+  // Lyrics of the song, one line per hard word, with its picture. Tap a line to hear the word.
+  function renderSong() {
+    const song = window.SONGS[lang];
+    view.innerHTML = `<div class="q-card"><p class="lyric">🎵 ${esc(song.title)}</p>
+      <p class="counter">${lang === "th" ? "แตะแต่ละท่อนเพื่อฟังเสียงคำศัพท์" : "Tap a line to hear the word"}</p></div>` +
+      song.sections.map((s) => `<div class="q-card"><h2 style="font-size:20px">${esc(s.label)}</h2>` +
+        s.lines.map((l) => `<button class="song-line" data-word="${esc(l.word)}">${picture(byWord[l.word])}<span>${esc(l.text)}</span></button>`).join("") +
+        "</div>").join("");
+    view.querySelectorAll(".song-line").forEach((b) => { b.onclick = () => speak(b.dataset.word); });
+  }
+
   function render() {
     $("lang-th").classList.toggle("on", lang === "th");
     $("lang-en").classList.toggle("on", lang === "en");
     $("mode-cards").classList.toggle("on", mode === "cards");
     $("mode-quiz").classList.toggle("on", mode === "quiz");
+    $("mode-song").classList.toggle("on", mode === "song");
+    $("levels").style.display = mode === "song" ? "none" : "";
     document.querySelectorAll("#levels button").forEach((b) => b.classList.toggle("on", b.dataset.level === level));
     if (mode === "cards") renderCards();
+    else if (mode === "song") renderSong();
     else renderQuiz();
   }
 
@@ -96,6 +110,7 @@
   $("lang-en").onclick = () => setLang("en");
   $("mode-cards").onclick = () => { mode = "cards"; render(); };
   $("mode-quiz").onclick = () => { mode = "quiz"; newQuiz(); render(); };
+  $("mode-song").onclick = () => { mode = "song"; render(); };
   $("levels").onclick = (e) => {
     const b = e.target.closest("button");
     if (!b) return;

@@ -10,12 +10,15 @@ window.VOCAB = [
     "meaning_th": "บรรเทา, ทำให้เบาลง",
     "image_idea": "ภาพก่อน/หลัง: คนปวดหัวหน้าเหยเก กินยาแล้วยิ้ม",
     "memory_trick": "ก้อนหินหนักบนหลัง ถูกยกออก",
-    "lyric": "Alleviate! Make the pain less severe!",
+    "lyric": "Alleviate, ease the pain!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "💊",
     "read_th": "อะ-ลี-วี-เอท",
-    "img": "alleviate.jpg"
+    "img": "alleviate.jpg",
+    "lyric_th": "ยาบรรเทา Alleviate ลดเจ็บลดไข้",
+    "gesture": "ทำท่าแบกหินหนักบนไหล่ แล้วยกออก ถอนหายใจโล่ง",
+    "example": "This medicine will alleviate the pain."
   },
   {
     "word": "attentively",
@@ -26,12 +29,15 @@ window.VOCAB = [
     "meaning_th": "อย่างตั้งใจ, อย่างใส่ใจ",
     "image_idea": "นักศึกษาฟังเลกเชอร์ ตาโต หูขยายใหญ่",
     "memory_trick": "attention! = ตั้งใจ!",
-    "lyric": "I listen attentively to what my teachers say",
+    "lyric": "Attentively, listen carefully!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "👂",
     "read_th": "อะ-เท็น-ทิฟ-ลี่",
-    "img": "attentively.jpg"
+    "img": "attentively.jpg",
+    "lyric_th": "Attentively ตั้งใจฟัง ครูสอนทุกครั้งจำได้ไว",
+    "gesture": "ป้องมือที่หู เบิกตากว้าง",
+    "example": "The students listened attentively to the guest speaker."
   },
   {
     "word": "constructive",
@@ -42,12 +48,15 @@ window.VOCAB = [
     "meaning_th": "สร้างสรรค์ (ติเพื่อก่อ)",
     "image_idea": "ครูวงงานด้วยปากกาแดง ในมือถือค้อนช่างก่อสร้าง",
     "memory_trick": "construct = ก่อสร้าง → ติเพื่อก่อ",
-    "lyric": "Constructive! Feedback that helps you get it!",
+    "lyric": "Constructive, helpful advice!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🛠️",
     "read_th": "คอน-สตรัค-ทิฟ",
-    "img": "constructive.jpg"
+    "img": "constructive.jpg",
+    "lyric_th": "Constructive ติเพื่อก่อ ช่วยให้ดีขึ้นทุกวัน",
+    "gesture": "ทำท่าตอกค้อน แล้วยกนิ้วโป้ง",
+    "example": "Thank you for the constructive feedback on my essay."
   },
   {
     "word": "diligently",
@@ -58,12 +67,15 @@ window.VOCAB = [
     "meaning_th": "อย่างขยันขันแข็ง",
     "image_idea": "มดแบกอาหารเป็นแถว / นักศึกษาทำการบ้านตอนดึก",
     "memory_trick": "มดคือสัญลักษณ์ความขยัน",
-    "lyric": "I study diligently, with effort every day",
+    "lyric": "Diligently, work hard every day!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🐜",
     "read_th": "ดิ-ลิ-เจ้นท์-ลี่",
-    "img": "diligently.jpg"
+    "img": "diligently.jpg",
+    "lyric_th": "Diligently ขยันทำ ตั้งใจจำทุกคืนวัน",
+    "gesture": "ทำท่าเขียนเร็ว ๆ แล้วปาดเหงื่อ",
+    "example": "She studied diligently for the final exam."
   },
   {
     "word": "enhance",
@@ -74,12 +86,15 @@ window.VOCAB = [
     "meaning_th": "ทำให้ดีขึ้น, เพิ่มคุณภาพ",
     "image_idea": "รูปก่อน/หลังใส่ฟิลเตอร์ หรือปุ่ม HD",
     "memory_trick": "en + hance → ยกระดับ (higher)",
-    "lyric": "Enhance! Make it better, make it clear!",
+    "lyric": "Enhance, make it better!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "✨",
     "read_th": "เอ็น-แฮนซ์",
-    "img": "enhance.jpg"
+    "img": "enhance.jpg",
+    "lyric_th": "Enhance เพิ่มให้ดี เก่งขึ้นทุกที เย้ เย้ เย้",
+    "gesture": "ทำมือเป็นกรอบรูป แล้วกางมือออกเหมือนภาพชัดขึ้น",
+    "example": "An internship can enhance your CV."
   },
   {
     "word": "enthusiastically",
@@ -90,12 +105,15 @@ window.VOCAB = [
     "meaning_th": "อย่างกระตือรือร้น",
     "image_idea": "เชียร์ลีดเดอร์กระโดดโห่ร้อง ยกมือสุด",
     "memory_trick": "เทียบกับ enthusiasm / enthusiastic ในชุดเดียวกัน",
-    "lyric": "I join the club enthusiastically: hip hip hooray!",
+    "lyric": "Enthusiastically, full of energy!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🙌",
     "read_th": "เอ็น-ทู-ซี-แอส-ติ-คอล-ลี่",
-    "img": "enthusiastically.jpg"
+    "img": "enthusiastically.jpg",
+    "lyric_th": "Enthusiastically ไฟแรงจัง กระตือรือร้นมีพลัง",
+    "gesture": "ชูสองมือขึ้น ร้อง \"เฮ!\"",
+    "example": "The students answered enthusiastically."
   },
   {
     "word": "extracurricular",
@@ -106,12 +124,15 @@ window.VOCAB = [
     "meaning_th": "นอกหลักสูตร (กิจกรรม)",
     "image_idea": "นักศึกษาเล่นดนตรี/กีฬา นอกห้องเรียน",
     "memory_trick": "extra = นอกเหนือ, curriculum = หลักสูตร",
-    "lyric": "Extracurricular: outside the class I play",
+    "lyric": "Extracurricular, fun after school!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🎸",
     "read_th": "เอ็กซ์-ตร้า-เคอ-ริ-คิว-ล่าร์",
-    "img": "extracurricular.jpg"
+    "img": "extracurricular.jpg",
+    "lyric_th": "Extracurricular หลังเลิกเรียน กิจกรรมสนุกวนเวียน",
+    "gesture": "ชี้ในห้อง แล้วก้าวออกไปทำท่าดีดกีตาร์",
+    "example": "She joins many extracurricular activities, like the music club."
   },
   {
     "word": "pandemic",
@@ -122,12 +143,15 @@ window.VOCAB = [
     "meaning_th": "โรคระบาดใหญ่ (ทั่วโลก)",
     "image_idea": "ลูกโลกใส่หน้ากากอนามัย",
     "memory_trick": "pan = ทั้งหมด (ทั้งโลก)",
-    "lyric": "When the pandemic spread across the world so wide",
+    "lyric": "Pandemic, sickness worldwide!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "😷🌍",
     "read_th": "แพน-เด็ม-มิค",
-    "img": "pandemic.jpg"
+    "img": "pandemic.jpg",
+    "lyric_th": "Pandemic โรคระบาด แพร่หลายชาติทั่วโลกเลย",
+    "gesture": "วาดวงกลมใหญ่ (โลก) แล้วทำท่าใส่หน้ากาก",
+    "example": "Many classes moved online during the pandemic."
   },
   {
     "word": "proofread",
@@ -138,12 +162,15 @@ window.VOCAB = [
     "meaning_th": "ตรวจทาน, พิสูจน์อักษร",
     "image_idea": "แว่นขยายส่องกระดาษ มีปากกาแดงวงคำผิด",
     "memory_trick": "proof (พิสูจน์) + read (อ่าน)",
-    "lyric": "Proofread! Check it before you submit!",
+    "lyric": "Proofread, check before you send!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🔍",
     "read_th": "พรูฟ-รีด",
-    "img": "proofread.jpg"
+    "img": "proofread.jpg",
+    "lyric_th": "Proofread ตรวจคำผิด เช็กอีกนิดก่อนส่งไป",
+    "gesture": "ทำนิ้วเป็นวงแว่นขยาย เลื่อนไปตามหน้ากระดาษ",
+    "example": "Always proofread your assignment before you submit it."
   },
   {
     "word": "intruder",
@@ -154,12 +181,15 @@ window.VOCAB = [
     "meaning_th": "ผู้บุกรุก",
     "image_idea": "โจรใส่หน้ากากปีนหน้าต่างตอนกลางคืน",
     "memory_trick": "in (เข้า) + rude (หยาบคาย) = เข้ามาแบบไม่ขออนุญาต",
-    "lyric": "Intruder at the window, sneaking in at night!",
+    "lyric": "Intruder, go away!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🥷",
     "read_th": "อิน-ทรู-เดอร์",
-    "img": "intruder.jpg"
+    "img": "intruder.jpg",
+    "lyric_th": "Intruder ผู้บุกรุก เข้ามาบุกไม่เชิญเลย",
+    "gesture": "ย่องเบา ๆ นิ้วแตะปาก \"จุ๊ ๆ\"",
+    "example": "The dog barked at the intruder."
   },
   {
     "word": "assortment",
@@ -170,12 +200,15 @@ window.VOCAB = [
     "meaning_th": "ของหลายอย่างรวมกัน, ของคละ",
     "image_idea": "กล่องช็อกโกแลตรวมรส / ถุงขนมคละ",
     "memory_trick": "กล่องเดียวมีหลาย sort (หลายแบบ)",
-    "lyric": "Assortment: a mix, a little bit of all",
+    "lyric": "Assortment, a mix of things!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🍫",
     "read_th": "อะ-ซอร์ท-เมินท์",
-    "img": "assortment.jpg"
+    "img": "assortment.jpg",
+    "lyric_th": "Assortment ของหลากหลาย รวมกันไว้หลายชนิด",
+    "gesture": "ทำท่าเปิดกล่อง แล้วชี้ทีละชิ้น",
+    "example": "The shop sells an assortment of Thai snacks."
   },
   {
     "word": "etiquette",
@@ -186,12 +219,15 @@ window.VOCAB = [
     "meaning_th": "มารยาท, ธรรมเนียมที่สุภาพ",
     "image_idea": "โต๊ะอาหารฝรั่งจัดมีดส้อม คู่กับภาพไหว้แบบไทย",
     "memory_trick": "ออกเสียงเหมือน 'เอ-ทิ-เค็ท' ติดป้าย (ticket) ว่าสุภาพ",
-    "lyric": "Etiquette! Good manners!",
+    "lyric": "Etiquette, be polite!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🍽️",
     "read_th": "เอ-ทิ-เค็ท",
-    "img": "etiquette.jpg"
+    "img": "etiquette.jpg",
+    "lyric_th": "Etiquette มารยาทดี พูดจาดีมีน้ำใจ",
+    "gesture": "ไหว้ แล้วทำท่าถือมีดกับส้อม",
+    "example": "In Thailand, it is good etiquette to take off your shoes before entering a home."
   },
   {
     "word": "minimise",
@@ -202,12 +238,15 @@ window.VOCAB = [
     "meaning_th": "ลดให้น้อยที่สุด",
     "image_idea": "ปุ่มย่อหน้าต่าง [–] บนจอคอมพิวเตอร์",
     "memory_trick": "ปุ่ม minimise บนคอม = ย่อให้เล็กสุด",
-    "lyric": "Minimise the problem, make it small",
+    "lyric": "Minimise, make it small!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "➖",
     "read_th": "มิ-นิ-ไมซ์",
-    "img": "minimise.jpg"
+    "img": "minimise.jpg",
+    "lyric_th": "Minimise ลดให้น้อย ลดอีกหน่อยจนเหลือนิด",
+    "gesture": "บีบนิ้วโป้งกับนิ้วชี้เข้าหากัน \"นิดเดียว\"",
+    "example": "Wear a mask to minimise the risk."
   },
   {
     "word": "misperception",
@@ -218,12 +257,15 @@ window.VOCAB = [
     "meaning_th": "การเข้าใจผิด, การรับรู้ผิด",
     "image_idea": "ภาพลวงตาเป็ด/กระต่าย หรือคนเห็นเชือกเป็นงู",
     "memory_trick": "mis (ผิด) + perception (การรับรู้)",
-    "lyric": "Misperception: a wrong idea in your mind",
+    "lyric": "Misperception, got it wrong!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🦆🐇",
     "read_th": "มิส-เพอร์-เซ็พ-ชั่น",
-    "img": "misperception.jpg"
+    "img": "misperception.jpg",
+    "lyric_th": "Misperception เข้าใจผิด คิดอีกนิดก่อนตัดสิน",
+    "gesture": "สะดุ้งถอยหลัง แล้วมองใกล้ ๆ แล้วหัวเราะ",
+    "example": "It is a misperception that English is too hard to learn."
   },
   {
     "word": "obscene",
@@ -237,7 +279,12 @@ window.VOCAB = [
     "quiz": false,
     "emoji": "🔞",
     "read_th": "อ็อบ-ซีน",
-    "img": "obscene.jpg"
+    "img": "obscene.jpg",
+    "lyric": "Obscene, rude, not clean!",
+    "lyric_th": "Obscene คำหยาบคาย ไม่สุภาพไม่ควรใช้",
+    "lyric_source": "song",
+    "gesture": "ไม่ใช้ท่าทาง สอนสั้น ๆ",
+    "example": "The film was banned because some scenes were obscene."
   },
   {
     "word": "reciprocal",
@@ -248,12 +295,15 @@ window.VOCAB = [
     "meaning_th": "ซึ่งกันและกัน, ตอบแทนกัน",
     "image_idea": "สองคนเกาหลังให้กัน / ลูกศรวนไป-กลับ",
     "memory_trick": "ให้ไป ↔ ได้คืน",
-    "lyric": "Reciprocal: you help me, I help you, that's right!",
+    "lyric": "Reciprocal, give and take!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🤝",
     "read_th": "รี-ซิพ-โพร-เคิล",
-    "img": "reciprocal.jpg"
+    "img": "reciprocal.jpg",
+    "lyric_th": "Reciprocal เธอให้ฉัน ฉันให้เธอ ตอบแทนกัน",
+    "gesture": "ชี้ไปที่เพื่อน แล้วชี้กลับมาที่ตัวเอง",
+    "example": "Friendship should be reciprocal."
   },
   {
     "word": "remarkably",
@@ -264,12 +314,15 @@ window.VOCAB = [
     "meaning_th": "อย่างน่าทึ่ง, อย่างโดดเด่น",
     "image_idea": "คนอ้าปากค้าง 'WOW!' ข้างปากกาไฮไลต์",
     "memory_trick": "re-mark = ควรค่าแก่การทำเครื่องหมาย",
-    "lyric": "Remarkably, we made it, learning side by side",
+    "lyric": "Remarkably, wow, amazing!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "😲",
     "read_th": "รี-มาร์ค-คะ-บลี่",
-    "img": "remarkably.jpg"
+    "img": "remarkably.jpg",
+    "lyric_th": "Remarkably น่าทึ่งจัง โดดเด่นปังเกินคาดเลย",
+    "gesture": "อ้าปากกว้าง เอามือแนบแก้ม \"ว้าว!\"",
+    "example": "She speaks English remarkably well after only one year."
   },
   {
     "word": "severance",
@@ -280,12 +333,15 @@ window.VOCAB = [
     "meaning_th": "การตัดขาด (ความสัมพันธ์)",
     "image_idea": "กรรไกรตัดเชือกที่ผูกคนสองคนไว้",
     "memory_trick": "sever ≈ ตัดให้ขาด",
-    "lyric": "Severance: it's over, cut the tie",
+    "lyric": "Severance, cut the tie!",
     "lyric_source": "song",
     "quiz": true,
     "emoji": "✂️",
     "read_th": "เซฟ-เวอ-เรินซ์",
-    "img": "severance.jpg"
+    "img": "severance.jpg",
+    "lyric_th": "Severance การตัดขาด แยกทางกันจบสัมพันธ์",
+    "gesture": "ทำนิ้วเป็นกรรไกร ตัดระหว่างสองมือ",
+    "example": "The severance of ties between the two companies surprised everyone."
   },
   {
     "word": "assign",

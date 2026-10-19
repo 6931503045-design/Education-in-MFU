@@ -8,7 +8,7 @@
 | 🏠 หน้าแรก | https://6931503045-design.github.io/Education-in-MFU/English-Communication/vocab-exam-web/ | เลือกได้ว่าจะเข้าหน้าฝึกเองหรือ Presenter mode |
 | 🎤 Presenter mode | https://6931503045-design.github.io/Education-in-MFU/English-Communication/vocab-exam-web/presenter.html | **สำหรับผู้สอนที่ฐาน** เปิดบนโน้ตบุ๊ก ควบคุมบทเรียน มีเฉลย โน้ตผู้สอน ตัวจับเวลา 10 นาที และตารางคะแนนของทุกกลุ่ม |
 | 🖥️ จอผู้เรียน | https://6931503045-design.github.io/Education-in-MFU/English-Communication/vocab-exam-web/stage.html | จอที่ผู้เรียนเห็นบน monitor **ให้เปิดผ่านปุ่ม "เปิดจอผู้เรียน" ในหน้า Presenter** ไม่ต้องเปิดลิงก์นี้ตรง ๆ |
-| 📚 ฝึกเอง | https://6931503045-design.github.io/Education-in-MFU/English-Communication/vocab-exam-web/study.html | **สำหรับนักศึกษา** ใช้บนมือถือ มี Flashcards พร้อมเสียงอ่าน และควิซสุ่ม 5 ข้อ |
+| 📚 ฝึกเอง | https://6931503045-design.github.io/Education-in-MFU/English-Communication/vocab-exam-web/study.html | **สำหรับนักศึกษา** ใช้บนมือถือ มี Flashcards พร้อมเสียงอ่าน, ควิซสุ่ม 5 ข้อ และเนื้อเพลงพร้อมภาพ |
 | 🔳 QR code | https://6931503045-design.github.io/Education-in-MFU/English-Communication/vocab-exam-web/images/qr.png | QR ไปหน้าฝึกเอง ใช้พิมพ์ติดที่ฐานหรือใส่ในใบสรุปศัพท์ |
 
 วิธีใช้ Presenter mode ที่ฐาน (โน้ตบุ๊ก + monitor) อยู่ใน [vocab-exam-web/README.md](vocab-exam-web/README.md)
@@ -19,7 +19,7 @@
 | [PLAN.md](vocab-exam-web/PLAN.md) | แผนรวมของโปรเจกต์และสิ่งที่ตกลงกันแล้ว (เป้าหมาย, ฟีเจอร์, คำถามสุ่ม, รูปแบบการวนฐาน) |
 | [LESSON-PLAN.md](vocab-exam-web/LESSON-PLAN.md) | ลำดับการสอน 10 นาทีต่อฐาน และวิธีทำเพลง |
 | [VOCAB-LEVELS.md](vocab-exam-web/VOCAB-LEVELS.md) | คำศัพท์ทั้ง 67 คำ เรียงจากยากไปง่าย (ยาก 18 · กลาง 34 · ง่าย 15) |
-| [SONG-LYRICS.md](vocab-exam-web/SONG-LYRICS.md) | เนื้อเพลง 3 เวอร์ชัน: 🇹🇭 ไทย (ใช้กับกลุ่มไทย), 🌏 English (ใช้กับกลุ่มต่างชาติ), ผสม (ใช้ตอนรวมทุกกลุ่ม) พร้อม style prompt สำหรับ Suno |
+| [SONG-LYRICS.md](vocab-exam-web/SONG-LYRICS.md) | เนื้อเพลงฉบับสุดท้าย 18 ท่อน (1 ท่อนต่อ 1 คำยาก) ทั้ง 🇹🇭 ไทย และ 🌏 English ไม่มีไฟล์เสียง ผู้สอนอ่านเป็นจังหวะให้กลุ่มพูดตาม |
 | [VISUAL-IDEAS.md](vocab-exam-web/VISUAL-IDEAS.md) | ไอเดียภาพประกอบและตัวช่วยจำของทุกคำ |
 | [vocab-exam-web/README.md](vocab-exam-web/README.md) | คู่มือใช้งานเว็บ, วิธีแก้เนื้อหา, วิธีเปลี่ยนโทนเว็บ |
 
@@ -33,10 +33,9 @@ https://claude.ai/artifact/84aWHxqLp8mgfcYBZNFAFv
 | อยากแก้ | ไฟล์ |
 |---|---|
 | โทนสี / ฟอนต์ | [`vocab-exam-web/css/theme.css`](vocab-exam-web/css/theme.css) |
-| คำศัพท์ ความหมาย เนื้อเพลงสำหรับควิซ | [`vocab-exam-web/data/vocab.js`](vocab-exam-web/data/vocab.js) |
-| เนื้อเพลงที่ขึ้นจอ, กลุ่มคำ | [`vocab-exam-web/data/songs.js`](vocab-exam-web/data/songs.js) |
+| คำศัพท์ ความหมาย เนื้อเพลง ท่ามือ ประโยคตัวอย่าง | [`vocab-exam-web/data/vocab.js`](vocab-exam-web/data/vocab.js) |
+| กลุ่มคำ | [`vocab-exam-web/data/songs.js`](vocab-exam-web/data/songs.js) |
 | ภาพประกอบ | ใส่ไฟล์ใน [`vocab-exam-web/images/`](vocab-exam-web/images/) |
-| ไฟล์เพลง | ใส่ไฟล์ใน [`vocab-exam-web/audio/`](vocab-exam-web/audio/) |
 
 แก้ไฟล์แล้วรวมเข้า branch `main` เว็บจะอัปเดตเองภายในประมาณ 1 นาที
 
@@ -46,4 +45,5 @@ https://claude.ai/artifact/84aWHxqLp8mgfcYBZNFAFv
 - [x] สไลด์ตัวอย่างพร้อมการ์ดคำยาก 18 ใบ
 - [ ] โทนและการตกแต่งเว็บ (รอทีม)
 - [x] ภาพประกอบครบ 67 คำ (Microsoft Fluent Emoji, MIT) เปลี่ยนเป็นภาพของทีมเองได้ ดู [images/README.md](vocab-exam-web/images/README.md)
-- [ ] ไฟล์เพลง `song-th.mp3` / `song-en.mp3`
+- [x] เนื้อเพลงฉบับสุดท้าย 18 ท่อน ไทย/อังกฤษ (ไม่ใช้ไฟล์เสียง)
+- [x] ท่ามือและประโยคตัวอย่างในโน้ตผู้สอน, หน้าเนื้อเพลงสำหรับนักศึกษา
