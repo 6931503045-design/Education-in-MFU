@@ -87,12 +87,13 @@
     return word.toLowerCase().replace(/\s+/g, "-");
   }
 
-  // Shows images/<word>.png if it exists, otherwise the emoji and the picture idea.
+  // Shows images/<img> (the team's picture) or images/<word>.png; if that file is missing, the emoji and the picture idea.
   function picture(v, showIdea) {
     if (!v) return '<div class="pic"><span class="emoji">🎵</span></div>';
+    const file = v.img || slug(v.word) + ".png";
     return (
       '<div class="pic">' +
-      `<img src="images/${esc(slug(v.word))}.png" alt="${esc(v.word)}" onerror="this.remove()">` +
+      `<img src="images/${esc(file)}" alt="${esc(v.word)}" onerror="this.remove()">` +
       `<span class="emoji">${esc(v.emoji)}</span>` +
       (showIdea ? `<span class="idea">${esc(v.image_idea)}</span>` : "") +
       "</div>"

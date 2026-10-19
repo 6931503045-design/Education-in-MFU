@@ -1,5 +1,5 @@
 // Vocabulary data for Sing the Words! (1006134 English for Communication 1, Chapters 1-3).
-// Edit this file to add or change words. Loaded as a script so the site also works offline (file://).
+// Edit this file to add or change words. `img` = picture file in images/ (default: <word>.png). Loaded as a script so the site also works offline (file://).
 window.VOCAB = [
   {
     "word": "alleviate",
@@ -14,7 +14,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "💊",
-    "read_th": "อะ-ลี-วี-เอท"
+    "read_th": "อะ-ลี-วี-เอท",
+    "img": "alleviate.jpg"
   },
   {
     "word": "attentively",
@@ -29,7 +30,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "👂",
-    "read_th": "อะ-เท็น-ทิฟ-ลี่"
+    "read_th": "อะ-เท็น-ทิฟ-ลี่",
+    "img": "attentively.jpg"
   },
   {
     "word": "constructive",
@@ -44,7 +46,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🛠️",
-    "read_th": "คอน-สตรัค-ทิฟ"
+    "read_th": "คอน-สตรัค-ทิฟ",
+    "img": "constructive.jpg"
   },
   {
     "word": "diligently",
@@ -59,7 +62,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🐜",
-    "read_th": "ดิ-ลิ-เจ้นท์-ลี่"
+    "read_th": "ดิ-ลิ-เจ้นท์-ลี่",
+    "img": "diligently.jpg"
   },
   {
     "word": "enhance",
@@ -74,7 +78,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "✨",
-    "read_th": "เอ็น-แฮนซ์"
+    "read_th": "เอ็น-แฮนซ์",
+    "img": "enhance.jpg"
   },
   {
     "word": "enthusiastically",
@@ -89,7 +94,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🙌",
-    "read_th": "เอ็น-ทู-ซี-แอส-ติ-คอล-ลี่"
+    "read_th": "เอ็น-ทู-ซี-แอส-ติ-คอล-ลี่",
+    "img": "enthusiastically.jpg"
   },
   {
     "word": "extracurricular",
@@ -104,7 +110,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🎸",
-    "read_th": "เอ็กซ์-ตร้า-เคอ-ริ-คิว-ล่าร์"
+    "read_th": "เอ็กซ์-ตร้า-เคอ-ริ-คิว-ล่าร์",
+    "img": "extracurricular.jpg"
   },
   {
     "word": "pandemic",
@@ -119,7 +126,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "😷🌍",
-    "read_th": "แพน-เด็ม-มิค"
+    "read_th": "แพน-เด็ม-มิค",
+    "img": "pandemic.jpg"
   },
   {
     "word": "proofread",
@@ -134,7 +142,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🔍",
-    "read_th": "พรูฟ-รีด"
+    "read_th": "พรูฟ-รีด",
+    "img": "proofread.jpg"
   },
   {
     "word": "intruder",
@@ -149,7 +158,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🥷",
-    "read_th": "อิน-ทรู-เดอร์"
+    "read_th": "อิน-ทรู-เดอร์",
+    "img": "intruder.jpg"
   },
   {
     "word": "assortment",
@@ -164,7 +174,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🍫",
-    "read_th": "อะ-ซอร์ท-เมินท์"
+    "read_th": "อะ-ซอร์ท-เมินท์",
+    "img": "assortment.jpg"
   },
   {
     "word": "etiquette",
@@ -179,7 +190,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🍽️",
-    "read_th": "เอ-ทิ-เค็ท"
+    "read_th": "เอ-ทิ-เค็ท",
+    "img": "etiquette.jpg"
   },
   {
     "word": "minimise",
@@ -194,7 +206,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "➖",
-    "read_th": "มิ-นิ-ไมซ์"
+    "read_th": "มิ-นิ-ไมซ์",
+    "img": "minimise.jpg"
   },
   {
     "word": "misperception",
@@ -209,7 +222,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🦆🐇",
-    "read_th": "มิส-เพอร์-เซ็พ-ชั่น"
+    "read_th": "มิส-เพอร์-เซ็พ-ชั่น",
+    "img": "misperception.jpg"
   },
   {
     "word": "obscene",
@@ -222,7 +236,8 @@ window.VOCAB = [
     "memory_trick": "มีแถบเซ็นเซอร์ = obscene",
     "quiz": false,
     "emoji": "🔞",
-    "read_th": "อ็อบ-ซีน"
+    "read_th": "อ็อบ-ซีน",
+    "img": "obscene.jpg"
   },
   {
     "word": "reciprocal",
@@ -237,7 +252,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "🤝",
-    "read_th": "รี-ซิพ-โพร-เคิล"
+    "read_th": "รี-ซิพ-โพร-เคิล",
+    "img": "reciprocal.jpg"
   },
   {
     "word": "remarkably",
@@ -252,7 +268,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "😲",
-    "read_th": "รี-มาร์ค-คะ-บลี่"
+    "read_th": "รี-มาร์ค-คะ-บลี่",
+    "img": "remarkably.jpg"
   },
   {
     "word": "severance",
@@ -267,7 +284,8 @@ window.VOCAB = [
     "lyric_source": "song",
     "quiz": true,
     "emoji": "✂️",
-    "read_th": "เซฟ-เวอ-เรินซ์"
+    "read_th": "เซฟ-เวอ-เรินซ์",
+    "img": "severance.jpg"
   },
   {
     "word": "assign",
