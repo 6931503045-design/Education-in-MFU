@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="en" data-mode="both">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Week 11 Ethics Slides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f5f8; --card:#ffffff; --ink:#0f1320; --ink-2:#394152; --muted:#6b7280; --line:#e4e6ec; --th:#4b5563;
+  --blue:#2f5bff; --blue-bg:#eaf0ff; --green:#15995a; --green-bg:#e3f5ea; --red:#e5483a; --red-bg:#fde8e5;
+  --amber:#c98a00; --amber-bg:#fff3d4; --violet:#7246f0; --violet-bg:#efe9ff;
+  --code-bg:#11163b; --code-ink:#dbe3ff; --dark:#0f1320; --dark-ink:#fff;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 6px 18px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1016; --card:#171b24; --ink:#eef1f6; --ink-2:#c6ccd7; --muted:#8c95a5; --line:#272d39; --th:#aab2c0;
+    --blue:#7090ff; --blue-bg:#1a2140; --green:#3ccf86; --green-bg:#11291e; --red:#ff7766; --red-bg:#341a17;
+    --amber:#f2bd3d; --amber-bg:#2e2510; --violet:#a58bff; --violet-bg:#221a3d;
+    --code-bg:#0a0e24; --dark:#eef1f6; --dark-ink:#0f1320; --shadow:0 1px 2px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1016; --card:#171b24; --ink:#eef1f6; --ink-2:#c6ccd7; --muted:#8c95a5; --line:#272d39; --th:#aab2c0;
+  --blue:#7090ff; --blue-bg:#1a2140; --green:#3ccf86; --green-bg:#11291e; --red:#ff7766; --red-bg:#341a17;
+  --amber:#f2bd3d; --amber-bg:#2e2510; --violet:#a58bff; --violet-bg:#221a3d;
+  --code-bg:#0a0e24; --dark:#eef1f6; --dark-ink:#0f1320; --shadow:0 1px 2px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.55 Inter,"IBM Plex Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em}
+code{background:var(--line);padding:1px 6px;border-radius:5px}
+b{font-weight:650}
+button{font:inherit;color:inherit}
+
+/* ---------- language modes ---------- */
+html[data-mode="en"] .th{display:none!important}
+html[data-mode="th"] .en{display:none!important}
+.th{font-family:"IBM Plex Sans Thai",Inter,sans-serif}
+html[data-mode="both"] .th{color:var(--th)}
+html[data-mode="both"] .en + .th{display:block;font-size:.86em;font-weight:inherit;margin-top:2px}
+html[data-mode="both"] h1 .en + .th,html[data-mode="both"] h2 .en + .th{font-weight:500;font-size:.62em;margin-top:6px}
+html[data-mode="th"] .th{font-size:1em}
+html[data-mode="both"] .nav .lbltxt .th{display:none!important}
+
+/* ---------- top bar ---------- */
+.top{flex-shrink:0;border-bottom:1px solid var(--line);background:var(--bg)}
+.top-in{max-width:1100px;margin:0 auto;padding:8px 16px;display:flex;gap:10px;align-items:center}
+.brand{font:600 13px "IBM Plex Mono",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.brand::before{content:"▶ ";color:var(--blue)}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px;flex-shrink:0}
+.seg button{border:0;background:none;color:var(--muted);font-weight:600;font-size:13px;padding:5px 11px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--blue);color:#fff}
+.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:10px;height:34px;padding:0 12px;cursor:pointer;font-size:14px;font-weight:600;flex-shrink:0}
+.progress{height:4px;background:var(--line)}
+.progress i{display:block;height:100%;background:var(--blue);width:0;transition:width .25s}
+
+/* ---------- slides ---------- */
+.stage{flex:1;position:relative;min-height:0}
+.slide{position:absolute;inset:0;overflow-y:auto;display:none;flex-direction:column;-webkit-overflow-scrolling:touch}
+.slide.on{display:flex;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.on{animation:none}}
+.inner{width:100%;max-width:1000px;margin:auto;padding:28px 20px 36px}
+.kicker{font:600 13px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:0 0 10px}
+.kicker.red{color:var(--red)}.kicker.green{color:var(--green)}.kicker.violet{color:var(--violet)}
+h1{font-size:clamp(40px,7vw,68px);line-height:1.05;letter-spacing:-.025em;margin:0 0 20px;font-weight:800}
+h2{font-size:clamp(28px,4.4vw,42px);line-height:1.12;letter-spacing:-.018em;margin:0 0 22px;font-weight:800}
+h3{font-size:20px;line-height:1.3;margin:0 0 6px;font-weight:700}
+p{margin:0}
+.big{font-size:clamp(19px,2.3vw,23px);color:var(--ink-2)}
+
+/* bullet points */
+.pts{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.pts li{display:flex;gap:14px;align-items:flex-start;font-size:clamp(18px,2.1vw,21px)}
+.pts li::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:.55em}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:14px;align-items:flex-start;font-size:clamp(17px,2vw,20px);counter-increment:s}
+.steps li::before{content:counter(s);width:30px;height:30px;border-radius:8px;background:var(--blue);color:#fff;font:700 15px Inter,sans-serif;display:grid;place-items:center;flex-shrink:0;margin-top:1px}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:760px){.g2,.g3{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.card p{color:var(--ink-2);font-size:17px}
+.card .tag{font:600 12px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.card.blue{border-top:5px solid var(--blue)}.card.green{border-top:5px solid var(--green)}.card.red{border-top:5px solid var(--red)}.card.amber{border-top:5px solid var(--amber)}.card.violet{border-top:5px solid var(--violet)}
+
+.box{margin-top:20px;border-left:5px solid var(--blue);background:var(--blue-bg);border-radius:0 12px 12px 0;padding:14px 18px;font-size:17px}
+.box .lbl{font:700 12px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.box.green{border-color:var(--green);background:var(--green-bg)}.box.green .lbl{color:var(--green)}
+.box.red{border-color:var(--red);background:var(--red-bg)}.box.red .lbl{color:var(--red)}
+.box.amber{border-color:var(--amber);background:var(--amber-bg)}.box.amber .lbl{color:var(--amber)}
+
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:18px 20px;overflow-x:auto;font:15px/1.7 "IBM Plex Mono",monospace;margin:0}
+pre .k{color:#8ea6ff}pre .s{color:#7ee2b0}pre .c{color:#8a93bd}
+
+/* flow diagram */
+.flow{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+.flow .card{flex:1 1 160px;text-align:center;padding:16px}
+.flow .ar{align-self:center;font-size:24px;color:var(--muted)}
+@media (max-width:760px){.flow{flex-direction:column}.flow .ar{transform:rotate(90deg)}}
+
+.thread{display:flex;gap:6px;flex-wrap:wrap}
+.thread div{flex:1 0 90px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;font-weight:650;font-size:16px}
+.thread small{display:block;color:var(--muted);font-weight:400;font-size:12.5px}
+.thread .on{background:var(--blue);border-color:var(--blue);color:#fff}.thread .on small{color:#dbe3ff}
+
+/* pyramid */
+.pyr{display:flex;flex-direction:column;align-items:center;gap:4px;max-width:420px;margin:0 auto}
+.pyr div{background:var(--dark);color:var(--dark-ink);text-align:center;font-weight:650;padding:14px 4px;font-size:15px}
+.pyr .a{width:40%;clip-path:polygon(20% 0,80% 0,100% 100%,0 100%);background:var(--red)}
+.pyr .b{width:68%;clip-path:polygon(11% 0,89% 0,100% 100%,0 100%);background:var(--amber)}
+.pyr .c{width:100%;clip-path:polygon(7% 0,93% 0,100% 100%,0 100%);background:var(--green);padding:22px 4px}
+.pyr div{color:#fff}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);font-size:16.5px}
+.tbl th{background:var(--dark);color:var(--dark-ink);text-align:left;font:600 12.5px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;padding:11px 14px}
+.tbl td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top}
+.tbl td:first-child{font-weight:650}
+.scroll-x{overflow-x:auto;border-radius:14px}
+@media (max-width:640px){.tbl.stack thead{display:none}.tbl.stack tr{display:block;border-top:1px solid var(--line);padding:8px 0}.tbl.stack td{display:block;border:0;padding:3px 14px}}
+
+.lvl{display:inline-block;min-width:26px;height:26px;border-radius:7px;color:#fff;font:700 13px Inter,sans-serif;text-align:center;line-height:26px;margin-right:8px}
+
+/* number line */
+.nl{width:100%;height:auto;display:block}
+.nl text{font:15px Inter,sans-serif;fill:var(--ink)}
+
+.calc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:17px}
+.calc span{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+.calc .ok{background:var(--green-bg);border-color:var(--green)}
+
+/* exam */
+.q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+.q + .q{margin-top:14px}
+.q .qn{font:700 13px "IBM Plex Mono",monospace;color:var(--blue);margin-bottom:4px}
+.q .qt{font-size:18.5px;font-weight:600;margin-bottom:12px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;border:1.5px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px;cursor:pointer;font-size:16.5px}
+.opt:hover:not(:disabled){border-color:var(--blue)}
+.opt .l{font:700 14px "IBM Plex Mono",monospace;color:var(--muted);flex-shrink:0;margin-top:2px}
+.opt.right{border-color:var(--green);background:var(--green-bg)}
+.opt.wrong{border-color:var(--red);background:var(--red-bg)}
+.opt:disabled{cursor:default}
+.why{display:none;margin-top:10px;font-size:16px;padding:10px 14px;border-radius:10px;background:var(--blue-bg)}
+.q.done .why{display:block}
+.scorebar{position:sticky;top:0;z-index:2;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--bg);padding:10px 0 12px;margin-bottom:6px;border-bottom:1px solid var(--line)}
+.scorebar .s{font-size:22px;font-weight:800}
+.btn{border:0;background:var(--blue);color:#fff;font-weight:650;font-size:15px;padding:9px 16px;border-radius:10px;cursor:pointer}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+details.sa{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-top:14px;box-shadow:var(--shadow)}
+details.sa summary{cursor:pointer;font-weight:650;font-size:17.5px}
+details.sa[open] summary{margin-bottom:12px}
+
+/* vocab */
+.vsearch{width:100%;font:inherit;font-size:17px;padding:12px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);margin-bottom:14px}
+.vsearch:focus{outline:none;border-color:var(--blue)}
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.vgrid{grid-template-columns:minmax(0,1fr)}}
+.v{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;box-shadow:var(--shadow)}
+.v .term{font-size:19px;font-weight:750}
+.v .thw{font-family:"IBM Plex Sans Thai",sans-serif;color:var(--blue);font-weight:600;font-size:16.5px}
+.v .mean{font-size:15.5px;color:var(--ink-2);margin-top:6px}
+.v .ex{font-size:14.5px;color:var(--muted);margin-top:6px}
+.v .cat{float:right;font:600 11px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 8px}
+
+/* bottom nav */
+.nav{flex-shrink:0;border-top:1px solid var(--line);background:var(--bg);padding-bottom:env(safe-area-inset-bottom)}
+.nav-in{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.nav button.go{border:0;background:var(--blue);color:#fff;font-weight:700;font-size:16px;padding:11px 20px;border-radius:12px;cursor:pointer;min-width:110px}
+.nav button.go.prev{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.nav button.go:disabled{opacity:.35;cursor:default}
+.count{flex:1;text-align:center;font:600 14px "IBM Plex Mono",monospace;color:var(--muted)}
+.count small{display:block;font:500 12.5px Inter,"IBM Plex Sans Thai",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:480px){.nav button.go{min-width:0;padding:11px 14px}.nav .lbltxt{display:none}}
+
+/* menu */
+.menu{position:fixed;inset:0;z-index:20;background:rgba(10,12,20,.45);display:none}
+.menu.on{display:block}
+.menu .panel{position:absolute;right:0;top:0;bottom:0;width:min(380px,92vw);background:var(--bg);overflow-y:auto;padding:16px;box-shadow:-8px 0 30px rgba(0,0,0,.2)}
+.menu ol{list-style:none;margin:10px 0 0;padding:0}
+.menu li button{display:flex;gap:10px;width:100%;text-align:left;border:0;background:none;padding:9px 10px;border-radius:10px;cursor:pointer;font-size:15.5px}
+.menu li button:hover{background:var(--card)}
+.menu li button.cur{background:var(--blue);color:#fff}
+.menu li .n{font:600 13px "IBM Plex Mono",monospace;opacity:.6;min-width:22px}
+.hint{font-size:14px;color:var(--muted);margin-top:22px}
+kbd{font:600 12px "IBM Plex Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;background:var(--card)}
+.dots{display:flex;gap:14px;margin-top:30px}
+.dots i{width:54px;height:54px;border-radius:50%}
+/* ---------- week 11 additions ---------- */
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:960px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.g4{grid-template-columns:minmax(0,1fr)}}
+.pts.red li::before{background:var(--red)}.pts.green li::before{background:var(--green)}
+.card .pts li{font-size:16.5px}
+.card .pts{gap:10px;margin-top:4px}
+details.chk summary{display:flex;gap:12px;align-items:flex-start;list-style:none}
+details.chk summary::-webkit-details-marker{display:none}
+details.chk summary .qn{font:700 14px "IBM Plex Mono",monospace;background:var(--violet);color:#fff;border-radius:8px;min-width:28px;height:28px;display:grid;place-items:center;flex-shrink:0}
+details.chk summary::after{content:"▸";margin-left:auto;color:var(--muted);flex-shrink:0}
+details.chk[open] summary::after{content:"▾"}
+details.chk .ans{font-weight:750;color:var(--green);font-size:18px;margin-left:40px}
+details.chk > p:not(.ans){margin-left:40px;color:var(--ink-2);font-size:16px}
+.tbl.sched{font-size:15px}.tbl.sched td{padding:7px 12px}
+.tbl.sched td:first-child{font-weight:500;white-space:nowrap}
+@media (max-width:640px){.tbl.stack td[data-h]:not(:first-child)::before{content:attr(data-h);display:block;font:600 11px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Week 11 · Ch10 Professional Ethics &amp; Practice</div>
+    <div class="seg" role="group" aria-label="Language">
+      <button data-m="en" aria-pressed="false">EN</button>
+      <button data-m="both" aria-pressed="true">EN+TH</button>
+      <button data-m="th" aria-pressed="false">TH</button>
+    </div>
+    <button class="iconbtn" id="menuBtn" aria-label="All slides">☰</button>
+  </div>
+  <div class="progress"><i id="bar"></i></div>
+</header>
+
+<main class="stage" id="stage"></main>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="go prev" id="prev">← <span class="lbltxt"><span class="en">Back</span><span class="th">ย้อนกลับ</span></span></button>
+    <div class="count"><span id="num">1 / 1</span><small id="ttl"></small></div>
+    <button class="go" id="next"><span class="lbltxt"><span class="en">Next</span><span class="th">ถัดไป</span></span> →</button>
+  </div>
+</nav>
+
+<div class="menu" id="menu"><div class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <b><span class="en">All slides</span><span class="th">สไลด์ทั้งหมด</span></b>
+    <button class="iconbtn" id="menuClose" aria-label="Close">✕</button>
+  </div>
+  <ol id="menuList"></ol>
+</div></div>
+
+<script>
+/* ---------- helpers ---------- */
+const L=(en,th)=>`<span class="en">${en}</span><span class="th">${th}</span>`;
+const P=(en,th,cls='')=>`<p class="en ${cls}">${en}</p><p class="th ${cls}">${th}</p>`;
+const pts=(a,cls='')=>`<ul class="pts ${cls}">${a.map(x=>`<li><div>${L(x[0],x[1])}</div></li>`).join('')}</ul>`;
+const steps=a=>`<ol class="steps">${a.map(x=>`<li><div>${L(x[0],x[1])}</div></li>`).join('')}</ol>`;
+const box=(kind,en,th,lblEn,lblTh)=>`<div class="box ${kind}"><div class="lbl">${L(lblEn,lblTh)}</div>${P(en,th)}</div>`;
+const remember=(en,th)=>box('green',en,th,'Remember','จำไว้');
+const plain=(en,th)=>box('',en,th,'In plain words','พูดง่าย ๆ');
+const head=(k,en,th,kc='')=>`<p class="kicker ${kc}">${k}</p><h2>${L(en,th)}</h2>`;
+const card=(cls,tag,en,th,ben,bth)=>`<div class="card ${cls}">${tag?`<div class="tag">${tag}</div>`:''}<h3>${L(en,th)}</h3>${ben?P(ben,bth):''}</div>`;
+/* table: cols = [[en,th],...], rows = [[[en,th],[en,th],...],...] */
+const tbl=(cols,rows,cls='stack')=>`<div class="scroll-x"><table class="tbl ${cls}"><thead><tr>${cols.map(c=>`<th>${L(c[0],c[1])}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td data-h="${cols[i][0]}">${Array.isArray(c)?L(c[0],c[1]):c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+/* concept check: [sitEn,sitTh,ansEn,ansTh,whyEn,whyTh] */
+const chk=a=>`<p class="hint" style="margin:0 0 4px">${L('Answer together first, then tap a situation to reveal the answer.','ตอบพร้อมกันทั้งห้องก่อน แล้วแตะแต่ละสถานการณ์เพื่อดูเฉลย')}</p>${a.map((r,i)=>`<details class="sa chk"><summary><span class="qn">${i+1}</span><div>${L(r[0],r[1])}</div></summary><p class="ans">${L('→ '+r[2],'→ '+r[3])}</p>${r[4]?P(r[4],r[5]):''}</details>`).join('')}`;
+
+/* ---------- slides ---------- */
+const S=[];
+const add=(en,th,html)=>S.push({en,th,html});
+
+add('Welcome','ยินดีต้อนรับ',`
+<p class="kicker" style="color:var(--muted)">Chapter 10 · Intro to Software Engineering · The last chapter</p>
+<h1>${L('"Make it work" is not<br>the <i>whole</i> job','"ทำให้มันทำงานได้"<br>ยังไม่ใช่งาน<i>ทั้งหมด</i>')}</h1>
+${P('Software touches people\'s <b>money</b>, <b>health</b> and <b>privacy</b>. An engineer owes a duty to the public, to the truth, and to the people who use what we build. In the AI era, <b>a person always stays accountable</b>.',
+    'ซอฟต์แวร์แตะต้อง<b>เงิน</b> <b>สุขภาพ</b> และ<b>ความเป็นส่วนตัว</b>ของผู้คน วิศวกรมีหน้าที่ต่อสาธารณะ ต่อความจริง และต่อคนที่ใช้สิ่งที่เราสร้าง ในยุค AI <b>คนยังต้องเป็นผู้รับผิดชอบเสมอ</b>','big')}
+<div class="dots" aria-hidden="true"><i style="background:#2f5bff"></i><i style="background:#15995a"></i><i style="background:#e5483a"></i><i style="background:#ffc23a"></i></div>
+<p class="hint">${L('How to use: press <b>Next →</b>, use the <kbd>←</kbd> <kbd>→</kbd> keys, or swipe on your phone. Switch language at the top.',
+ 'วิธีใช้: กด <b>ถัดไป →</b> ใช้ปุ่มลูกศร <kbd>←</kbd> <kbd>→</kbd> หรือปัดหน้าจอบนมือถือ เปลี่ยนภาษาได้ที่ด้านบน')}</p>`);
+
+add("Today's plan",'แผนการเรียนวันนี้',`
+${head('Roadmap','Today: Ch10, then get ready for the demo','วันนี้: เรียน Ch10 แล้วเตรียมตัวสำหรับวันเดโม')}
+<div class="flow">
+ <div class="card"><h3>Ch10</h3><p>${L('Ethics &amp; Practice<br>3 concept checks','จริยธรรมและการปฏิบัติ<br>concept check 3 รอบ')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>${L('Demo day','วันเดโม')}</h3><p>${L('your slot, what to present','ช่วงเวลาของทีม และต้องนำเสนออะไร')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>${L('Scoring','การให้คะแนน')}</h3><p>${L('demo, oral, contribution','เดโม สอบปากเปล่า การมีส่วนร่วม')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>${L('Exam practice','ฝึกข้อสอบ')}</h3><p>${L('MCQ on Ch10','ข้อสอบปรนัย Ch10')}</p></div>
+</div>
+<div class="grid g3" style="margin-top:16px">
+ ${card('blue','Goal','Understand the concepts','เข้าใจแนวคิด','Ch10 is on the final exam (Ch1 to Ch10, English MCQ with 4 options + short answer).','Ch10 ออกสอบปลายภาค (Ch1–Ch10 ข้อสอบภาษาอังกฤษ ปรนัย 4 ตัวเลือก + เขียนตอบสั้น)')}
+ ${card('green','Concept checks','Answer together','ตอบพร้อมกัน','After each topic: a short situation, the whole room answers at once. Not graded.','หลังจบแต่ละหัวข้อ มีสถานการณ์สั้น ๆ ให้ทั้งห้องตอบพร้อมกัน ไม่คิดคะแนน')}
+ ${card('amber','Your team','Find your slot','หาช่วงเวลาของทีม','13 teams on Mon 9 Nov, 13 on Mon 16 Nov, 12 minutes each.','13 ทีมวันจันทร์ 9 พ.ย. อีก 13 ทีมวันจันทร์ 16 พ.ย. ทีมละ 12 นาที')}
+</div>
+${box('amber','This chapter ties straight into your <b>AI-Use Statement</b> and the <b>oral exam</b>. It also includes a case study on <b>AI backdoors</b>.',
+ 'บทนี้เชื่อมตรงกับ <b>AI-Use Statement</b> และ<b>การสอบปากเปล่า</b>ของเรา และมีกรณีศึกษาเรื่อง <b>backdoor ใน AI</b> ด้วย','Note','หมายเหตุ')}`);
+
+add('Where we are','เราอยู่ตรงไหน',`
+${head('The golden thread · final chapter','From how we build to who we build for','จาก "สร้างอย่างไร" สู่ "สร้างเพื่อใคร"')}
+<div class="thread">
+ <div>Problem<small>Ch 1</small></div><div>FR / NFR<small>Ch 3</small></div><div>Model<small>Ch 4</small></div>
+ <div>Design<small>Ch 5</small></div><div>Code<small>Ch 6</small></div><div>Test<small>Ch 7</small></div>
+ <div>Quality<small>Ch 8</small></div><div>PM<small>Ch 9</small></div><div class="on">Ethics<small>Ch 10 · today</small></div>
+</div>
+<div class="grid g3" style="margin-top:20px">
+ ${card('blue','Ideas 1 + 2','Ethics &amp; data','จริยธรรมและข้อมูล','The ACM/IEEE Code, four everyday issues, and data ethics: can vs should.','จรรยาบรรณ ACM/IEEE ประเด็นที่เจอประจำ 4 เรื่อง และจริยธรรมข้อมูล: ทำได้ กับ ควรทำ')}
+ ${card('red','Ideas 3 + 4','Responsible AI &amp; practice','ใช้ AI อย่างรับผิดชอบ และนิสัยการทำงาน','A person stays accountable, with an AI backdoor case study; habits that make you easy to work with.','คนยังต้องรับผิดชอบ พร้อมกรณีศึกษา backdoor ใน AI และนิสัยที่ทำให้คนอยากทำงานด้วย')}
+ ${card('violet','Idea 5','Dev tools','เครื่องมือพัฒนา','IDE, Git and GitHub, tests, and a taste of CI.','IDE, Git และ GitHub, เทสต์ และรู้จัก CI เบื้องต้น')}
+</div>
+${box('','Ch8 asked <b>"can it be trusted?"</b>, Ch9 asked <b>"how does the team finish?"</b>. Ch10 asks <b>"should we build it this way, and who answers for it?"</b>',
+ 'Ch8 ถามว่า <b>"เชื่อถือได้ไหม?"</b> Ch9 ถามว่า <b>"ทีมจะทำให้เสร็จได้อย่างไร?"</b> Ch10 ถามว่า <b>"ควรสร้างแบบนี้ไหม และใครต้องรับผิดชอบ?"</b>','The big question','คำถามใหญ่')}`);
+
+add('Duties beyond "it compiles"','หน้าที่ที่มากกว่า "คอมไพล์ผ่าน"',`
+${head('Idea 1 · SE ethics','Professional codes spell out what we owe','จรรยาบรรณวิชาชีพบอกว่าเรามีหน้าที่อะไร')}
+<div class="grid g3">
+ ${card('blue','Public interest','People come first','คนต้องมาก่อน','Act consistently with public health, safety and welfare, above your own or your client\'s convenience.','ทำงานโดยคำนึงถึงสุขภาพ ความปลอดภัย และสวัสดิภาพของสาธารณะ เหนือความสะดวกของตัวเองหรือลูกค้า')}
+ ${card('green','Honesty','Be truthful','ซื่อตรง','Don\'t overstate what the software does, hide known defects, or take credit for others\' work.','ไม่โอ้อวดเกินจริงว่าซอฟต์แวร์ทำอะไรได้ ไม่ปิดบังข้อบกพร่องที่รู้อยู่ และไม่เอาผลงานคนอื่นมาเป็นของตัวเอง')}
+ ${card('amber','Competence &amp; care','Do work you can stand behind','ทำงานที่ตัวเองรับรองได้','Only sign off on work you believe is right, and keep learning. The ACM/IEEE Code is the shared standard.','รับรองเฉพาะงานที่เชื่อว่าถูกต้อง และเรียนรู้ต่อเนื่อง จรรยาบรรณ ACM/IEEE คือมาตรฐานร่วมกัน')}
+</div>
+${plain('A profession is a <b>promise</b>. Doctors, engineers and now software builders hold power over people\'s lives. The code of ethics is how we keep that trust.',
+ 'วิชาชีพคือ<b>คำสัญญา</b> หมอ วิศวกร และตอนนี้คนสร้างซอฟต์แวร์ ล้วนมีอำนาจต่อชีวิตผู้คน จรรยาบรรณคือวิธีที่เรารักษาความไว้วางใจนั้นไว้')}`);
+
+add('Where the Code comes from','จรรยาบรรณมาจากไหน',`
+${head('Idea 1a · History','Two societies, one code for a new profession','สองสมาคม หนึ่งจรรยาบรรณ สำหรับวิชาชีพใหม่')}
+<div class="flow">
+ <div class="card"><h3>1993</h3><p>${L('IEEE-CS steering committee; ACM commission','IEEE-CS ตั้งคณะกรรมการ และ ACM ตั้งคณะทำงาน')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>1994</h3><p>${L('Joint ACM + IEEE-CS committee','คณะกรรมการร่วม ACM + IEEE-CS')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>1997</h3><p>${L('Draft in <i>Comm. ACM</i>, for comments','ร่างลงใน <i>Comm. ACM</i> เพื่อรับความเห็น')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>1999</h3><p>${L('Version 5.2 approved','อนุมัติเวอร์ชัน 5.2')}</p></div>
+</div>
+<div class="grid g3" style="margin-top:16px">
+ ${card('blue','The goal','Make SE a profession','ทำให้ SE เป็นวิชาชีพ','Define standard terms, a body of knowledge, curricula and ethical standards for software engineers.','กำหนดคำศัพท์มาตรฐาน องค์ความรู้ หลักสูตร และมาตรฐานจริยธรรมของวิศวกรซอฟต์แวร์')}
+ ${card('green','What a code does','Educate, inspire, inform','ให้ความรู้ สร้างแรงบันดาลใจ บอกให้รู้','It tells members what peers expect, tells the public what the profession is responsible for, and gives practical advice. It is <b>not a law</b>.','บอกสมาชิกว่าเพื่อนร่วมวิชาชีพคาดหวังอะไร บอกสาธารณะว่าวิชาชีพนี้รับผิดชอบอะไร และให้คำแนะนำที่ใช้ได้จริง แต่<b>ไม่ใช่กฎหมาย</b>')}
+ ${card('amber','Who it covers','Including students','รวมถึงนักศึกษา','Practitioners, educators, managers, policy makers, trainees and <b>students</b>. That means you, now.','ผู้ปฏิบัติงาน ผู้สอน ผู้จัดการ ผู้กำหนดนโยบาย ผู้ฝึกงาน และ<b>นักศึกษา</b> ซึ่งก็คือเราตอนนี้')}
+</div>
+${box('','People who build software have real chances <b>"to do good and to cause harm"</b>, and to enable others to do either. The code exists so that power is used for good.',
+ 'คนที่สร้างซอฟต์แวร์มีโอกาสจริง ๆ ที่จะ<b>"ทำความดีและก่อความเสียหาย"</b> และทำให้คนอื่นทำได้ทั้งสองอย่าง จรรยาบรรณมีไว้เพื่อให้อำนาจนั้นถูกใช้ในทางที่ดี','The preamble, in one line','คำปรารภ ในหนึ่งบรรทัด')}
+<p class="hint">Source: Gotterbarn, Miller &amp; Rogerson, Comm. ACM 40(11), Nov 1997 (draft); version 5.2 approved 1999.</p>`);
+
+const P8=[
+ ['Public','สาธารณะ','Act in the public interest.','ทำเพื่อประโยชน์ของสาธารณะ'],
+ ['Client &amp; employer','ลูกค้าและนายจ้าง','Serve them, within the public interest.','รับใช้พวกเขา ภายใต้ประโยชน์ของสาธารณะ'],
+ ['Product','ผลิตภัณฑ์','Meet the highest standards you can.','ทำให้ได้มาตรฐานสูงสุดเท่าที่ทำได้'],
+ ['Judgment','วิจารณญาณ','Keep it independent and honest.','ตัดสินใจอย่างอิสระและซื่อตรง'],
+ ['Management','การบริหาร','Lead ethically.','เป็นผู้นำอย่างมีจริยธรรม'],
+ ['Profession','วิชาชีพ','Protect its integrity and reputation.','รักษาความน่าเชื่อถือและชื่อเสียงของวิชาชีพ'],
+ ['Colleagues','เพื่อนร่วมงาน','Be fair and supportive; credit their work.','ยุติธรรมและช่วยเหลือกัน ให้เครดิตงานของเขา'],
+ ['Self','ตนเอง','Keep learning, keep ethical.','เรียนรู้ต่อเนื่อง และรักษาจริยธรรม']
+];
+const pcols=['blue','green','amber','violet','blue','green','amber','violet'];
+add('The eight principles','หลักการ 8 ข้อ',`
+${head('Idea 1b · ACM/IEEE-CS, 1999','The Software Engineering Code of Ethics','จรรยาบรรณวิศวกรรมซอฟต์แวร์')}
+<div class="grid g4">${P8.map((p,i)=>card(pcols[i],String(i+1),p[0],p[1],p[2],p[3])).join('')}</div>
+${plain('Read the first word of each: <b>Public</b> comes first, then the people you serve, the product, your own judgment. Ethics radiates outward, starting from "do no harm to the public."',
+ 'อ่านคำแรกของแต่ละข้อ: <b>สาธารณะ</b>มาก่อน ตามด้วยคนที่เรารับใช้ ผลิตภัณฑ์ และวิจารณญาณของเรา จริยธรรมแผ่ออกไปจากศูนย์กลางคือ "อย่าทำร้ายสาธารณะ"')}
+<p class="hint">Source: ACM/IEEE-CS SE Code of Ethics (1999); Sommerville 9e, Fig 1.3. The 1997 draft listed Product first; the approved 1999 version moved Public to the top.</p>`);
+
+add('Three levels','สามระดับของหน้าที่',`
+${head('Idea 1c · How the Code is built','Every principle works at three levels','ทุกหลักการทำงานใน 3 ระดับ')}
+<div class="grid g3">
+ ${card('blue','Level 1 · Aspire','To be human','เป็นมนุษย์ที่ดี','Values every person shares, such as honesty and fairness. They set a direction and need your own ethical judgment.','คุณค่าที่ทุกคนมีร่วมกัน เช่น ความซื่อสัตย์และความยุติธรรม เป็นทิศทาง และต้องใช้วิจารณญาณของเราเอง')}
+ ${card('green','Level 2 · Expect','To be professional','เป็นมืออาชีพ','Duties every professional owes, because people affected by your work deserve special care.','หน้าที่ที่มืออาชีพทุกคนต้องทำ เพราะคนที่ได้รับผลจากงานของเราสมควรได้รับการดูแลเป็นพิเศษ')}
+ ${card('red','Level 3 · Demand','To use good practices','ใช้แนวปฏิบัติที่ดี','Specific, often measurable behaviours of software engineering today, close to the state of the art.','พฤติกรรมที่เจาะจงและมักวัดผลได้ของวิศวกรรมซอฟต์แวร์ในปัจจุบัน ใกล้เคียงกับแนวปฏิบัติล่าสุด')}
+</div>
+<div style="margin-top:16px">${tbl([['Level','ระดับ'],['Example for "Public"','ตัวอย่างของหลัก "สาธารณะ"']],[
+ [['Aspire','Aspire (ใฝ่ถึง)'],['Be fair and truthful in everything you say about the software.','พูดถึงซอฟต์แวร์อย่างยุติธรรมและตามความจริงเสมอ']],
+ [['Expect','Expect (คาดหวัง)'],['Accept full responsibility for your own work, including the parts AI drafted.','รับผิดชอบงานของตัวเองเต็มที่ รวมถึงส่วนที่ AI ร่างให้']],
+ [['Demand','Demand (บังคับ)'],['Approve software only if you have good grounds to believe it is safe, meets its spec and has passed appropriate tests.','อนุมัติซอฟต์แวร์เมื่อมีเหตุผลเพียงพอว่าปลอดภัย ตรงตาม spec และผ่านเทสต์ที่เหมาะสมแล้วเท่านั้น']]
+])}</div>
+<p class="hint">${L('The code does not label each clause with a level; the table illustrates the idea.','จรรยาบรรณไม่ได้ระบุระดับไว้ทุกข้อ ตารางนี้เป็นตัวอย่างเพื่ออธิบายแนวคิด')}</p>`);
+
+add('Principles 1 to 4','หลักการข้อ 1–4',`
+${head('Idea 1d · In practice','Principles 1 to 4: what they ask you to do','หลักการข้อ 1–4 ขอให้เราทำอะไร')}
+${tbl([['Principle','หลักการ'],['Key clauses (paraphrased)','ใจความสำคัญ'],['In this course','ในวิชานี้']],[
+ [['1 Public','1 สาธารณะ'],['Disclose any danger the software may cause; approve only software you believe is safe and tested; never put your own, employer\'s or client\'s interest ahead of the public\'s; accept full responsibility.','เปิดเผยอันตรายที่ซอฟต์แวร์อาจก่อ อนุมัติเฉพาะซอฟต์แวร์ที่เชื่อว่าปลอดภัยและทดสอบแล้ว ไม่เอาประโยชน์ของตัวเอง นายจ้าง หรือลูกค้าไว้เหนือสาธารณะ และรับผิดชอบเต็มที่'],['"The AI wrote it" is not a defence; you own what you submit.','"AI เขียน" ไม่ใช่ข้อแก้ตัว งานที่ส่งเป็นของเรา']],
+ [['2 Client &amp; employer','2 ลูกค้าและนายจ้าง'],['Work only within your competence; keep their information confidential (unless the public is at risk); tell them early if a project is likely to fail, overrun or break copyright; never use illegally obtained software.','ทำงานในขอบเขตความสามารถ รักษาข้อมูลของเขาเป็นความลับ (เว้นแต่สาธารณะตกอยู่ในความเสี่ยง) บอกแต่เนิ่น ๆ ถ้าโปรเจกต์น่าจะล้มเหลว เกินงบ/เวลา หรือละเมิดลิขสิทธิ์ ไม่ใช้ซอฟต์แวร์ที่ได้มาอย่างผิดกฎหมาย'],['Tell the team before the deadline; no pirated tools or unlicensed code.','บอกทีมก่อนถึงกำหนดส่ง ไม่ใช้โปรแกรมเถื่อนหรือโค้ดที่ไม่มีไลเซนส์']],
+ [['3 Product','3 ผลิตภัณฑ์'],['Specs documented and approved; realistic estimates with a risk assessment; adequate testing, debugging and review; respect users\' privacy; use only accurate data from legal sources.','มี spec ที่เขียนและอนุมัติแล้ว ประมาณการอย่างสมจริงพร้อมประเมินความเสี่ยง ทดสอบ ดีบัก และรีวิวอย่างเพียงพอ เคารพความเป็นส่วนตัวของผู้ใช้ ใช้ข้อมูลที่ถูกต้องจากแหล่งที่ถูกกฎหมาย'],['SRS + acceptance criteria (Ch3), tests (Ch7), PDPA (Ch8), risk (Ch9).','SRS + acceptance criteria (Ch3) เทสต์ (Ch7) PDPA (Ch8) ความเสี่ยง (Ch9)']],
+ [['4 Judgment','4 วิจารณญาณ'],['Stay objective when evaluating software; sign only documents within your competence; reject bribery; disclose conflicts of interest; temper technical judgment with human values.','ประเมินซอฟต์แวร์อย่างเป็นกลาง ลงนามเฉพาะเอกสารที่อยู่ในความสามารถ ปฏิเสธสินบน เปิดเผยผลประโยชน์ทับซ้อน และใช้คุณค่าความเป็นมนุษย์ประกอบการตัดสินใจทางเทคนิค'],['Never sign a test report you did not run.','ห้ามลงชื่อในรายงานผลเทสต์ที่ตัวเองไม่ได้รัน']]
+])}`);
+
+add('Principles 5 to 8','หลักการข้อ 5–8',`
+${head('Idea 1e · In practice','Principles 5 to 8: what they ask you to do','หลักการข้อ 5–8 ขอให้เราทำอะไร')}
+${tbl([['Principle','หลักการ'],['Key clauses (paraphrased)','ใจความสำคัญ'],['In this course','ในวิชานี้']],[
+ [['5 Management','5 การบริหาร'],['Tell people the standards before holding them to them; assign work by education and experience while helping people grow; agree fairly who owns what; never ask anyone to break the code.','แจ้งมาตรฐานให้รู้ก่อนจะใช้วัดผล มอบหมายงานตามความรู้และประสบการณ์ พร้อมช่วยให้คนเติบโต ตกลงกันอย่างยุติธรรมว่าใครเป็นเจ้าของอะไร และไม่สั่งให้ใครละเมิดจรรยาบรรณ'],['Team leads rotate (Ch9); agree roles and ownership in the charter.','หัวหน้าทีมหมุนเวียน (Ch9) ตกลงบทบาทและความเป็นเจ้าของงานใน Team Charter']],
+ [['6 Profession','6 วิชาชีพ'],['Be accurate about what the software does, avoiding deceptive or misleading claims; take responsibility for finding, fixing and reporting errors; obey the law, as far as it is consistent with public welfare.','พูดตามจริงว่าซอฟต์แวร์ทำอะไรได้ ไม่กล่าวอ้างแบบหลอกลวงหรือชวนเข้าใจผิด รับผิดชอบการค้นหา แก้ไข และรายงานข้อผิดพลาด และทำตามกฎหมายเท่าที่สอดคล้องกับสวัสดิภาพของสาธารณะ'],['At the demo, show what works; don\'t oversell.','ตอนเดโม แสดงสิ่งที่ใช้ได้จริง ไม่ขายเกินจริง']],
+ [['7 Colleagues','7 เพื่อนร่วมงาน'],['Credit fully the work of others; review others\' work objectively, candidly and with a record; give colleagues a fair hearing; ask experts when outside your competence.','ให้เครดิตงานของคนอื่นอย่างครบถ้วน รีวิวงานคนอื่นอย่างเป็นกลาง ตรงไปตรงมา และมีบันทึก รับฟังเพื่อนร่วมงานอย่างยุติธรรม และถามผู้เชี่ยวชาญเมื่อเกินความสามารถ'],['Pull-request reviews (Ch6); honest credit in the AI-Use Statement.','รีวิว pull request (Ch6) ให้เครดิตตามจริงใน AI-Use Statement']],
+ [['8 Self','8 ตนเอง'],['Keep learning design, development, testing and management; improve your documentation; know the law and the code that govern your work.','เรียนรู้ต่อเนื่องทั้งการออกแบบ พัฒนา ทดสอบ และบริหาร ปรับปรุงการเขียนเอกสาร และรู้กฎหมายกับจรรยาบรรณที่กำกับงานของเรา'],['AI makes learning faster, not optional.','AI ทำให้เรียนรู้เร็วขึ้น แต่ไม่ได้ทำให้ไม่ต้องเรียน']]
+])}`);
+
+add('When principles conflict','เมื่อหลักการขัดกัน',`
+${head('Idea 1f · Using the Code when it gets hard','The code is not an algorithm: five questions to ask','จรรยาบรรณไม่ใช่สูตรสำเร็จ: ถามตัวเอง 5 ข้อ')}
+${steps([
+ ['<b>Who is affected?</b> Think broadly: users, third parties, people who never touch the app.','<b>ใครได้รับผลกระทบ?</b> คิดให้กว้าง: ผู้ใช้ บุคคลที่สาม และคนที่ไม่เคยแตะแอปเลย'],
+ ['<b>Are we treating people with respect?</b> You and your colleagues, towards every person involved.','<b>เราปฏิบัติต่อผู้คนอย่างให้เกียรติไหม?</b> ทั้งเราและเพื่อนร่วมงาน ต่อทุกคนที่เกี่ยวข้อง'],
+ ['<b>How would a well-informed public see it?</b> If they knew all the facts, would they accept your decision?','<b>สาธารณะที่รู้ข้อมูลครบจะมองอย่างไร?</b> ถ้าเขารู้ความจริงทั้งหมด เขาจะยอมรับการตัดสินใจของเราไหม?'],
+ ['<b>What happens to the least empowered?</b> The people with the least power to complain or protect themselves.','<b>คนที่มีอำนาจน้อยที่สุดจะเป็นอย่างไร?</b> คนที่แทบไม่มีกำลังร้องเรียนหรือปกป้องตัวเอง'],
+ ['<b>Would an ideal professional do this?</b> Would respected, experienced peers who knew the facts judge it worthy?','<b>มืออาชีพในอุดมคติจะทำแบบนี้ไหม?</b> เพื่อนร่วมวิชาชีพที่มีประสบการณ์และรู้ข้อเท็จจริง จะเห็นว่าสมควรไหม?']
+])}
+<div class="grid g2" style="margin-top:18px">
+ ${card('amber','Try it','Ship Friday, or fix the leak?','ปล่อยวันศุกร์ หรือแก้ข้อมูลรั่วก่อน?','Affected: every user whose data can leak. Least empowered: users who never chose this app. Informed public: would not accept "we knew, but the deadline came first." <b>Answer: report the risk and delay or fix (Principle 1).</b>','ผู้ได้รับผล: ผู้ใช้ทุกคนที่ข้อมูลอาจรั่ว คนที่มีอำนาจน้อยที่สุด: ผู้ใช้ที่ไม่ได้เลือกใช้แอปนี้เอง สาธารณะที่รู้ข้อมูลครบ: ไม่ยอมรับคำว่า "เรารู้ แต่ deadline มาก่อน" <b>คำตอบ: รายงานความเสี่ยง แล้วเลื่อนหรือแก้ก่อน (หลักการข้อ 1)</b>')}
+ ${card('blue','Why five questions?','Not a rulebook','ไม่ใช่คู่มือกฎ','Principles can conflict with each other or with other rules. The code gives no automatic answer; it gives you a way to judge, and a written standard the whole team can point to when they say no.','หลักการอาจขัดกันเอง หรือขัดกับกฎอื่น จรรยาบรรณไม่ได้ให้คำตอบอัตโนมัติ แต่ให้วิธีตัดสินใจ และมาตรฐานที่เขียนไว้ซึ่งทั้งทีมอ้างอิงได้เวลาต้องปฏิเสธ')}
+</div>`);
+
+add('Concept check 1','Concept check 1',`
+${head('Concept check 1 · The eight principles','Which principle does it break?','ละเมิดหลักการข้อไหน?','violet')}
+${chk([
+ ['Your manager says ship on Friday, although the team knows a bug can leak users\' data.','ผู้จัดการบอกให้ปล่อยวันศุกร์ ทั้งที่ทีมรู้ว่ามีบั๊กที่ทำให้ข้อมูลผู้ใช้รั่วได้','1 Public','1 สาธารณะ','People\'s data before the deadline (also 3 and 4).','ข้อมูลของผู้คนสำคัญกว่า deadline (เกี่ยวกับข้อ 3 และ 4 ด้วย)'],
+ ['You sign a test report saying all tests passed, but you never ran them.','เราลงชื่อในรายงานว่าเทสต์ผ่านทั้งหมด แต่ไม่เคยรันเลย','4 Judgment','4 วิจารณญาณ','Sign only what you believe is true.','ลงชื่อเฉพาะสิ่งที่เชื่อว่าเป็นความจริง'],
+ ['You present a classmate\'s module as your own work in the demo.','เราเอาโมดูลที่เพื่อนทำมานำเสนอว่าเป็นงานของเราในวันเดโม','7 Colleagues','7 เพื่อนร่วมงาน','Credit the work of others.','ให้เครดิตงานของคนอื่น'],
+ ['A team lead tells juniors to hide known defects from the client.','หัวหน้าทีมสั่งรุ่นน้องให้ปิดบังข้อบกพร่องที่รู้อยู่แล้วจากลูกค้า','5 Management','5 การบริหาร','Leaders must lead ethically.','ผู้นำต้องนำอย่างมีจริยธรรม']
+])}
+${box('amber','Doesn\'t Principle 2 say "serve your employer"? Yes, but only <b>within the public interest</b>. Principle 1 comes first.',
+ 'หลักการข้อ 2 บอกให้ "รับใช้นายจ้าง" ไม่ใช่เหรอ? ใช่ แต่ต้อง<b>อยู่ภายใต้ประโยชน์ของสาธารณะ</b> หลักการข้อ 1 มาก่อนเสมอ','Follow-up','คำถามต่อยอด')}`);
+
+add('Four everyday issues','4 ประเด็นที่เจอประจำ',`
+${head('Idea 1g · Sommerville §1.2','Four issues you\'ll meet in ordinary work','4 ประเด็นที่จะเจอในงานทั่วไป')}
+<div class="grid g4">
+ ${card('blue','#1','Confidentiality','การรักษาความลับ','Respect your employer\'s and client\'s information, with or without a signed agreement.','เคารพข้อมูลของนายจ้างและลูกค้า ไม่ว่าจะเซ็นสัญญาไว้หรือไม่')}
+ ${card('green','#2','Competence','ความสามารถ','Don\'t misrepresent your skill, and don\'t take on work beyond it.','ไม่อ้างความสามารถเกินจริง และไม่รับงานที่เกินความสามารถ')}
+ ${card('amber','#3','IP rights','ทรัพย์สินทางปัญญา','Know and respect patents, copyright and licences. Protect what isn\'t yours.','รู้และเคารพสิทธิบัตร ลิขสิทธิ์ และไลเซนส์ ปกป้องสิ่งที่ไม่ใช่ของเรา')}
+ ${card('red','#4','Computer misuse','การใช้คอมพิวเตอร์ในทางที่ผิด','Don\'t use your skills to harm others\' systems, from time-wasting to malware.','ไม่ใช้ทักษะทำร้ายระบบของคนอื่น ตั้งแต่ก่อกวนไปจนถึงมัลแวร์')}
+</div>
+${box('green','<b>Confidentiality + IP</b> = why you never commit secrets or copy code without a licence. <b>Competence + misuse</b> = why "the AI wrote it" never excuses harm.',
+ '<b>ความลับ + ทรัพย์สินทางปัญญา</b> = เหตุผลที่ห้าม commit รหัสลับ หรือก๊อปโค้ดที่ไม่มีไลเซนส์ · <b>ความสามารถ + การใช้ในทางผิด</b> = เหตุผลที่ "AI เขียน" ไม่เคยเป็นข้อแก้ตัวเมื่อเกิดความเสียหาย','Connects to this course','เชื่อมกับวิชานี้')}`);
+
+add('Data ethics: can vs should','จริยธรรมข้อมูล: ทำได้ vs ควรทำ',`
+${head('Idea 2 · Data ethics &amp; privacy','Just because you <i>can</i> collect it doesn\'t mean you <i>should</i>','เก็บข้อมูล<i>ได้</i> ไม่ได้แปลว่า<i>ควร</i>เก็บ')}
+<div class="grid g3">
+ ${card('blue','Minimise','Collect the least','เก็บให้น้อยที่สุด','Only what the feature truly needs. Every extra field is a liability you now have to protect.','เก็บเฉพาะที่ฟีเจอร์จำเป็นจริง ๆ ทุกช่องที่เกินมาคือภาระที่เราต้องปกป้อง')}
+ ${card('green','Protect','Guard what you hold','ดูแลข้อมูลที่ถืออยู่','Secure it, limit who can see it, and honour people\'s right to see, correct and delete (PDPA, Ch8).','รักษาความปลอดภัย จำกัดคนที่เห็นได้ และเคารพสิทธิ์ของเจ้าของข้อมูลที่จะดู แก้ไข และลบ (PDPA, Ch8)')}
+ ${card('amber','Be transparent','Say what and why','บอกว่าเก็บอะไร และเพื่ออะไร','Tell people what you collect and how it\'s used, in plain language, before they hand it over.','บอกผู้คนด้วยภาษาง่าย ๆ ว่าเก็บอะไรและใช้อย่างไร ก่อนที่เขาจะให้ข้อมูล')}
+</div>
+${box('','Security was the <b>how</b>; data ethics is the <b>whether</b>. The most private data is the data you chose never to collect. <b>Which fields in your prototype are not really needed?</b>',
+ 'ความปลอดภัยคือ <b>"ทำอย่างไร"</b> จริยธรรมข้อมูลคือ <b>"ควรทำไหม"</b> ข้อมูลที่เป็นส่วนตัวที่สุดคือข้อมูลที่เราเลือกไม่เก็บตั้งแต่แรก <b>ใน prototype ของเรามีช่องไหนที่ไม่จำเป็นจริง ๆ บ้าง?</b>','Carries Ch8 forward','ต่อยอดจาก Ch8')}`);
+
+add('Concept check 2','Concept check 2',`
+${head('Concept check 2 · Everyday issues &amp; data ethics','Which issue or data rule is it?','เป็นประเด็นหรือหลักข้อมูลข้อไหน?','violet')}
+${chk([
+ ['You post a screenshot of a client\'s internal dashboard in a public Discord to ask for help.','เราโพสต์ภาพหน้าจอ dashboard ภายในของลูกค้าลงใน Discord สาธารณะเพื่อขอความช่วยเหลือ','Confidentiality','การรักษาความลับ','',''],
+ ['You paste code from a GitHub repo that has no licence into your product.','เราก๊อปโค้ดจาก GitHub repo ที่ไม่มีไลเซนส์มาใส่ในผลิตภัณฑ์','IP rights','ทรัพย์สินทางปัญญา','No licence means no permission to reuse.','ไม่มีไลเซนส์ = ไม่ได้รับอนุญาตให้นำไปใช้'],
+ ['After one tutorial, you tell a client you are an expert and take the job.','ดู tutorial มาเรื่องเดียว แล้วบอกลูกค้าว่าเป็นผู้เชี่ยวชาญและรับงาน','Competence','ความสามารถ','',''],
+ ['A study-reminder app asks for your national ID number and birthday at sign-up.','แอปเตือนอ่านหนังสือขอเลขบัตรประชาชนและวันเกิดตอนสมัคร','Minimise','เก็บให้น้อยที่สุด','A reminder doesn\'t need your ID.','การเตือนอ่านหนังสือไม่จำเป็นต้องใช้เลขบัตรประชาชน'],
+ ['The app shares usage data with an ad partner, but the privacy notice never says so.','แอปแชร์ข้อมูลการใช้งานกับพาร์ตเนอร์โฆษณา แต่ประกาศความเป็นส่วนตัวไม่ได้บอกไว้เลย','Be transparent','ความโปร่งใส','','']
+])}
+${box('amber','The last two are legal and technical problems too. Ch8 PDPA said what the law <b>requires</b>; Ch10 asks whether we <b>should</b> collect it at all.',
+ 'สองข้อสุดท้ายเป็นปัญหาทางกฎหมายและเทคนิคด้วย Ch8 (PDPA) บอกว่ากฎหมาย<b>บังคับ</b>อะไร ส่วน Ch10 ถามว่าเรา<b>ควร</b>เก็บข้อมูลนั้นตั้งแต่แรกหรือไม่','Follow-up','คำถามต่อยอด')}`);
+
+add('Responsible AI use','ใช้ AI อย่างรับผิดชอบ',`
+${head('Idea 3 · AI-first, but a person is accountable','AI can be wrong or biased, and it cannot be responsible','AI ผิดหรือลำเอียงได้ และมันรับผิดชอบแทนเราไม่ได้','red')}
+<div class="grid g2">
+ <div class="card green"><div class="tag">DO · ควรทำ</div>${pts([
+  ['<b>Keep a human sign-off.</b> A person reads, tests and approves. Accountability can\'t be delegated to a model.','<b>ให้คนเป็นผู้อนุมัติ</b> คนอ่าน ทดสอบ และอนุมัติ ความรับผิดชอบโยนให้โมเดลไม่ได้'],
+  ['<b>Be transparent.</b> Disclose where AI was used. That is exactly what your AI-Use Statement is for.','<b>โปร่งใส</b> เปิดเผยว่าใช้ AI ตรงไหน นี่คือสิ่งที่ AI-Use Statement มีไว้'],
+  ['<b>Watch for bias and error.</b> AI reflects its training data. Check outputs against reality, especially about people.','<b>ระวังอคติและความผิดพลาด</b> AI สะท้อนข้อมูลที่ใช้ฝึก ตรวจผลลัพธ์กับความเป็นจริง โดยเฉพาะเรื่องเกี่ยวกับคน']
+ ],'green')}</div>
+ <div class="card red"><div class="tag">DON'T · ไม่ควรทำ</div>${pts([
+  ['<b>"The AI said so."</b> Not a defence. If you shipped it, you own it, bug and bias included.','<b>"AI บอกมาแบบนี้"</b> ไม่ใช่ข้อแก้ตัว ถ้าเราปล่อยออกไป เราเป็นเจ้าของ รวมทั้งบั๊กและอคติ'],
+  ['<b>Paste private data into prompts.</b> Treat a prompt as public. Never feed real personal data or secrets.','<b>วางข้อมูลส่วนตัวลงใน prompt</b> ให้คิดว่า prompt เป็นของสาธารณะ ห้ามใส่ข้อมูลส่วนบุคคลจริงหรือรหัสลับ'],
+  ['<b>Pass AI work off as fully your own.</b> Honesty (Idea 1) applies to how the work was made, too.','<b>อ้างว่างานของ AI เป็นของเราทั้งหมด</b> ความซื่อตรง (Idea 1) ใช้กับวิธีที่งานถูกสร้างด้วย']
+ ],'red')}</div>
+</div>
+${plain('AI is like a <b>very fast intern</b>: brilliant first drafts, but you sign the work before it goes out. If it\'s wrong, the boss (you) answers for it, never the intern. This is one of the four oral-exam criteria.',
+ 'AI เหมือน<b>เด็กฝึกงานที่เร็วมาก</b> ร่างงานแรกได้เก่ง แต่เราต้องเซ็นรับรองก่อนส่งออกไป ถ้าผิด หัวหน้า (เรา) ต้องรับผิดชอบ ไม่ใช่เด็กฝึกงาน นี่คือหนึ่งใน 4 เกณฑ์ของการสอบปากเปล่า')}`);
+
+add('Concept check 3','Concept check 3',`
+${head('Concept check 3 · Responsible AI','Responsible AI use, or not?','ใช้ AI อย่างรับผิดชอบ หรือไม่?','violet')}
+${chk([
+ ['AI drafts your unit tests; you run them and fix two wrong expected values.','AI ร่าง unit test ให้ เรารันแล้วแก้ค่า expected ที่ผิด 2 จุด','Responsible','รับผิดชอบ','A person checked and signed off.','มีคนตรวจและรับรองแล้ว'],
+ ['You paste a real clinic\'s patient list into a chatbot to "make test data".','เราวางรายชื่อคนไข้ของคลินิกจริงลงในแชตบอตเพื่อ "สร้างข้อมูลทดสอบ"','Not OK','ไม่โอเค','Real personal data in a prompt.','ใส่ข้อมูลส่วนบุคคลจริงลงใน prompt'],
+ ['The AI-Use Statement says "no AI used", but AI generated the UI layout.','AI-Use Statement เขียนว่า "ไม่ได้ใช้ AI" แต่ layout ของ UI สร้างโดย AI','Not OK','ไม่โอเค','Honesty: disclose, don\'t hide.','ความซื่อตรง: ต้องเปิดเผย ไม่ปิดบัง'],
+ ['AI-written code leaks data; the team\'s report says "the AI caused it".','โค้ดที่ AI เขียนทำข้อมูลรั่ว แล้วรายงานของทีมบอกว่า "AI เป็นต้นเหตุ"','Not OK','ไม่โอเค','Accountability stays with the team.','ความรับผิดชอบยังอยู่ที่ทีม']
+])}
+${box('amber','Is using AI itself the problem? <b>No.</b> Using AI well is expected in this course. Hiding it, or shipping what you can\'t explain, is the problem.',
+ 'การใช้ AI เป็นปัญหาไหม? <b>ไม่</b> วิชานี้คาดหวังให้ใช้ AI ให้เป็น ปัญหาคือการปิดบัง หรือส่งงานที่ตัวเองอธิบายไม่ได้','Follow-up','คำถามต่อยอด')}`);
+
+add('Case study: AI backdoor','กรณีศึกษา: backdoor ใน AI',`
+${head('Case study · In the news, October 2026','A trusted AI tool update carried a backdoor','อัปเดตของเครื่องมือ AI ที่น่าเชื่อถือ แฝง backdoor มาด้วย','red')}
+<div class="flow">
+ <div class="card"><h3>Marketplace</h3><p>${L('attacker gets a tampered build served','ผู้โจมตีทำให้ build ที่ถูกดัดแปลงถูกแจกจ่าย')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>${L('"Normal" update','อัปเดต "ปกติ"')}</h3><p>${L('v2.1.312 and 2.1.313, about 11 hours','v2.1.312 และ 2.1.313 ราว 11 ชั่วโมง')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>${L('Developer machine','เครื่องนักพัฒนา')}</h3><p>${L('attacker SSH key added','เพิ่ม SSH key ของผู้โจมตี')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>Backdoor</h3><p>${L('reverse tunnel opened','เปิด reverse tunnel')}</p></div>
+</div>
+<div class="grid g2" style="margin-top:16px">
+ ${card('red','The incident, 29 Oct 2026','Claude Code extension on the Cursor Marketplace','ส่วนขยาย Claude Code บน Cursor Marketplace','Cursor says at most 5,000 users received it and other extensions were not affected. Cursor says the tampered version was not developed by Anthropic; Anthropic says none of its systems were compromised. How the attacker got in has not been stated in the sources checked.','Cursor ระบุว่ามีผู้ได้รับไม่เกิน 5,000 คน และส่วนขยายอื่นไม่ได้รับผลกระทบ Cursor ระบุว่าเวอร์ชันที่ถูกดัดแปลงไม่ได้พัฒนาโดย Anthropic ส่วน Anthropic ระบุว่าไม่มีระบบใดของตนถูกเจาะ แหล่งข้อมูลที่ตรวจสอบยังไม่ได้ระบุว่าผู้โจมตีเข้ามาได้อย่างไร')}
+ ${card('amber','Same month: two related cases','Packages and model weights','แพ็กเกจและ model weights','<b>LiteLLM 1.107.0</b> (21 Oct): stolen GitHub tokens ran the release workflow; the PyPI build had a credential stealer and backdoor. <b>Imperial College study:</b> a tampered speech model reacted to one chosen voice. Research in a sandbox, not a real attack.','<b>LiteLLM 1.107.0</b> (21 ต.ค.): token GitHub ที่ถูกขโมยถูกใช้รัน release workflow ทำให้ build บน PyPI มีตัวขโมยรหัสผ่านและ backdoor · <b>งานวิจัย Imperial College:</b> โมเดลเสียงที่ถูกดัดแปลงตอบสนองต่อเสียงที่เลือกไว้เสียงเดียว เป็นงานวิจัยใน sandbox ไม่ใช่การโจมตีจริง')}
+</div>
+${box('red','A <b>backdoor</b> is a hidden way in that bypasses normal login. The tool looks normal and has your permissions, so <b>trust is the attack path</b>.',
+ '<b>Backdoor</b> คือทางเข้าลับที่ข้ามการล็อกอินปกติ เครื่องมือดูปกติและมีสิทธิ์เท่ากับเรา ดังนั้น<b>ความไว้วางใจคือเส้นทางโจมตี</b>','Backdoor, in plain terms','Backdoor พูดง่าย ๆ')}
+<p class="hint">Sources: Cursor security notice; Microsoft Security Blog, 30 Oct 2026; SafeDep; Help Net Security, 22 Oct 2026. ${L('Developing story: check for updates. Read like an engineer: who is the source, what is confirmed, what is still unknown, real incident or research test?','เรื่องยังไม่จบ ควรติดตามอัปเดต อ่านแบบวิศวกร: ใครเป็นแหล่งข่าว อะไรยืนยันแล้ว อะไรยังไม่รู้ เป็นเหตุการณ์จริงหรืองานวิจัย?')}</p>`);
+
+add('Case study: what it teaches','กรณีศึกษา: ได้บทเรียนอะไร',`
+${head('Case study · Discuss, then use the Code','Who is responsible, and what would you do?','ใครต้องรับผิดชอบ และเราจะทำอย่างไร?','red')}
+${tbl([['Question','คำถาม'],['Ch10 link','เชื่อมกับ Ch10'],['A professional response','คำตอบแบบมืออาชีพ']],[
+ [['Who is affected?','ใครได้รับผลกระทบ?'],['Five questions','คำถาม 5 ข้อ'],['Developers, and everyone whose data or code sits on their machines.','นักพัฒนา และทุกคนที่มีข้อมูลหรือโค้ดอยู่บนเครื่องของพวกเขา']],
+ [['You installed the update. What do you do first?','เราติดตั้งอัปเดตนั้นไปแล้ว ทำอะไรก่อน?'],['1 Public, 6 Profession','1 สาธารณะ, 6 วิชาชีพ'],['Report it, follow the vendor\'s notice, check SSH keys and tunnels, rotate credentials. Uninstalling alone may not be enough.','รายงาน ทำตามประกาศของผู้ให้บริการ ตรวจ SSH key และ tunnel เปลี่ยนรหัส/credential ใหม่ แค่ถอนการติดตั้งอาจไม่พอ']],
+ [['"The tool was official." A full defence?','"เครื่องมือเป็นของทางการ" แก้ตัวได้เต็มที่ไหม?'],['Accountability','ความรับผิดชอบ'],['No. It explains how it happened, but your team still owns what it ships.','ไม่ได้ มันอธิบายว่าเกิดขึ้นได้อย่างไร แต่ทีมยังต้องรับผิดชอบสิ่งที่ปล่อยออกไป']],
+ [['What should a team change?','ทีมควรเปลี่ยนอะไร?'],['3 Product, Ch8','3 ผลิตภัณฑ์, Ch8'],['Check where tools come from, delay brand-new versions, use short-lived scoped secrets, limit what AI agents can do.','ตรวจแหล่งที่มาของเครื่องมือ รอก่อนอัปเดตเวอร์ชันใหม่เอี่ยม ใช้ secret อายุสั้นและสิทธิ์จำกัด จำกัดสิ่งที่ AI agent ทำได้']]
+])}
+${remember('Treat AI tools, packages and models as <b>supply-chain dependencies</b>: useful, powerful, and never trusted without checks. A human stays accountable.',
+ 'มองเครื่องมือ AI แพ็กเกจ และโมเดลเป็น<b>ส่วนหนึ่งของห่วงโซ่อุปทาน (supply chain)</b>: มีประโยชน์ ทรงพลัง แต่ห้ามเชื่อโดยไม่ตรวจ คนยังต้องรับผิดชอบ')}`);
+
+add('Backdoor in your own code','Backdoor ในโค้ดของเราเอง',`
+${head('Concept · Backdoor in code','A backdoor can also arrive in code AI writes for you','backdoor อาจมากับโค้ดที่ AI เขียนให้เราได้ด้วย','red')}
+<pre><span class="k">def</span> login(user, password):
+    <span class="k">if</span> password == <span class="s">"dev-2569"</span>: <span class="k">return</span> True   <span class="c"># ← nobody asked for this line</span>
+    <span class="k">return</span> check_password(user, password)</pre>
+<div class="grid g2" style="margin-top:16px">
+ ${card('red','The problem','Nobody asked for this line','ไม่มีใครขอบรรทัดนี้','Yet all login tests still pass. Anyone who knows the value gets in without a real password.','แต่เทสต์ล็อกอินทั้งหมดยังผ่าน ใครรู้ค่านี้ก็เข้าระบบได้โดยไม่ต้องใช้รหัสผ่านจริง')}
+ ${card('amber','Why tests miss it','Tests check what <i>should</i> work','เทสต์ตรวจสิ่งที่<i>ควร</i>ทำงาน','They rarely check for an extra way in. That is why you read the code before committing, and why review still matters.','เทสต์แทบไม่ตรวจว่ามีทางเข้าเพิ่ม นี่คือเหตุผลที่ต้องอ่านโค้ดก่อน commit และทำไมการรีวิวยังสำคัญ')}
+</div>
+${box('green','Remove the line, tell the team, and test the login again. Bug or backdoor, intended or not, the risk is the same, and <b>the team that ships it owns it</b>.',
+ 'ลบบรรทัดนั้น บอกทีม แล้วทดสอบล็อกอินอีกครั้ง จะเป็นบั๊กหรือ backdoor ตั้งใจหรือไม่ ความเสี่ยงก็เท่ากัน และ<b>ทีมที่ปล่อยออกไปต้องรับผิดชอบ</b>','What to do','ต้องทำอะไร')}`);
+
+add('What about a local model?','แล้วโมเดลที่รันในเครื่องล่ะ?',`
+${head('Case study · Local models','"Local" does not mean "trusted"','"รันในเครื่อง" ไม่ได้แปลว่า "ไว้ใจได้"','red')}
+${tbl([['Route','ช่องทาง'],['How it works','ทำงานอย่างไร'],['Can it send data out?','ส่งข้อมูลออกไปได้ไหม?']],[
+ [['Hidden code in the file','โค้ดซ่อนในไฟล์'],['Pickle files or <code>trust_remote_code</code> can run code when loaded.','ไฟล์ pickle หรือ <code>trust_remote_code</code> รันโค้ดได้ตอนโหลด'],['<b>Yes</b>, like ordinary malware. No trigger needed.','<b>ได้</b> เหมือนมัลแวร์ทั่วไป ไม่ต้องมีตัวกระตุ้น']],
+ [['Backdoor in the weights','backdoor ใน weights'],['Training makes the model change its output on a trigger.','การฝึกทำให้โมเดลเปลี่ยนคำตอบเมื่อเจอตัวกระตุ้น (trigger)'],['<b>Not alone.</b> Weights are numbers; they need software around them.','<b>ลำพังไม่ได้</b> weights เป็นแค่ตัวเลข ต้องมีซอฟต์แวร์รอบ ๆ']],
+ [['Model + tools or UI','โมเดล + เครื่องมือหรือ UI'],['A triggered output calls a tool, or puts data in a link or image URL.','คำตอบที่ถูกกระตุ้นไปเรียกเครื่องมือ หรือใส่ข้อมูลลงในลิงก์หรือ URL รูปภาพ'],['<b>Yes</b>, if the tool has permission or the UI loads the URL.','<b>ได้</b> ถ้าเครื่องมือมีสิทธิ์ หรือ UI โหลด URL นั้น']]
+])}
+<div class="grid g2" style="margin-top:16px">
+ ${card('green','Reduce the risk','Layers of defence','ป้องกันหลายชั้น','Check the publisher and hash; prefer <code>safetensors</code>; avoid <code>trust_remote_code</code>; use a sandbox with no network; give tools the least privilege; a person confirms risky actions.','ตรวจผู้เผยแพร่และค่า hash ใช้ <code>safetensors</code> หลีกเลี่ยง <code>trust_remote_code</code> รันใน sandbox ที่ไม่มีเน็ต ให้เครื่องมือมีสิทธิ์น้อยที่สุด และให้คนยืนยันก่อนทำสิ่งเสี่ยง')}
+ ${card('amber','The limit','A scan can\'t see behaviour','การสแกนมองไม่เห็นพฤติกรรม','A file scan finds hidden code, not behaviour learned in training. Design so that even a triggered model cannot get data out.','การสแกนไฟล์เจอโค้ดที่ซ่อนอยู่ แต่ไม่เจอพฤติกรรมที่เรียนมาจากการฝึก จึงต้องออกแบบให้แม้โมเดลถูกกระตุ้นก็ส่งข้อมูลออกไม่ได้')}
+</div>`);
+
+add('Professional practice','นิสัยการทำงานแบบมืออาชีพ',`
+${head('Idea 4 · Habits that matter as much as code','Being easy to work with is an engineering skill','การเป็นคนที่ทำงานด้วยง่าย ก็เป็นทักษะทางวิศวกรรม','green')}
+<div class="grid g4">
+ ${card('blue','Communicate','Clearly and early','ชัดเจนและเนิ่น ๆ','Say what you\'re doing, and say when you\'re stuck, before the deadline.','บอกว่ากำลังทำอะไร และบอกเมื่อติดปัญหา ก่อนถึงกำหนดส่ง')}
+ ${card('green','Commit','Keep your word','รักษาคำพูด','Deliver what you said, or renegotiate early. Reliability is reputation.','ส่งงานตามที่บอกไว้ หรือขอต่อรองแต่เนิ่น ๆ ความน่าเชื่อถือคือชื่อเสียง')}
+ ${card('amber','Feedback','Give and take it','ให้และรับ','Critique the work, not the person; receive it without defensiveness.','วิจารณ์ที่งาน ไม่ใช่ตัวคน และรับคำวิจารณ์โดยไม่ตั้งป้อมปกป้องตัวเอง')}
+ ${card('violet','Document','Leave a trail','ทิ้งร่องรอยไว้','A README and clear commits so others, and future-you, can follow.','มี README และ commit ที่ชัดเจน ให้คนอื่นและตัวเราในอนาคตตามได้')}
+</div>
+${box('','These are the habits the <b>oral exam</b> and the <b>GitHub contribution factor</b> reward: the parts of engineering that no model does for you.',
+ 'นี่คือนิสัยที่<b>การสอบปากเปล่า</b>และ<b>ตัวคูณการมีส่วนร่วมบน GitHub</b>ให้คะแนน เป็นส่วนของงานวิศวกรรมที่ไม่มีโมเดลไหนทำแทนเราได้','Why it\'s graded','ทำไมถึงมีคะแนน')}`);
+
+add('Tools & dev environments','เครื่องมือและสภาพแวดล้อมการพัฒนา',`
+${head('Idea 5 · What a real team builds with','The toolkit, and where CI fits','ชุดเครื่องมือ และ CI อยู่ตรงไหน','violet')}
+<div class="flow">
+ <div class="card"><h3>IDE</h3><p>${L('write + AI assist','เขียนโค้ด + AI ช่วย')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>Git / GitHub</h3><p>${L('version control','ควบคุมเวอร์ชัน')}</p></div><span class="ar">→</span>
+ <div class="card" style="border-color:var(--violet)"><h3>CI</h3><p>${L('on push: runs tests automatically','เมื่อ push: รันเทสต์อัตโนมัติ')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>Deploy</h3><p>${L('users can try it','ผู้ใช้ลองใช้ได้')}</p></div>
+</div>
+<div style="margin-top:18px">${P('You already use the IDE, Git and tests. <b>CI (Continuous Integration)</b> is the new idea: a service that runs your tests on every push, so a broken change is caught in minutes, by a machine, before it reaches the team.',
+ 'เราใช้ IDE, Git และเทสต์อยู่แล้ว ที่ใหม่คือ <b>CI (Continuous Integration)</b>: บริการที่รันเทสต์ทุกครั้งที่ push ทำให้การแก้ที่ทำของพังถูกจับได้ในไม่กี่นาที โดยเครื่อง ก่อนจะไปถึงทีม','big')}</div>
+${plain('CI is a <b>tireless teammate</b> who re-runs every test the moment you push. Our prototypes are static, so you don\'t need to set up CI; <b>GitHub Pages</b>, which republishes your site on every push, is the same idea at the Deploy step.',
+ 'CI คือ<b>เพื่อนร่วมทีมที่ไม่รู้จักเหนื่อย</b> รันเทสต์ทั้งหมดใหม่ทันทีที่เรา push prototype ของเราเป็นเว็บ static จึงไม่ต้องตั้ง CI ส่วน <b>GitHub Pages</b> ที่เผยแพร่เว็บใหม่ทุกครั้งที่ push ก็คือแนวคิดเดียวกันในขั้น Deploy')}`);
+
+add('Your project + AI','โปรเจกต์ของเรา + AI',`
+${head('Do this with your team','Finish like a professional','จบงานแบบมืออาชีพ','green')}
+<div class="grid g2">
+ <div class="card blue"><div class="tag">Project step · ขั้นตอนของโปรเจกต์</div>${pts([
+  ['<b>Keep the AI-Use Statement honest.</b> A milestone without it is capped at 50%, and it is your transparency on record.','<b>เขียน AI-Use Statement ตามจริง</b> milestone ที่ไม่มีจะได้คะแนนไม่เกิน 50% และเป็นหลักฐานความโปร่งใสของเรา'],
+  ['<b>Collect the minimum.</b> Trim the personal data your prototype shows or asks for before the demo; be ready to justify every field. Use made-up data only.','<b>เก็บข้อมูลให้น้อยที่สุด</b> ตัดข้อมูลส่วนบุคคลที่ prototype แสดงหรือขอออกก่อนเดโม พร้อมอธิบายได้ทุกช่อง ใช้ข้อมูลสมมติเท่านั้น']
+ ])}</div>
+ <div class="card red"><div class="tag">AI-first: own it · ใช้ AI แต่ต้องรับผิดชอบ</div>${pts([
+  ['<b>Be ready to explain any line.</b> At the oral exam, "the AI wrote it" is not an answer. Understanding is.','<b>พร้อมอธิบายได้ทุกบรรทัด</b> ตอนสอบปากเปล่า "AI เขียน" ไม่ใช่คำตอบ ความเข้าใจต่างหากคือคำตอบ'],
+  ['<b>Disclose, don\'t hide.</b> Using AI well is expected and rewarded; hiding it is the problem.','<b>เปิดเผย อย่าปิดบัง</b> การใช้ AI ให้เป็นคือสิ่งที่คาดหวังและได้คะแนน การปิดบังต่างหากที่เป็นปัญหา']
+ ],'red')}</div>
+</div>`);
+
+add('Summary','สรุป',`
+${head('Chapter 10 · in four lines','Build for people, stay accountable, leave a clear trail','สร้างเพื่อผู้คน รับผิดชอบเสมอ ทิ้งร่องรอยให้ชัด','green')}
+<div class="grid g2">
+ ${card('blue','Ethics','Duties beyond the code','หน้าที่ที่มากกว่าโค้ด','Public interest, honesty, competence. The ACM/IEEE Code is the shared standard; <b>Public comes first</b>.','ประโยชน์สาธารณะ ความซื่อตรง ความสามารถ จรรยาบรรณ ACM/IEEE คือมาตรฐานร่วม <b>สาธารณะมาก่อน</b>')}
+ ${card('green','Data','Can vs should','ทำได้ vs ควรทำ','Minimise, protect, be transparent. The safest data is what you never collected.','เก็บให้น้อย ปกป้อง โปร่งใส ข้อมูลที่ปลอดภัยที่สุดคือข้อมูลที่ไม่เคยเก็บ')}
+ ${card('red','AI','A person is accountable','คนต้องรับผิดชอบ','Disclose use, keep a human sign-off, watch for bias. Check AI tools and models like any dependency. "The AI said so" is never a defence.','เปิดเผยการใช้ ให้คนเป็นผู้อนุมัติ ระวังอคติ ตรวจเครื่องมือและโมเดล AI เหมือน dependency ทั่วไป "AI บอกมา" ไม่เคยเป็นข้อแก้ตัว')}
+ ${card('violet','Practice','Habits and tools','นิสัยและเครื่องมือ','Communicate, commit, give feedback, document; let IDE, Git, tests and CI carry the work.','สื่อสาร รักษาคำพูด ให้ feedback เขียนเอกสาร และให้ IDE, Git, เทสต์ และ CI ช่วยแบกงาน')}
+</div>`);
+
+/* ---------- demo day ---------- */
+const TA=['Aura','5 idoiots',"I'm so hungry ahh",'Apollo','Viounique','dek70','Gamza007','MedMind','Hew Khao Mak','Strategic','ILY3000','PhomPen Duke','Socrates and Skeletons'];
+const TB=['Larb Lamphon',"I don't know",'16RideRight','ByteSquad','MFU888','Yhar Bid','Home sick','lumen Inc.','Hallo world','Trauma squad','team 24','Team25','The last one'];
+const slot=i=>{const t=m=>{const h=12+Math.floor(m/60),mm=m%60;return h+':'+String(mm).padStart(2,'0');};return t(5+i*12)+'–'+t(17+i*12);};
+const sched=(teams,off)=>`<div class="scroll-x"><table class="tbl sched"><thead><tr><th>${L('Slot','เวลา')}</th><th>${L('Group','กลุ่ม')}</th><th>${L('Team','ทีม')}</th></tr></thead><tbody>${teams.map((t,i)=>`<tr><td class="mono">${slot(i)}</td><td>${i+1+off}</td><td>${t}</td></tr>`).join('')}</tbody></table></div>`;
+add('Demo day schedule','ตารางวันเดโม',`
+${head('Demo + oral exam · When is your team?','13 teams a day, 12 minutes each, in our usual class slot','วันละ 13 ทีม ทีมละ 12 นาที ในเวลาเรียนปกติ','amber')}
+<div class="grid g2">
+ <div><h3>${L('Group A · Mon 9 Nov, 12:00–14:50','Group A · จันทร์ 9 พ.ย. 12:00–14:50')}</h3>${sched(TA,0)}</div>
+ <div><h3>${L('Group B · Mon 16 Nov, 12:00–14:50','Group B · จันทร์ 16 พ.ย. 12:00–14:50')}</h3>${sched(TB,13)}</div>
+</div>
+${box('amber','12:00–12:05 set-up and briefing; 14:41–14:50 spare time. <b>Arrive 10 minutes before your slot</b> with the prototype already open. <b>The whole team must be present</b>: the oral part is individual.',
+ '12:00–12:05 เตรียมเครื่องและชี้แจง · 14:41–14:50 เวลาสำรอง <b>มาถึงก่อนเวลาของทีม 10 นาที</b> และเปิด prototype ไว้ให้พร้อม <b>ทุกคนในทีมต้องมา</b> เพราะการสอบปากเปล่าเป็นรายบุคคล','Important','สำคัญ')}`);
+
+add('What to present','ต้องนำเสนออะไร',`
+${head('Your 12 minutes · 5 min demo + 6 min questions (+1 min set-up)','Present in this order: follow the Golden Thread','นำเสนอตามลำดับนี้: เดินตาม Golden Thread','amber')}
+${tbl([['#','#'],['Topic (5-min demo)','หัวข้อ (เดโม 5 นาที)'],['Time','เวลา']],[
+ ['1',['<b>Problem and user</b>: who has the pain, and what it is (M1)','<b>ปัญหาและผู้ใช้</b>: ใครมีปัญหา และปัญหาคืออะไร (M1)'],'0:30'],
+ ['2',['<b>Must FRs</b>: the MVP list from your SRS (M2)','<b>Must FR</b>: รายการ MVP จาก SRS (M2)'],'0:30'],
+ ['3',['<b>Live click-through</b>: every Must FR happy path + 1 unhappy path (empty or error). Point: "this screen = FR-3 = this diagram = this acceptance test"','<b>คลิกเดโมสด</b>: happy path ของ Must FR ทุกข้อ + unhappy path 1 กรณี (ว่างหรือ error) ชี้ให้เห็นว่า "หน้าจอนี้ = FR-3 = diagram นี้ = acceptance test นี้"'],'3:00'],
+ ['4',['<b>AI use</b>: where AI helped, what you checked and changed','<b>การใช้ AI</b>: AI ช่วยตรงไหน เราตรวจและแก้อะไร'],'0:30'],
+ ['5',['<b>Next step</b>: one thing you would improve, and why','<b>ก้าวต่อไป</b>: สิ่งหนึ่งที่อยากปรับปรุง และเพราะอะไร'],'0:30']
+],'')}
+<div class="grid g3" style="margin-top:16px">
+ ${card('blue','Q · 6 min','Every member answers','ทุกคนต้องตอบ','1 to 2 questions each, about your own part and your AI use. Scored on the oral criteria.','คนละ 1–2 คำถาม เกี่ยวกับส่วนที่ตัวเองทำและการใช้ AI ให้คะแนนตามเกณฑ์สอบปากเปล่า')}
+ ${card('green','Have ready','Before your slot','เตรียมก่อนถึงเวลา','Prototype opens in a browser from the repo (no server, no DB). Demo slides, Final Report with the Golden Thread table, and the AI-Use Statement in the repo. Laptop and display adapter tested.','prototype เปิดในเบราว์เซอร์จาก repo ได้ (ไม่มี server ไม่มี DB) มีสไลด์เดโม Final Report พร้อมตาราง Golden Thread และ AI-Use Statement ใน repo ทดสอบโน้ตบุ๊กและหัวต่อจอแล้ว')}
+ ${card('red','Over time','At 5:00 the demo stops','ครบ 5:00 เดโมหยุด','Questions start. Unshown features count as not shown.','เริ่มช่วงถามตอบทันที ฟีเจอร์ที่ยังไม่ได้แสดงถือว่าไม่ได้แสดง')}
+</div>`);
+
+add('How the demo is scored','การให้คะแนนเดโม',`
+${head('Team score · M3 final prototype + demo = 30 points (15% of the course)','Marks are for the Golden Thread, not for a pretty app','คะแนนอยู่ที่ Golden Thread ไม่ใช่ความสวยของแอป','amber')}
+${tbl([['Criterion','เกณฑ์'],['Points','คะแนน'],['Full marks look like','ได้เต็มเมื่อ']],[
+ [['Clickable prototype covers every Must FR','prototype คลิกได้ครบทุก Must FR'],'12',['Every Must-FR happy path is clickable end to end (no real DB), plus an unhappy path (empty or error state)','happy path ของ Must FR ทุกข้อคลิกได้ตั้งแต่ต้นจนจบ (ไม่ต้องมี DB จริง) และมี unhappy path (สถานะว่างหรือ error)']],
+ [['Golden Thread coherence','ความต่อเนื่องของ Golden Thread'],'6',['You can point: this feature = FR-3 = this diagram = this acceptance test','ชี้ได้ว่า ฟีเจอร์นี้ = FR-3 = diagram นี้ = acceptance test นี้']],
+ [['Demo and presentation','เดโมและการนำเสนอ'],'6',['Tells the Problem → Solution story, on time, answers "why" questions','เล่าเรื่องจากปัญหาไปสู่ทางแก้ ตรงเวลา และตอบคำถาม "ทำไม" ได้']],
+ [['Engineering and AI-first process','กระบวนการวิศวกรรมและการใช้ AI'],'6',['Clean repo (prototype + docs inside), README says how to open it, honest AI-Use Statement','repo เรียบร้อย (มี prototype + เอกสาร) README บอกวิธีเปิด และ AI-Use Statement ตามจริง']]
+])}
+<div class="grid g3" style="margin-top:16px">
+ ${card('red','AI-use gate','No AI-Use Statement','ไม่มี AI-Use Statement','M3 capped at 50%.','M3 ได้ไม่เกิน 50%')}
+ ${card('red','Coherence gate','Broken thread','เส้นด้ายขาด','Problem, design and prototype about different things: capped at 50%.','ปัญหา การออกแบบ และ prototype พูดคนละเรื่อง: ได้ไม่เกิน 50%')}
+ ${card('amber','Late or missing','Deadlines matter','กำหนดส่งสำคัญ','Late = half. Not handed in = 0. Heavy gaps = returned for revision.','ส่งช้า = ครึ่งเดียว ไม่ส่ง = 0 ขาดเยอะ = ส่งกลับให้แก้')}
+</div>`);
+
+add('Marking rubric','เกณฑ์ให้คะแนน',`
+${head('Final project marking rubric · M3 = 30 points','What each score level looks like','แต่ละระดับคะแนนหน้าตาเป็นอย่างไร','amber')}
+${tbl([['Criterion','เกณฑ์'],['Strong','ดีมาก'],['Developing','กำลังพัฒนา'],['Weak','อ่อน'],['0','0']],[
+ [['Prototype, Must FRs (12)','Prototype, Must FR (12)'],['10–12: every Must FR clickable, plus an unhappy path','10–12: Must FR คลิกได้ทุกข้อ และมี unhappy path'],['6–9: most Must FRs, or no unhappy path','6–9: ได้เกือบทุก Must FR หรือไม่มี unhappy path'],['1–5: few flows work end to end','1–5: มีไม่กี่ flow ที่ใช้ได้ตั้งแต่ต้นจนจบ'],['Won\'t open','เปิดไม่ได้']],
+ [['Golden Thread (6)','Golden Thread (6)'],['5–6: every Must FR maps to diagram and test','5–6: Must FR ทุกข้อโยงไป diagram และเทสต์'],['3–4: some links missing','3–4: ขาดบางจุด'],['1–2: mostly disconnected','1–2: แทบไม่เชื่อมกัน'],['No table','ไม่มีตาราง']],
+ [['Demo (6)','เดโม (6)'],['5–6: clear story, on time, answers "why"','5–6: เรื่องชัด ตรงเวลา ตอบ "ทำไม" ได้'],['3–4: clear, but weak on "why"','3–4: ชัด แต่ตอบ "ทำไม" ได้ไม่ดี'],['1–2: unclear or incomplete','1–2: ไม่ชัดหรือไม่ครบ'],['No demo','ไม่มีเดโม']],
+ [['Engineering and AI (6)','วิศวกรรมและ AI (6)'],['5–6: clean repo, working README, specific AI-Use Statement','5–6: repo เรียบร้อย README ใช้ได้ AI-Use Statement เจาะจง'],['3–4: complete, but thin','3–4: ครบแต่บาง'],['1–2: items missing or unclear','1–2: ขาดบางส่วนหรือไม่ชัด'],['Nothing usable','ไม่มีอะไรใช้ได้']]
+])}
+<p class="hint">${L('Then apply: no AI-Use Statement or broken thread = capped at 50%; late = half; contribution factor per person.','จากนั้นใช้กฎ: ไม่มี AI-Use Statement หรือเส้นด้ายขาด = ไม่เกิน 50% · ส่งช้า = ครึ่งเดียว · คูณตัวคูณการมีส่วนร่วมรายคน')}</p>`);
+
+add('How the oral exam is scored','การให้คะแนนสอบปากเปล่า',`
+${head('Individual score · Oral exam = 4 criteria × 0–5 = 20, scaled to 10%','Explain your own part, and how you used AI','อธิบายส่วนที่ตัวเองทำ และวิธีที่ใช้ AI','amber')}
+${tbl([['Criterion','เกณฑ์'],['5 Strong','5 ดีมาก'],['3 OK','3 พอใช้'],['1 Weak','1 อ่อน'],['0','0']],[
+ [['Understands the concept','เข้าใจแนวคิด'],['Explains clearly, correct','อธิบายชัดและถูกต้อง'],['Mostly correct','ถูกเป็นส่วนใหญ่'],['Confused','สับสน'],['No idea','ไม่รู้เลย']],
+ [['Can explain own work','อธิบายงานตัวเองได้'],['Owns it, in detail','เป็นเจ้าของงาน อธิบายละเอียด'],['Partial','ได้บางส่วน'],['Shaky','ไม่มั่นคง'],['Can\'t','อธิบายไม่ได้']],
+ [['AI use: transparent and critical','การใช้ AI: โปร่งใสและคิดวิเคราะห์'],['What AI did, what you changed, and why','AI ทำอะไร เราแก้อะไร และเพราะอะไร'],['Some awareness','รู้ตัวบ้าง'],['"AI did it"','"AI ทำ"'],['Hides or denies','ปิดบังหรือปฏิเสธ']],
+ [['Communication','การสื่อสาร'],['Clear, confident','ชัดเจน มั่นใจ'],['Adequate','พอใช้'],['Unclear','ไม่ชัด'],['None','ไม่สื่อสาร']]
+])}
+<div class="grid g2" style="margin-top:16px">
+ ${card('red','Red flag','Can\'t explain your own part','อธิบายส่วนของตัวเองไม่ได้','"Can explain own work" = 0, and it is noted as possible undisclosed AI use or free-riding.','"อธิบายงานตัวเองได้" = 0 และถูกบันทึกว่าอาจใช้ AI โดยไม่เปิดเผย หรือไม่ได้ช่วยงาน')}
+ ${card('blue','Sample questions','Practise these','ลองฝึกตอบ','Pick one feature: which problem, which FR, which test proves it? Walk me through your part. Where did you use AI, and what did you change? What would break if this input changed?','เลือกหนึ่งฟีเจอร์: แก้ปัญหาอะไร FR ข้อไหน เทสต์ไหนพิสูจน์? เล่าส่วนที่ทำให้ฟัง ใช้ AI ตรงไหนและแก้อะไร? ถ้า input นี้เปลี่ยน อะไรจะพัง?')}
+</div>`);
+
+add('Individual contribution','การมีส่วนร่วมรายบุคคล',`
+${head('Project mark = team score × contribution factor (GitHub only, no peer review)','Start at 1.00; it only goes down, with evidence','เริ่มที่ 1.00 และลดลงได้เฉพาะเมื่อมีหลักฐาน','amber')}
+<div class="grid g3">
+ ${card('green','1.00 · Normal','Most students','นักศึกษาส่วนใหญ่','Visible work in the repo matching your role in the Team Charter.','มีงานให้เห็นใน repo ตรงกับบทบาทใน Team Charter')}
+ ${card('amber','0.70 · Partial','Thin or last-minute','น้อยหรือทำตอนท้าย','Thin or last-minute GitHub work, after a chance to explain.','งานบน GitHub น้อยหรือทำตอนใกล้ส่ง หลังได้โอกาสชี้แจงแล้ว')}
+ ${card('red','0.40 · Barely any','No verifiable work','ไม่มีงานที่ตรวจสอบได้','No verifiable work in the repo across the project.','ไม่มีงานที่ตรวจสอบได้ใน repo ตลอดทั้งโปรเจกต์')}
+</div>
+<h3 style="margin-top:20px">${L('A factor is lowered only when both are true','ตัวคูณจะลดลงเมื่อเป็นจริงทั้งสองข้อเท่านั้น')}</h3>
+${steps([
+ ['<b>GitHub shows little or no work</b>: commits, PRs, issues, committed docs, diagrams, prototype. Judged on meaning, not commit count.','<b>GitHub แสดงงานน้อยหรือไม่มีเลย</b>: commit, PR, issue, เอกสาร, diagram, prototype ดูที่สาระ ไม่ใช่จำนวน commit'],
+ ['<b>You saw the evidence and had 3 days to explain.</b> Non-code work (design, docs, PM, testing) must be pointable in the repo.','<b>ได้เห็นหลักฐานและมีเวลา 3 วันในการชี้แจง</b> งานที่ไม่ใช่โค้ด (ออกแบบ เอกสาร PM เทสต์) ต้องชี้ให้เห็นได้ใน repo']
+])}
+${box('green','Open your repo: <b>Insights → Contributors</b>. If your work is not there under your own account, it does not count.',
+ 'เปิด repo ของทีม: <b>Insights → Contributors</b> ถ้างานของเราไม่ได้อยู่ในบัญชีของเราเอง จะไม่นับ','Do it now','ทำเลยตอนนี้')}`);
+
+add('Exam review','ทบทวนก่อนสอบ',`
+${head('Exam review · Ch10 on one page','What the final exam can ask from Ch10','ข้อสอบปลายภาคถามอะไรได้บ้างจาก Ch10','violet')}
+<div class="grid g2">
+ <div class="card blue"><div class="tag">Ethics &amp; data · จริยธรรมและข้อมูล</div>${pts([
+  ['<b>Code:</b> ACM/IEEE-CS, 8 principles: Public, Client &amp; employer, Product, Judgment, Management, Profession, Colleagues, Self. Public comes first; Principle 2 is within the public interest.','<b>จรรยาบรรณ:</b> ACM/IEEE-CS 8 ข้อ: สาธารณะ ลูกค้าและนายจ้าง ผลิตภัณฑ์ วิจารณญาณ การบริหาร วิชาชีพ เพื่อนร่วมงาน ตนเอง สาธารณะมาก่อน ข้อ 2 อยู่ภายใต้ประโยชน์สาธารณะ'],
+  ['<b>Three levels:</b> aspire, expect, demand. Not an algorithm: ask who is affected, and how the least empowered fare.','<b>สามระดับ:</b> aspire, expect, demand ไม่ใช่สูตรสำเร็จ: ถามว่าใครได้รับผล และคนที่มีอำนาจน้อยที่สุดเป็นอย่างไร'],
+  ['<b>Everyday (§1.2):</b> confidentiality, competence, IP rights, computer misuse.','<b>ประเด็นประจำ (§1.2):</b> ความลับ ความสามารถ ทรัพย์สินทางปัญญา การใช้คอมพิวเตอร์ในทางผิด'],
+  ['<b>Data:</b> can vs should: minimise, protect, be transparent.','<b>ข้อมูล:</b> ทำได้ vs ควรทำ: เก็บให้น้อย ปกป้อง โปร่งใส']
+ ])}</div>
+ <div class="card red"><div class="tag">AI &amp; practice · AI และการปฏิบัติ</div>${pts([
+  ['<b>AI:</b> human sign-off, disclose use, watch for bias; never paste private data; "the AI said so" is not a defence.','<b>AI:</b> ให้คนอนุมัติ เปิดเผยการใช้ ระวังอคติ ห้ามวางข้อมูลส่วนตัว "AI บอกมา" ไม่ใช่ข้อแก้ตัว'],
+  ['<b>Habits:</b> communicate, commit, feedback, document.','<b>นิสัย:</b> สื่อสาร รักษาคำพูด feedback เขียนเอกสาร'],
+  ['<b>Tools:</b> IDE, Git/GitHub, tests; CI runs the tests automatically on every push; deploy.','<b>เครื่องมือ:</b> IDE, Git/GitHub, เทสต์ · CI รันเทสต์อัตโนมัติทุกครั้งที่ push · deploy']
+ ],'red')}</div>
+</div>
+${box('amber','Final exam: Ch1 to Ch10, English MCQ (4 options) + short answer. You will be asked to <b>explain</b>, <b>choose</b> or <b>classify</b>.',
+ 'สอบปลายภาค: Ch1–Ch10 ข้อสอบภาษาอังกฤษ ปรนัย 4 ตัวเลือก + เขียนตอบสั้น จะถูกถามให้<b>อธิบาย</b> <b>เลือก</b> หรือ<b>จำแนก</b>','Format','รูปแบบข้อสอบ')}`);
+
+/* ---------- exam ---------- */
+const Q=[
+ ['In the ACM/IEEE-CS Software Engineering Code of Ethics, which principle comes first?','ในจรรยาบรรณวิศวกรรมซอฟต์แวร์ ACM/IEEE-CS หลักการข้อไหนมาเป็นอันดับแรก?',
+  [['Client and employer','ลูกค้าและนายจ้าง'],['Product','ผลิตภัณฑ์'],['Public','สาธารณะ'],['Self','ตนเอง']],2,
+  'Public comes first. Principle 2 (client &amp; employer) only applies within the public interest.','สาธารณะมาก่อน ข้อ 2 (ลูกค้าและนายจ้าง) ใช้ได้ภายใต้ประโยชน์สาธารณะเท่านั้น'],
+ ['A study-reminder prototype asks every user for their national ID number. Which data-ethics principle does this break most directly?','prototype แอปเตือนอ่านหนังสือขอเลขบัตรประชาชนจากผู้ใช้ทุกคน ละเมิดหลักจริยธรรมข้อมูลข้อไหนโดยตรงที่สุด?',
+  [['Transparency','ความโปร่งใส'],['Data minimisation','การเก็บข้อมูลให้น้อยที่สุด'],['Competence','ความสามารถ'],['Intellectual property','ทรัพย์สินทางปัญญา']],1,
+  'A reminder does not need a national ID: collect only what the feature truly needs.','การเตือนไม่ต้องใช้เลขบัตรประชาชน: เก็บเฉพาะที่ฟีเจอร์จำเป็นจริง ๆ'],
+ ['A bug in AI-generated code exposes users\' data after release. Who is accountable?','บั๊กในโค้ดที่ AI สร้างทำให้ข้อมูลผู้ใช้รั่วหลังปล่อย ใครต้องรับผิดชอบ?',
+  [['The company that trained the AI model','บริษัทที่ฝึกโมเดล AI'],['No one, because the code was generated automatically','ไม่มีใคร เพราะโค้ดถูกสร้างอัตโนมัติ'],['The engineers who reviewed and shipped the code','วิศวกรที่รีวิวและปล่อยโค้ดนั้น'],['The user who reported the bug','ผู้ใช้ที่รายงานบั๊ก']],2,
+  'A person stays accountable. If you shipped it, you own it.','คนยังต้องรับผิดชอบ ถ้าเราปล่อยออกไป เราเป็นเจ้าของ'],
+ ['What does Continuous Integration (CI) do?','Continuous Integration (CI) ทำอะไร?',
+  [['It writes the unit tests for you','เขียน unit test ให้'],['It runs the tests automatically on every push','รันเทสต์อัตโนมัติทุกครั้งที่ push'],['It deploys the system once, at the end of the project','deploy ระบบครั้งเดียวตอนจบโปรเจกต์'],['It replaces code review','แทนที่การรีวิวโค้ด']],1,
+  'CI is a tireless teammate that re-runs every test on each push.','CI คือเพื่อนร่วมทีมที่รันเทสต์ทั้งหมดใหม่ทุกครั้งที่ push'],
+ ['You sign a test report saying all tests passed, but you never ran them. Which principle does this break?','เราลงชื่อในรายงานว่าเทสต์ผ่านทั้งหมด แต่ไม่เคยรัน ละเมิดหลักการข้อไหน?',
+  [['Judgment','วิจารณญาณ'],['Self','ตนเอง'],['Management','การบริหาร'],['Colleagues','เพื่อนร่วมงาน']],0,
+  'Principle 4 Judgment: sign only documents you believe are true.','ข้อ 4 วิจารณญาณ: ลงชื่อเฉพาะเอกสารที่เชื่อว่าเป็นความจริง'],
+ ['You paste code from a GitHub repo with no licence into your product. Which everyday issue is this?','เราก๊อปโค้ดจาก GitHub repo ที่ไม่มีไลเซนส์มาใส่ในผลิตภัณฑ์ เป็นประเด็นไหน?',
+  [['Confidentiality','การรักษาความลับ'],['Competence','ความสามารถ'],['IP rights','ทรัพย์สินทางปัญญา'],['Computer misuse','การใช้คอมพิวเตอร์ในทางผิด']],2,
+  'No licence means no permission: respect copyright and licences.','ไม่มีไลเซนส์ = ไม่ได้รับอนุญาต ต้องเคารพลิขสิทธิ์และไลเซนส์'],
+ ['Which statement about the ACM/IEEE Code is correct?','ข้อใดถูกต้องเกี่ยวกับจรรยาบรรณ ACM/IEEE?',
+  [['It is a national law with fines','เป็นกฎหมายระดับประเทศที่มีค่าปรับ'],['It is an algorithm that gives one right answer','เป็นอัลกอริทึมที่ให้คำตอบถูกเพียงข้อเดียว'],['It applies only to managers','ใช้กับผู้จัดการเท่านั้น'],['It is guidance for professionals, including students; it is not a law','เป็นแนวทางสำหรับมืออาชีพ รวมถึงนักศึกษา และไม่ใช่กฎหมาย']],3,
+  'It educates, inspires and informs. It covers students too, and gives a way to judge, not an automatic answer.','ให้ความรู้ สร้างแรงบันดาลใจ บอกให้รู้ ครอบคลุมนักศึกษาด้วย และให้วิธีตัดสินใจ ไม่ใช่คำตอบอัตโนมัติ'],
+ ['Which is the most responsible way to use AI for test data?','ข้อใดคือวิธีใช้ AI สร้างข้อมูลทดสอบที่รับผิดชอบที่สุด?',
+  [['Paste a real clinic\'s patient list and ask it to clean it up','วางรายชื่อคนไข้จริงของคลินิกแล้วให้ AI จัดให้'],['Ask for made-up data, then check it before using it','ขอข้อมูลสมมติ แล้วตรวจก่อนนำไปใช้'],['Use whatever the AI gives without reading it','ใช้สิ่งที่ AI ให้มาเลยโดยไม่อ่าน'],['Hide that AI was used in the AI-Use Statement','ปิดบังใน AI-Use Statement ว่าใช้ AI']],1,
+  'Never put real personal data in a prompt; a person still checks the output.','ห้ามใส่ข้อมูลส่วนบุคคลจริงใน prompt และคนยังต้องตรวจผลลัพธ์'],
+ ['AI-written login code contains <code>if password == "dev-2569": return True</code>. All tests pass. What is it?','โค้ดล็อกอินที่ AI เขียนมี <code>if password == "dev-2569": return True</code> และเทสต์ผ่านหมด สิ่งนี้คืออะไร?',
+  [['A backdoor: a hidden way in that bypasses normal login','backdoor: ทางเข้าลับที่ข้ามการล็อกอินปกติ'],['A harmless test helper','ตัวช่วยเทสต์ที่ไม่มีอันตราย'],['A performance optimisation','การปรับประสิทธิภาพ'],['An acceptance criterion','acceptance criterion']],0,
+  'Tests check what should work, not extra ways in. Remove it, tell the team, re-test.','เทสต์ตรวจสิ่งที่ควรทำงาน ไม่ได้ตรวจทางเข้าเพิ่ม ให้ลบ บอกทีม แล้วทดสอบใหม่'],
+ ['Your team installed a tool update that later turned out to carry a backdoor. What should you do first?','ทีมติดตั้งอัปเดตเครื่องมือที่ภายหลังพบว่ามี backdoor ควรทำอะไรก่อน?',
+  [['Nothing, the tool was official','ไม่ต้องทำอะไร เพราะเป็นเครื่องมือทางการ'],['Just uninstall it and move on','แค่ถอนการติดตั้งแล้วทำงานต่อ'],['Report it, follow the vendor\'s notice, check SSH keys and tunnels, rotate credentials','รายงาน ทำตามประกาศผู้ให้บริการ ตรวจ SSH key และ tunnel เปลี่ยน credential'],['Blame the vendor in the report','โทษผู้ให้บริการในรายงาน']],2,
+  'Uninstalling alone may not be enough, and "it was official" does not remove your team\'s accountability.','แค่ถอนการติดตั้งอาจไม่พอ และ "เป็นของทางการ" ไม่ได้ลบความรับผิดชอบของทีม'],
+ ['Which of the four everyday issues (Sommerville §1.2) is "taking on a job beyond your skill"?','ประเด็นไหนใน 4 ข้อ (Sommerville §1.2) คือ "รับงานที่เกินความสามารถ"?',
+  [['Confidentiality','การรักษาความลับ'],['Competence','ความสามารถ'],['IP rights','ทรัพย์สินทางปัญญา'],['Computer misuse','การใช้คอมพิวเตอร์ในทางผิด']],1,
+  'Competence: don\'t misrepresent your skill or take on work beyond it.','ความสามารถ: ไม่อ้างเกินจริงและไม่รับงานที่เกินความสามารถ'],
+ ['"Security is the how; data ethics is the ___."','"ความปลอดภัยคือ how ส่วนจริยธรรมข้อมูลคือ ___"',
+  [['when','when'],['where','where'],['whether','whether'],['who','who']],2,
+  'Data ethics asks whether we should collect the data at all.','จริยธรรมข้อมูลถามว่าเราควรเก็บข้อมูลนั้นหรือไม่ตั้งแต่แรก']
+];
+const LET='ABCD';
+Q.forEach(q=>{const right=q[2][q[3]];const o=q[2].slice();
+  for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]];}
+  q[2]=o;q[3]=o.indexOf(right);});
+add('Exam practice','ฝึกทำข้อสอบ',`
+<p class="kicker violet">Exam practice · ${Q.length} questions + 2 written</p>
+<h2>${L('Test yourself','ทดสอบตัวเอง')}</h2>
+${P('Q1–Q4 are the in-class practice questions. Tap an answer to see right away if it is correct, with a short explanation.','ข้อ 1–4 คือข้อฝึกในห้องเรียน แตะเลือกคำตอบแล้วจะรู้ทันทีว่าถูกหรือผิด พร้อมคำอธิบายสั้น ๆ')}
+<div class="scorebar"><span class="s" id="qscore">0 / ${Q.length}</span><span id="qleft" style="color:var(--muted);font-size:15px"></span><button class="btn ghost" id="qreset">${L('Start again','เริ่มใหม่')}</button></div>
+<div id="quiz">${Q.map((q,i)=>`<div class="q" data-i="${i}">
+  <div class="qn">Q${i+1}</div><div class="qt">${L(q[0],q[1])}</div>
+  <div class="opts">${q[2].map((o,j)=>`<button class="opt" data-j="${j}"><span class="l">${LET[j]}</span><span>${L(o[0],o[1])}</span></button>`).join('')}</div>
+  <div class="why">${L(q[4],q[5])}</div></div>`).join('')}</div>
+<h3 style="margin-top:28px">${L('Written practice','ฝึกเขียนตอบ')}</h3>
+<details class="sa"><summary>${L('W1. Your manager wants to ship on Friday, but a bug can leak users\' data. Use the Code to explain what you should do.','W1. ผู้จัดการอยากปล่อยวันศุกร์ แต่มีบั๊กที่ทำให้ข้อมูลผู้ใช้รั่ว ใช้จรรยาบรรณอธิบายว่าควรทำอย่างไร')}</summary>
+${P('Principle 1 (Public) comes first, and Principle 2 (serve your employer) only applies within the public interest. Every user whose data can leak is affected, and they are the least empowered: they cannot protect themselves. A well-informed public would not accept "we knew, but the deadline came first." So I report the risk to the manager in writing, and we delay the release or fix the bug first.',
+ 'หลักการข้อ 1 (สาธารณะ) มาก่อน และข้อ 2 (รับใช้นายจ้าง) ใช้ได้ภายใต้ประโยชน์สาธารณะเท่านั้น ผู้ใช้ทุกคนที่ข้อมูลอาจรั่วได้รับผลกระทบ และเป็นกลุ่มที่มีอำนาจน้อยที่สุดเพราะปกป้องตัวเองไม่ได้ สาธารณะที่รู้ข้อมูลครบจะไม่ยอมรับคำว่า "เรารู้ แต่ deadline มาก่อน" ดังนั้นเราต้องรายงานความเสี่ยงให้ผู้จัดการเป็นลายลักษณ์อักษร แล้วเลื่อนการปล่อยหรือแก้บั๊กก่อน')}</details>
+<details class="sa"><summary>${L('W2. Give two DOs and two DON\'Ts for responsible AI use in a team project.','W2. ยกตัวอย่างสิ่งที่ควรทำ 2 ข้อ และไม่ควรทำ 2 ข้อ ในการใช้ AI อย่างรับผิดชอบในโปรเจกต์ทีม')}</summary>
+${P('<b>DO:</b> keep a human sign-off (read, test and approve AI output); disclose where AI was used in the AI-Use Statement. <b>DON\'T:</b> paste real personal data or secrets into prompts; say "the AI caused it" to avoid responsibility for a bug you shipped.',
+ '<b>ควรทำ:</b> ให้คนเป็นผู้อนุมัติ (อ่าน ทดสอบ และรับรองผลจาก AI) และเปิดเผยใน AI-Use Statement ว่าใช้ AI ตรงไหน · <b>ไม่ควรทำ:</b> วางข้อมูลส่วนบุคคลจริงหรือรหัสลับลงใน prompt และอ้างว่า "AI เป็นต้นเหตุ" เพื่อหนีความรับผิดชอบต่อบั๊กที่เราปล่อยออกไป')}</details>`);
+
+/* ---------- vocab ---------- */
+const V=[
+ ['Ethics','จริยธรรม','Principles of right and wrong that guide what we do.','หลักความถูกผิดที่ชี้นำการกระทำ','Ethics'],
+ ['Code of ethics','จรรยาบรรณ','A written standard of what a profession expects of its members.','มาตรฐานที่เขียนไว้ว่าวิชาชีพคาดหวังอะไรจากสมาชิก','Ethics','ACM/IEEE-CS SE Code (1999)'],
+ ['Profession','วิชาชีพ','Work that holds power over people and promises to use it well.','งานที่มีอำนาจต่อผู้คน และสัญญาว่าจะใช้อำนาจนั้นอย่างดี','Ethics'],
+ ['Public interest','ประโยชน์สาธารณะ','The health, safety and welfare of everyone affected.','สุขภาพ ความปลอดภัย และสวัสดิภาพของทุกคนที่ได้รับผล','Ethics','Principle 1 comes first'],
+ ['Accountability','ความรับผิดชอบ (ต่อผลที่เกิด)','Being the one who must answer for a result.','การเป็นผู้ที่ต้องตอบคำถามและรับผลของสิ่งที่เกิดขึ้น','Ethics','"The AI said so" is not a defence'],
+ ['Integrity','ความซื่อตรง / ความน่าเชื่อถือ','Being honest and consistent; keeping a profession trustworthy.','ซื่อสัตย์และคงเส้นคงวา ทำให้วิชาชีพน่าเชื่อถือ','Ethics'],
+ ['Conflict of interest','ผลประโยชน์ทับซ้อน','When personal gain could bias your professional judgment.','เมื่อประโยชน์ส่วนตัวอาจทำให้การตัดสินใจทางวิชาชีพลำเอียง','Ethics'],
+ ['Bribery','การติดสินบน','Offering or taking something to influence a decision.','การให้หรือรับสิ่งของเพื่อชักจูงการตัดสินใจ','Ethics'],
+ ['Aspire / Expect / Demand','ใฝ่ถึง / คาดหวัง / บังคับ','The three levels of obligation in the Code.','สามระดับของหน้าที่ในจรรยาบรรณ','Ethics'],
+ ['Least empowered','ผู้ที่มีอำนาจน้อยที่สุด','People with the least power to complain or protect themselves.','คนที่แทบไม่มีกำลังร้องเรียนหรือปกป้องตัวเอง','Ethics'],
+ ['Confidentiality','การรักษาความลับ','Respecting an employer\'s or client\'s private information.','เคารพข้อมูลส่วนตัวของนายจ้างหรือลูกค้า','Issues'],
+ ['Competence','ความสามารถ','Only claiming and taking on work you can really do.','อ้างและรับเฉพาะงานที่ทำได้จริง','Issues'],
+ ['Intellectual property (IP)','ทรัพย์สินทางปัญญา','Creations protected by patents, copyright and licences.','ผลงานที่คุ้มครองด้วยสิทธิบัตร ลิขสิทธิ์ และไลเซนส์','Issues'],
+ ['Licence','สัญญาอนุญาต (ไลเซนส์)','Permission that says how you may use someone\'s code.','การอนุญาตที่บอกว่าเราใช้โค้ดของคนอื่นได้อย่างไร','Issues','No licence = no permission'],
+ ['Computer misuse','การใช้คอมพิวเตอร์ในทางที่ผิด','Using skills to harm or disrupt others\' systems.','ใช้ทักษะทำร้ายหรือรบกวนระบบของคนอื่น','Issues'],
+ ['Data minimisation','การเก็บข้อมูลให้น้อยที่สุด','Collect only the data a feature truly needs.','เก็บเฉพาะข้อมูลที่ฟีเจอร์จำเป็นจริง ๆ','Data'],
+ ['Transparency','ความโปร่งใส','Telling people clearly what you do and why.','บอกผู้คนอย่างชัดเจนว่าเราทำอะไรและทำไม','Data'],
+ ['Privacy notice','ประกาศความเป็นส่วนตัว','A plain-language statement of what data is collected and how it is used.','ข้อความภาษาง่ายที่บอกว่าเก็บข้อมูลอะไรและใช้อย่างไร','Data'],
+ ['PDPA','พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล','Thailand\'s Personal Data Protection Act B.E. 2562 (2019).','พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562','Data'],
+ ['Bias','อคติ','A systematic unfairness, e.g. AI reflecting skewed training data.','ความไม่เป็นธรรมอย่างเป็นระบบ เช่น AI สะท้อนข้อมูลฝึกที่เอนเอียง','AI'],
+ ['Human sign-off','การอนุมัติโดยมนุษย์','A person reads, tests and approves before anything ships.','คนอ่าน ทดสอบ และอนุมัติก่อนปล่อยงาน','AI'],
+ ['AI-Use Statement','คำชี้แจงการใช้ AI','The team\'s honest record of where and how AI was used.','บันทึกตามจริงของทีมว่าใช้ AI ที่ไหนและอย่างไร','AI','Missing = M3 capped at 50%'],
+ ['Backdoor','ประตูหลัง (ทางเข้าลับ)','A hidden way in that bypasses normal login.','ทางเข้าลับที่ข้ามการล็อกอินปกติ','Security'],
+ ['Supply chain','ห่วงโซ่อุปทานซอฟต์แวร์','All the tools, packages and models your software depends on.','เครื่องมือ แพ็กเกจ และโมเดลทั้งหมดที่ซอฟต์แวร์ของเราพึ่งพา','Security'],
+ ['Credential','ข้อมูลยืนยันตัวตน','A password, token or key that proves who you are.','รหัสผ่าน token หรือ key ที่พิสูจน์ว่าเราเป็นใคร','Security','Rotate after a breach'],
+ ['Trigger','ตัวกระตุ้น','A special input that makes a backdoored model change behaviour.','input พิเศษที่ทำให้โมเดลที่มี backdoor เปลี่ยนพฤติกรรม','Security'],
+ ['Sandbox','แซนด์บ็อกซ์','An isolated space where code runs without reaching the real system or network.','พื้นที่แยกที่รันโค้ดโดยไม่แตะระบบจริงหรือเน็ตเวิร์ก','Security'],
+ ['Least privilege','สิทธิ์น้อยที่สุด','Give a tool or person only the access they need.','ให้เครื่องมือหรือคนมีสิทธิ์เท่าที่จำเป็นเท่านั้น','Security'],
+ ['IDE','สภาพแวดล้อมการพัฒนาแบบรวม','The editor where you write, run and debug code.','โปรแกรมที่ใช้เขียน รัน และดีบักโค้ด','Tools','VS Code'],
+ ['Version control','การควบคุมเวอร์ชัน','Tracking every change to code so you can review or undo it.','บันทึกทุกการเปลี่ยนแปลงของโค้ด เพื่อรีวิวหรือย้อนกลับได้','Tools','Git / GitHub'],
+ ['Continuous Integration (CI)','การรวมโค้ดอย่างต่อเนื่อง','A service that runs the tests automatically on every push.','บริการที่รันเทสต์อัตโนมัติทุกครั้งที่ push','Tools'],
+ ['Deploy','การนำขึ้นใช้งาน','Putting the software where users can try it.','นำซอฟต์แวร์ไปไว้ในที่ที่ผู้ใช้ลองใช้ได้','Tools','GitHub Pages'],
+ ['Contribution factor','ตัวคูณการมีส่วนร่วม','Multiplier (1.00 / 0.70 / 0.40) on the team score, based on GitHub evidence.','ตัวคูณ (1.00 / 0.70 / 0.40) ของคะแนนทีม ตามหลักฐานบน GitHub','Project'],
+ ['Golden Thread','เส้นด้ายทองคำ','The link from problem → FR → design → test → prototype.','ความเชื่อมโยงจากปัญหา → FR → การออกแบบ → เทสต์ → prototype','Project','this screen = FR-3 = this test']
+];
+add('Vocabulary','คำศัพท์',`
+<p class="kicker violet">Vocabulary · ${V.length} words you should know</p>
+<h2>${L('Vocabulary you should know','คำศัพท์ที่ควรรู้')}</h2>
+<input class="vsearch" id="vq" type="search" placeholder="Search · ค้นหา (e.g. backdoor, ความลับ)" aria-label="Search vocabulary">
+<div class="vgrid" id="vgrid">${V.map(v=>`<div class="v" data-s="${(v[0]+' '+v[1]+' '+v[2]+' '+v[3]).toLowerCase().replace(/"/g,'')}">
+ <span class="cat">${v[4]}</span><div class="term">${v[0]}</div><div class="thw">${v[1]}</div>
+ <div class="mean">${L(v[2],v[3])}</div>${v[5]?`<div class="ex">e.g. ${v[5]}</div>`:''}</div>`).join('')}</div>
+<p id="vnone" class="hint" style="display:none">${L('No matching words.','ไม่พบคำที่ค้นหา')}</p>`);
+
+add('References','แหล่งอ้างอิง',`
+${head('References','Where this lesson comes from','แหล่งที่มาของบทเรียนนี้')}
+${steps([
+ ['<b>Sommerville, I. (2011)</b> Software Engineering 9e, §1.2 Software engineering ethics: confidentiality, competence, IP, misuse; Fig 1.3 the ACM/IEEE Code.','<b>Sommerville, I. (2011)</b> Software Engineering 9e §1.2 จริยธรรมวิศวกรรมซอฟต์แวร์ และ Fig 1.3 จรรยาบรรณ ACM/IEEE'],
+ ['<b>ACM/IEEE-CS Code of Ethics (1999)</b>: Gotterbarn, Miller &amp; Rogerson, draft in Comm. ACM 40(11), 1997; version 5.2 approved 1999. Eight principles, three levels of obligation.','<b>จรรยาบรรณ ACM/IEEE-CS (1999)</b>: Gotterbarn, Miller &amp; Rogerson ร่างใน Comm. ACM 40(11) ปี 1997 อนุมัติเวอร์ชัน 5.2 ปี 1999 หลักการ 8 ข้อ หน้าที่ 3 ระดับ'],
+ ['<b>Leveson &amp; Turner (1993)</b> An investigation of the Therac-25 accidents: accountability and safety, IEEE Computer 26(7).','<b>Leveson &amp; Turner (1993)</b> การสอบสวนอุบัติเหตุ Therac-25: ความรับผิดชอบและความปลอดภัย IEEE Computer 26(7)'],
+ ['<b>US EPA (2015)</b> Volkswagen defeat-device notice: dishonest code written to cheat an emissions test.','<b>US EPA (2015)</b> ประกาศเรื่อง defeat device ของ Volkswagen: โค้ดที่เขียนขึ้นเพื่อโกงการทดสอบไอเสีย'],
+ ['<b>PDPA B.E. 2562 (2019)</b>: the data-protection duty behind "collect the minimum, be transparent."','<b>พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562</b>: หน้าที่คุ้มครองข้อมูลที่อยู่เบื้องหลัง "เก็บให้น้อย และโปร่งใส"'],
+ ['<b>Case study sources</b>: Cursor security notice; Microsoft Security Blog (30 Oct 2026); SafeDep, October 2026 Security Incident Review; Help Net Security (22 Oct 2026).','<b>แหล่งข้อมูลกรณีศึกษา</b>: ประกาศความปลอดภัยของ Cursor; Microsoft Security Blog (30 ต.ค. 2026); SafeDep; Help Net Security (22 ต.ค. 2026)']
+])}
+<p class="hint">${L('Before the final exam: read the eight principles and Sommerville §1.2. Your AI-Use Statement is Principle 4 (honest judgment) in practice. Original handout: <a href="week11-ethics-practice.pdf">week11-ethics-practice.pdf</a>.','ก่อนสอบปลายภาค: อ่านหลักการ 8 ข้อ และ Sommerville §1.2 · AI-Use Statement ของเราคือหลักการข้อ 4 (วิจารณญาณที่ซื่อตรง) ในทางปฏิบัติ · เอกสารต้นฉบับ: <a href="week11-ethics-practice.pdf">week11-ethics-practice.pdf</a>')}</p>`);
+
+add("What's next",'ต่อไปคืออะไร',`
+${head("That's Ch10, and the last content class",'Next: demo, oral exam, final exam','ต่อไป: เดโม สอบปากเปล่า และสอบปลายภาค','green')}
+<div class="grid g2">
+ ${card('blue','Critique papers','8 sheets this term','เทอมนี้ 8 แผ่น','No Critique today. You started by spotting AI mistakes and finished by asking your own questions.','วันนี้ไม่มี Critique เราเริ่มจากการจับผิด AI และจบด้วยการตั้งคำถามของตัวเอง')}
+ ${card('green','Team deliverables','Final Report + AI-Use Statement','Final Report + AI-Use Statement','Due date to be confirmed. Golden Thread table, demo slides, repo frozen. Commit from your own account.','กำหนดส่งจะแจ้งอีกครั้ง มีตาราง Golden Thread สไลด์เดโม และ repo ถูกล็อก commit จากบัญชีของตัวเอง')}
+ ${card('amber','Demo + oral exam','Group A Mon 9 Nov · Group B Mon 16 Nov','Group A จันทร์ 9 พ.ย. · Group B จันทร์ 16 พ.ย.','12:00–14:50, 12 minutes per team. Re-read your team\'s AI-Use Statement first.','12:00–14:50 ทีมละ 12 นาที อ่าน AI-Use Statement ของทีมอีกรอบก่อน')}
+ ${card('red','Final exam','23 Nov to 4 Dec','23 พ.ย. ถึง 4 ธ.ค.','Ch1 to Ch10, English MCQ + short answer. The Ch10 self-study handbook is posted in Classroom.','Ch1–Ch10 ข้อสอบภาษาอังกฤษ ปรนัย + เขียนตอบสั้น คู่มืออ่านเอง Ch10 อยู่ใน Classroom')}
+</div>
+<div class="dots" aria-hidden="true"><i style="background:#2f5bff"></i><i style="background:#15995a"></i><i style="background:#e5483a"></i><i style="background:#ffc23a"></i></div>`);
+
+/* ---------- render ---------- */
+const stage=document.getElementById('stage');
+stage.innerHTML=S.map((s,i)=>`<section class="slide" aria-roledescription="slide" aria-label="${i+1} of ${S.length}"><div class="inner">${s.html}</div></section>`).join('');
+const slides=[...stage.querySelectorAll('.slide')];
+const root=document.documentElement;
+let cur=0;
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+function show(i){
+  i=Math.max(0,Math.min(S.length-1,i));
+  slides[cur].classList.remove('on'); cur=i; slides[cur].classList.add('on'); slides[cur].scrollTop=0;
+  document.getElementById('num').textContent=`${cur+1} / ${S.length}`;
+  document.getElementById('ttl').innerHTML=L(S[cur].en,S[cur].th);
+  document.getElementById('bar').style.width=((cur+1)/S.length*100)+'%';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===S.length-1;
+  history.replaceState(null,'','#'+(cur+1));
+  store.set('w11-slide',cur);
+  renderMenu();
+}
+document.getElementById('prev').onclick=()=>show(cur-1);
+document.getElementById('next').onclick=()=>show(cur+1);
+document.addEventListener('keydown',e=>{
+  if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown')show(cur+1);
+  else if(e.key==='ArrowLeft'||e.key==='PageUp')show(cur-1);
+  else if(e.key==='Escape')menu.classList.remove('on');
+});
+let tx=0,ty=0,skip=false;
+stage.addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY;skip=!!e.target.closest('pre,.scroll-x,input,svg');},{passive:true});
+stage.addEventListener('touchend',e=>{if(skip)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;
+  if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.6)show(cur+(dx<0?1:-1));},{passive:true});
+
+/* menu */
+const menu=document.getElementById('menu'),menuList=document.getElementById('menuList');
+function renderMenu(){menuList.innerHTML=S.map((s,i)=>`<li><button class="${i===cur?'cur':''}" data-i="${i}"><span class="n">${i+1}</span><span>${L(s.en,s.th)}</span></button></li>`).join('');}
+menuList.onclick=e=>{const b=e.target.closest('button');if(b){show(+b.dataset.i);menu.classList.remove('on');}};
+document.getElementById('menuBtn').onclick=()=>menu.classList.add('on');
+document.getElementById('menuClose').onclick=()=>menu.classList.remove('on');
+menu.onclick=e=>{if(e.target===menu)menu.classList.remove('on');};
+
+/* language */
+const segBtns=document.querySelectorAll('.seg button');
+function setMode(m){root.dataset.mode=m;root.lang=m==='th'?'th':'en';segBtns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.m===m)));store.set('w11-lang',m);}
+segBtns.forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+const savedLang=store.get('w11-lang'); if(savedLang)setMode(savedLang);
+
+/* quiz */
+const quiz=document.getElementById('quiz');
+function updScore(){
+  const done=quiz.querySelectorAll('.q.done').length, right=quiz.querySelectorAll('.opt.right.picked').length;
+  document.getElementById('qscore').textContent=`${right} / ${Q.length}`;
+  document.getElementById('qleft').innerHTML=done<Q.length?L(`${Q.length-done} left`,`เหลือ ${Q.length-done} ข้อ`):L(right>=Q.length*0.8?'Excellent! 🎉':right>=Q.length*0.5?'Good. Review the ones you missed.':'Review the slides and try again.',right>=Q.length*0.8?'ยอดเยี่ยม! 🎉':right>=Q.length*0.5?'ดี ลองทบทวนข้อที่ผิด':'ทบทวนสไลด์แล้วลองใหม่');
+}
+quiz.addEventListener('click',e=>{
+  const b=e.target.closest('.opt'); if(!b)return; const q=b.closest('.q'); if(q.classList.contains('done'))return;
+  const ans=Q[+q.dataset.i][3];
+  q.querySelectorAll('.opt').forEach((o,j)=>{o.disabled=true;if(j===ans)o.classList.add('right');});
+  b.classList.add('picked'); if(+b.dataset.j!==ans)b.classList.add('wrong');
+  q.classList.add('done'); updScore();
+});
+document.getElementById('qreset').onclick=()=>{quiz.querySelectorAll('.q').forEach(q=>{q.classList.remove('done');q.querySelectorAll('.opt').forEach(o=>{o.disabled=false;o.className='opt';});});updScore();slides[cur].scrollTop=0;};
+updScore();
+
+/* vocab search */
+document.getElementById('vq').addEventListener('input',e=>{
+  const s=e.target.value.trim().toLowerCase(); let n=0;
+  document.querySelectorAll('#vgrid .v').forEach(v=>{const m=!s||v.dataset.s.includes(s);v.style.display=m?'':'none';if(m)n++;});
+  document.getElementById('vnone').style.display=n?'none':'block';
+});
+
+/* start */
+const fromHash=parseInt(location.hash.slice(1),10);
+const saved=parseInt(store.get('w11-slide'),10);
+slides[0].classList.add('on');
+show(!isNaN(fromHash)?fromHash-1:(!isNaN(saved)?saved:0));
+</script>
+</body>
+</html>
