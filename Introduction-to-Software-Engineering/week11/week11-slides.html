@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-mode="both">
+<html lang="en" data-mode="both" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -212,6 +212,7 @@ details.chk > p:not(.ans){margin-left:40px;color:var(--ink-2);font-size:16px}
 .tbl.sched td:first-child{font-weight:500;white-space:nowrap}
 @media (max-width:640px){.tbl.stack td[data-h]:not(:first-child)::before{content:attr(data-h);display:block;font:600 11px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}}
 </style>
+<script>try{var t=localStorage.getItem("w11-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body>
 
@@ -223,6 +224,7 @@ details.chk > p:not(.ans){margin-left:40px;color:var(--ink-2);font-size:16px}
       <button data-m="both" aria-pressed="true">EN+TH</button>
       <button data-m="th" aria-pressed="false">TH</button>
     </div>
+    <button class="iconbtn" id="themeBtn" aria-label="Switch theme" title="Light / dark">☀️</button>
     <button class="iconbtn" id="menuBtn" aria-label="All slides">☰</button>
   </div>
   <div class="progress"><i id="bar"></i></div>
@@ -833,6 +835,12 @@ menuList.onclick=e=>{const b=e.target.closest('button');if(b){show(+b.dataset.i)
 document.getElementById('menuBtn').onclick=()=>menu.classList.add('on');
 document.getElementById('menuClose').onclick=()=>menu.classList.remove('on');
 menu.onclick=e=>{if(e.target===menu)menu.classList.remove('on');};
+
+/* theme */
+const themeBtn=document.getElementById('themeBtn');
+function setTheme(t){root.dataset.theme=t;themeBtn.textContent=t==='dark'?'☀️':'🌙';themeBtn.setAttribute('aria-label',t==='dark'?'Switch to light theme':'Switch to dark theme');store.set('w11-theme',t);}
+themeBtn.onclick=()=>setTheme(root.dataset.theme==='dark'?'light':'dark');
+setTheme(root.dataset.theme==='light'?'light':'dark');
 
 /* language */
 const segBtns=document.querySelectorAll('.seg button');
