@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="en" data-mode="both" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ch8 Quality Slides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f5f8; --card:#ffffff; --ink:#0f1320; --ink-2:#394152; --muted:#6b7280; --line:#e4e6ec; --th:#4b5563;
+  --blue:#2f5bff; --blue-bg:#eaf0ff; --green:#15995a; --green-bg:#e3f5ea; --red:#e5483a; --red-bg:#fde8e5;
+  --amber:#c98a00; --amber-bg:#fff3d4; --violet:#7246f0; --violet-bg:#efe9ff;
+  --code-bg:#11163b; --code-ink:#dbe3ff; --dark:#0f1320; --dark-ink:#fff;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 6px 18px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1016; --card:#171b24; --ink:#eef1f6; --ink-2:#c6ccd7; --muted:#8c95a5; --line:#272d39; --th:#aab2c0;
+    --blue:#7090ff; --blue-bg:#1a2140; --green:#3ccf86; --green-bg:#11291e; --red:#ff7766; --red-bg:#341a17;
+    --amber:#f2bd3d; --amber-bg:#2e2510; --violet:#a58bff; --violet-bg:#221a3d;
+    --code-bg:#0a0e24; --dark:#eef1f6; --dark-ink:#0f1320; --shadow:0 1px 2px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1016; --card:#171b24; --ink:#eef1f6; --ink-2:#c6ccd7; --muted:#8c95a5; --line:#272d39; --th:#aab2c0;
+  --blue:#7090ff; --blue-bg:#1a2140; --green:#3ccf86; --green-bg:#11291e; --red:#ff7766; --red-bg:#341a17;
+  --amber:#f2bd3d; --amber-bg:#2e2510; --violet:#a58bff; --violet-bg:#221a3d;
+  --code-bg:#0a0e24; --dark:#eef1f6; --dark-ink:#0f1320; --shadow:0 1px 2px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.55 Inter,"IBM Plex Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em}
+code{background:var(--line);padding:1px 6px;border-radius:5px}
+b{font-weight:650}
+button{font:inherit;color:inherit}
+
+/* ---------- language modes ---------- */
+html[data-mode="en"] .th{display:none!important}
+html[data-mode="th"] .en{display:none!important}
+.th{font-family:"IBM Plex Sans Thai",Inter,sans-serif}
+html[data-mode="both"] .th{color:var(--th)}
+html[data-mode="both"] .en + .th{display:block;font-size:.86em;font-weight:inherit;margin-top:2px}
+html[data-mode="both"] h1 .en + .th,html[data-mode="both"] h2 .en + .th{font-weight:500;font-size:.62em;margin-top:6px}
+html[data-mode="th"] .th{font-size:1em}
+html[data-mode="both"] .nav .lbltxt .th{display:none!important}
+
+/* ---------- top bar ---------- */
+.top{flex-shrink:0;border-bottom:1px solid var(--line);background:var(--bg)}
+.top-in{max-width:1100px;margin:0 auto;padding:8px 16px;display:flex;gap:10px;align-items:center}
+.brand{font:600 13px "IBM Plex Mono",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.brand::before{content:"▶ ";color:var(--blue)}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px;flex-shrink:0}
+.seg button{border:0;background:none;color:var(--muted);font-weight:600;font-size:13px;padding:5px 11px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--blue);color:#fff}
+.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:10px;height:34px;padding:0 12px;cursor:pointer;font-size:14px;font-weight:600;flex-shrink:0}
+.progress{height:4px;background:var(--line)}
+.progress i{display:block;height:100%;background:var(--blue);width:0;transition:width .25s}
+
+/* ---------- slides ---------- */
+.stage{flex:1;position:relative;min-height:0}
+.slide{position:absolute;inset:0;overflow-y:auto;display:none;flex-direction:column;-webkit-overflow-scrolling:touch}
+.slide.on{display:flex;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.on{animation:none}}
+.inner{width:100%;max-width:1000px;margin:auto;padding:28px 20px 36px}
+.kicker{font:600 13px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:0 0 10px}
+.kicker.red{color:var(--red)}.kicker.green{color:var(--green)}.kicker.violet{color:var(--violet)}
+h1{font-size:clamp(40px,7vw,68px);line-height:1.05;letter-spacing:-.025em;margin:0 0 20px;font-weight:800}
+h2{font-size:clamp(28px,4.4vw,42px);line-height:1.12;letter-spacing:-.018em;margin:0 0 22px;font-weight:800}
+h3{font-size:20px;line-height:1.3;margin:0 0 6px;font-weight:700}
+p{margin:0}
+.big{font-size:clamp(19px,2.3vw,23px);color:var(--ink-2)}
+
+/* bullet points */
+.pts{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.pts li{display:flex;gap:14px;align-items:flex-start;font-size:clamp(18px,2.1vw,21px)}
+.pts li::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:.55em}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:14px;align-items:flex-start;font-size:clamp(17px,2vw,20px);counter-increment:s}
+.steps li::before{content:counter(s);width:30px;height:30px;border-radius:8px;background:var(--blue);color:#fff;font:700 15px Inter,sans-serif;display:grid;place-items:center;flex-shrink:0;margin-top:1px}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:760px){.g2,.g3{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.card p{color:var(--ink-2);font-size:17px}
+.card .tag{font:600 12px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.card.blue{border-top:5px solid var(--blue)}.card.green{border-top:5px solid var(--green)}.card.red{border-top:5px solid var(--red)}.card.amber{border-top:5px solid var(--amber)}.card.violet{border-top:5px solid var(--violet)}
+
+.box{margin-top:20px;border-left:5px solid var(--blue);background:var(--blue-bg);border-radius:0 12px 12px 0;padding:14px 18px;font-size:17px}
+.box .lbl{font:700 12px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.box.green{border-color:var(--green);background:var(--green-bg)}.box.green .lbl{color:var(--green)}
+.box.red{border-color:var(--red);background:var(--red-bg)}.box.red .lbl{color:var(--red)}
+.box.amber{border-color:var(--amber);background:var(--amber-bg)}.box.amber .lbl{color:var(--amber)}
+
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:18px 20px;overflow-x:auto;font:15px/1.7 "IBM Plex Mono",monospace;margin:0}
+pre .k{color:#8ea6ff}pre .s{color:#7ee2b0}pre .c{color:#8a93bd}
+
+/* flow diagram */
+.flow{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+.flow .card{flex:1 1 160px;text-align:center;padding:16px}
+.flow .ar{align-self:center;font-size:24px;color:var(--muted)}
+@media (max-width:760px){.flow{flex-direction:column}.flow .ar{transform:rotate(90deg)}}
+
+.thread{display:flex;gap:6px;flex-wrap:wrap}
+.thread div{flex:1 0 90px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;font-weight:650;font-size:16px}
+.thread small{display:block;color:var(--muted);font-weight:400;font-size:12.5px}
+.thread .on{background:var(--blue);border-color:var(--blue);color:#fff}.thread .on small{color:#dbe3ff}
+
+/* pyramid */
+.pyr{display:flex;flex-direction:column;align-items:center;gap:4px;max-width:420px;margin:0 auto}
+.pyr div{background:var(--dark);color:var(--dark-ink);text-align:center;font-weight:650;padding:14px 4px;font-size:15px}
+.pyr .a{width:40%;clip-path:polygon(20% 0,80% 0,100% 100%,0 100%);background:var(--red)}
+.pyr .b{width:68%;clip-path:polygon(11% 0,89% 0,100% 100%,0 100%);background:var(--amber)}
+.pyr .c{width:100%;clip-path:polygon(7% 0,93% 0,100% 100%,0 100%);background:var(--green);padding:22px 4px}
+.pyr div{color:#fff}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);font-size:16.5px}
+.tbl th{background:var(--dark);color:var(--dark-ink);text-align:left;font:600 12.5px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;padding:11px 14px}
+.tbl td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top}
+.tbl td:first-child{font-weight:650}
+.scroll-x{overflow-x:auto;border-radius:14px}
+@media (max-width:640px){.tbl.stack thead{display:none}.tbl.stack tr{display:block;border-top:1px solid var(--line);padding:8px 0}.tbl.stack td{display:block;border:0;padding:3px 14px}}
+
+.lvl{display:inline-block;min-width:26px;height:26px;border-radius:7px;color:#fff;font:700 13px Inter,sans-serif;text-align:center;line-height:26px;margin-right:8px}
+
+/* number line */
+.nl{width:100%;height:auto;display:block}
+.nl text{font:15px Inter,sans-serif;fill:var(--ink)}
+
+.calc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:17px}
+.calc span{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+.calc .ok{background:var(--green-bg);border-color:var(--green)}
+
+/* exam */
+.q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+.q + .q{margin-top:14px}
+.q .qn{font:700 13px "IBM Plex Mono",monospace;color:var(--blue);margin-bottom:4px}
+.q .qt{font-size:18.5px;font-weight:600;margin-bottom:12px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;border:1.5px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px;cursor:pointer;font-size:16.5px}
+.opt:hover:not(:disabled){border-color:var(--blue)}
+.opt .l{font:700 14px "IBM Plex Mono",monospace;color:var(--muted);flex-shrink:0;margin-top:2px}
+.opt.right{border-color:var(--green);background:var(--green-bg)}
+.opt.wrong{border-color:var(--red);background:var(--red-bg)}
+.opt:disabled{cursor:default}
+.why{display:none;margin-top:10px;font-size:16px;padding:10px 14px;border-radius:10px;background:var(--blue-bg)}
+.q.done .why{display:block}
+.scorebar{position:sticky;top:0;z-index:2;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--bg);padding:10px 0 12px;margin-bottom:6px;border-bottom:1px solid var(--line)}
+.scorebar .s{font-size:22px;font-weight:800}
+.btn{border:0;background:var(--blue);color:#fff;font-weight:650;font-size:15px;padding:9px 16px;border-radius:10px;cursor:pointer}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+details.sa{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-top:14px;box-shadow:var(--shadow)}
+details.sa summary{cursor:pointer;font-weight:650;font-size:17.5px}
+details.sa[open] summary{margin-bottom:12px}
+
+/* vocab */
+.vsearch{width:100%;font:inherit;font-size:17px;padding:12px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);margin-bottom:14px}
+.vsearch:focus{outline:none;border-color:var(--blue)}
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.vgrid{grid-template-columns:minmax(0,1fr)}}
+.v{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;box-shadow:var(--shadow)}
+.v .term{font-size:19px;font-weight:750}
+.v .thw{font-family:"IBM Plex Sans Thai",sans-serif;color:var(--blue);font-weight:600;font-size:16.5px}
+.v .mean{font-size:15.5px;color:var(--ink-2);margin-top:6px}
+.v .ex{font-size:14.5px;color:var(--muted);margin-top:6px}
+.v .cat{float:right;font:600 11px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 8px}
+
+/* bottom nav */
+.nav{flex-shrink:0;border-top:1px solid var(--line);background:var(--bg);padding-bottom:env(safe-area-inset-bottom)}
+.nav-in{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.nav button.go{border:0;background:var(--blue);color:#fff;font-weight:700;font-size:16px;padding:11px 20px;border-radius:12px;cursor:pointer;min-width:110px}
+.nav button.go.prev{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.nav button.go:disabled{opacity:.35;cursor:default}
+.count{flex:1;text-align:center;font:600 14px "IBM Plex Mono",monospace;color:var(--muted)}
+.count small{display:block;font:500 12.5px Inter,"IBM Plex Sans Thai",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:480px){.nav button.go{min-width:0;padding:11px 14px}.nav .lbltxt{display:none}}
+
+/* menu */
+.menu{position:fixed;inset:0;z-index:20;background:rgba(10,12,20,.45);display:none}
+.menu.on{display:block}
+.menu .panel{position:absolute;right:0;top:0;bottom:0;width:min(380px,92vw);background:var(--bg);overflow-y:auto;padding:16px;box-shadow:-8px 0 30px rgba(0,0,0,.2)}
+.menu ol{list-style:none;margin:10px 0 0;padding:0}
+.menu li button{display:flex;gap:10px;width:100%;text-align:left;border:0;background:none;padding:9px 10px;border-radius:10px;cursor:pointer;font-size:15.5px}
+.menu li button:hover{background:var(--card)}
+.menu li button.cur{background:var(--blue);color:#fff}
+.menu li .n{font:600 13px "IBM Plex Mono",monospace;opacity:.6;min-width:22px}
+.hint{font-size:14px;color:var(--muted);margin-top:22px}
+kbd{font:600 12px "IBM Plex Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;background:var(--card)}
+.dots{display:flex;gap:14px;margin-top:30px}
+.dots i{width:54px;height:54px;border-radius:50%}
+/* ---------- week 11 additions ---------- */
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:960px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.g4{grid-template-columns:minmax(0,1fr)}}
+.pts.red li::before{background:var(--red)}.pts.green li::before{background:var(--green)}
+.card .pts li{font-size:16.5px}
+.card .pts{gap:10px;margin-top:4px}
+details.chk summary{display:flex;gap:12px;align-items:flex-start;list-style:none}
+details.chk summary::-webkit-details-marker{display:none}
+details.chk summary .qn{font:700 14px "IBM Plex Mono",monospace;background:var(--violet);color:#fff;border-radius:8px;min-width:28px;height:28px;display:grid;place-items:center;flex-shrink:0}
+details.chk summary::after{content:"▸";margin-left:auto;color:var(--muted);flex-shrink:0}
+details.chk[open] summary::after{content:"▾"}
+details.chk .ans{font-weight:750;color:var(--green);font-size:18px;margin-left:40px}
+details.chk > p:not(.ans){margin-left:40px;color:var(--ink-2);font-size:16px}
+.tbl.sched{font-size:15px}.tbl.sched td{padding:7px 12px}
+.tbl.sched td:first-child{font-weight:500;white-space:nowrap}
+@media (max-width:640px){.tbl.stack td[data-h]:not(:first-child)::before{content:attr(data-h);display:block;font:600 11px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}}
+/* ---------- ch8 additions ---------- */
+.bars{display:flex;align-items:flex-end;gap:12px;height:260px;padding:10px 4px 0;border-bottom:2px solid var(--line)}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.bar i{display:block;width:100%;max-width:90px;border-radius:10px 10px 0 0;background:linear-gradient(var(--red),var(--amber))}
+.bar:first-child i{background:var(--green)}
+.bar .bv{font:700 17px Inter,sans-serif;margin-bottom:6px}
+.bar .bn{font-size:14px;text-align:center;position:absolute;transform:translateY(100%)}
+.bars{position:relative;margin-bottom:56px}
+.bar{position:relative}
+.bar .bn{bottom:-8px}
+@media (max-width:520px){.bars{gap:6px}.bar .n{font-size:11.5px}.bar .bv{font-size:14px}}
+.layers{display:flex;flex-direction:column;align-items:center;gap:8px}
+.layers div{color:#fff;font-weight:650;text-align:center;padding:16px 14px;border-radius:12px;font-size:17px}
+.layers div .th{color:rgba(255,255,255,.85)!important}
+@media (max-width:640px){.layers div{width:100%!important}}
+.timer{display:flex;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+.timer #tleft{font:800 44px "IBM Plex Mono",monospace;min-width:140px}
+.timer.done #tleft{color:var(--red)}
+</style>
+<script>try{var t=localStorage.getItem("w8-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Ch8 · Software Quality &amp; Basic Security</div>
+    <div class="seg" role="group" aria-label="Language">
+      <button data-m="en" aria-pressed="false">EN</button>
+      <button data-m="both" aria-pressed="true">EN+TH</button>
+      <button data-m="th" aria-pressed="false">TH</button>
+    </div>
+    <button class="iconbtn" id="themeBtn" aria-label="Switch theme" title="Light / dark">☀️</button>
+    <button class="iconbtn" id="menuBtn" aria-label="All slides">☰</button>
+  </div>
+  <div class="progress"><i id="bar"></i></div>
+</header>
+
+<main class="stage" id="stage"></main>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="go prev" id="prev">← <span class="lbltxt"><span class="en">Back</span><span class="th">ย้อนกลับ</span></span></button>
+    <div class="count"><span id="num">1 / 1</span><small id="ttl"></small></div>
+    <button class="go" id="next"><span class="lbltxt"><span class="en">Next</span><span class="th">ถัดไป</span></span> →</button>
+  </div>
+</nav>
+
+<div class="menu" id="menu"><div class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <b><span class="en">All slides</span><span class="th">สไลด์ทั้งหมด</span></b>
+    <button class="iconbtn" id="menuClose" aria-label="Close">✕</button>
+  </div>
+  <ol id="menuList"></ol>
+</div></div>
+
+<script>
+/* ---------- helpers ---------- */
+const L=(en,th)=>`<span class="en">${en}</span><span class="th">${th}</span>`;
+const P=(en,th,cls='')=>`<p class="en ${cls}">${en}</p><p class="th ${cls}">${th}</p>`;
+const pts=(a,cls='')=>`<ul class="pts ${cls}">${a.map(x=>`<li><div>${L(x[0],x[1])}</div></li>`).join('')}</ul>`;
+const steps=a=>`<ol class="steps">${a.map(x=>`<li><div>${L(x[0],x[1])}</div></li>`).join('')}</ol>`;
+const box=(kind,en,th,lblEn,lblTh)=>`<div class="box ${kind}"><div class="lbl">${L(lblEn,lblTh)}</div>${P(en,th)}</div>`;
+const remember=(en,th)=>box('green',en,th,'Remember','จำไว้');
+const plain=(en,th)=>box('',en,th,'In plain words','พูดง่าย ๆ');
+const head=(k,en,th,kc='')=>`<p class="kicker ${kc}">${k}</p><h2>${L(en,th)}</h2>`;
+const card=(cls,tag,en,th,ben,bth)=>`<div class="card ${cls}">${tag?`<div class="tag">${tag}</div>`:''}<h3>${L(en,th)}</h3>${ben?P(ben,bth):''}</div>`;
+/* table: cols = [[en,th],...], rows = [[[en,th],[en,th],...],...] */
+const tbl=(cols,rows,cls='stack')=>`<div class="scroll-x"><table class="tbl ${cls}"><thead><tr>${cols.map(c=>`<th>${L(c[0],c[1])}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td data-h="${cols[i][0]}">${Array.isArray(c)?L(c[0],c[1]):c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+/* concept check: [sitEn,sitTh,ansEn,ansTh,whyEn,whyTh] */
+const chk=a=>`<p class="hint" style="margin:0 0 4px">${L('Answer together first, then tap a situation to reveal the answer.','ตอบพร้อมกันทั้งห้องก่อน แล้วแตะแต่ละสถานการณ์เพื่อดูเฉลย')}</p>${a.map((r,i)=>`<details class="sa chk"><summary><span class="qn">${i+1}</span><div>${L(r[0],r[1])}</div></summary><p class="ans">${L('→ '+r[2],'→ '+r[3])}</p>${r[4]?P(r[4],r[5]):''}</details>`).join('')}`;
+
+const S=[];
+const add=(en,th,html)=>S.push({en,th,html});
+
+add('Welcome','ยินดีต้อนรับ',`
+<p class="kicker" style="color:var(--muted)">Chapter 8 · Intro to Software Engineering · Quality &amp; Basic Security</p>
+<h1>${L('Does it work —<br>and can it be <i>trusted</i>?','มันทำงานได้ —<br>แต่<i>ไว้ใจ</i>ได้หรือเปล่า?')}</h1>
+${P('Quality is not luck and security is not an add-on. You <b>check</b> quality with reviews, tests and tools, and you <b>protect</b> users with a few habits any beginner can apply today, including the law: Thailand\'s <b>PDPA</b>.',
+    'คุณภาพไม่ใช่เรื่องดวง และความปลอดภัยไม่ใช่ของแถม เรา<b>ตรวจ</b>คุณภาพด้วยการรีวิว เทสต์ และเครื่องมือ และ<b>ปกป้อง</b>ผู้ใช้ด้วยนิสัยไม่กี่ข้อที่มือใหม่ทำได้ตั้งแต่วันนี้ รวมถึงกฎหมาย: <b>PDPA</b> ของไทย','big')}
+<div class="dots" aria-hidden="true"><i style="background:#2f5bff"></i><i style="background:#15995a"></i><i style="background:#e5483a"></i><i style="background:#ffc23a"></i></div>
+<p class="hint">${L('How to use: press <b>Next →</b>, use the <kbd>←</kbd> <kbd>→</kbd> keys, or swipe on your phone. Switch language and theme at the top.',
+ 'วิธีใช้: กด <b>ถัดไป →</b> ใช้ปุ่มลูกศร <kbd>←</kbd> <kbd>→</kbd> หรือปัดหน้าจอบนมือถือ เปลี่ยนภาษาและธีมได้ที่ด้านบน')}</p>`);
+
+add("Today's plan",'แผนการเรียนวันนี้',`
+${head('Roadmap','Today: Ch8, then exam practice','วันนี้: เรียน Ch8 แล้วฝึกทำข้อสอบ')}
+<div class="flow">
+ <div class="card"><h3>Ch8</h3><p>${L('Quality &amp; Security<br>3 concept checks','คุณภาพและความปลอดภัย<br>concept check 3 รอบ')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>Critique #8</h3><p>${L('ask questions','ฝึกตั้งคำถาม')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>${L('Exam practice','ฝึกข้อสอบ')}</h3><p>${L('MCQ on Ch8','ข้อสอบปรนัย Ch8')}</p></div><span class="ar">→</span>
+ <div class="card"><h3>${L('Next class','คาบหน้า')}</h3><p>Ch9 + Ch10</p></div>
+</div>
+<div class="grid g3" style="margin-top:16px">
+ ${card('blue','Goal','Understand the concepts','เข้าใจแนวคิด','Ch8 is on the final exam (Ch1 to Ch10, English MCQ with 4 options + short answer).','Ch8 ออกสอบปลายภาค (Ch1–Ch10 ข้อสอบภาษาอังกฤษ ปรนัย 4 ตัวเลือก + เขียนตอบสั้น)')}
+ ${card('green','Concept checks','Answer together','ตอบพร้อมกัน','After each topic: a short situation, the whole room answers at once. Not graded.','หลังจบแต่ละหัวข้อ มีสถานการณ์สั้น ๆ ให้ทั้งห้องตอบพร้อมกัน ไม่คิดคะแนน')}
+ ${card('amber','Bring','One A4 sheet','กระดาษ A4 หนึ่งแผ่น','For Critique #8. Handwritten, handed in during class.','สำหรับ Critique #8 เขียนด้วยมือ และส่งในห้อง')}
+</div>
+${box('amber','Ch9 and Ch10 are next class: <b>Mon 26 Oct, starting 13:00</b>.','Ch9 และ Ch10 เรียนคาบหน้า: <b>จันทร์ 26 ต.ค. เริ่ม 13:00</b>','Note','หมายเหตุ')}`);
+
+add('Where we are','เราอยู่ตรงไหน',`
+${head('The golden thread · one step further','Quality &amp; security are how the prototype earns trust','คุณภาพและความปลอดภัยคือสิ่งที่ทำให้ prototype น่าไว้ใจ')}
+<div class="thread">
+ <div>Problem<small>Wk 3</small></div><div>FR / NFR<small>SRS</small></div><div>Model<small>UML</small></div>
+ <div>Design<small>Wk 5</small></div><div>Code<small>Wk 6</small></div><div>Test<small>Ch 7</small></div>
+ <div class="on">Quality<small>Ch 8 · today</small></div><div>PM<small>Ch 9</small></div><div>Ethics<small>Ch 10</small></div>
+</div>
+<div class="grid g3" style="margin-top:20px">
+ ${card('blue','Part 1','Quality','คุณภาพ','What "quality" means, and how you actually check it: reviews, tests, linters.','"คุณภาพ" หมายถึงอะไร และตรวจได้จริงอย่างไร: รีวิว เทสต์ linter')}
+ ${card('red','Part 2','Basic security','ความปลอดภัยพื้นฐาน','The big three for beginners, plus a real vulnerability you can find today.','3 นิสัยหลักสำหรับมือใหม่ พร้อมช่องโหว่จริงที่หาเจอได้วันนี้')}
+ ${card('violet','Part 3','Privacy &amp; PDPA','ความเป็นส่วนตัวและ PDPA','Personal data is a legal duty: consent, minimise, protect.','ข้อมูลส่วนบุคคลเป็นหน้าที่ตามกฎหมาย: ขอความยินยอม เก็บให้น้อย ปกป้อง')}
+</div>
+${box('amber','<b>Understand-only</b> this term: these are habits you apply to the prototype and are assessed on the exam, not a separately graded security audit.',
+ 'เทอมนี้เป็นแบบ<b>เข้าใจอย่างเดียว</b>: เป็นนิสัยที่ใช้กับ prototype และออกสอบ ไม่มีการให้คะแนนการตรวจความปลอดภัยแยก','Note','หมายเหตุ')}`);
+
+add('Quality attributes','คุณลักษณะด้านคุณภาพ',`
+${head('Part 1 · What quality means','Quality is several attributes — and each is checkable','คุณภาพมีหลายด้าน และตรวจได้ทุกด้าน')}
+<div class="grid g3">
+ ${card('green','Reliability','It keeps working','ทำงานได้ต่อเนื่อง','Same input → same correct result, even on a bad day. <b>Checked by tests.</b>','input เดิม → ผลลัพธ์ถูกต้องเหมือนเดิม แม้ในวันที่แย่ <b>ตรวจด้วยเทสต์</b>')}
+ ${card('blue','Usability','People can use it','คนใช้งานได้','Clear, forgiving, learnable. <b>Checked by watching a real user try it.</b>','ชัดเจน ให้อภัยความผิดพลาด เรียนรู้ได้ <b>ตรวจโดยดูผู้ใช้จริงลองใช้</b>')}
+ ${card('violet','Maintainability','Easy to change','แก้ไขง่าย','Readable code future-you can edit. <b>Checked by reviews &amp; linters.</b>','โค้ดอ่านง่าย ตัวเราในอนาคตแก้ได้ <b>ตรวจด้วยรีวิวและ linter</b>')}
+ ${card('red','Security','It protects data','ปกป้องข้อมูล','Only the right people see the right data. <b>Checked by thinking like an attacker.</b>','เฉพาะคนที่ใช่เห็นข้อมูลที่ใช่ <b>ตรวจโดยคิดแบบผู้โจมตี</b>')}
+ ${card('amber','Performance','Fast enough','เร็วพอ','Responds within the NFR budget. <b>Checked by measuring, not guessing.</b>','ตอบสนองภายในเวลาที่ NFR กำหนด <b>ตรวจด้วยการวัด ไม่ใช่การเดา</b>')}
+ ${card('','The point','You check, not hope','ตรวจ ไม่ใช่หวัง','Every attribute traces back to an NFR in your SRS, and to a way to verify it.','ทุกด้านโยงกลับไปที่ NFR ใน SRS และมีวิธีตรวจสอบ')}
+</div>
+${plain('Quality isn\'t one thing: it\'s a checklist, like judging a restaurant: taste, speed, cleanliness, price. Each is real, and each is checked a different way.',
+ 'คุณภาพไม่ใช่สิ่งเดียว แต่เป็นรายการตรวจ เหมือนให้คะแนนร้านอาหาร: รสชาติ ความเร็ว ความสะอาด ราคา ทุกข้อมีจริง และตรวจคนละวิธี')}`);
+
+const ISO=[
+ ['Functional suitability','ความเหมาะสมเชิงฟังก์ชัน','Does what\'s needed, correctly.','ทำสิ่งที่ต้องการได้ถูกต้อง',''],
+ ['Performance efficiency','ประสิทธิภาพ','Fast enough, within resources.','เร็วพอ ภายในทรัพยากรที่มี',''],
+ ['Compatibility','ความเข้ากันได้','Works alongside other systems.','ทำงานร่วมกับระบบอื่นได้',''],
+ ['Interaction capability','ความสามารถในการโต้ตอบ','People can learn and use it.','คนเรียนรู้และใช้งานได้','Renamed: was Usability'],
+ ['Reliability','ความน่าเชื่อถือ','Keeps working over time.','ทำงานได้ต่อเนื่องตลอดเวลา',''],
+ ['Security','ความปลอดภัย','Protects data and access.','ปกป้องข้อมูลและการเข้าถึง',''],
+ ['Maintainability','การบำรุงรักษาได้','Easy to change safely.','แก้ไขได้ง่ายและปลอดภัย',''],
+ ['Flexibility','ความยืดหยุ่น','Adapts to new environments and needs.','ปรับเข้ากับสภาพแวดล้อมและความต้องการใหม่ได้','Renamed: was Portability'],
+ ['Safety','ความปลอดภัยต่อชีวิตและทรัพย์สิน','Avoids harm to people, property and the environment.','ไม่ก่ออันตรายต่อคน ทรัพย์สิน และสิ่งแวดล้อม','New in 2023']
+];
+add('ISO/IEC 25010:2023','ISO/IEC 25010:2023',`
+${head('Part 1b · A standard vocabulary','Quality has an international model: nine characteristics','คุณภาพมีโมเดลสากล: 9 คุณลักษณะ')}
+<div class="grid g3">${ISO.map((c,i)=>`<div class="card ${c[4]?(c[4].startsWith('New')?'green':'amber'):''}"><div class="tag">#${i+1}${c[4]?' · '+c[4]:''}</div><h3>${L(c[0],c[1])}</h3>${P(c[2],c[3])}</div>`).join('')}</div>
+${box('','The 2023 edition (replacing 2011) renamed <b>Usability</b> and <b>Portability</b> and added <b>Safety</b>, because software now runs cars, medical devices and AI systems. Each characteristic in your SRS becomes an NFR you can check.',
+ 'ฉบับปี 2023 (แทนฉบับ 2011) เปลี่ยนชื่อ <b>Usability</b> และ <b>Portability</b> และเพิ่ม <b>Safety</b> เพราะทุกวันนี้ซอฟต์แวร์ควบคุมรถยนต์ เครื่องมือแพทย์ และระบบ AI แต่ละคุณลักษณะใน SRS จะกลายเป็น NFR ที่ตรวจได้','Why it changed','ทำไมถึงเปลี่ยน')}
+<p class="hint">Source: ISO/IEC 25010:2023 Product quality model, Edition 2. Sommerville 9e Ch24 describes the earlier 2011 model.</p>`);
+
+add('Review & static checks','รีวิวโค้ดและ linter',`
+${head('Part 1 · Cheap, powerful quality tools','Code review &amp; the linter catch problems early','รีวิวโค้ดและ linter จับปัญหาได้ตั้งแต่เนิ่น ๆ')}
+<div class="grid g2">
+ ${card('blue','Human','Code review','การรีวิวโค้ด','A teammate reads your code before it reaches <code>main</code>: this is what a Pull Request is for (Ch6). Catches logic bugs, unclear names, missing cases, and spreads knowledge across the team.','เพื่อนร่วมทีมอ่านโค้ดก่อนเข้า <code>main</code> ซึ่งก็คือหน้าที่ของ Pull Request (Ch6) จับบั๊กตรรกะ ชื่อที่ไม่ชัด กรณีที่ขาด และกระจายความรู้ในทีม')}
+ ${card('violet','Automatic','Linter / static analysis','Linter / การวิเคราะห์แบบสถิต','A tool that reads the code <b>without running it</b> and flags style, unused variables, likely bugs, risky patterns. Fast, consistent, runs on every commit.','เครื่องมือที่อ่านโค้ด<b>โดยไม่ต้องรัน</b> แล้วเตือนเรื่องสไตล์ ตัวแปรที่ไม่ได้ใช้ บั๊กที่น่าจะเกิด และรูปแบบที่เสี่ยง เร็ว สม่ำเสมอ และรันทุก commit')}
+</div>
+<pre style="margin-top:16px"><span class="c"># what a linter might flag</span>
+<span class="k">def</span> total(items):
+    count = <span class="s">0</span>                 <span class="c"># ⚠ 'count' assigned but never used</span>
+    <span class="k">for</span> i <span class="k">in</span> items:
+        s = s + i.price         <span class="c"># ✗ 's' used before assignment</span>
+    <span class="k">return</span> s</pre>
+${plain('A linter is <b>spell-check for code</b>; a code review is <b>a classmate proof-reading your essay</b>. Neither is optional on a real team, and both make AI-generated code far safer to keep.',
+ 'linter คือ<b>ตัวตรวจคำผิดสำหรับโค้ด</b> ส่วนการรีวิวโค้ดคือ<b>เพื่อนช่วยพิสูจน์อักษรเรียงความ</b> ทีมจริงขาดไม่ได้ทั้งคู่ และทั้งคู่ทำให้โค้ดที่ AI เขียนปลอดภัยขึ้นมาก')}`);
+
+const COST=[['Requirements','Requirements',1],['Design','Design',5],['Code','Code',10],['Test','Test',25],['Production','Production',100]];
+add('Cost of fixing defects','ต้นทุนการแก้ข้อบกพร่อง',`
+${head('Part 1c · Why check early (Boehm)','The later you catch a defect, the more it costs','ยิ่งเจอข้อบกพร่องช้า ยิ่งแก้แพง')}
+<div class="bars" role="img" aria-label="Illustrative cost to fix: requirements 1x, design 5x, code 10x, test 25x, production 100x">
+${COST.map(c=>`<div class="bar"><span class="bv">~${c[2]}×</span><i style="height:${Math.max(4,c[2])}%"></i><span class="bn">${c[0]}</span></div>`).join('')}
+</div>
+<p class="hint" style="text-align:center;margin-top:8px">${L('Illustrative scale: a bug caught in review/test is cheap; the same bug in production is not.','สเกลเพื่ออธิบาย: บั๊กที่จับได้ตอนรีวิว/เทสต์แก้ถูก แต่บั๊กเดียวกันบน production แพงมาก')}</p>
+${plain('A typo you catch while writing costs nothing; the same typo found after the book is printed means a reprint. Bugs are identical: catching them early, in a review or a test, is why both are worth the time.',
+ 'คำผิดที่เจอตอนกำลังเขียนไม่เสียอะไรเลย แต่คำผิดเดียวกันที่เจอหลังพิมพ์หนังสือแล้วต้องพิมพ์ใหม่ บั๊กก็เหมือนกัน การจับได้เร็วในรีวิวหรือเทสต์คือเหตุผลที่ทั้งสองอย่างคุ้มค่าเวลา')}
+<p class="hint">After Boehm (1981) <i>Software Engineering Economics</i>. ${L('This is why reviews and unit tests (Ch7) pay for themselves: they move the catch leftward.','นี่คือเหตุผลที่รีวิวและ unit test (Ch7) คุ้มค่า: ช่วยให้จับบั๊กได้เร็วขึ้น (ขยับไปทางซ้าย)')}</p>`);
+
+add('Concept check 1','Concept check 1',`
+${head('Concept check 1 · Quality attributes','Which attribute is it, and how do you check it?','เป็นคุณภาพด้านไหน และตรวจอย่างไร?','violet')}
+${chk([
+ ['The app takes more than 5 seconds to respond when many people use it.','แอปใช้เวลาตอบสนองเกิน 5 วินาทีเมื่อมีคนใช้เยอะ','Performance · check by measuring, not guessing','Performance · ตรวจด้วยการวัด ไม่ใช่การเดา','',''],
+ ['A new user cannot find the Save button.','ผู้ใช้ใหม่หาปุ่ม Save ไม่เจอ','Usability · watch a real user try it','Usability · ดูผู้ใช้จริงลองใช้','',''],
+ ['Changing one feature means editing 10 files.','แก้ฟีเจอร์เดียวต้องแก้ 10 ไฟล์','Maintainability · code review + linter','Maintainability · รีวิวโค้ด + linter','',''],
+ ['The calculation is sometimes wrong.','การคำนวณผิดเป็นบางครั้ง','Reliability · tests','Reliability · เทสต์','',''],
+ ['User A can see User B\'s data.','ผู้ใช้ A เห็นข้อมูลของผู้ใช้ B','Security · think like an attacker (access control)','Security · คิดแบบผู้โจมตี (access control)','','']
+])}
+${box('amber','If that last bug reaches production, is it more expensive than catching it in review? <b>Yes</b>, by an order of magnitude or more (Boehm): the later you find it, the more it costs.',
+ 'ถ้าบั๊กข้อสุดท้ายหลุดไปถึง production จะแพงกว่าจับได้ตอนรีวิวไหม? <b>ใช่</b> แพงขึ้นเป็นสิบเท่าหรือมากกว่า (Boehm): ยิ่งเจอช้า ยิ่งแพง','Follow-up','คำถามต่อยอด')}`);
+
+add('The big three','3 นิสัยด้านความปลอดภัย',`
+${head('Part 2 · Security you can apply today','Three habits that stop most beginner mistakes','3 นิสัยที่กันความผิดพลาดของมือใหม่ได้เกือบทั้งหมด','red')}
+<div class="grid g3">
+ ${card('blue','#1','Validate input','ตรวจสอบ input','Never trust data from the user or the browser. Check type, length and range <b>on the server</b>, before you use or store it.','อย่าไว้ใจข้อมูลจากผู้ใช้หรือเบราว์เซอร์ ตรวจชนิด ความยาว และช่วงค่า<b>ที่ฝั่ง server</b> ก่อนนำไปใช้หรือเก็บ')}
+ ${card('red','#2','Access control','ควบคุมการเข้าถึง','A logged-in user may see <b>only their own data</b>. Check "who are you, and is this yours?" on every request.','ผู้ใช้ที่ล็อกอินแล้วเห็นได้<b>เฉพาะข้อมูลของตัวเอง</b> ตรวจว่า "คุณคือใคร และนี่เป็นของคุณไหม?" ทุก request')}
+ ${card('amber','#3','No secrets in the repo','ไม่มีรหัสลับใน repo','Passwords, API keys, tokens never go in the code or Git history. Use <code>.env</code> + <code>.gitignore</code> (Ch6).','รหัสผ่าน API key และ token ห้ามอยู่ในโค้ดหรือประวัติ Git ใช้ <code>.env</code> + <code>.gitignore</code> (Ch6)')}
+</div>
+${plain('Picture a shop: check what comes through the door (<b>validate input</b>), only staff can open the till (<b>access control</b>), and never tape the keys to the door (<b>no secrets in the repo</b>).',
+ 'นึกถึงร้านค้า: ตรวจของที่ผ่านประตูเข้ามา (<b>ตรวจ input</b>) เฉพาะพนักงานเปิดลิ้นชักเงินได้ (<b>ควบคุมการเข้าถึง</b>) และอย่าแปะกุญแจไว้ที่ประตู (<b>ไม่มีรหัสลับใน repo</b>)')}`);
+
+add('A vulnerability you can find today','ช่องโหว่ที่หาเจอได้วันนี้',`
+${head('Part 2 · Trusting the client = the classic hole','If the user can change the id, they can read your data','ถ้าผู้ใช้เปลี่ยน id ได้ ก็อ่านข้อมูลคนอื่นได้','red')}
+<div class="grid g2">
+ <div><h3 style="color:var(--red)">✗ ${L('Wrong: the server trusts an id from the URL','ผิด: server เชื่อ id จาก URL')}</h3>
+<pre><span class="c"># anyone logged in can swap the number</span>
+GET /api/notes?user_id=1042
+
+<span class="k">def</span> get_notes(user_id):
+    <span class="k">return</span> db.notes.where(owner=user_id)
+    <span class="c"># ...whose id is this? nobody checked.</span></pre></div>
+ <div><h3 style="color:var(--green)">✓ ${L('Right: use the identity from the session','ถูก: ใช้ตัวตนจาก session')}</h3>
+<pre><span class="c"># id comes from WHO is logged in</span>
+GET /api/notes
+
+<span class="k">def</span> get_notes(session):
+    me = session.user    <span class="c"># trusted</span>
+    <span class="k">return</span> db.notes.where(owner=me.id)</pre></div>
+</div>
+${box('red','Change <code>1042</code> to <code>1043</code> → you\'re reading someone else\'s notes. This is <b>IDOR</b> (Insecure Direct Object Reference): <b>broken access control</b>, #1 in the OWASP Top 10 (2021).',
+ 'เปลี่ยน <code>1042</code> เป็น <code>1043</code> → ก็อ่านโน้ตของคนอื่นได้ นี่คือ <b>IDOR</b> (Insecure Direct Object Reference) หรือ<b>การควบคุมการเข้าถึงที่บกพร่อง</b> อันดับ 1 ใน OWASP Top 10 (2021)','The hole','ช่องโหว่')}
+${remember('Never decide "whose data" from something the user can edit. Derive it from the <b>authenticated session</b>.',
+ 'อย่าตัดสินว่า "ข้อมูลของใคร" จากสิ่งที่ผู้ใช้แก้ได้ ให้ดึงจาก <b>session ที่ยืนยันตัวตนแล้ว</b>')}`);
+
+add('Concept check 2','Concept check 2',`
+${head('Concept check 2 · The big three','Which habit was missing? Show 1, 2 or 3','ขาดนิสัยข้อไหน? ชูนิ้ว 1, 2 หรือ 3','violet')}
+<div class="grid g3" style="margin-bottom:10px">
+ <div class="card blue" style="padding:12px 16px"><h3>${L('1 · Validate input','1 · ตรวจ input')}</h3>${P('on the server','ที่ฝั่ง server')}</div>
+ <div class="card red" style="padding:12px 16px"><h3>${L('2 · Access control','2 · ควบคุมการเข้าถึง')}</h3>${P('who are you, is it yours?','คุณคือใคร เป็นของคุณไหม?')}</div>
+ <div class="card amber" style="padding:12px 16px"><h3>${L('3 · No secrets in repo','3 · ไม่มีรหัสลับใน repo')}</h3>${P('.env + .gitignore','.env + .gitignore')}</div>
+</div>
+${chk([
+ ['The age field accepts -5 and the system saves it.','ช่องอายุรับค่า -5 และระบบบันทึกไว้','1 · Validate input','1 · ตรวจ input','',''],
+ ['Changing order_id in the URL shows someone else\'s order.','เปลี่ยน order_id ใน URL แล้วเห็นคำสั่งซื้อของคนอื่น','2 · Access control (IDOR)','2 · ควบคุมการเข้าถึง (IDOR)','',''],
+ ['<code>config.js</code> in a public repo contains an API key.','<code>config.js</code> ใน repo สาธารณะมี API key อยู่','3 · No secrets in the repo','3 · ไม่มีรหัสลับใน repo','',''],
+ ['Password length is checked only in the browser with JavaScript; the server accepts anything.','ตรวจความยาวรหัสผ่านแค่ในเบราว์เซอร์ด้วย JavaScript แต่ server รับทุกอย่าง','1 · Validate input on the server','1 · ตรวจ input ที่ฝั่ง server','Users can bypass the browser.','ผู้ใช้ข้ามการตรวจในเบราว์เซอร์ได้']
+])}`);
+
+add('Privacy & PDPA','ความเป็นส่วนตัวและ PDPA',`
+${head('Part 3 · A legal duty, not just good manners','Personal data comes with responsibilities','ข้อมูลส่วนบุคคลมาพร้อมความรับผิดชอบ','violet')}
+<div class="grid g3">
+ ${card('blue','Consent','Ask first','ขอก่อน','Collect personal data (schedules, notes, messages, faces) only with the person\'s <b>informed consent</b>, for a stated purpose.','เก็บข้อมูลส่วนบุคคล (ตารางเวลา โน้ต ข้อความ ใบหน้า) เฉพาะเมื่อเจ้าของ<b>ยินยอมโดยรู้ข้อมูล</b> และมีวัตถุประสงค์ที่แจ้งไว้')}
+ ${card('green','Minimise','Collect the least','เก็บให้น้อยที่สุด','If the feature doesn\'t need it, don\'t store it. Less data = less risk and less to protect.','ถ้าฟีเจอร์ไม่ต้องใช้ ก็อย่าเก็บ ข้อมูลน้อย = ความเสี่ยงน้อย และมีสิ่งที่ต้องปกป้องน้อย')}
+ ${card('amber','Protect','Guard &amp; honour rights','ปกป้องและเคารพสิทธิ์','Secure it, and let people <b>see, correct or delete</b> their data. This is PDPA: Thai law, fully in force since 2022.','รักษาความปลอดภัย และให้เจ้าของ<b>ดู แก้ไข หรือลบ</b>ข้อมูลของตัวเองได้ นี่คือ PDPA กฎหมายไทยที่บังคับใช้เต็มรูปแบบตั้งแต่ปี 2022 (พ.ศ. 2565)')}
+</div>
+${box('green','Use <b>fake / seed data</b> in the prototype. Real personal data belongs nowhere near a student repo, and never in Git history.',
+ 'ใช้<b>ข้อมูลสมมติ / seed data</b> ใน prototype ข้อมูลส่วนบุคคลจริงไม่ควรอยู่ใกล้ repo ของนักศึกษาเลย และห้ามอยู่ในประวัติ Git','For your project','สำหรับโปรเจกต์ของเรา')}`);
+
+add('Concept check 3','Concept check 3',`
+${head('Concept check 3 · PDPA','Consent, minimise, or protect?','ขอความยินยอม เก็บให้น้อย หรือปกป้อง?','violet')}
+${chk([
+ ['A note-taking app asks to read your whole contact list, but no feature uses it.','แอปจดโน้ตขออ่านรายชื่อผู้ติดต่อทั้งหมด แต่ไม่มีฟีเจอร์ไหนใช้','Minimise','เก็บให้น้อยที่สุด','',''],
+ ['An app stores photos of users\' faces without saying what they are for.','แอปเก็บรูปใบหน้าผู้ใช้โดยไม่บอกว่าเก็บไว้ทำอะไร','Consent (and state the purpose)','ขอความยินยอม (และแจ้งวัตถุประสงค์)','',''],
+ ['A user asks to delete their account, but the system has no way to delete their data.','ผู้ใช้ขอลบบัญชี แต่ระบบไม่มีวิธีลบข้อมูลของเขา','Protect: the owner\'s rights to see, correct and delete','ปกป้อง: สิทธิ์ของเจ้าของข้อมูลที่จะดู แก้ไข และลบ','','']
+])}
+${remember('PDPA (B.E. 2562, fully in force 2022): <b>consent</b> before collecting, <b>minimise</b> what you keep, <b>protect</b> it and honour the owner\'s rights.',
+ 'PDPA (พ.ศ. 2562 บังคับใช้เต็มรูปแบบปี 2565): <b>ขอความยินยอม</b>ก่อนเก็บ <b>เก็บให้น้อย</b> และ<b>ปกป้อง</b>ข้อมูลพร้อมเคารพสิทธิ์ของเจ้าของ')}`);
+
+add('How the checks stack up','การตรวจซ้อนกันเป็นชั้น',`
+${head('Picture it','Quality &amp; security are layers, not a final step','คุณภาพและความปลอดภัยเป็นชั้น ๆ ไม่ใช่ขั้นตอนสุดท้าย')}
+<div class="layers">
+ <div style="width:100%;background:var(--blue)">${L('Write readable code (Ch6)','เขียนโค้ดให้อ่านง่าย (Ch6)')}</div>
+ <div style="width:88%;background:var(--green)">${L('Unit tests prove it works (Ch7)','unit test พิสูจน์ว่าทำงานได้ (Ch7)')}</div>
+ <div style="width:76%;background:var(--violet)">${L('Review + linter catch the rest (Ch8)','รีวิว + linter จับส่วนที่เหลือ (Ch8)')}</div>
+ <div style="width:64%;background:var(--red)">${L('Validate input, access control, protect data','ตรวจ input ควบคุมการเข้าถึง ปกป้องข้อมูล')}</div>
+</div>
+${box('','Each layer catches what the one above let through: <b>trust is built up, not bolted on</b>.',
+ 'แต่ละชั้นจับสิ่งที่ชั้นบนปล่อยหลุดมา: <b>ความไว้วางใจต้องค่อย ๆ สร้าง ไม่ใช่เอามาติดทีหลัง</b>','The idea','แนวคิด')}`);
+
+add('Your project + AI','โปรเจกต์ของเรา + AI',`
+${head('Do this with your team','Make quality &amp; safety part of the build','ทำให้คุณภาพและความปลอดภัยเป็นส่วนหนึ่งของการสร้าง','green')}
+<div class="grid g2">
+ <div class="card blue"><div class="tag">Project step · ขั้นตอนของโปรเจกต์</div>${pts([
+  ['<b>Add a linter on day one.</b> Let it run on every commit: cheap quality your whole team gets for free.','<b>ใส่ linter ตั้งแต่วันแรก</b> ให้รันทุก commit คุณภาพราคาถูกที่ทั้งทีมได้ฟรี'],
+  ['<b>Check access on every read.</b> Whose data is this? Derive the owner from the session, not the request.','<b>ตรวจสิทธิ์ทุกครั้งที่อ่านข้อมูล</b> ข้อมูลนี้ของใคร? ดึงเจ้าของจาก session ไม่ใช่จาก request']
+ ])}</div>
+ <div class="card red"><div class="tag">AI-first · verify! · ใช้ AI แต่ต้องตรวจ!</div>${pts([
+  ['<b>Ask AI to review your code.</b> Great at spotting smells, but confirm each flag; it also invents some.','<b>ให้ AI ช่วยรีวิวโค้ด</b> เก่งเรื่องหาจุดน่าสงสัย แต่ต้องยืนยันทุกข้อ เพราะบางข้อมันก็แต่งขึ้นมาเอง'],
+  ['<b>Never paste real secrets/data.</b> Don\'t feed API keys or real personal data into a prompt: treat it as public.','<b>ห้ามวางรหัสลับหรือข้อมูลจริง</b> อย่าใส่ API key หรือข้อมูลส่วนบุคคลจริงลงใน prompt ให้คิดว่า prompt เป็นของสาธารณะ']
+ ],'red')}</div>
+</div>`);
+
+add('Summary','สรุป',`
+${head('Chapter 8 · in four lines','Check quality, don\'t hope for it — and protect the user','ตรวจคุณภาพ อย่าแค่หวัง และปกป้องผู้ใช้','green')}
+<div class="grid g2">
+ ${card('blue','Quality','Attributes you can verify','คุณลักษณะที่ตรวจได้','Reliability, usability, maintainability, security, performance: each traces to an NFR and a check.','ความน่าเชื่อถือ ความง่ายในการใช้ การบำรุงรักษา ความปลอดภัย ประสิทธิภาพ แต่ละด้านโยงไปที่ NFR และวิธีตรวจ')}
+ ${card('violet','Tools','Review + linter','รีวิว + linter','A human reads it; a tool scans it. Cheap, early, on every commit.','คนอ่าน เครื่องมือสแกน ถูก เร็ว และทำทุก commit')}
+ ${card('red','Security','The big three','3 นิสัยหลัก','Validate input, enforce access control, keep secrets out of the repo.','ตรวจ input บังคับใช้การควบคุมการเข้าถึง และไม่เก็บรหัสลับใน repo')}
+ ${card('amber','Privacy','PDPA is law','PDPA คือกฎหมาย','Consent, minimise, protect, and keep real personal data out of the prototype.','ขอความยินยอม เก็บให้น้อย ปกป้อง และไม่ใส่ข้อมูลส่วนบุคคลจริงใน prototype')}
+</div>
+<p class="hint">${L('Reading: Sommerville (quality &amp; security), OWASP Top 10 (skim), PDPA overview. Next: Ch9, Project Management &amp; Process.','อ่านเพิ่ม: Sommerville (คุณภาพและความปลอดภัย) OWASP Top 10 (อ่านผ่าน ๆ) ภาพรวม PDPA ถัดไป: Ch9 การบริหารโปรเจกต์และกระบวนการ')}</p>`);
+
+add('AI Critique #8','AI Critique #8',`
+${head('AI Critique #8 · Ask, don\'t answer (7 min, handwritten A4)','Ask questions about a project like yours','ตั้งคำถามเกี่ยวกับโปรเจกต์ที่คล้ายของเรา','violet')}
+<div class="grid g2">
+ ${card('red','Question focus','CareFlow OPD (outpatient queue booking)','CareFlow OPD (ระบบจองคิวผู้ป่วยนอก)','Imagine a student project from this course has been live at a hospital for one month. A patient posts on Facebook: <i>"Change the appointment number in the link and you can see other patients\' names, phone numbers and symptoms. I even cancelled someone else\'s appointment."</i> The team says every FR was tested and all tests passed. The repo is public, and <code>config.js</code> contains the database password.',
+  'สมมติว่าโปรเจกต์นักศึกษาในวิชานี้เปิดใช้จริงในโรงพยาบาลมา 1 เดือน มีผู้ป่วยโพสต์ใน Facebook ว่า <i>"ลองเปลี่ยนเลขนัดในลิงก์ดู จะเห็นชื่อ เบอร์โทร และอาการของผู้ป่วยคนอื่น ผมยังยกเลิกนัดของคนอื่นได้ด้วย"</i> ทีมบอกว่าทดสอบทุก FR แล้วและเทสต์ผ่านหมด repo เป็น Public และไฟล์ <code>config.js</code> มีรหัสผ่านฐานข้อมูลอยู่')}
+ <div>
+  ${steps([
+   ['<b>Write at least 3 questions</b> about the event. Do not answer them. End each with (closed) = short answer, or (open) = needs explaining.','<b>เขียนคำถามอย่างน้อย 3 ข้อ</b> เกี่ยวกับเหตุการณ์ ไม่ต้องตอบ ท้ายแต่ละข้อเขียน (closed) = ตอบสั้น หรือ (open) = ต้องอธิบาย'],
+   ['<b>Circle the most important one.</b> Write 1 to 2 lines: why this question matters most.','<b>วงคำถามที่สำคัญที่สุด</b> เขียน 1–2 บรรทัดว่าทำไมข้อนี้สำคัญที่สุด'],
+   ['<b>Link it to one Ch8 concept</b> (e.g. access control, PDPA, cost of defects) and say in one line how.','<b>เชื่อมกับแนวคิด Ch8 หนึ่งข้อ</b> (เช่น access control, PDPA, ต้นทุนข้อบกพร่อง) แล้วอธิบายใน 1 บรรทัดว่าช่วยอย่างไร']
+  ])}
+  <div class="timer" id="timer"><span id="tleft">7:00</span><button class="btn" id="tgo">${L('Start','เริ่ม')}</button><button class="btn ghost" id="treset">${L('Reset','รีเซ็ต')}</button></div>
+ </div>
+</div>
+<p class="hint">${L('Top of the A4: name, student ID, Critique #8. Alone, handwritten, phones and laptops face down until the sheet is collected. There are no wrong questions.','หัวกระดาษ A4: ชื่อ รหัสนักศึกษา Critique #8 ทำคนเดียว เขียนมือ คว่ำมือถือและโน้ตบุ๊กไว้จนกว่าจะเก็บกระดาษ ไม่มีคำถามไหนผิด')}</p>`);
+
+add('Case: CareFlow OPD','กรณีศึกษา: CareFlow OPD',`
+${head('Case · A what-if on a student project','Four Ch8 failures in one small system','ความผิดพลาด 4 ข้อจาก Ch8 ในระบบเล็ก ๆ ระบบเดียว','red')}
+<div class="grid g2">
+ ${card('red','Access control (IDOR)','Change the number, see another patient','เปลี่ยนเลข เห็นผู้ป่วยคนอื่น','The server trusted the appointment id in the link. <b>Fix:</b> take the patient from the login session and check the appointment is theirs, for viewing and for cancelling.','server เชื่อเลขนัดในลิงก์ <b>วิธีแก้:</b> ดึงผู้ป่วยจาก session ที่ล็อกอิน แล้วตรวจว่านัดนั้นเป็นของเขา ทั้งตอนดูและตอนยกเลิก')}
+ ${card('violet','PDPA: minimise, protect','Health data is sensitive','ข้อมูลสุขภาพเป็นข้อมูลอ่อนไหว','Symptoms are health data, a sensitive category under PDPA that needs explicit consent. Does the booking page need symptoms at all? Show the least, protect the rest.','อาการป่วยเป็นข้อมูลสุขภาพ ซึ่งเป็นข้อมูลอ่อนไหวตาม PDPA ต้องได้รับความยินยอมโดยชัดแจ้ง หน้าจองคิวจำเป็นต้องมีอาการไหม? แสดงให้น้อยที่สุด และปกป้องส่วนที่เหลือ')}
+ ${card('blue','Quality: check, don\'t hope','"All tests passed"','"เทสต์ผ่านหมด"','The tests only tried honest users. Add the attacker\'s case: patient A asks for patient B\'s appointment, and the system must refuse.','เทสต์ลองแค่ผู้ใช้ที่สุจริต ต้องเพิ่มกรณีผู้โจมตี: ผู้ป่วย A ขอดูนัดของผู้ป่วย B และระบบต้องปฏิเสธ')}
+ ${card('amber','No secrets in the repo','A password in a public repo','รหัสผ่านใน repo สาธารณะ','Anyone could read <code>config.js</code>. Revoke the password and keep secrets in <code>.env</code> listed in <code>.gitignore</code>. Deleting the line is not enough: Git history keeps it.','ใครก็อ่าน <code>config.js</code> ได้ ต้องยกเลิกรหัสผ่านนั้น และเก็บรหัสลับใน <code>.env</code> ที่อยู่ใน <code>.gitignore</code> แค่ลบบรรทัดไม่พอ เพราะประวัติ Git ยังเก็บไว้')}
+</div>
+${box('','You don\'t need a giant company to break every rule in Ch8. A student-sized system with real patients needs the big three and PDPA <b>from day one</b>.',
+ 'ไม่ต้องเป็นบริษัทใหญ่ก็ทำผิดทุกกฎใน Ch8 ได้ ระบบขนาดโปรเจกต์นักศึกษาที่มีผู้ป่วยจริงต้องมี 3 นิสัยหลักและ PDPA <b>ตั้งแต่วันแรก</b>','The lesson','บทเรียน')}
+<p class="hint">${L('What-if scenario built on a student project idea (Must FRs: book, view, cancel appointments). It does not describe any team\'s actual prototype. PDPA B.E. 2562, Section 26: health data is sensitive personal data.','สถานการณ์สมมติจากไอเดียโปรเจกต์นักศึกษา (Must FR: จอง ดู ยกเลิกนัด) ไม่ได้หมายถึง prototype ของทีมใดจริง PDPA พ.ศ. 2562 มาตรา 26: ข้อมูลสุขภาพเป็นข้อมูลส่วนบุคคลที่อ่อนไหว')}</p>`);
+
+add('Link your question to Ch8','เชื่อมคำถามกับ Ch8',`
+${head('Critique #8 · Link your question to the chapter','Every good question leads back to a Ch8 concept','คำถามที่ดีทุกข้อนำกลับไปสู่แนวคิดใน Ch8','violet')}
+${tbl([['If you asked','ถ้าเราถามว่า'],['Ch8 concept','แนวคิด Ch8'],['What really happened','สิ่งที่เกิดขึ้นจริง']],[
+ [['Why could changing the number show someone else\'s data?','ทำไมเปลี่ยนเลขแล้วเห็นข้อมูลคนอื่น?'],['Access control (IDOR)','Access control (IDOR)'],['The server trusted the id in the link','server เชื่อ id ในลิงก์']],
+ [['Does the booking page need symptoms at all? Who agreed to share them?','หน้าจองคิวต้องมีอาการไหม? ใครยินยอมให้แชร์?'],['PDPA: minimise, consent for sensitive data','PDPA: เก็บให้น้อย ขอความยินยอมสำหรับข้อมูลอ่อนไหว'],['Health data visible to anyone with a link','ข้อมูลสุขภาพเปิดให้ทุกคนที่มีลิงก์เห็น']],
+ [['How did every test pass?','ทำไมเทสต์ผ่านหมด?'],['Quality: check, don\'t hope','คุณภาพ: ตรวจ อย่าแค่หวัง'],['The tests only tried honest users','เทสต์ลองแค่ผู้ใช้ที่สุจริต']],
+ [['Why was the password in the repo?','ทำไมรหัสผ่านอยู่ใน repo?'],['No secrets in the repo','ไม่มีรหัสลับใน repo'],['<code>config.js</code> in a public repo','<code>config.js</code> ใน repo สาธารณะ']],
+ [['What does fixing it after launch cost, compared with at design time?','แก้หลังเปิดใช้แพงแค่ไหน เทียบกับแก้ตอนออกแบบ?'],['Cost of defects','ต้นทุนข้อบกพร่อง'],['A code fix, plus a data review and telling patients','ต้องแก้โค้ด ตรวจข้อมูล และแจ้งผู้ป่วยด้วย']]
+])}
+${box('green','The big three, PDPA, and testing the dishonest case. The best question is often the one the slide cannot answer yet, like <i>"Who in the team should check the access rules before launch?"</i>',
+ '3 นิสัยหลัก PDPA และการทดสอบกรณีผู้ใช้ไม่สุจริต คำถามที่ดีที่สุดมักเป็นคำถามที่สไลด์ยังตอบไม่ได้ เช่น <i>"ใครในทีมควรตรวจกฎการเข้าถึงก่อนเปิดใช้?"</i>','The whole chapter in one case','ทั้งบทในกรณีเดียว')}`);
+
+/* ---------- exam ---------- */
+const Q=[
+ ['Which of the following is <b>not</b> one of the "big three" security habits taught in this course?','ข้อใด<b>ไม่ใช่</b>หนึ่งใน 3 นิสัยด้านความปลอดภัยที่เรียนในวิชานี้?',
+  [['Validate input on the server','ตรวจ input ที่ฝั่ง server'],['Enforce access control on every request','บังคับใช้การควบคุมการเข้าถึงทุก request'],['Keep secrets out of the repository','ไม่เก็บรหัสลับไว้ใน repository'],['Use a dark theme to hide sensitive fields','ใช้ธีมมืดเพื่อซ่อนช่องข้อมูลอ่อนไหว']],3,
+  'The big three: validate input, access control, no secrets in the repo. A theme hides nothing.','3 นิสัยหลัก: ตรวจ input, access control, ไม่มีรหัสลับใน repo ธีมไม่ได้ซ่อนอะไรเลย'],
+ ['A user changes <code>user_id=1042</code> to <code>user_id=1043</code> in the URL and sees another person\'s notes. What is the best fix?','ผู้ใช้เปลี่ยน <code>user_id=1042</code> เป็น <code>user_id=1043</code> ใน URL แล้วเห็นโน้ตของคนอื่น วิธีแก้ที่ดีที่สุดคือ?',
+  [['Hide the id from the URL bar','ซ่อน id จากแถบ URL'],['Take the owner\'s identity from the authenticated session','ดึงตัวตนเจ้าของจาก session ที่ยืนยันตัวตนแล้ว'],['Check that the id is a number','ตรวจว่า id เป็นตัวเลข'],['Add a linter to the project','เพิ่ม linter ในโปรเจกต์']],1,
+  'This is IDOR. Never decide whose data from something the user can edit.','นี่คือ IDOR อย่าตัดสินว่าข้อมูลของใครจากสิ่งที่ผู้ใช้แก้ได้'],
+ ['Which is <b>not</b> a characteristic in the ISO/IEC 25010:2023 product-quality model?','ข้อใด<b>ไม่ใช่</b>คุณลักษณะในโมเดลคุณภาพ ISO/IEC 25010:2023?',
+  [['Interaction capability','Interaction capability'],['Safety','Safety'],['Profitability','Profitability'],['Maintainability','Maintainability']],2,
+  'Profitability is a business goal, not a product-quality characteristic.','ความสามารถทำกำไรเป็นเป้าหมายทางธุรกิจ ไม่ใช่คุณลักษณะด้านคุณภาพผลิตภัณฑ์'],
+ ['According to Boehm\'s cost-of-defects idea, where is a defect usually cheapest to fix?','ตามแนวคิดต้นทุนข้อบกพร่องของ Boehm ข้อบกพร่องมักแก้ได้ถูกที่สุดในขั้นไหน?',
+  [['Requirements','Requirements'],['Testing','Testing'],['Production','Production'],['Maintenance','Maintenance']],0,
+  'The earlier, the cheaper: ~1× at requirements vs ~100× in production.','ยิ่งเร็วยิ่งถูก: ~1 เท่าตอน requirements เทียบกับ ~100 เท่าตอน production'],
+ ['Which tool reads code <b>without running it</b> and flags unused variables and risky patterns?','เครื่องมือใดอ่านโค้ด<b>โดยไม่ต้องรัน</b> แล้วเตือนตัวแปรที่ไม่ได้ใช้และรูปแบบที่เสี่ยง?',
+  [['A unit test','Unit test'],['A linter (static analysis)','Linter (การวิเคราะห์แบบสถิต)'],['A database','ฐานข้อมูล'],['A load test','Load test']],1,
+  'Static analysis = no running. Tests, by contrast, run the code.','การวิเคราะห์แบบสถิต = ไม่ต้องรัน ส่วนเทสต์ต้องรันโค้ด'],
+ ['In ISO/IEC 25010:2023, "Usability" was renamed to…','ใน ISO/IEC 25010:2023 "Usability" ถูกเปลี่ยนชื่อเป็น…',
+  [['Flexibility','Flexibility'],['Interaction capability','Interaction capability'],['Compatibility','Compatibility'],['Safety','Safety']],1,
+  'Usability → Interaction capability; Portability → Flexibility; Safety is new.','Usability → Interaction capability · Portability → Flexibility · Safety เป็นของใหม่'],
+ ['A password-length rule is checked only in the browser with JavaScript. Why is this not enough?','กฎความยาวรหัสผ่านถูกตรวจแค่ในเบราว์เซอร์ด้วย JavaScript ทำไมถึงไม่พอ?',
+  [['JavaScript is too slow','JavaScript ช้าเกินไป'],['Users can bypass the browser, so the server must validate too','ผู้ใช้ข้ามเบราว์เซอร์ได้ server จึงต้องตรวจด้วย'],['Browsers cannot count characters','เบราว์เซอร์นับตัวอักษรไม่ได้'],['It breaks the linter','ทำให้ linter พัง']],1,
+  'Never trust the client: validate on the server.','อย่าไว้ใจฝั่ง client: ต้องตรวจที่ server'],
+ ['You find a database password committed to a public repo. Deleting the line in a new commit is…','เจอรหัสผ่านฐานข้อมูลถูก commit ไว้ใน repo สาธารณะ การลบบรรทัดนั้นใน commit ใหม่…',
+  [['Enough, the problem is solved','พอแล้ว ปัญหาจบ'],['Not enough: Git history keeps it, so revoke/change the password and move secrets to .env','ไม่พอ: ประวัติ Git ยังเก็บไว้ ต้องยกเลิก/เปลี่ยนรหัสผ่าน และย้ายรหัสลับไปไว้ใน .env'],['Only a problem if the repo is private','เป็นปัญหาเฉพาะ repo ส่วนตัว'],['Fixed by adding a linter','แก้ได้ด้วยการเพิ่ม linter']],1,
+  'Revoke the secret, then keep secrets in .env listed in .gitignore.','ยกเลิกรหัสลับนั้น แล้วเก็บรหัสลับใน .env ที่อยู่ใน .gitignore'],
+ ['A note-taking app asks to read your whole contact list, but no feature uses it. Which PDPA principle is broken?','แอปจดโน้ตขออ่านรายชื่อผู้ติดต่อทั้งหมด แต่ไม่มีฟีเจอร์ไหนใช้ ละเมิดหลัก PDPA ข้อไหน?',
+  [['Minimise','เก็บให้น้อยที่สุด'],['Performance','ประสิทธิภาพ'],['Compatibility','ความเข้ากันได้'],['Reliability','ความน่าเชื่อถือ']],0,
+  'If the feature doesn\'t need it, don\'t collect it.','ถ้าฟีเจอร์ไม่ต้องใช้ ก็อย่าเก็บ'],
+ ['Under Thailand\'s PDPA, a patient\'s symptoms are…','ตาม PDPA ของไทย อาการป่วยของผู้ป่วยเป็น…',
+  [['Public data anyone may use','ข้อมูลสาธารณะที่ใครก็ใช้ได้'],['Sensitive personal data that needs explicit consent','ข้อมูลส่วนบุคคลที่อ่อนไหว ต้องได้รับความยินยอมโดยชัดแจ้ง'],['Not personal data','ไม่ใช่ข้อมูลส่วนบุคคล'],['Only regulated outside Thailand','ควบคุมเฉพาะนอกประเทศไทย']],1,
+  'Health data is a sensitive category (PDPA B.E. 2562, Section 26).','ข้อมูลสุขภาพเป็นข้อมูลอ่อนไหว (PDPA พ.ศ. 2562 มาตรา 26)'],
+ ['"The app takes more than 5 seconds to respond when many people use it." Which attribute, and how do you check it?','"แอปใช้เวลาตอบสนองเกิน 5 วินาทีเมื่อมีคนใช้เยอะ" เป็นคุณภาพด้านไหน และตรวจอย่างไร?',
+  [['Usability, by watching users','Usability ดูผู้ใช้'],['Performance, by measuring','Performance วัดผล'],['Maintainability, by code review','Maintainability รีวิวโค้ด'],['Security, by thinking like an attacker','Security คิดแบบผู้โจมตี']],1,
+  'Performance is checked by measuring, not guessing.','Performance ตรวจด้วยการวัด ไม่ใช่การเดา'],
+ ['CareFlow OPD\'s team says "all tests passed", yet patients can see each other\'s data. What was missing from the tests?','ทีม CareFlow OPD บอกว่า "เทสต์ผ่านหมด" แต่ผู้ป่วยเห็นข้อมูลกันและกันได้ เทสต์ขาดอะไร?',
+  [['More happy-path tests','happy path เพิ่ม'],['The attacker\'s case: patient A asks for patient B\'s appointment and must be refused','กรณีผู้โจมตี: ผู้ป่วย A ขอนัดของผู้ป่วย B และต้องถูกปฏิเสธ'],['A faster database','ฐานข้อมูลที่เร็วกว่า'],['A dark theme','ธีมมืด']],1,
+  'Tests that only try honest users can\'t catch broken access control.','เทสต์ที่ลองแค่ผู้ใช้สุจริตจับการควบคุมการเข้าถึงที่บกพร่องไม่ได้']
+];
+const LET='ABCD';
+Q.forEach(q=>{const right=q[2][q[3]];const o=q[2].slice();
+  for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]];}
+  q[2]=o;q[3]=o.indexOf(right);});
+add('Exam practice','ฝึกทำข้อสอบ',`
+<p class="kicker violet">Exam practice · ${Q.length} questions + 2 written</p>
+<h2>${L('Test yourself','ทดสอบตัวเอง')}</h2>
+${P('Q1–Q4 are the in-class practice questions. Tap an answer to see right away if it is correct, with a short explanation.','ข้อ 1–4 คือข้อฝึกในห้องเรียน แตะเลือกคำตอบแล้วจะรู้ทันทีว่าถูกหรือผิด พร้อมคำอธิบายสั้น ๆ')}
+<div class="scorebar"><span class="s" id="qscore">0 / ${Q.length}</span><span id="qleft" style="color:var(--muted);font-size:15px"></span><button class="btn ghost" id="qreset">${L('Start again','เริ่มใหม่')}</button></div>
+<div id="quiz">${Q.map((q,i)=>`<div class="q" data-i="${i}">
+  <div class="qn">Q${i+1}</div><div class="qt">${L(q[0],q[1])}</div>
+  <div class="opts">${q[2].map((o,j)=>`<button class="opt" data-j="${j}"><span class="l">${LET[j]}</span><span>${L(o[0],o[1])}</span></button>`).join('')}</div>
+  <div class="why">${L(q[4],q[5])}</div></div>`).join('')}</div>
+<h3 style="margin-top:28px">${L('Written practice','ฝึกเขียนตอบ')}</h3>
+<details class="sa"><summary>${L('W1. Explain IDOR with an example, and how to fix it.','W1. อธิบาย IDOR พร้อมตัวอย่าง และวิธีแก้')}</summary>
+${P('IDOR (Insecure Direct Object Reference) is broken access control: the server decides whose data to return from an id the user can edit. Example: <code>GET /api/notes?user_id=1042</code>; changing it to 1043 shows another user\'s notes. Fix: take the user\'s identity from the authenticated session (<code>me = session.user</code>) and only return or change records whose owner is <code>me.id</code>.',
+ 'IDOR (Insecure Direct Object Reference) คือการควบคุมการเข้าถึงที่บกพร่อง: server ตัดสินว่าจะส่งข้อมูลของใครจาก id ที่ผู้ใช้แก้ได้ ตัวอย่าง: <code>GET /api/notes?user_id=1042</code> เปลี่ยนเป็น 1043 แล้วเห็นโน้ตของคนอื่น วิธีแก้: ดึงตัวตนผู้ใช้จาก session ที่ยืนยันแล้ว (<code>me = session.user</code>) และส่งหรือแก้เฉพาะข้อมูลที่เจ้าของคือ <code>me.id</code>')}</details>
+<details class="sa"><summary>${L('W2. Name the three PDPA principles from this chapter and give one prototype example of each.','W2. บอกหลัก PDPA 3 ข้อจากบทนี้ พร้อมตัวอย่างใน prototype ข้อละหนึ่งตัวอย่าง')}</summary>
+${P('<b>Consent:</b> show a clear notice and ask before saving a student\'s timetable. <b>Minimise:</b> a study-reminder app asks only for name and tasks, not national ID or birthday. <b>Protect:</b> each user sees only their own data, and there is a "delete my account and data" button. In the prototype, use made-up seed data only.',
+ '<b>ขอความยินยอม:</b> แสดงข้อความชัดเจนและขออนุญาตก่อนบันทึกตารางเรียน · <b>เก็บให้น้อย:</b> แอปเตือนอ่านหนังสือขอแค่ชื่อและงาน ไม่ขอเลขบัตรประชาชนหรือวันเกิด · <b>ปกป้อง:</b> ผู้ใช้แต่ละคนเห็นเฉพาะข้อมูลของตัวเอง และมีปุ่ม "ลบบัญชีและข้อมูลของฉัน" ใน prototype ให้ใช้ข้อมูลสมมติเท่านั้น')}</details>`);
+
+/* ---------- vocab ---------- */
+const V=[
+ ['Software quality','คุณภาพซอฟต์แวร์','A set of attributes (reliable, usable, secure…) that you can check.','ชุดคุณลักษณะ (น่าเชื่อถือ ใช้ง่าย ปลอดภัย…) ที่ตรวจสอบได้','Quality'],
+ ['Quality attribute','คุณลักษณะด้านคุณภาพ','One checkable aspect of quality, traced to an NFR.','ด้านหนึ่งของคุณภาพที่ตรวจได้ โยงไปที่ NFR','Quality'],
+ ['Reliability','ความน่าเชื่อถือ','Keeps giving the same correct result over time.','ให้ผลลัพธ์ที่ถูกต้องเหมือนเดิมตลอดเวลา','Quality','Checked by tests'],
+ ['Usability / Interaction capability','ความง่ายในการใช้งาน','People can learn and use it easily.','คนเรียนรู้และใช้งานได้ง่าย','Quality','Watch a real user'],
+ ['Maintainability','การบำรุงรักษาได้','Code is easy to read and change safely.','โค้ดอ่านง่ายและแก้ไขได้อย่างปลอดภัย','Quality'],
+ ['Performance efficiency','ประสิทธิภาพ','Fast enough within the resources and NFR budget.','เร็วพอภายในทรัพยากรและเวลาที่ NFR กำหนด','Quality','Measure, don\'t guess'],
+ ['Flexibility','ความยืดหยุ่น','Adapts to new environments and needs (was Portability).','ปรับเข้ากับสภาพแวดล้อมและความต้องการใหม่ได้ (เดิมคือ Portability)','Quality'],
+ ['Safety','ความปลอดภัยต่อชีวิตและทรัพย์สิน','Avoids harm to people, property and the environment (new in 2023).','ไม่ก่ออันตรายต่อคน ทรัพย์สิน และสิ่งแวดล้อม (ใหม่ในปี 2023)','Quality'],
+ ['ISO/IEC 25010','มาตรฐานโมเดลคุณภาพผลิตภัณฑ์','International product-quality model with 9 characteristics (2023 edition).','โมเดลคุณภาพผลิตภัณฑ์สากล มี 9 คุณลักษณะ (ฉบับ 2023)','Quality'],
+ ['Code review','การรีวิวโค้ด','A teammate reads your code before it reaches main.','เพื่อนร่วมทีมอ่านโค้ดก่อนเข้า main','Tools','Pull Request'],
+ ['Pull Request (PR)','คำขอรวมโค้ด','A request to merge a branch, where review happens.','คำขอรวม branch ซึ่งเป็นที่ที่เกิดการรีวิว','Tools'],
+ ['Linter','ตัวตรวจโค้ด','A tool that flags style issues and likely bugs without running the code.','เครื่องมือที่เตือนปัญหาสไตล์และบั๊กที่น่าจะเกิด โดยไม่ต้องรันโค้ด','Tools'],
+ ['Static analysis','การวิเคราะห์แบบสถิต','Checking code by reading it, not running it.','การตรวจโค้ดโดยอ่าน ไม่ใช่รัน','Tools'],
+ ['Code smell','กลิ่นโค้ด (จุดน่าสงสัย)','A sign the code may be badly designed, even if it works.','สัญญาณว่าโค้ดอาจออกแบบไม่ดี แม้จะทำงานได้','Tools'],
+ ['Defect','ข้อบกพร่อง','A mistake that makes software behave wrongly.','ความผิดพลาดที่ทำให้ซอฟต์แวร์ทำงานผิด','Quality'],
+ ['Cost of defects','ต้นทุนข้อบกพร่อง','Fixing a bug costs more the later it is found (Boehm).','ยิ่งเจอบั๊กช้า ยิ่งแก้แพง (Boehm)','Quality','~1× → ~100×'],
+ ['Production','ระบบใช้งานจริง','The live system that real users use.','ระบบที่ผู้ใช้จริงใช้งานอยู่','Quality'],
+ ['Vulnerability','ช่องโหว่','A weakness an attacker can use.','จุดอ่อนที่ผู้โจมตีใช้ประโยชน์ได้','Security'],
+ ['Input validation','การตรวจสอบข้อมูลนำเข้า','Checking type, length and range of input on the server.','ตรวจชนิด ความยาว และช่วงค่าของ input ที่ฝั่ง server','Security','age ≥ 0'],
+ ['Access control','การควบคุมการเข้าถึง','Making sure users can only see and change what is theirs.','ทำให้ผู้ใช้เห็นและแก้ได้เฉพาะสิ่งที่เป็นของตัวเอง','Security'],
+ ['Authentication','การยืนยันตัวตน','Proving who you are (e.g. logging in).','การพิสูจน์ว่าเราเป็นใคร (เช่น ล็อกอิน)','Security'],
+ ['Session','เซสชัน','The server\'s trusted record of who is logged in.','บันทึกที่ server เชื่อถือได้ว่าใครล็อกอินอยู่','Security','session.user'],
+ ['IDOR','การอ้างอิงออบเจกต์โดยตรงที่ไม่ปลอดภัย','Insecure Direct Object Reference: changing an id shows others\' data.','เปลี่ยน id แล้วเห็นข้อมูลของคนอื่น','Security','user_id=1043'],
+ ['Broken access control','การควบคุมการเข้าถึงที่บกพร่อง','Users can act outside their permissions. #1 in OWASP Top 10 (2021).','ผู้ใช้ทำสิ่งที่เกินสิทธิ์ได้ อันดับ 1 ใน OWASP Top 10 (2021)','Security'],
+ ['OWASP Top 10','10 ความเสี่ยงสำคัญของเว็บแอป','A list of the most critical web-app security risks.','รายการความเสี่ยงด้านความปลอดภัยของเว็บแอปที่สำคัญที่สุด','Security'],
+ ['Secret','รหัสลับ','A password, API key or token that must stay private.','รหัสผ่าน API key หรือ token ที่ต้องเก็บเป็นความลับ','Security'],
+ ['API key','คีย์ API','A secret string that lets a program use a service.','ข้อความลับที่ให้โปรแกรมใช้บริการได้','Security'],
+ ['.env / .gitignore','ไฟล์ .env / .gitignore','.env holds secrets; .gitignore keeps it out of Git.','.env เก็บรหัสลับ ส่วน .gitignore กันไม่ให้เข้า Git','Security'],
+ ['Personal data','ข้อมูลส่วนบุคคล','Data that identifies a person.','ข้อมูลที่ระบุตัวบุคคลได้','Privacy'],
+ ['Sensitive personal data','ข้อมูลส่วนบุคคลที่อ่อนไหว','Special categories such as health data; need explicit consent.','ข้อมูลประเภทพิเศษ เช่น ข้อมูลสุขภาพ ต้องได้รับความยินยอมโดยชัดแจ้ง','Privacy','PDPA §26'],
+ ['PDPA','พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล','Thailand\'s Personal Data Protection Act B.E. 2562, fully in force 2022.','พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 บังคับใช้เต็มรูปแบบปี 2565','Privacy'],
+ ['Consent','ความยินยอม','Permission given knowingly, for a stated purpose.','การอนุญาตโดยรู้ข้อมูล สำหรับวัตถุประสงค์ที่แจ้งไว้','Privacy'],
+ ['Data minimisation','การเก็บข้อมูลให้น้อยที่สุด','Collect only what the feature needs.','เก็บเฉพาะที่ฟีเจอร์จำเป็น','Privacy'],
+ ['Seed / fake data','ข้อมูลสมมติ','Made-up data used in a prototype instead of real people\'s data.','ข้อมูลที่แต่งขึ้นเพื่อใช้ใน prototype แทนข้อมูลคนจริง','Privacy']
+];
+add('Vocabulary','คำศัพท์',`
+<p class="kicker violet">Vocabulary · ${V.length} words you should know</p>
+<h2>${L('Vocabulary you should know','คำศัพท์ที่ควรรู้')}</h2>
+<input class="vsearch" id="vq" type="search" placeholder="Search · ค้นหา (e.g. IDOR, ความยินยอม)" aria-label="Search vocabulary">
+<div class="vgrid" id="vgrid">${V.map(v=>`<div class="v" data-s="${(v[0]+' '+v[1]+' '+v[2]+' '+v[3]).toLowerCase().replace(/"/g,'')}">
+ <span class="cat">${v[4]}</span><div class="term">${v[0]}</div><div class="thw">${v[1]}</div>
+ <div class="mean">${L(v[2],v[3])}</div>${v[5]?`<div class="ex">e.g. ${v[5]}</div>`:''}</div>`).join('')}</div>
+<p id="vnone" class="hint" style="display:none">${L('No matching words.','ไม่พบคำที่ค้นหา')}</p>`);
+
+add('References','แหล่งอ้างอิง',`
+${head('References','Where this lesson comes from','แหล่งที่มาของบทเรียนนี้')}
+${steps([
+ ['<b>Sommerville, I. (2011)</b> Software Engineering 9e: Ch24 Quality management; Ch14 Security engineering (§14.1 risk, §14.2 design for security); §11.4; §13.4.','<b>Sommerville, I. (2011)</b> Software Engineering 9e: บทที่ 24 การบริหารคุณภาพ · บทที่ 14 วิศวกรรมความปลอดภัย'],
+ ['<b>ISO/IEC 25010:2023</b> Product quality model, Edition 2 (replaces 2011): nine characteristics, Safety is new.','<b>ISO/IEC 25010:2023</b> โมเดลคุณภาพผลิตภัณฑ์ ฉบับที่ 2 (แทน 2011): 9 คุณลักษณะ เพิ่ม Safety'],
+ ['<b>OWASP Top 10 (2021)</b>: the most critical web-app risks. Broken Access Control is #1 (the IDOR demo).','<b>OWASP Top 10 (2021)</b>: ความเสี่ยงสำคัญที่สุดของเว็บแอป Broken Access Control เป็นอันดับ 1 (ตัวอย่าง IDOR)'],
+ ['<b>Boehm, B. (1981)</b> Software Engineering Economics: the cost of fixing a defect rises sharply across the life cycle.','<b>Boehm, B. (1981)</b> Software Engineering Economics: ต้นทุนแก้ข้อบกพร่องเพิ่มขึ้นมากตามวงจรชีวิต'],
+ ['<b>PDPA B.E. 2562 (2019)</b>: Thailand\'s Personal Data Protection Act, in force 2022.','<b>พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562</b> บังคับใช้ปี 2565']
+])}
+<p class="hint">${L('Read Ch24 + skim the OWASP Top 10 before the exam. Original handout: <a href="ch08-quality-security.pdf">ch08-quality-security.pdf</a>.','อ่านบทที่ 24 + อ่านผ่าน ๆ OWASP Top 10 ก่อนสอบ · เอกสารต้นฉบับ: <a href="ch08-quality-security.pdf">ch08-quality-security.pdf</a>')}</p>`);
+
+add('Next class','คาบหน้า',`
+${head("That's Ch8. See you next class",'Next: Ch9 and Ch10','ต่อไป: Ch9 และ Ch10','green')}
+<div class="grid g2">
+ ${card('blue','Next class','Mon 26 Oct, 13:00–14:50','จันทร์ 26 ต.ค. 13:00–14:50','Note the later start: <b>13:00, not 12:00</b>. Ch9 Project Management and Ch10 Professional Ethics.','สังเกตว่าเริ่มช้ากว่าปกติ: <b>13:00 ไม่ใช่ 12:00</b> เรียน Ch9 การบริหารโปรเจกต์ และ Ch10 จริยธรรมวิชาชีพ')}
+ ${card('amber','Bring','Two A4 sheets','กระดาษ A4 สองแผ่น','Critique #9 and Critique #10, handwritten in class.','Critique #9 และ Critique #10 เขียนมือในห้อง')}
+ ${card('green','Hand in today','Critique #8 sheet','กระดาษ Critique #8','Name, student ID and "Critique #8" on top.','เขียนชื่อ รหัสนักศึกษา และ "Critique #8" ไว้ด้านบน')}
+ ${card('violet','Before next class','Review Ch8','ทบทวน Ch8','The Ch8 and Ch9 self-study handbook will be posted in Classroom, with self-checks and practice MCQs.','คู่มืออ่านเอง Ch8 และ Ch9 จะโพสต์ใน Classroom พร้อมแบบทดสอบตัวเองและข้อสอบฝึก')}
+</div>
+<div class="dots" aria-hidden="true"><i style="background:#2f5bff"></i><i style="background:#15995a"></i><i style="background:#e5483a"></i><i style="background:#ffc23a"></i></div>`);
+
+/* ---------- render ---------- */
+const stage=document.getElementById('stage');
+stage.innerHTML=S.map((s,i)=>`<section class="slide" aria-roledescription="slide" aria-label="${i+1} of ${S.length}"><div class="inner">${s.html}</div></section>`).join('');
+const slides=[...stage.querySelectorAll('.slide')];
+const root=document.documentElement;
+let cur=0;
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+function show(i){
+  i=Math.max(0,Math.min(S.length-1,i));
+  slides[cur].classList.remove('on'); cur=i; slides[cur].classList.add('on'); slides[cur].scrollTop=0;
+  document.getElementById('num').textContent=`${cur+1} / ${S.length}`;
+  document.getElementById('ttl').innerHTML=L(S[cur].en,S[cur].th);
+  document.getElementById('bar').style.width=((cur+1)/S.length*100)+'%';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===S.length-1;
+  history.replaceState(null,'','#'+(cur+1));
+  store.set('w8-slide',cur);
+  renderMenu();
+}
+document.getElementById('prev').onclick=()=>show(cur-1);
+document.getElementById('next').onclick=()=>show(cur+1);
+document.addEventListener('keydown',e=>{
+  if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown')show(cur+1);
+  else if(e.key==='ArrowLeft'||e.key==='PageUp')show(cur-1);
+  else if(e.key==='Escape')menu.classList.remove('on');
+});
+let tx=0,ty=0,skip=false;
+stage.addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY;skip=!!e.target.closest('pre,.scroll-x,input,svg');},{passive:true});
+stage.addEventListener('touchend',e=>{if(skip)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;
+  if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.6)show(cur+(dx<0?1:-1));},{passive:true});
+
+/* menu */
+const menu=document.getElementById('menu'),menuList=document.getElementById('menuList');
+function renderMenu(){menuList.innerHTML=S.map((s,i)=>`<li><button class="${i===cur?'cur':''}" data-i="${i}"><span class="n">${i+1}</span><span>${L(s.en,s.th)}</span></button></li>`).join('');}
+menuList.onclick=e=>{const b=e.target.closest('button');if(b){show(+b.dataset.i);menu.classList.remove('on');}};
+document.getElementById('menuBtn').onclick=()=>menu.classList.add('on');
+document.getElementById('menuClose').onclick=()=>menu.classList.remove('on');
+menu.onclick=e=>{if(e.target===menu)menu.classList.remove('on');};
+
+/* theme */
+const themeBtn=document.getElementById('themeBtn');
+function setTheme(t){root.dataset.theme=t;themeBtn.textContent=t==='dark'?'☀️':'🌙';themeBtn.setAttribute('aria-label',t==='dark'?'Switch to light theme':'Switch to dark theme');store.set('w8-theme',t);}
+themeBtn.onclick=()=>setTheme(root.dataset.theme==='dark'?'light':'dark');
+setTheme(root.dataset.theme==='light'?'light':'dark');
+
+/* language */
+const segBtns=document.querySelectorAll('.seg button');
+function setMode(m){root.dataset.mode=m;root.lang=m==='th'?'th':'en';segBtns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.m===m)));store.set('w8-lang',m);}
+segBtns.forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+const savedLang=store.get('w8-lang'); if(savedLang)setMode(savedLang);
+
+/* quiz */
+const quiz=document.getElementById('quiz');
+function updScore(){
+  const done=quiz.querySelectorAll('.q.done').length, right=quiz.querySelectorAll('.opt.right.picked').length;
+  document.getElementById('qscore').textContent=`${right} / ${Q.length}`;
+  document.getElementById('qleft').innerHTML=done<Q.length?L(`${Q.length-done} left`,`เหลือ ${Q.length-done} ข้อ`):L(right>=Q.length*0.8?'Excellent! 🎉':right>=Q.length*0.5?'Good. Review the ones you missed.':'Review the slides and try again.',right>=Q.length*0.8?'ยอดเยี่ยม! 🎉':right>=Q.length*0.5?'ดี ลองทบทวนข้อที่ผิด':'ทบทวนสไลด์แล้วลองใหม่');
+}
+quiz.addEventListener('click',e=>{
+  const b=e.target.closest('.opt'); if(!b)return; const q=b.closest('.q'); if(q.classList.contains('done'))return;
+  const ans=Q[+q.dataset.i][3];
+  q.querySelectorAll('.opt').forEach((o,j)=>{o.disabled=true;if(j===ans)o.classList.add('right');});
+  b.classList.add('picked'); if(+b.dataset.j!==ans)b.classList.add('wrong');
+  q.classList.add('done'); updScore();
+});
+document.getElementById('qreset').onclick=()=>{quiz.querySelectorAll('.q').forEach(q=>{q.classList.remove('done');q.querySelectorAll('.opt').forEach(o=>{o.disabled=false;o.className='opt';});});updScore();slides[cur].scrollTop=0;};
+updScore();
+
+/* vocab search */
+document.getElementById('vq').addEventListener('input',e=>{
+  const s=e.target.value.trim().toLowerCase(); let n=0;
+  document.querySelectorAll('#vgrid .v').forEach(v=>{const m=!s||v.dataset.s.includes(s);v.style.display=m?'':'none';if(m)n++;});
+  document.getElementById('vnone').style.display=n?'none':'block';
+});
+
+/* critique timer */
+let tSec=420,tInt=null;const tEl=document.getElementById("tleft"),tBox=document.getElementById("timer");
+const tShow=()=>{tEl.textContent=Math.floor(tSec/60)+":"+String(tSec%60).padStart(2,"0");tBox.classList.toggle("done",tSec===0);};
+document.getElementById("tgo").onclick=()=>{if(tInt){clearInterval(tInt);tInt=null;return;}if(tSec===0)tSec=420;tInt=setInterval(()=>{tSec=Math.max(0,tSec-1);tShow();if(!tSec){clearInterval(tInt);tInt=null;}},1000);};
+document.getElementById("treset").onclick=()=>{clearInterval(tInt);tInt=null;tSec=420;tShow();};
+
+/* start */
+const fromHash=parseInt(location.hash.slice(1),10);
+const saved=parseInt(store.get('w8-slide'),10);
+slides[0].classList.add('on');
+show(!isNaN(fromHash)?fromHash-1:(!isNaN(saved)?saved:0));
+</script>
+</body>
+</html>
