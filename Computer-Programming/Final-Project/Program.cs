@@ -3,14 +3,49 @@ using System.IO;
 
 namespace Computer_Program
 {
+    // One object = one student (name, total score, grade)
+    class Student
+    {
+        public string name;
+        public double total;
+        public string grade;
+
+        // Constructor: runs when we write "new Student(...)"
+        public Student(string n, double t)
+        {
+            name = n;
+            total = t;
+            grade = CalGrade(t);
+        }
+
+        // private = only this class can use it
+        private string CalGrade(double t)
+        {
+            if (t >= 80)
+                return "A";
+            else if (t >= 75)
+                return "B+";
+            else if (t >= 70)
+                return "B";
+            else if (t >= 65)
+                return "C+";
+            else if (t >= 60)
+                return "C";
+            else if (t >= 55)
+                return "D+";
+            else if (t >= 50)
+                return "D";
+            else
+                return "F";
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
-            string[] name = new string[50];
-            double[,] score = new double[50, 3]; // column 0 = work, 1 = midterm, 2 = final
-            double[] total = new double[50];
-            string[] grade = new string[50];
+            Student[] students = new Student[50]; // array of class
+            double[,] score = new double[50, 3];  // column 0 = work, 1 = midterm, 2 = final
             int count = 0;
             int menu;
 
@@ -39,12 +74,12 @@ namespace Computer_Program
                         {
                             Console.WriteLine("--Student " + (i + 1) + "--");
                             Console.Write("Enter name: ");
-                            name[i] = Console.ReadLine().Replace(",", " ");
+                            string n = Console.ReadLine().Replace(",", " ");
                             score[i, 0] = ReadScore("Enter work score: ");
                             score[i, 1] = ReadScore("Enter midterm score: ");
                             score[i, 2] = ReadScore("Enter final score: ");
-                            total[i] = CalTotal(score[i, 0], score[i, 1], score[i, 2]);
-                            grade[i] = CalGrade(total[i]);
+                            double t = CalTotal(score[i, 0], score[i, 1], score[i, 2]);
+                            students[i] = new Student(n, t);
                         }
                         count = count + add;
                         break;
@@ -58,8 +93,8 @@ namespace Computer_Program
                         Console.WriteLine("Name".PadRight(15) + "Work\tMid\tFinal\tTotal\tGrade");
                         for (int i = 0; i < count; i++)
                         {
-                            Console.WriteLine(name[i].PadRight(15) + score[i, 0] + "\t" + score[i, 1] + "\t"
-                                + score[i, 2] + "\t" + total[i] + "\t" + grade[i]);
+                            Console.WriteLine(students[i].name.PadRight(15) + score[i, 0] + "\t" + score[i, 1] + "\t"
+                                + score[i, 2] + "\t" + students[i].total + "\t" + students[i].grade);
                         }
                         break;
 
@@ -75,7 +110,7 @@ namespace Computer_Program
                             Console.Write(list[i] + "\t: ");
                             for (int j = 0; j < count; j++)
                             {
-                                if (grade[j] == list[i])
+                                if (students[j].grade == list[i])
                                     Console.Write("*");
                             }
                             Console.WriteLine();
@@ -86,7 +121,7 @@ namespace Computer_Program
                         StreamWriter sw = new StreamWriter("students.txt");
                         for (int i = 0; i < count; i++)
                         {
-                            sw.WriteLine(name[i] + "," + score[i, 0] + "," + score[i, 1] + "," + score[i, 2]);
+                            sw.WriteLine(students[i].name + "," + score[i, 0] + "," + score[i, 1] + "," + score[i, 2]);
                         }
                         sw.Close();
                         Console.WriteLine("Saved " + count + " students");
@@ -104,12 +139,11 @@ namespace Computer_Program
                         while (line != null && count < 50)
                         {
                             string[] part = line.Split(',');
-                            name[count] = part[0];
                             score[count, 0] = double.Parse(part[1]);
                             score[count, 1] = double.Parse(part[2]);
                             score[count, 2] = double.Parse(part[3]);
-                            total[count] = CalTotal(score[count, 0], score[count, 1], score[count, 2]);
-                            grade[count] = CalGrade(total[count]);
+                            double t = CalTotal(score[count, 0], score[count, 1], score[count, 2]);
+                            students[count] = new Student(part[0], t);
                             count++;
                             line = sr.ReadLine();
                         }
@@ -155,26 +189,6 @@ namespace Computer_Program
         {
             double sum = (w * 0.3) + (m * 0.3) + (f * 0.4);
             return Math.Round(sum, 2);
-        }
-
-        static string CalGrade(double t)
-        {
-            if (t >= 80)
-                return "A";
-            else if (t >= 75)
-                return "B+";
-            else if (t >= 70)
-                return "B";
-            else if (t >= 65)
-                return "C+";
-            else if (t >= 60)
-                return "C";
-            else if (t >= 55)
-                return "D+";
-            else if (t >= 50)
-                return "D";
-            else
-                return "F";
         }
     }
 }
