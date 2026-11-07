@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 
 namespace Computer_Program
 {
@@ -44,6 +45,10 @@ namespace Computer_Program
     {
         static void Main(string[] args)
         {
+            // Let the console show and read Thai (and other languages)
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.InputEncoding = Encoding.UTF8;
+
             Student[] students = new Student[50]; // array of class
             double[,] score = new double[50, 3];  // column 0 = work, 1 = midterm, 2 = final
             int count = 0;
@@ -90,10 +95,10 @@ namespace Computer_Program
                             Console.WriteLine("No data yet");
                             break;
                         }
-                        Console.WriteLine("Name".PadRight(15) + "Work\tMid\tFinal\tTotal\tGrade");
+                        Console.WriteLine("Name".PadRight(15) + "\tWork\tMid\tFinal\tTotal\tGrade");
                         for (int i = 0; i < count; i++)
                         {
-                            Console.WriteLine(students[i].name.PadRight(15) + score[i, 0] + "\t" + score[i, 1] + "\t"
+                            Console.WriteLine(students[i].name.PadRight(15) + "\t" + score[i, 0] + "\t" + score[i, 1] + "\t"
                                 + score[i, 2] + "\t" + students[i].total + "\t" + students[i].grade);
                         }
                         break;
