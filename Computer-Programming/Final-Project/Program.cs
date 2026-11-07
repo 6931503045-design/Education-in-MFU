@@ -83,6 +83,8 @@ namespace Computer_Program
             int count = 0;                                  // how many students we have now
             int menu = -1;
 
+            ShowWelcome();   // show the welcome message one time when the program starts
+
             do
             {
                 // ---------- Show menu ----------
@@ -92,8 +94,9 @@ namespace Computer_Program
                 Console.WriteLine("3. Show grade chart");
                 Console.WriteLine("4. Save to file");
                 Console.WriteLine("5. Load from file");
+                Console.WriteLine("6. How to use");
                 Console.WriteLine("0. Exit");
-                menu = ReadNumber("Choose menu: ", 0, 5);
+                menu = ReadNumber("Choose menu: ", 0, 6);
                 Console.WriteLine();
 
                 switch (menu)
@@ -249,6 +252,11 @@ namespace Computer_Program
                         }
                         break;
 
+                    // ---------- Menu 6: How to use ----------
+                    case 6:
+                        ShowHelp();
+                        break;
+
                     // ---------- Menu 0: Exit ----------
                     case 0:
                         Console.WriteLine("Bye Bye Luk na jub jub A+ pls");
@@ -257,6 +265,78 @@ namespace Computer_Program
 
                 Console.WriteLine();
             } while (menu != 0);
+        }
+
+        // ============================================================
+        // Welcome message: shown one time when the program starts
+        // ============================================================
+        static void ShowWelcome()
+        {
+            Console.WriteLine("==========================================");
+            Console.WriteLine("     Welcome to the Grading System");
+            Console.WriteLine("==========================================");
+            Console.WriteLine("This program helps teachers calculate");
+            Console.WriteLine("total scores and grades for students.");
+            Console.WriteLine();
+            Console.WriteLine("How the total score is calculated:");
+            Console.WriteLine("  Work    30%");
+            Console.WriteLine("  Midterm 30%");
+            Console.WriteLine("  Final   40%");
+            Console.WriteLine();
+            Console.WriteLine("Grade criteria:");
+            Console.WriteLine("  A  : 80 or more");
+            Console.WriteLine("  B+ : 75 or more");
+            Console.WriteLine("  B  : 70 or more");
+            Console.WriteLine("  C+ : 65 or more");
+            Console.WriteLine("  C  : 60 or more");
+            Console.WriteLine("  D+ : 55 or more");
+            Console.WriteLine("  D  : 50 or more");
+            Console.WriteLine("  F  : less than 50");
+            Console.WriteLine();
+            Console.WriteLine("New here? Choose menu 6 to see how to use.");
+            Console.WriteLine("==========================================");
+            Console.WriteLine();
+        }
+
+        // ============================================================
+        // Help page: explains every menu (menu 6)
+        // ============================================================
+        static void ShowHelp()
+        {
+            Console.WriteLine("============== How to use ==============");
+            Console.WriteLine();
+            Console.WriteLine("1. Add students & scores");
+            Console.WriteLine("   Type how many students you want to add.");
+            Console.WriteLine("   Then type each student's name and 3 scores:");
+            Console.WriteLine("   work, midterm and final (each score is 0 - 100).");
+            Console.WriteLine("   New students are added after the old ones.");
+            Console.WriteLine("   You can keep up to 50 students.");
+            Console.WriteLine();
+            Console.WriteLine("2. Show score table");
+            Console.WriteLine("   Shows every student's scores, total and grade.");
+            Console.WriteLine();
+            Console.WriteLine("3. Show grade chart");
+            Console.WriteLine("   Shows how many students got each grade.");
+            Console.WriteLine("   One * means one student.");
+            Console.WriteLine();
+            Console.WriteLine("4. Save to file");
+            Console.WriteLine("   Saves all students to the file students.txt.");
+            Console.WriteLine("   The old file will be replaced.");
+            Console.WriteLine();
+            Console.WriteLine("5. Load from file");
+            Console.WriteLine("   Loads students from students.txt.");
+            Console.WriteLine("   Warning: students that are not saved yet will be lost.");
+            Console.WriteLine();
+            Console.WriteLine("6. How to use");
+            Console.WriteLine("   Shows this page.");
+            Console.WriteLine();
+            Console.WriteLine("0. Exit");
+            Console.WriteLine("   Closes the program.");
+            Console.WriteLine("   Remember to save (menu 4) before you exit!");
+            Console.WriteLine();
+            Console.WriteLine("Tip: if you type something wrong, the program");
+            Console.WriteLine("will tell you and ask again.");
+            Console.WriteLine("========================================");
         }
 
         // ============================================================
