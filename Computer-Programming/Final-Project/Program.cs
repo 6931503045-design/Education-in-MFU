@@ -95,10 +95,10 @@ namespace Computer_Program
                             Console.WriteLine("No data yet");
                             break;
                         }
-                        Console.WriteLine("Name".PadRight(15) + "\tWork\tMid\tFinal\tTotal\tGrade");
+                        Console.WriteLine("Name".PadRight(20) + "\tWork\tMid\tFinal\tTotal\tGrade");
                         for (int i = 0; i < count; i++)
                         {
-                            Console.WriteLine(students[i].name.PadRight(15) + "\t" + score[i, 0] + "\t" + score[i, 1] + "\t"
+                            Console.WriteLine(students[i].name.PadRight(20) + "\t" + score[i, 0] + "\t" + score[i, 1] + "\t"
                                 + score[i, 2] + "\t" + students[i].total + "\t" + students[i].grade);
                         }
                         break;
