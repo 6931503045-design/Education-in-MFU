@@ -79,7 +79,14 @@ namespace Computer_Program
                         {
                             Console.WriteLine("--Student " + (i + 1) + "--");
                             Console.Write("Enter name: ");
-                            string n = Console.ReadLine().Replace(",", " ");
+                            string n = Console.ReadLine().Trim();
+                            while (n == "")
+                            {
+                                Console.WriteLine("Name cannot be empty");
+                                Console.Write("Enter name: ");
+                                n = Console.ReadLine().Trim();
+                            }
+                            n = n.Replace(",", " ");
                             score[i, 0] = ReadScore("Enter work score: ");
                             score[i, 1] = ReadScore("Enter midterm score: ");
                             score[i, 2] = ReadScore("Enter final score: ");
@@ -123,6 +130,11 @@ namespace Computer_Program
                         break;
 
                     case 4:
+                        if (count == 0)
+                        {
+                            Console.WriteLine("No data to save");
+                            break;
+                        }
                         StreamWriter sw = new StreamWriter("students.txt");
                         for (int i = 0; i < count; i++)
                         {
@@ -182,7 +194,7 @@ namespace Computer_Program
         {
             double s;
             Console.Write(text);
-            while (!double.TryParse(Console.ReadLine(), out s) || s < 0 || s > 100)
+            while (!double.TryParse(Console.ReadLine(), out s) || double.IsNaN(s) || s < 0 || s > 100)
             {
                 Console.WriteLine("Score must be 0 - 100");
                 Console.Write(text);
