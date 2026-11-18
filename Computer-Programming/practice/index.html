@@ -92,7 +92,7 @@ h3{font-size:16px;font-weight:500;margin:0 0 4px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
 .lesson{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;transition:border-color .15s,background .15s}
 .lesson:hover{border-color:var(--line-2);background:var(--card-2)}
-.lesson .em{font-size:22px;width:40px;height:40px;border-radius:8px;border:1px solid var(--line-2);display:grid;place-items:center;margin-bottom:12px}
+.lesson .em{color:var(--accent);width:40px;height:40px;border-radius:8px;border:1px solid var(--line-2);display:grid;place-items:center;margin-bottom:12px}
 .lesson .n{font:12px "IBM Plex Mono",monospace;color:var(--muted)}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .stat{padding:16px 18px;border-right:1px solid var(--line)}
@@ -112,7 +112,21 @@ h3{font-size:16px;font-weight:500;margin:0 0 4px}
 .vtabs button{border:1px solid var(--line-2);background:transparent;border-radius:6px;padding:3px 10px;font-size:13px;color:var(--muted)}
 .vtabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .analogy{display:flex;gap:16px;align-items:center;border:1px solid var(--line);background:var(--bg-2);border-radius:12px;padding:16px 18px;margin-top:18px}
-.analogy .big{font-size:34px;line-height:1;width:60px;height:60px;flex:0 0 60px;border-radius:10px;border:1px solid var(--line-2);display:grid;place-items:center}
+.analogy{padding:0;overflow:hidden;align-items:stretch;gap:0}
+.analogy figure{margin:0;flex:0 0 44%;max-width:44%;position:relative;background:#000}
+.analogy figure img{display:block;width:100%;height:100%;min-height:200px;object-fit:cover}
+.analogy figcaption{position:absolute;left:8px;bottom:6px;font-size:10.5px;color:#fff;background:rgba(0,0,0,.55);padding:1px 6px;border-radius:4px}
+.analogy .txt{padding:18px 20px;display:flex;flex-direction:column;justify-content:center}
+.analogy .txt b{font-size:17px;font-weight:500;letter-spacing:-.01em}
+.ic{width:1.1em;height:1.1em;flex:0 0 auto;vertical-align:-.18em}
+.lesson .em .ic,.h1-ic .ic{width:20px;height:20px}
+.h1-ic{display:inline-grid;place-items:center;width:44px;height:44px;border:1px solid var(--line-2);border-radius:10px;vertical-align:middle;margin-right:12px;color:var(--accent)}
+.tutor .ava .ic{width:19px;height:19px;color:var(--accent)}
+.ibtn{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.ibtn .ic{width:16px;height:16px}
+.side a .ic{width:16px;height:16px;color:var(--muted)}
+.side a.on .ic{color:var(--ink)}
+.count{display:inline-flex;align-items:center;gap:6px}
 .analogy p{margin:2px 0 0;color:var(--muted);font-size:15px}
 
 /* ===== Tracer ===== */
@@ -197,6 +211,9 @@ input.out{width:100%;background:var(--code-bg);color:var(--code-ink);border:1px 
   .shell{grid-template-columns:1fr}
   .side{display:none}
   .tracer{grid-template-columns:1fr}
+  .analogy{flex-direction:column}
+  .analogy figure{max-width:none;flex:none}
+  .analogy figure img{height:220px}
   .wrap{padding:0 16px}
 }
 @media (max-width:640px){
@@ -213,8 +230,8 @@ input.out{width:100%;background:var(--code-bg);color:var(--code-ink);border:1px 
 <header class="top"><div class="top-in">
   <a class="logo" href="#home"><i></i>CompPro Gym</a>
   <span class="count" id="count"></span>
-  <button class="ibtn" id="voiceBtn" title="เปิด/ปิดเสียงพากย์">🔊</button>
-  <button class="ibtn" id="themeBtn" title="สลับธีม">🌙</button>
+  <button class="ibtn" id="voiceBtn" title="เปิด/ปิดเสียงพากย์"></button>
+  <button class="ibtn" id="themeBtn" title="สลับธีม"></button>
 </div></header>
 <div class="shell"><aside class="side" id="side"></aside><main id="appScroll"><div class="wrap" id="app"></div></main></div>
 
@@ -243,6 +260,10 @@ const save = () => { for (const k of ['done','ex','review','best','voice','theme
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pick = a => a[Math.floor(Math.random()*a.length)];
+/* ---------- ไอคอนเส้น (Lucide, ISC license) ---------- */
+const ICONS = {"boxes": "<path d=\"M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z\" /> <path d=\"m7 16.5-4.74-2.85\" /> <path d=\"m7 16.5 5-3\" /> <path d=\"M7 16.5v5.17\" /> <path d=\"M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z\" /> <path d=\"m17 16.5-5-3\" /> <path d=\"m17 16.5 4.74-2.85\" /> <path d=\"M17 16.5v5.17\" /> <path d=\"M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z\" /> <path d=\"M12 8 7.26 5.15\" /> <path d=\"m12 8 4.74-2.85\" /> <path d=\"M12 13.5V8\" />", "lock": "<rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\" /> <path d=\"M7 11V7a5 5 0 0 1 10 0v4\" />", "landmark": "<line x1=\"3\" x2=\"21\" y1=\"22\" y2=\"22\" /> <line x1=\"6\" x2=\"6\" y1=\"18\" y2=\"11\" /> <line x1=\"10\" x2=\"10\" y1=\"18\" y2=\"11\" /> <line x1=\"14\" x2=\"14\" y1=\"18\" y2=\"11\" /> <line x1=\"18\" x2=\"18\" y1=\"18\" y2=\"11\" /> <polygon points=\"12 2 20 7 4 7\" />", "zap": "<path d=\"M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z\" />", "car": "<path d=\"M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2\" /> <circle cx=\"7\" cy=\"17\" r=\"2\" /> <path d=\"M9 17h6\" /> <circle cx=\"17\" cy=\"17\" r=\"2\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "bot": "<path d=\"M12 8V4H8\" /> <rect width=\"16\" height=\"12\" x=\"4\" y=\"8\" rx=\"2\" /> <path d=\"M2 14h2\" /> <path d=\"M20 14h2\" /> <path d=\"M15 13v2\" /> <path d=\"M9 13v2\" />", "play": "<polygon points=\"6 3 20 12 6 21 6 3\" />", "pause": "<rect x=\"14\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\" /> <rect x=\"6\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\" />", "skip-back": "<polygon points=\"19 20 9 12 19 4 19 20\" /> <line x1=\"5\" x2=\"5\" y1=\"19\" y2=\"5\" />", "chevron-left": "<path d=\"m15 18-6-6 6-6\" />", "skip-forward": "<polygon points=\"5 4 15 12 5 20 5 4\" /> <line x1=\"19\" x2=\"19\" y1=\"5\" y2=\"19\" />", "volume-2": "<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\" /> <path d=\"M16 9a5 5 0 0 1 0 6\" /> <path d=\"M19.364 18.364a9 9 0 0 0 0-12.728\" />", "volume-x": "<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\" /> <line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\" /> <line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\" />", "moon": "<path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\" />", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\" /> <path d=\"M12 2v2\" /> <path d=\"M12 20v2\" /> <path d=\"m4.93 4.93 1.41 1.41\" /> <path d=\"m17.66 17.66 1.41 1.41\" /> <path d=\"M2 12h2\" /> <path d=\"M20 12h2\" /> <path d=\"m6.34 17.66-1.41 1.41\" /> <path d=\"m19.07 4.93-1.41 1.41\" />", "house": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "target": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <circle cx=\"12\" cy=\"12\" r=\"6\" /> <circle cx=\"12\" cy=\"12\" r=\"2\" />", "rotate-ccw": "<path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\" /> <path d=\"M3 3v5h5\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <polyline points=\"12 6 12 12 16 14\" />", "graduation-cap": "<path d=\"M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z\" /> <path d=\"M22 10v6\" /> <path d=\"M6 12.5V16a6 3 0 0 0 12 0v-3.5\" />", "clipboard-check": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />"};
+const ic = (n, cls='') => `<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
+const BOT_AVA = `<div class="ava">${ic('bot')}</div>`;
 const lines = s => s.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
 
 /* ---------- พี่บอท: ติวเตอร์สไตล์ตรง ๆ ดุนิด ๆ แต่ตลก ---------- */
@@ -311,8 +332,8 @@ Console.WriteLine(r1.name + " " + r2.battery);`);
    .step(12, 'ตั้งชื่อหุ่นตัวที่ 2 — หุ่นตัวที่ 1 ไม่โดนด้วยนะ', b => b.f('#2','name','"Jarvis"'))
    .step(13, 'ผลคือ <b>NongAI 0</b> ⚠️ <code>r2.battery</code> ยังเป็น 0 เพราะเราไม่เคยตั้งค่า — ข้อสอบชอบหลอกจุดนี้!', b => b.print('NongAI 0'));
   CH10.lessons.push({
-    id:'l1', emoji:'🧩', title:'Class vs Object', sub:'แม่พิมพ์ กับ ของจริง',
-    analogy:{ big:'🍪', title:'Class = แม่พิมพ์คุกกี้ · Object = คุกกี้แต่ละชิ้น', text:'แม่พิมพ์อันเดียว ปั๊มคุกกี้ได้เป็นร้อยชิ้น แต่ละชิ้นแต่งหน้าไม่เหมือนกันก็ได้ แต่กินแม่พิมพ์ไม่ได้นะ 😂' },
+    id:'l1', icon:'boxes', title:'Class vs Object', sub:'แม่พิมพ์ กับ ของจริง',
+    analogy:{ img:'img/l1-cookie-cutters.jpg', credit:'ภาพ: Lyn Lomasi · CC0 · Wikimedia Commons', title:'Class = แม่พิมพ์คุกกี้ · Object = คุกกี้แต่ละชิ้น', text:'แม่พิมพ์อันเดียว ปั๊มคุกกี้ได้เป็นร้อยชิ้น แต่ละชิ้นแต่งหน้าไม่เหมือนกันก็ได้ แต่กินแม่พิมพ์ไม่ได้นะ 😂' },
     yt:'C# class object ภาษาไทย',
     video:{
       th:[{ id:'199P8cmmFGs', title:'OOP คืออะไร' },{ id:'Pua2hJuH6BM', title:'สร้าง Class & Object' }],
@@ -394,8 +415,8 @@ acc.balance = 1000000;`);
    .step(9, '<code>owner</code> เป็น public → แก้จากข้างนอก (Main) ได้ ✅', b => b.f('#1','owner','"Mew"'))
    .step(10, '💥 <b>compile error!</b> <code>balance</code> เป็น private เข้าจาก Main ไม่ได้ — ดีแล้ว ไม่งั้นใครก็เสกเงินล้านได้ 😂 แล้วจะเข้าถึงยังไง? → บทต่อไป <b>Property</b>', b => b.err("error CS0122: 'BankAccount.balance' is inaccessible due to its protection level"));
   CH10.lessons.push({
-    id:'l2', emoji:'🔒', title:'Field & public/private', sub:'ใครแตะข้อมูลได้บ้าง',
-    analogy:{ big:'👛', title:'private = เงินในกระเป๋าตังค์ · public = ป้ายชื่อที่ห้อยคอ', text:'ป้ายชื่อใครก็อ่านได้ แต่เงินในกระเป๋า คนอื่นห้ามล้วงเอง ต้องขอผ่านเจ้าของ' },
+    id:'l2', icon:'lock', title:'Field & public/private', sub:'ใครแตะข้อมูลได้บ้าง',
+    analogy:{ img:'img/l2-wallet.jpg', credit:'ภาพ: Martin Kingsley · CC BY 2.0 · Wikimedia Commons', title:'private = เงินในกระเป๋าตังค์ · public = ป้ายชื่อที่ห้อยคอ', text:'ป้ายชื่อใครก็อ่านได้ แต่เงินในกระเป๋า คนอื่นห้ามล้วงเอง ต้องขอผ่านเจ้าของ' },
     yt:'C# access modifier public private ภาษาไทย',
     video:{
       th:[{ id:'VgHGH55AxuI', title:'Access Modifier' },{ id:'-VaujJeZo9M', title:'สร้าง Field' },{ id:'FLig8RdrXws', title:'Encapsulation' }],
@@ -464,8 +485,8 @@ Console.WriteLine(acc.Balance);`);
    .step(6, '<b>get</b> ส่งค่า balance ออกไป = 500')
    .step(19, 'แสดงผล <b>500</b> (ไม่ใช่ -100 นะ!)', b => b.print('500'));
   CH10.lessons.push({
-    id:'l3', emoji:'🧑‍💼', title:'Property (get / set)', sub:'ประตูเข้า-ออกของ field',
-    analogy:{ big:'🏦', title:'Field = ตู้เซฟ · Property = พนักงานธนาคาร', text:'เราไม่เดินเข้าไปเปิดตู้เซฟเอง แต่ยื่นเงิน (value) ให้พนักงาน → set, หรือขอดูยอด → get พนักงานตรวจได้ว่ายอดติดลบมั้ย' },
+    id:'l3', icon:'landmark', title:'Property (get / set)', sub:'ประตูเข้า-ออกของ field',
+    analogy:{ img:'img/l3-bank-counter.jpg', credit:'ภาพ: Basher Eyre · CC BY-SA 2.0 · Wikimedia Commons', title:'Field = เงินในตู้เซฟหลังเคาน์เตอร์ · Property = พนักงานหน้าเคาน์เตอร์', text:'ลูกค้าเดินเข้าไปหลังเคาน์เตอร์เองไม่ได้ (private) ต้องยื่นเงิน (value) ให้พนักงาน → set, หรือขอดูยอด → get และพนักงานตรวจได้ว่ายอดติดลบมั้ย' },
     yt:'C# property get set ภาษาไทย',
     video:{
       th:[{ id:'9yMY_5OHqXU', title:'สร้าง Property' },{ id:'czugZCmnWps', title:'Auto Property' }],
@@ -577,8 +598,8 @@ Account a2 = new Account("Ploy", 500);`);
    .step(15, 'balance = b', b => b.f('#2','balance','500'))
    .step(21, 'เสร็จ! o กับ b หายไป (มันอยู่แค่ใน constructor) a2 ได้บัญชีที่มีเงิน 500 ตั้งแต่เกิด 🎉', b => { b.drop('o'); b.drop('b'); b.v('a2','→ #2'); });
   CH10.lessons.push({
-    id:'l4', emoji:'⚡', title:'Constructor', sub:'ตั้งค่าตั้งแต่เกิด',
-    analogy:{ big:'💳', title:'Constructor = ขั้นตอนเปิดบัญชีธนาคาร', text:'พอเดินเข้าไปเปิดบัญชี (new) พนักงานกรอกชื่อ + เงินฝากแรกเข้าให้ทันที บัญชีไม่เกิดมาแบบว่างเปล่า แถมมีหลายแบบฟอร์มให้เลือก' },
+    id:'l4', icon:'zap', title:'Constructor', sub:'ตั้งค่าตั้งแต่เกิด',
+    analogy:{ img:'img/l4-passbook.jpg', credit:'ภาพ: Parinaam · CC BY-SA 3.0 · Wikimedia Commons', title:'Constructor = ตอนเปิดบัญชีแล้วได้สมุดบัญชี', text:'พอเปิดบัญชี (new) สมุดที่ได้มามีชื่อเจ้าของ + เงินฝากแรกเข้ากรอกไว้ให้แล้ว บัญชีไม่เกิดมาแบบว่างเปล่า และมีหลายแบบฟอร์มให้เลือก (หลาย constructor)' },
     yt:'C# constructor ภาษาไทย',
     video:{
       th:[{ id:'X0WT5sh6u4A', title:'Default Constructor' },{ id:'Pc7d-rOYenI', title:'Parameter Constructor' }],
@@ -678,8 +699,8 @@ Console.WriteLine(cars[2].Name);`);
    .step(12, 'แสดง Tesla ✅', b => b.print('Tesla'))
    .step(13, '💥 <b>NullReferenceException!</b> ช่อง [2] ว่าง ไม่มีรถให้ถามชื่อ — error นี้เจอบ่อยมากในงานจริงและข้อสอบ', b => b.err('Unhandled exception. System.NullReferenceException: Object reference not set to an instance of an object.'));
   CH10.lessons.push({
-    id:'l5', emoji:'🅿️', title:'Array of Class', sub:'เก็บ object หลายตัวใน array',
-    analogy:{ big:'🚗', title:'Array = ลานจอดรถ · Object = รถแต่ละคัน', text:'สร้างลานจอด 3 ช่อง ไม่ได้แปลว่ามีรถ 3 คันนะ! ต้องเอารถ (new) มาจอดทีละช่องเอง' },
+    id:'l5', icon:'car', title:'Array of Class', sub:'เก็บ object หลายตัวใน array',
+    analogy:{ img:'img/l5-parking-lot.jpg', credit:'ภาพ: Öljylautta · Public domain · Wikimedia Commons', title:'Array = ลานจอดรถ · Object = รถแต่ละคัน', text:'ดูรูป: ตีเส้นช่องจอดไว้เต็มลาน แต่ไม่มีรถสักคัน = ทุกช่องเป็น null! ต้องเอารถ (new) มาจอดทีละช่องเอง' },
     yt:'C# array of objects ภาษาไทย',
     video:{
       th:[{ id:'zwZxfIZnsW0', title:'Struct & Array', note:'Playlist ไทยไม่มีคลิป Array of Class ตรง ๆ แต่คลิปนี้ใช้หลักการเดียวกัน (เก็บข้อมูลหลายตัวใน array) — หรือสลับไปดู Bro Code ที่ตรงกว่า' }],
@@ -778,8 +799,8 @@ public class Student
    .step([12,16], 'property Name คู่กับ field name', b => b.u(4))
    .step([18,21], '<code>+ Dance()</code> มีวงเล็บ = <b>method</b> public ไม่บอก type = <b>void</b>', b => b.u(5));
   CH10.lessons.push({
-    id:'l6', emoji:'📐', title:'UML Class Diagram → Code', sub:'อ่านแบบแปลนแล้วเขียนโค้ด',
-    analogy:{ big:'🏗️', title:'UML = แบบแปลนบ้าน · Code = บ้านที่สร้างจริง', text:'สถาปนิกวาดแปลนให้ช่างดู ช่าง (เรา) ต้องอ่านสัญลักษณ์ให้ออก แล้วสร้างให้ตรงแบบ' },
+    id:'l6', icon:'ruler', title:'UML Class Diagram → Code', sub:'อ่านแบบแปลนแล้วเขียนโค้ด',
+    analogy:{ img:'img/l6-plan-to-house.jpg', credit:'ภาพ: Azmie Kasmy · CC BY-SA 4.0 · Wikimedia Commons', title:'UML = แบบแปลนบ้าน · Code = บ้านที่สร้างจริง', text:'ดูรูป: จากแปลนในคอม → โมเดล 3D → บ้านจริง เหมือนกัน UML คือแปลน เรา (ช่าง) อ่านสัญลักษณ์ให้ออก แล้วเขียนโค้ดให้ตรงแบบ' },
     yt:'UML class diagram ภาษาไทย',
     video:{
       th:[{ id:'1PIECrX6x54', title:'Procedural vs OOP', note:'ยังไม่มีคลิปสอน UML ตรง ๆ คลิปนี้ช่วยปูพื้น OOP ที่หัวข้อ UML ใช้' }],
@@ -891,7 +912,7 @@ const stopSpeak = () => { try{ speechSynthesis.cancel(); }catch(e){} };
 function mountTracer(el, t){
   let i = 0, playing = false, timer = null;
   el.innerHTML = `
-    <div class="tutor" style="margin-bottom:12px"><div class="ava">🤖</div><div class="bub" data-say></div></div>
+    <div class="tutor" style="margin-bottom:12px">${BOT_AVA}<div class="bub" data-say></div></div>
     <div class="tracer">
       <div>${codeBox(t.code)}</div>
       <div class="side-p">
@@ -902,10 +923,10 @@ function mountTracer(el, t){
       </div>
     </div>
     <div class="ctrl">
-      <button class="ibtn" data-a="first" title="เริ่มใหม่">⏮</button>
-      <button class="ibtn" data-a="prev" title="ย้อน">◀</button>
-      <button class="ibtn play" data-a="play" title="เล่นอัตโนมัติ">▶ เล่น</button>
-      <button class="ibtn" data-a="next" title="ถัดไป">▶|</button>
+      <button class="ibtn" data-a="first" title="เริ่มใหม่">${ic('skip-back')}</button>
+      <button class="ibtn" data-a="prev" title="ย้อน">${ic('chevron-left')}</button>
+      <button class="ibtn play" data-a="play" title="เล่นอัตโนมัติ">${ic('play')} เล่น</button>
+      <button class="ibtn" data-a="next" title="ถัดไป">${ic('skip-forward')}</button>
       <span class="stepn" data-step></span>
     </div>`;
   const lns = [...el.querySelectorAll('.ln')];
@@ -939,12 +960,12 @@ function mountTracer(el, t){
     i = n; render();
   };
   const playBtn = $('[data-a="play"]', el);
-  const stop = () => { playing = false; clearTimeout(timer); stopSpeak(); playBtn.textContent = '▶ เล่น'; };
+  const stop = () => { playing = false; clearTimeout(timer); stopSpeak(); playBtn.innerHTML = ic('play') + ' เล่น'; };
   el.addEventListener('click', e => {
     const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return;
     if (a === 'play') {
       if (playing) return stop();
-      playing = true; playBtn.textContent = '⏸ หยุด';
+      playing = true; playBtn.innerHTML = ic('pause') + ' หยุด';
       if (i >= t.steps.length - 1) i = 0;
       render();
     }
@@ -1125,9 +1146,9 @@ function pageHome(){
     <h1>ฝึกให้เห็นภาพ<br><span style="color:var(--muted)">แล้วค่อยลงมือเขียน</span></h1>
     <p class="sub">ดูคลิป → ดู animation → ลงมือทำ → quiz · ครั้งละ 30–60 นาทีพอ</p>
     <div class="card">
-      <div class="tutor"><div class="ava">🤖</div><div class="bub">${
+      <div class="tutor">${BOT_AVA}<div class="bub">${
         due ? `มีโจทย์ที่เคยผิด <b>${due} ข้อ</b> รอทบทวนอยู่นะ ทำก่อนเลย ไม่งั้นลืมแน่ 😤`
-        : next ? `เริ่มที่ <b>${next.emoji} ${next.title}</b> เลย บทนี้เรียงจากเรื่องที่งงที่สุดก่อน (Class) ตามที่บอกไว้`
+        : next ? `เริ่มที่ <b>${next.title}</b> เลย บทนี้เรียงจากเรื่องที่งงที่สุดก่อน (Class) ตามที่บอกไว้`
         : `ดูครบทุกบทแล้ว 🔥 ไปลุย <b>Final Quiz</b> แล้วทำคะแนนให้ถึง 80% (A) ให้ได้!`
       }</div></div>
       <div class="stats" style="margin-top:14px">
@@ -1137,9 +1158,9 @@ function pageHome(){
         <div class="stat"><b>${due}</b><small>รอทบทวน</small></div>
       </div>
       <div class="row" style="margin-top:14px">
-        ${next ? `<a class="btn" style="text-decoration:none" href="#l/${next.id}">▶ เรียนต่อ: ${next.title}</a>` : ''}
-        ${due ? `<a class="btn ghost" style="text-decoration:none" href="#review">🔁 ทบทวน (${due})</a>` : ''}
-        <a class="btn ghost" style="text-decoration:none" href="#quiz">📝 Final Quiz Ch10</a>
+        ${next ? `<a class="btn" style="text-decoration:none" href="#l/${next.id}">${ic('play')} เรียนต่อ: ${next.title}</a>` : ''}
+        ${due ? `<a class="btn ghost" style="text-decoration:none" href="#review">${ic('rotate-ccw')} ทบทวน (${due})</a>` : ''}
+        <a class="btn ghost" style="text-decoration:none" href="#quiz">${ic('clipboard-check')} Final Quiz Ch10</a>
       </div>
     </div>
     ${CHAPTERS.map(c => `
@@ -1147,7 +1168,7 @@ function pageHome(){
       ${c.soon ? `<p class="sub">กำลังทำ… บทนี้จะมาหลังจากลอง Ch10 แล้วชอบสไตล์</p>` : `
       <div class="grid">${c.lessons.map((l, k) => `
         <a class="lesson" href="#l/${l.id}">
-          <div class="em">${l.emoji}</div>
+          <div class="em">${ic(l.icon)}</div>
           <div class="n">0${k+1}</div><h3>${l.title}</h3>
           <p class="sub" style="font-size:14px">${l.sub}</p>
           <div class="row" style="margin-top:8px">${S.done[l.id] ? '<span class="pill ok">✓ ดูจบแล้ว</span>' : ''}<span class="pill">${l.ex.length} โจทย์</span></div>
@@ -1162,7 +1183,7 @@ function pageLesson(id){
   const idx = CH10.lessons.indexOf(L), prev = CH10.lessons[idx-1], next = CH10.lessons[idx+1];
   app.innerHTML = `
     <a class="back" href="#home">← หน้าแรก</a>
-    <h1>${L.emoji} ${L.title}</h1>
+    <h1><span class="h1-ic">${ic(L.icon)}</span>${L.title}</h1>
     <p class="sub">Ch10 · บทที่ ${idx+1}/${CH10.lessons.length} · ${L.sub}</p>
 
     <div class="card">
@@ -1172,8 +1193,8 @@ function pageLesson(id){
 
     <div class="card">
       <div class="step-h"><span class="no">02</span><h2>ดูให้เห็นภาพ</h2></div>
-      <div class="analogy" style="margin:0 0 16px"><div class="big">${L.analogy.big}</div><div><b>${L.analogy.title}</b><p>${L.analogy.text}</p></div></div>
-      <p class="sub" style="margin:0 0 12px;font-size:14px">กด <b style="color:var(--ink)">▶ เล่น</b> ให้พี่บอทพากย์ หรือกด <b style="color:var(--ink)">▶|</b> ไปทีละขั้นเอง แล้วดูกล่อง memory ทางขวาเปลี่ยนตามโค้ดแต่ละบรรทัด</p>
+      <div class="analogy" style="margin:0 0 16px"><figure><img src="${L.analogy.img}" alt="${esc(L.analogy.title)}" loading="lazy"><figcaption>${L.analogy.credit}</figcaption></figure><div class="txt"><b>${L.analogy.title}</b><p>${L.analogy.text}</p></div></div>
+      <p class="sub" style="margin:0 0 12px;font-size:14px">กด <b style="color:var(--ink)">เล่น</b> ให้พี่บอทพากย์ หรือกด <b style="color:var(--ink)">ถัดไป</b> ไปทีละขั้นเอง แล้วดูกล่อง memory ทางขวาเปลี่ยนตามโค้ดแต่ละบรรทัด</p>
       <div data-tracer></div>
     </div>
 
@@ -1218,7 +1239,7 @@ function pageQuiz(){
     if (n >= N || !it) return finish();
     used.add(it.id);
     app.innerHTML = `<a class="back" href="#home">← ออก</a>
-      <h1>📝 Final Quiz · Ch10</h1>
+      <h1><span class="h1-ic">${ic('clipboard-check')}</span>Final Quiz · Ch10</h1>
       <p class="sub">ข้อ ${n+1}/${N} · ระดับตอนนี้ Lv.${lv} · คะแนน ${score}</p>
       <div class="bar" style="margin:12px 0"><i style="width:${n/N*100}%"></i></div>
       <div class="card"><div data-it></div><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn" data-next disabled>ข้อต่อไป →</button></div></div>`;
@@ -1238,13 +1259,13 @@ function pageQuiz(){
     app.innerHTML = `<a class="back" href="#home">← หน้าแรก</a>
       <h1>ผลสอบ: ${pct}% ${isBest ? '🏆 สถิติใหม่!' : ''}</h1>
       <div class="card">
-        <div class="tutor"><div class="ava">🤖</div><div class="bub">${
+        <div class="tutor">${BOT_AVA}<div class="bub">${
           pct >= 80 ? `ระดับ <b>${grade}</b> 🔥 แบบนี้เป็นที่ 1 ได้จริง แต่อย่าเพิ่งเหลิง ทำซ้ำให้ได้ทุกรอบ`
           : pct >= 60 ? `ได้ประมาณ <b>${grade}</b> ยังไม่ถึง A นะ 😤 กลับไปดูบทที่ผิดบ่อยแล้วมาสอบใหม่`
           : `<b>${grade}</b>… ไม่เป็นไร รอบแรกทุกคนก็พัง 😅 กลับไปดู animation ของบทข้างล่างอีกรอบ แล้วค่อยมาใหม่`
         }</div></div>
         <p>ถูก <b>${score}/${n}</b> · ระดับสุดท้าย Lv.${lv} · สถิติดีสุด ${S.best}%</p>
-        ${weak.length ? `<h3>จุดที่ต้องฝึกเพิ่ม</h3><ul class="key">${weak.map(([l, c]) => { const L = lessonById(l); return `<li><a href="#l/${l}">${L.emoji} ${L.title}</a> — ผิด ${c} ข้อ</li>`; }).join('')}</ul><p class="sub" style="font-size:14px">ข้อที่ผิดถูกใส่ไว้ในโหมดทบทวนแล้ว</p>` : '<p>ไม่ผิดเลยสักข้อ 😳 เก่งเกิน</p>'}
+        ${weak.length ? `<h3>จุดที่ต้องฝึกเพิ่ม</h3><ul class="key">${weak.map(([l, c]) => { const L = lessonById(l); return `<li><a href="#l/${l}">${L.title}</a> — ผิด ${c} ข้อ</li>`; }).join('')}</ul><p class="sub" style="font-size:14px">ข้อที่ผิดถูกใส่ไว้ในโหมดทบทวนแล้ว</p>` : '<p>ไม่ผิดเลยสักข้อ 😳 เก่งเกิน</p>'}
         <div class="row"><a class="btn" style="text-decoration:none" href="#quiz" onclick="setTimeout(route)">สอบใหม่</a><a class="btn ghost" style="text-decoration:none" href="#home">หน้าแรก</a></div>
       </div>`;
   };
@@ -1254,14 +1275,14 @@ function pageQuiz(){
 function pageReview(){
   const ids = dueList();
   if (!ids.length) {
-    app.innerHTML = `<a class="back" href="#home">← หน้าแรก</a><h1>🔁 ทบทวน</h1><div class="card"><div class="tutor"><div class="ava">🤖</div><div class="bub">ตอนนี้ไม่มีอะไรต้องทวน 👍 ข้อที่เคยผิดจะกลับมาให้ทำซ้ำ: อีก 10 นาที → 1 วัน → 3 วัน → 7 วัน จนจำได้จริง</div></div></div>`;
+    app.innerHTML = `<a class="back" href="#home">← หน้าแรก</a><h1><span class="h1-ic">${ic('rotate-ccw')}</span>ทบทวน</h1><div class="card"><div class="tutor">${BOT_AVA}<div class="bub">ตอนนี้ไม่มีอะไรต้องทวน 👍 ข้อที่เคยผิดจะกลับมาให้ทำซ้ำ: อีก 10 นาที → 1 วัน → 3 วัน → 7 วัน จนจำได้จริง</div></div></div>`;
     return;
   }
   let k = 0;
   const show = () => {
     if (k >= ids.length) return pageReview();
     const it = ALL[ids[k]];
-    app.innerHTML = `<a class="back" href="#home">← หน้าแรก</a><h1>🔁 ทบทวน</h1><p class="sub">ข้อ ${k+1}/${ids.length} · ข้อที่เคยทำผิด</p>
+    app.innerHTML = `<a class="back" href="#home">← หน้าแรก</a><h1><span class="h1-ic">${ic('rotate-ccw')}</span>ทบทวน</h1><p class="sub">ข้อ ${k+1}/${ids.length} · ข้อที่เคยทำผิด</p>
       <div class="card"><div data-it></div><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn" data-next disabled>ต่อไป →</button></div></div>`;
     mountItem($('[data-it]'), it, first => { reviewResult(it.id, first); const b = $('[data-next]'); b.disabled = false; b.onclick = () => { k++; show(); }; });
   };
@@ -1277,8 +1298,8 @@ function mountVideo(el, L){
   const show = () => {
     const vids = V[lang] || [];
     const seg = `<div class="vlang">
-        <button class="${lang==='th'?'on':''}" data-l="th">🇹🇭 ไทย</button>
-        <button class="${lang==='en'?'on':''}" data-l="en">🇬🇧 English · Bro Code</button>
+        <button class="${lang==='th'?'on':''}" data-l="th">ไทย</button>
+        <button class="${lang==='en'?'on':''}" data-l="en">English · Bro Code</button>
       </div>`;
     let body;
     if (!vids.length) {
@@ -1304,9 +1325,9 @@ function renderSide(h){
   const due = dueList().length;
   $('#side').innerHTML = `
     <h5>เมนู</h5>
-    <a href="#home" class="${h==='home'?'on':''}">⌂ หน้าแรก</a>
-    <a href="#quiz" class="${h==='quiz'?'on':''}">◎ Final Quiz</a>
-    <a href="#review" class="${h==='review'?'on':''}">↻ ทบทวน ${due ? `<span class="badge">${due}</span>` : ''}</a>
+    <a href="#home" class="${h==='home'?'on':''}">${ic('house')} หน้าแรก</a>
+    <a href="#quiz" class="${h==='quiz'?'on':''}">${ic('target')} Final Quiz</a>
+    <a href="#review" class="${h==='review'?'on':''}">${ic('rotate-ccw')} ทบทวน ${due ? `<span class="badge">${due}</span>` : ''}</a>
     ${CHAPTERS.map(c => `<h5>${c.title}</h5>` + (c.soon ? `<a class="soon">เร็ว ๆ นี้</a>` :
       c.lessons.map(l => `<a href="#l/${l.id}" class="${h==='l/'+l.id?'on':''}"><span class="dot ${S.done[l.id]?'ok':''}"></span>${l.title}</a>`).join(''))).join('')}`;
 }
@@ -1329,17 +1350,17 @@ window.addEventListener('hashchange', route);
 /* ---------- top bar: countdown, voice, theme ---------- */
 function updateCount(){
   const d = Math.ceil((new Date('2026-11-26T09:00:00+07:00') - Date.now()) / DAY);
-  $('#count').textContent = d > 0 ? `⏰ Final อีก ${d} วัน` : d === 0 ? '⏰ วันนี้สอบ! สู้ ๆ' : '🎓 สอบเสร็จแล้ว';
+  $('#count').innerHTML = d > 0 ? `${ic('clock')} Final อีก ${d} วัน` : d === 0 ? `${ic('clock')} วันนี้สอบ! สู้ ๆ` : `${ic('graduation-cap')} สอบเสร็จแล้ว`;
 }
-function applyTheme(){ document.documentElement.dataset.theme = S.theme; $('#themeBtn').textContent = S.theme === 'dark' ? '🌙' : '☀️'; }
-function applyVoice(){ $('#voiceBtn').textContent = S.voice ? '🔊' : '🔇'; }
+function applyTheme(){ document.documentElement.dataset.theme = S.theme; $('#themeBtn').innerHTML = ic(S.theme === 'dark' ? 'moon' : 'sun'); }
+function applyVoice(){ $('#voiceBtn').innerHTML = ic(S.voice ? 'volume-2' : 'volume-x'); }
 $('#themeBtn').onclick = () => { S.theme = S.theme === 'dark' ? 'light' : 'dark'; save(); applyTheme(); };
 $('#voiceBtn').onclick = () => { S.voice = !S.voice; save(); applyVoice(); if (!S.voice) stopSpeak(); };
 
 /* เตือนพักทุก 45 นาที (สมาธิอยู่ได้ 30–60 นาที) */
 setInterval(() => {
   const t = document.createElement('div'); t.className = 'toast';
-  t.innerHTML = '🤖 เรียนมา 45 นาทีแล้ว พักสายตา 5 นาที ลุกไปกินน้ำก่อน เดี๋ยวสมองค้าง 🧠💤';
+  t.innerHTML = ic('bot') + ' เรียนมา 45 นาทีแล้ว พักสายตา 5 นาที ลุกไปกินน้ำก่อน เดี๋ยวสมองค้าง 🧠💤';
   document.body.appendChild(t); setTimeout(() => t.remove(), 9000);
 }, 45 * 60e3);
 
