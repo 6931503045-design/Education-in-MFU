@@ -53,3 +53,14 @@
 - โจทย์ที่อยากฝึก: เขียนทั้งโปรแกรม > หาบั๊ก > ทาย output > เรียงบรรทัด > เติมช่องว่าง
 - ความยาก: ปรับอัตโนมัติ
 - สื่อ: animation + เสียงพากย์ **และ** ลิงก์คลิป YouTube ภาษาไทย
+
+## คลิปที่เลือกไว้ (ให้ผู้ใช้สลับ TH / EN ในเว็บได้)
+- 🇹🇭 Playlist ไทย (KongRuksiam): https://youtube.com/playlist?list=PLltVQYLz1BMAq2fsXLKzGS1eFNxl0-z0I
+- 🇬🇧 Bro Code (C# สั้น ๆ คลิปละ ~5 นาที)
+
+| บท | 🇹🇭 ไทย (video id) | 🇬🇧 Bro Code (video id) |
+|---|---|---|
+| Ch7 Loop | For `LCzQ1um80DI`, While `9oakRGApArA`, Do-While `QzVdkSqZY5A`, Break/Continue `d7cYXTW7kBc`, สรุป Loop `FveroYjmFxw` | – |
+| Ch8 Methods | สร้างเมธอด `5jkrECOtGRc`, รับค่า `sa9v71d2Jcg`, return `_4-M9Qpk3rE`, รับ+return `sIFLh-01Hy4`, Array→Method `Qi4hVi9G7ms` | methods `IPpEefuFiVM` |
+| Ch9 Array | รู้จัก `TlDjHDM285E`, สร้าง `Jgl97Ib1SQU`, For `SHePqpqslwg`, ForEach `YboQQ8ms5W0`, 2D `R8mujcKfeuA` `u5e7wTrK-Pg` `dfK1Lhjij-o`, Length/GetLength `cVIHZUeysfQ`, For 2D `POcF4AWD7cw` | arrays `IHMmPVEOT64` |
+| Ch10 Class | ใส่ในเว็บแล้ว (OOP ตอน 2, 5–10, 13–14) | ใส่ในเว็บแล้ว |

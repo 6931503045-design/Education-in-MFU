@@ -105,6 +105,9 @@ h3{font-size:16px;font-weight:500;margin:0 0 4px}
 .video{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;border:1px solid var(--line-2);background:var(--bg-2)}
 .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .video-empty{border:1px dashed var(--line-2);border-radius:10px;padding:22px;text-align:center;color:var(--muted);font-size:14px}
+.vlang{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;padding:3px;margin-bottom:12px;gap:2px}
+.vlang button{border:0;background:transparent;border-radius:6px;padding:4px 12px;font-size:13px;color:var(--muted)}
+.vlang button.on{background:var(--card-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2)}
 .vtabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
 .vtabs button{border:1px solid var(--line-2);background:transparent;border-radius:6px;padding:3px 10px;font-size:13px;color:var(--muted)}
 .vtabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -233,8 +236,9 @@ const S = {
   best: store.get('best', 0),
   voice: store.get('voice', true),
   theme: store.get('theme', 'dark'),
+  vlang: store.get('vlang', 'th'),         // ภาษาคลิปที่เลือกล่าสุด
 };
-const save = () => { for (const k of ['done','ex','review','best','voice','theme']) store.set(k, S[k]); };
+const save = () => { for (const k of ['done','ex','review','best','voice','theme','vlang']) store.set(k, S[k]); };
 
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -310,6 +314,9 @@ Console.WriteLine(r1.name + " " + r2.battery);`);
     id:'l1', emoji:'🧩', title:'Class vs Object', sub:'แม่พิมพ์ กับ ของจริง',
     analogy:{ big:'🍪', title:'Class = แม่พิมพ์คุกกี้ · Object = คุกกี้แต่ละชิ้น', text:'แม่พิมพ์อันเดียว ปั๊มคุกกี้ได้เป็นร้อยชิ้น แต่ละชิ้นแต่งหน้าไม่เหมือนกันก็ได้ แต่กินแม่พิมพ์ไม่ได้นะ 😂' },
     yt:'C# class object ภาษาไทย',
+    video:{
+      th:[{ id:'199P8cmmFGs', title:'OOP คืออะไร' },{ id:'Pua2hJuH6BM', title:'สร้าง Class & Object' }],
+      en:[{ id:'9V5B3dNoVIA', title:'C# classes' },{ id:'heoTab1e41A', title:'C# objects' }] },
     trace:t,
     key:[
       '<b>Class</b> = แบบ/แม่พิมพ์ (abstract) บอกว่ามี field อะไร มี method อะไร',
@@ -390,6 +397,9 @@ acc.balance = 1000000;`);
     id:'l2', emoji:'🔒', title:'Field & public/private', sub:'ใครแตะข้อมูลได้บ้าง',
     analogy:{ big:'👛', title:'private = เงินในกระเป๋าตังค์ · public = ป้ายชื่อที่ห้อยคอ', text:'ป้ายชื่อใครก็อ่านได้ แต่เงินในกระเป๋า คนอื่นห้ามล้วงเอง ต้องขอผ่านเจ้าของ' },
     yt:'C# access modifier public private ภาษาไทย',
+    video:{
+      th:[{ id:'VgHGH55AxuI', title:'Access Modifier' },{ id:'-VaujJeZo9M', title:'สร้าง Field' },{ id:'FLig8RdrXws', title:'Encapsulation' }],
+      en:[{ id:'8FmE_-QXg3Y', title:'C# getters & setters (private)', note:'Bro Code ไม่มีคลิป access modifier ของ C# โดยตรง คลิปนี้อธิบาย private ไว้ด้วย' }] },
     trace:t,
     key:[
       '<b>Field</b> = ตัวแปรที่ประกาศใน class เก็บ state ของ object',
@@ -457,6 +467,9 @@ Console.WriteLine(acc.Balance);`);
     id:'l3', emoji:'🧑‍💼', title:'Property (get / set)', sub:'ประตูเข้า-ออกของ field',
     analogy:{ big:'🏦', title:'Field = ตู้เซฟ · Property = พนักงานธนาคาร', text:'เราไม่เดินเข้าไปเปิดตู้เซฟเอง แต่ยื่นเงิน (value) ให้พนักงาน → set, หรือขอดูยอด → get พนักงานตรวจได้ว่ายอดติดลบมั้ย' },
     yt:'C# property get set ภาษาไทย',
+    video:{
+      th:[{ id:'9yMY_5OHqXU', title:'สร้าง Property' },{ id:'czugZCmnWps', title:'Auto Property' }],
+      en:[{ id:'8FmE_-QXg3Y', title:'C# getters & setters' },{ id:'Z70AwnYYJOc', title:'Auto properties' }] },
     trace:t,
     key:[
       'Property ใช้เข้าถึง <b>private field</b> อย่างปลอดภัย',
@@ -567,6 +580,9 @@ Account a2 = new Account("Ploy", 500);`);
     id:'l4', emoji:'⚡', title:'Constructor', sub:'ตั้งค่าตั้งแต่เกิด',
     analogy:{ big:'💳', title:'Constructor = ขั้นตอนเปิดบัญชีธนาคาร', text:'พอเดินเข้าไปเปิดบัญชี (new) พนักงานกรอกชื่อ + เงินฝากแรกเข้าให้ทันที บัญชีไม่เกิดมาแบบว่างเปล่า แถมมีหลายแบบฟอร์มให้เลือก' },
     yt:'C# constructor ภาษาไทย',
+    video:{
+      th:[{ id:'X0WT5sh6u4A', title:'Default Constructor' },{ id:'Pc7d-rOYenI', title:'Parameter Constructor' }],
+      en:[{ id:'cAhh6pYkHPQ', title:'C# constructors' },{ id:'OLxIscUoTgY', title:'Overloaded constructors' }] },
     trace:t,
     key:[
       'ชื่อ <b>เหมือน class</b> เป๊ะ',
@@ -665,6 +681,9 @@ Console.WriteLine(cars[2].Name);`);
     id:'l5', emoji:'🅿️', title:'Array of Class', sub:'เก็บ object หลายตัวใน array',
     analogy:{ big:'🚗', title:'Array = ลานจอดรถ · Object = รถแต่ละคัน', text:'สร้างลานจอด 3 ช่อง ไม่ได้แปลว่ามีรถ 3 คันนะ! ต้องเอารถ (new) มาจอดทีละช่องเอง' },
     yt:'C# array of objects ภาษาไทย',
+    video:{
+      th:[{ id:'zwZxfIZnsW0', title:'Struct & Array', note:'Playlist ไทยไม่มีคลิป Array of Class ตรง ๆ แต่คลิปนี้ใช้หลักการเดียวกัน (เก็บข้อมูลหลายตัวใน array) — หรือสลับไปดู Bro Code ที่ตรงกว่า' }],
+      en:[{ id:'ZITVn87McQ8', title:'C# array of objects' }] },
     trace:t,
     key:[
       'รูปแบบ: <code>ClassName[] ชื่อ = new ClassName[size];</code>',
@@ -762,6 +781,9 @@ public class Student
     id:'l6', emoji:'📐', title:'UML Class Diagram → Code', sub:'อ่านแบบแปลนแล้วเขียนโค้ด',
     analogy:{ big:'🏗️', title:'UML = แบบแปลนบ้าน · Code = บ้านที่สร้างจริง', text:'สถาปนิกวาดแปลนให้ช่างดู ช่าง (เรา) ต้องอ่านสัญลักษณ์ให้ออก แล้วสร้างให้ตรงแบบ' },
     yt:'UML class diagram ภาษาไทย',
+    video:{
+      th:[{ id:'1PIECrX6x54', title:'Procedural vs OOP', note:'ยังไม่มีคลิปสอน UML ตรง ๆ คลิปนี้ช่วยปูพื้น OOP ที่หัวข้อ UML ใช้' }],
+      en:[] },
     trace:t,
     key:[
       '<code>-</code> = private, <code>+</code> = public',
@@ -1144,7 +1166,7 @@ function pageLesson(id){
     <p class="sub">Ch10 · บทที่ ${idx+1}/${CH10.lessons.length} · ${L.sub}</p>
 
     <div class="card">
-      <div class="step-h"><span class="no">01</span><h2>ดูคนสอนจริง</h2></div>
+      <div class="step-h"><span class="no">01</span><h2>ดูคนสอนจริง</h2><span class="sub" style="margin-left:auto;font-size:13px">เลือกภาษาที่ชอบได้</span></div>
       <div data-video></div>
     </div>
 
@@ -1249,22 +1271,32 @@ function pageReview(){
 /* ---------- คลิป YouTube: ฝังพร้อมเวลาเริ่ม-จบ ----------
    ใส่ในบทเรียนแบบ: video:[{ id:'VIDEO_ID', start:200, end:465, title:'ชื่อคลิป' }] (วินาที) */
 function mountVideo(el, L){
-  const vids = L.video || [];
-  if (!vids.length){
-    el.innerHTML = `<div class="video-empty">ยังไม่มีคลิปสำหรับบทนี้ · ส่งลิงก์ YouTube ที่ชอบมาแล้วจะฝังไว้ตรงนี้<br>
-      <a class="yt" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(L.yt)}">หาคลิปบน YouTube ↗</a></div>`;
-    return;
-  }
-  const show = k => {
-    const v = vids[k];
-    const q = new URLSearchParams({ rel:'0', modestbranding:'1' });
-    if (v.start) q.set('start', v.start); if (v.end) q.set('end', v.end);
-    el.innerHTML = (vids.length > 1 ? `<div class="vtabs">${vids.map((x, j) => `<button class="${j===k?'on':''}" data-v="${j}">${esc(x.title || 'คลิป '+(j+1))}</button>`).join('')}</div>` : '')
-      + `<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.id)}?${q}" title="${esc(v.title || L.title)}" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`
-      + (v.note ? `<p class="sub" style="margin-top:8px;font-size:14px">${v.note}</p>` : '');
-    el.querySelectorAll('[data-v]').forEach(b => b.onclick = () => show(+b.dataset.v));
+  const V = L.video || {};
+  const has = l => (V[l] || []).length > 0;
+  let lang = has(S.vlang) ? S.vlang : (has('th') ? 'th' : 'en'), k = 0;
+  const show = () => {
+    const vids = V[lang] || [];
+    const seg = `<div class="vlang">
+        <button class="${lang==='th'?'on':''}" data-l="th">🇹🇭 ไทย</button>
+        <button class="${lang==='en'?'on':''}" data-l="en">🇬🇧 English · Bro Code</button>
+      </div>`;
+    let body;
+    if (!vids.length) {
+      body = `<div class="video-empty">ยังไม่มีคลิป${lang==='en'?'ภาษาอังกฤษ':'ภาษาไทย'}สำหรับบทนี้<br>
+        <a class="yt" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(L.yt)}">หาคลิปบน YouTube ↗</a></div>`;
+    } else {
+      const v = vids[Math.min(k, vids.length-1)];
+      const q = new URLSearchParams({ rel:'0', modestbranding:'1' });
+      if (v.start) q.set('start', v.start); if (v.end) q.set('end', v.end);
+      body = (vids.length > 1 ? `<div class="vtabs">${vids.map((x, j) => `<button class="${j===k?'on':''}" data-v="${j}">${j+1}. ${esc(x.title)}</button>`).join('')}</div>` : '')
+        + `<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.id)}?${q}" title="${esc(v.title)}" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`
+        + (v.note ? `<p class="sub" style="margin-top:8px;font-size:14px">ℹ️ ${v.note}</p>` : '');
+    }
+    el.innerHTML = seg + body;
+    el.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { lang = b.dataset.l; S.vlang = lang; save(); k = 0; show(); });
+    el.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { k = +b.dataset.v; show(); });
   };
-  show(0);
+  show();
 }
 
 /* ---------- sidebar ---------- */
