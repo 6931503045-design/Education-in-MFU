@@ -104,6 +104,21 @@ h3{font-size:16px;font-weight:500;margin:0 0 4px}
 /* video + analogy */
 .video{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;border:1px solid var(--line-2);background:var(--bg-2)}
 .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+/* voice settings panel */
+.vpanel{position:fixed;top:62px;right:16px;z-index:30;width:300px;max-width:calc(100vw - 32px);background:var(--card);border:1px solid var(--line-2);border-radius:12px;padding:16px;box-shadow:0 20px 50px rgba(0,0,0,.45);font-size:14px}
+.vpanel[hidden]{display:none}
+.vp-row{display:flex;justify-content:space-between;align-items:center}
+.vp-lbl{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:14px 0 6px}
+.vpanel select{width:100%;background:var(--bg-2);color:var(--ink);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;font:inherit}
+.vpanel input[type=range]{width:100%;accent-color:var(--accent)}
+.vp-note{margin:12px 0 0;font-size:13px;color:var(--muted);background:var(--accent-bg);border-radius:8px;padding:8px 10px}
+.vp-note b{color:var(--ink)}
+.switch{position:relative;width:38px;height:22px;display:inline-block}
+.switch input{opacity:0;width:0;height:0}
+.switch span{position:absolute;inset:0;background:var(--line-2);border-radius:99px;transition:.2s;cursor:pointer}
+.switch span::before{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.switch input:checked+span{background:var(--accent)}
+.switch input:checked+span::before{transform:translateX(16px)}
 .vcard{display:block;text-decoration:none;color:#fff}
 .vcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.7;transition:opacity .2s}
 .vcard:hover img{opacity:.9}
@@ -237,7 +252,8 @@ input.out{width:100%;background:var(--code-bg);color:var(--code-ink);border:1px 
 <header class="top"><div class="top-in">
   <a class="logo" href="#home"><i></i>CompPro Gym</a>
   <span class="count" id="count"></span>
-  <button class="ibtn" id="voiceBtn" title="เปิด/ปิดเสียงพากย์"></button>
+  <button class="ibtn" id="voiceBtn" title="ตั้งค่าเสียงพากย์"></button>
+  <div class="vpanel" id="voicePanel" hidden></div>
   <button class="ibtn" id="themeBtn" title="สลับธีม"></button>
 </div></header>
 <div class="shell"><aside class="side" id="side"></aside><main id="appScroll"><div class="wrap" id="app"></div></main></div>
@@ -261,8 +277,10 @@ const S = {
   voice: store.get('voice', true),
   theme: store.get('theme', 'dark'),
   vlang: store.get('vlang', 'th'),         // ภาษาคลิปที่เลือกล่าสุด
+  voiceName: store.get('voiceName', ''),   // เสียงที่เลือก ('' = เลือกให้อัตโนมัติ)
+  rate: store.get('rate', 1),              // ความเร็วเสียง
 };
-const save = () => { for (const k of ['done','ex','review','best','voice','theme','vlang']) store.set(k, S[k]); };
+const save = () => { for (const k of ['done','ex','review','best','voice','theme','vlang','voiceName','rate']) store.set(k, S[k]); };
 
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -898,22 +916,89 @@ function codeBox(code, opts={}){
   return `<div class="codebox">${arr.map((l, i) => `<div class="ln${opts.pick?' pick':''}" data-n="${i+1}"><i>${i+1}</i><span>${hl(l) || ' '}</span></div>`).join('')}</div>`;
 }
 
-/* ---------- เสียงพากย์ (Web Speech API) ---------- */
-let thVoice = null;
-function loadVoices(){ try{ thVoice = speechSynthesis.getVoices().find(v => /^th/i.test(v.lang)) || null; }catch(e){} }
-if ('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
-function speak(html, onend){
-  if (!S.voice || !('speechSynthesis' in window)) { onend && setTimeout(onend, 2600); return; }
+/* ---------- เสียงพากย์ (Web Speech API) ----------
+   เสียงขึ้นกับ browser: Edge มีเสียงไทย AI "Premwadee/Niwat (Natural)" ฟังดีสุด, Chrome มี "Google ไทย"
+   เลยให้คะแนนเสียงแต่ละตัว แล้วเลือกตัวที่ดีที่สุดให้อัตโนมัติ (ผู้ใช้เปลี่ยนเองได้ในแผงตั้งค่า) */
+const HAS_TTS = 'speechSynthesis' in window;
+let VOICES = [];
+const voiceScore = v => (/natural|neural/i.test(v.name) ? 20 : 0) + (/online/i.test(v.name) ? 6 : 0)
+  + (/premwadee|niwat|achara/i.test(v.name) ? 4 : 0) + (/google/i.test(v.name) ? 8 : 0) + (v.localService ? 0 : 1);
+function loadVoices(){
+  try{ VOICES = speechSynthesis.getVoices().filter(v => /^th/i.test(v.lang)).sort((a, b) => voiceScore(b) - voiceScore(a)); }catch(e){ VOICES = []; }
+  if ($('#voicePanel') && !$('#voicePanel').hidden) renderVoicePanel();
+}
+if (HAS_TTS){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+const pickVoice = () => VOICES.find(v => v.name === S.voiceName) || VOICES[0] || null;
+
+/* แปลงข้อความบนจอ → คำที่อ่านออกเสียงได้ลื่น ๆ (เช่น acc.Balance → "acc จุด Balance") */
+function toSpeech(html){
+  const dec = s => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
+  const OPS = [
+    [/>=/g, ' มากกว่าหรือเท่ากับ '], [/<=/g, ' น้อยกว่าหรือเท่ากับ '], [/==/g, ' เท่ากับ '], [/!=/g, ' ไม่เท่ากับ '],
+    [/=>/g, ' '], [/\+\+/g, ' บวกหนึ่ง '], [/\+=/g, ' บวกเพิ่ม '],
+  ];
+  // ในโค้ด (<code>): "=" อ่านว่า "เท่ากับ", จุดอ่านว่า "จุด", [0] อ่านว่า "ช่อง 0"
+  const CODE = [...OPS, [/(\w)\.(?=[A-Za-z_])/g, '$1 จุด '], [/\[(\w+)\]/g, ' ช่อง $1 '], [/\(\s*\)/g, ''], [/=/g, ' เท่ากับ ']];
+  let t = html.replace(/<code>([\s\S]*?)<\/code>/g, (m, c) => { let x = dec(c); for (const [a, b] of CODE) x = x.replace(a, b); return ' ' + x + ' '; });
+  t = dec(t.replace(/<[^>]+>/g, ' ')).replace(/\p{Extended_Pictographic}|️|‍/gu, '');
+  // ในประโยคทั่วไป: "A = B" แปลว่า "A คือ B"
+  const PROSE = [...OPS, [/→/g, ' แล้วก็ '], [/\(\s*[^\w\s฀-๿]\s*\)/g, ''], [/(\w)\.(?=[A-Za-z_])/g, '$1 จุด '],
+    [/\[(\w+)\]/g, ' ช่อง $1 '], [/=/g, ' คือ '], [/#(\d+)/g, ' หมายเลข $1 '], [/\bnull\b/g, 'นัล'], [/\bvoid\b/g, 'วอยด์'], [/(\d)\s*%/g, '$1 เปอร์เซ็นต์'],
+    [/[;{}"`|·]/g, ' '], [/\s+/g, ' '], [/ช่อง\s+ช่อง/g, 'ช่อง']];
+  for (const [a, b] of PROSE) t = t.replace(a, b);
+  return t.trim();
+}
+/* ตัดเป็นท่อนสั้น ๆ: Chrome มักตัดเสียงกลางคันถ้าประโยคยาวเกิน ~15 วินาที */
+function chunks(t, max = 140){
+  const out = []; let cur = '';
+  for (const w of t.split(' ')) {
+    if (cur && (cur + ' ' + w).length > max) { out.push(cur); cur = w; } else cur = cur ? cur + ' ' + w : w;
+  }
+  if (cur) out.push(cur);
+  return out;
+}
+let speakId = 0;
+function speak(html, onend, force){
+  if ((!S.voice && !force) || !HAS_TTS) { onend && setTimeout(onend, 2600); return; }
   try{
     speechSynthesis.cancel();
-    const txt = html.replace(/<[^>]+>/g, '').replace(/[🧩🍪⚠️✅💥🔒🔓🧑‍💼🛡️💸🎉⚡🅿️😂]/gu, '');
-    const u = new SpeechSynthesisUtterance(txt);
-    u.lang = 'th-TH'; if (thVoice) u.voice = thVoice; u.rate = 1.05;
-    u.onend = () => onend && onend();
-    speechSynthesis.speak(u);
+    const my = ++speakId, parts = chunks(toSpeech(html)), voice = pickVoice();
+    let i = 0;
+    const next = () => {
+      if (my !== speakId) return;                    // มีการกดหยุด/เปลี่ยนขั้นไปแล้ว
+      if (i >= parts.length) { onend && onend(); return; }
+      const u = new SpeechSynthesisUtterance(parts[i++]);
+      u.lang = voice ? voice.lang : 'th-TH'; if (voice) u.voice = voice;
+      u.rate = S.rate; u.pitch = 1;
+      u.onend = next; u.onerror = next;
+      speechSynthesis.speak(u);
+    };
+    next();
   }catch(e){ onend && setTimeout(onend, 2600); }
 }
-const stopSpeak = () => { try{ speechSynthesis.cancel(); }catch(e){} };
+const stopSpeak = () => { speakId++; try{ speechSynthesis.cancel(); }catch(e){} };
+
+/* ---------- แผงตั้งค่าเสียง ---------- */
+function renderVoicePanel(){
+  const cur = pickVoice();
+  const natural = VOICES.some(v => /natural|neural/i.test(v.name));
+  $('#voicePanel').innerHTML = `
+    <div class="vp-row"><b>เสียงพากย์</b>
+      <label class="switch"><input type="checkbox" id="vpOn" ${S.voice ? 'checked' : ''}><span></span></label></div>
+    ${!HAS_TTS ? `<p class="sub">browser นี้ไม่รองรับเสียงอ่าน</p>` : !VOICES.length ? `<p class="vp-note">เครื่องนี้ไม่มีเสียงภาษาไทย 😢 ลองเปิดเว็บด้วย <b>Microsoft Edge</b> จะได้เสียงไทยแบบ AI ที่ฟังเหมือนคนจริง</p>` : `
+    <label class="vp-lbl">เลือกเสียง</label>
+    <select id="vpVoice">${VOICES.map(v => `<option value="${esc(v.name)}" ${cur && v.name === cur.name ? 'selected' : ''}>${esc(v.name.replace(/^Microsoft\s*/i, ''))}${/natural|neural/i.test(v.name) ? ' ⭐' : ''}</option>`).join('')}</select>
+    <label class="vp-lbl">ความเร็ว <span id="vpRateTxt">${S.rate.toFixed(2)}x</span></label>
+    <input type="range" id="vpRate" min="0.7" max="1.5" step="0.05" value="${S.rate}">
+    <button class="btn ghost" id="vpTest" style="width:100%;justify-content:center;margin-top:10px">${ic('play')} ลองฟัง</button>
+    ${natural ? '' : `<p class="vp-note">💡 อยากได้เสียงที่ฟังเหมือนคนจริงกว่านี้ เปิดเว็บด้วย <b>Microsoft Edge</b> แล้วเลือกเสียงที่มี ⭐ (Natural)</p>`}`}`;
+  $('#vpOn').onchange = e => { S.voice = e.target.checked; save(); applyVoice(); if (!S.voice) stopSpeak(); };
+  if ($('#vpVoice')) {
+    $('#vpVoice').onchange = e => { S.voiceName = e.target.value; save(); };
+    $('#vpRate').oninput = e => { S.rate = +e.target.value; $('#vpRateTxt').textContent = S.rate.toFixed(2) + 'x'; save(); };
+    $('#vpTest').onclick = () => speak('หวัดดี พี่บอทเอง วันนี้มาเรียน <code>Class</code> กัน ถ้า <code>acc.Balance</code> มากกว่าหรือเท่ากับ 0 ก็เก็บค่าไว้ ผ่านแน่ A!', null, true);
+  }
+}
 
 /* ---------- Tracer: โค้ดรันทีละบรรทัด + memory + console ---------- */
 function mountTracer(el, t){
@@ -1372,7 +1457,13 @@ function updateCount(){
 function applyTheme(){ document.documentElement.dataset.theme = S.theme; $('#themeBtn').innerHTML = ic(S.theme === 'dark' ? 'moon' : 'sun'); }
 function applyVoice(){ $('#voiceBtn').innerHTML = ic(S.voice ? 'volume-2' : 'volume-x'); }
 $('#themeBtn').onclick = () => { S.theme = S.theme === 'dark' ? 'light' : 'dark'; save(); applyTheme(); };
-$('#voiceBtn').onclick = () => { S.voice = !S.voice; save(); applyVoice(); if (!S.voice) stopSpeak(); };
+/* กดปุ่มลำโพง → เปิดแผงตั้งค่าเสียง, คลิกที่อื่น → ปิด */
+$('#voiceBtn').onclick = e => {
+  e.stopPropagation();
+  const p = $('#voicePanel'); p.hidden = !p.hidden;
+  if (!p.hidden) { loadVoices(); renderVoicePanel(); }
+};
+document.addEventListener('click', e => { const p = $('#voicePanel'); if (!p.hidden && !p.contains(e.target)) p.hidden = true; });
 
 /* เตือนพักทุก 45 นาที (สมาธิอยู่ได้ 30–60 นาที) */
 setInterval(() => {
