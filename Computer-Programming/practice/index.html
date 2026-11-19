@@ -1,0 +1,2820 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CompPro Gym</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===== Theme tokens — โทนแบบ Profound: ดำ-ขาว-เทา + accent ส้มนิดเดียว ===== */
+:root, :root[data-theme="dark"]{
+  --bg:#000; --bg-2:#0a0a0a; --card:#0c0c0d; --card-2:#141415; --ink:#edf2f5; --ink-2:#d1d1d1; --muted:#828282; --line:#1f1f1f; --line-2:#2c2c2c;
+  --accent:#ff7a45; --accent-bg:rgba(255,122,69,.12);
+  --green:#4ade80; --green-bg:rgba(74,222,128,.08); --red:#f87171; --red-bg:rgba(248,113,113,.08); --amber:#fbbf24; --amber-bg:rgba(251,191,36,.08);
+  --btn:#fff; --btn-ink:#222;
+  --code-bg:#070707; --code-ink:#e5e5e5; --hl:rgba(255,255,255,.07); --ln:#3d3d3d;
+  --k:#ff8a5c; --t:#7dd3fc; --s:#bef264; --n:#fca5a5; --c:#5a5a5a;
+  --glow:radial-gradient(1200px 500px at 50% -200px, rgba(255,255,255,.07), transparent 70%);
+}
+:root[data-theme="light"]{
+  --bg:#fafafa; --bg-2:#fff; --card:#fff; --card-2:#f4f4f5; --ink:#111; --ink-2:#333; --muted:#6b6b6b; --line:#e7e7e7; --line-2:#d9d9d9;
+  --accent:#e85d27; --accent-bg:rgba(232,93,39,.1);
+  --green:#15803d; --green-bg:rgba(21,128,61,.07); --red:#c62828; --red-bg:rgba(198,40,40,.06); --amber:#a16207; --amber-bg:rgba(161,98,7,.08);
+  --btn:#111; --btn-ink:#fff;
+  --code-bg:#0c0c0d; --code-ink:#e5e5e5; --hl:rgba(255,255,255,.08); --ln:#444;
+  --glow:radial-gradient(1200px 500px at 50% -200px, rgba(0,0,0,.05), transparent 70%);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);background-image:var(--glow);background-repeat:no-repeat;color:var(--ink);font:16px/1.65 Inter,"IBM Plex Sans Thai",system-ui,sans-serif;letter-spacing:-.005em;-webkit-font-smoothing:antialiased}
+code,.mono,textarea{font-family:"IBM Plex Mono",ui-monospace,monospace}
+:not(pre)>code{background:var(--card-2);border:1px solid var(--line-2);padding:0 5px;border-radius:5px;font-size:.86em;letter-spacing:0}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:10px;height:56px;padding:0 20px}
+.logo{font-weight:600;font-size:17px;letter-spacing:-.02em;text-decoration:none;color:var(--ink);white-space:nowrap;display:flex;align-items:center;gap:8px}
+.logo i{width:20px;height:20px;border-radius:6px;background:var(--ink);display:inline-block;position:relative}
+.logo i::after{content:"";position:absolute;inset:6px;border-radius:2px;background:var(--accent)}
+.count{margin-left:auto;font-size:13px;color:var(--accent);background:var(--accent-bg);padding:4px 10px;border-radius:6px;white-space:nowrap}
+.ibtn{border:1px solid var(--line-2);background:transparent;border-radius:8px;height:34px;min-width:34px;padding:0 10px;font-size:14px;color:var(--ink-2)}
+.ibtn:hover{background:var(--card-2)}
+
+/* app shell: sidebar + content (เหมือนแอปทำงาน) */
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:calc(100vh - 56px)}
+.shell>*,.tracer>*{min-width:0}
+.side{border-right:1px solid var(--line);padding:18px 12px;position:sticky;top:56px;height:calc(100vh - 56px);overflow:auto}
+.side h5{margin:18px 10px 6px;font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0}
+.side h5:first-child{margin-top:0}
+.side a{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;text-decoration:none;color:var(--ink-2);font-size:14px}
+.side a:hover{background:var(--card-2)}
+.side a.on{background:var(--card-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2)}
+.side a .dot{width:7px;height:7px;border-radius:50%;border:1px solid var(--muted);flex:0 0 7px}
+.side a .dot.ok{background:var(--green);border-color:var(--green)}
+.side a.soon{opacity:.4;pointer-events:none}
+.side .badge{margin-left:auto;font-size:11px;background:var(--accent);color:#000;border-radius:5px;padding:0 6px;font-weight:600}
+.wrap{max-width:960px;margin:0 auto;padding:0 28px}
+
+/* type */
+h1{font-size:40px;line-height:1.15;font-weight:500;letter-spacing:-.025em;margin:36px 0 8px}
+h2{font-size:20px;font-weight:500;letter-spacing:-.015em;margin:0 0 12px}
+h3{font-size:16px;font-weight:500;margin:0 0 4px}
+.sub{color:var(--muted);margin:0;font-size:15px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);border:1px solid var(--line-2);border-radius:999px;padding:3px 12px 3px 4px}
+.eyebrow b{background:var(--accent-bg);color:var(--accent);font-weight:500;border-radius:999px;padding:0 8px}
+
+/* cards & bits */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;margin:16px 0}
+.step-h{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.step-h .no{font:500 12px "IBM Plex Mono",monospace;color:var(--muted);border:1px solid var(--line-2);border-radius:6px;padding:1px 7px}
+.step-h h2{margin:0}
+.pill{display:inline-block;font-size:12px;font-weight:500;padding:1px 8px;border-radius:6px;color:var(--muted);border:1px solid var(--line-2)}
+.pill.ok{color:var(--green);border-color:color-mix(in srgb,var(--green) 40%,transparent)}
+.pill.lv{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:0;background:var(--btn);color:var(--btn-ink);font-weight:500;font-size:14px;padding:9px 16px;border-radius:8px;text-decoration:none;letter-spacing:-.01em}
+.btn:hover{opacity:.9}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2)}
+.btn.ghost:hover{background:var(--card-2)}
+.btn:disabled{opacity:.35;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* tutor bubble */
+.tutor{display:flex;gap:12px;align-items:flex-start}
+.tutor .ava{flex:0 0 36px;height:36px;border-radius:8px;border:1px solid var(--line-2);background:var(--card-2);display:grid;place-items:center;font-size:18px}
+.tutor .bub{border:1px solid var(--line);background:var(--bg-2);border-radius:10px;padding:9px 14px;flex:1;min-height:42px;font-size:15px;color:var(--ink-2)}
+.tutor .bub b{color:var(--ink)}
+
+/* home */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.lesson{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;transition:border-color .15s,background .15s}
+.lesson:hover{border-color:var(--line-2);background:var(--card-2)}
+.lesson .em{color:var(--accent);width:40px;height:40px;border-radius:8px;border:1px solid var(--line-2);display:grid;place-items:center;margin-bottom:12px}
+.lesson .n{font:12px "IBM Plex Mono",monospace;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stat{padding:16px 18px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat b{display:block;font-size:30px;font-weight:500;letter-spacing:-.03em}
+.stat small{color:var(--muted);font-size:13px}
+.stat.hot b{color:var(--accent)}
+
+/* video + analogy */
+.video{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;border:1px solid var(--line-2);background:var(--bg-2)}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+/* voice settings panel */
+.vpanel{position:fixed;top:62px;right:16px;z-index:30;width:300px;max-width:calc(100vw - 32px);background:var(--card);border:1px solid var(--line-2);border-radius:12px;padding:16px;box-shadow:0 20px 50px rgba(0,0,0,.45);font-size:14px}
+.vpanel[hidden]{display:none}
+.vp-row{display:flex;justify-content:space-between;align-items:center}
+.vp-lbl{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:14px 0 6px}
+.vpanel select{width:100%;background:var(--bg-2);color:var(--ink);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;font:inherit}
+.vpanel input[type=range]{width:100%;accent-color:var(--accent)}
+.vp-note{margin:12px 0 0;font-size:13px;color:var(--muted);background:var(--accent-bg);border-radius:8px;padding:8px 10px}
+.vp-note b{color:var(--ink)}
+.switch{position:relative;width:38px;height:22px;display:inline-block}
+.switch input{opacity:0;width:0;height:0}
+.switch span{position:absolute;inset:0;background:var(--line-2);border-radius:99px;transition:.2s;cursor:pointer}
+.switch span::before{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.switch input:checked+span{background:var(--accent)}
+.switch input:checked+span::before{transform:translateX(16px)}
+.vcard{display:block;text-decoration:none;color:#fff}
+.vcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.7;transition:opacity .2s}
+.vcard:hover img{opacity:.9}
+.vplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:68px;height:48px;border-radius:12px;background:#ff0033;display:grid;place-items:center}
+.vplay .ic{width:24px;height:24px;fill:#fff;stroke:#fff}
+.vcap{position:absolute;left:0;right:0;bottom:0;padding:28px 16px 12px;background:linear-gradient(transparent,rgba(0,0,0,.85));display:flex;flex-direction:column}
+.vcap small{color:#ccc;font-size:12px}
+.video-empty{border:1px dashed var(--line-2);border-radius:10px;padding:22px;text-align:center;color:var(--muted);font-size:14px}
+.vlang{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;padding:3px;margin-bottom:12px;gap:2px}
+.vlang button{border:0;background:transparent;border-radius:6px;padding:4px 12px;font-size:13px;color:var(--muted)}
+.vlang button.on{background:var(--card-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2)}
+.vtabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.vtabs button{border:1px solid var(--line-2);background:transparent;border-radius:6px;padding:3px 10px;font-size:13px;color:var(--muted)}
+.vtabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.analogy{display:flex;gap:16px;align-items:center;border:1px solid var(--line);background:var(--bg-2);border-radius:12px;padding:16px 18px;margin-top:18px}
+.analogy{padding:0;overflow:hidden;align-items:stretch;gap:0}
+.analogy figure{margin:0;flex:0 0 44%;max-width:44%;position:relative;background:#000}
+.analogy figure img{display:block;width:100%;height:100%;min-height:200px;object-fit:cover}
+.analogy figcaption{position:absolute;left:8px;bottom:6px;font-size:10.5px;color:#fff;background:rgba(0,0,0,.55);padding:1px 6px;border-radius:4px}
+.analogy figure.noimg{display:grid;place-items:center;min-height:180px;color:var(--accent);background:var(--bg-2);border-right:1px solid var(--line)}
+.analogy figure.noimg .ic{width:64px;height:64px;stroke-width:1.25}
+.analogy .txt{padding:18px 20px;display:flex;flex-direction:column;justify-content:center}
+.analogy .txt b{font-size:17px;font-weight:500;letter-spacing:-.01em}
+.ic{width:1.1em;height:1.1em;flex:0 0 auto;vertical-align:-.18em}
+.lesson .em .ic,.h1-ic .ic{width:20px;height:20px}
+.h1-ic{display:inline-grid;place-items:center;width:44px;height:44px;border:1px solid var(--line-2);border-radius:10px;vertical-align:middle;margin-right:12px;color:var(--accent)}
+.tutor .ava .ic{width:19px;height:19px;color:var(--accent)}
+.ibtn{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.ibtn .ic{width:16px;height:16px}
+.side a .ic{width:16px;height:16px;color:var(--muted)}
+.side a.on .ic{color:var(--ink)}
+.count{display:inline-flex;align-items:center;gap:6px}
+.analogy p{margin:2px 0 0;color:var(--muted);font-size:15px}
+
+/* ===== Tracer ===== */
+.tracer{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px}
+.codebox{background:var(--code-bg);color:var(--code-ink);border:1px solid var(--line-2);border-radius:10px;padding:10px 0;font:13.5px/1.7 "IBM Plex Mono",monospace;overflow:auto;letter-spacing:0}
+.codebox .ln{display:flex;padding:0 12px 0 0;border-left:2px solid transparent;white-space:pre}
+.codebox .ln i{flex:0 0 34px;text-align:right;padding-right:14px;color:var(--ln);font-style:normal;user-select:none}
+.codebox .ln.cur{background:var(--hl);border-left-color:var(--accent)}
+.codebox .ln.cur i{color:var(--accent)}
+.codebox .ln.pick{cursor:pointer}
+.codebox .ln.pick:hover{background:rgba(255,255,255,.05)}
+.codebox .ln.bad{background:rgba(248,113,113,.14);border-left-color:#f87171}
+.codebox .ln.good{background:rgba(74,222,128,.13);border-left-color:#4ade80}
+.tk-k{color:var(--k)}.tk-t{color:var(--t)}.tk-s{color:var(--s)}.tk-n{color:var(--n)}.tk-c{color:var(--c);font-style:italic}
+.side-p{display:flex;flex-direction:column;gap:10px;min-width:0}
+.panel{border:1px solid var(--line);background:var(--bg-2);border-radius:10px;padding:10px 12px}
+.panel h4{margin:0 0 8px;font-size:12px;font-weight:500;color:var(--muted)}
+.vars{display:flex;flex-wrap:wrap;gap:6px}
+.var{font:12.5px "IBM Plex Mono",monospace;border:1px solid var(--line-2);border-radius:6px;padding:2px 8px;color:var(--ink-2)}
+.var b{color:var(--t);font-weight:500}
+.objs{display:flex;flex-wrap:wrap;gap:8px}
+.obj{border:1px solid var(--line-2);background:var(--card);border-radius:8px;min-width:130px;font:12.5px "IBM Plex Mono",monospace;overflow:hidden;animation:pop .3s}
+.obj .hd{padding:3px 8px;font-weight:600;color:#0a0a0a}
+.obj .fl{padding:2px 8px;display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line)}
+.obj .fl.flash{animation:flash 1s}
+.obj .fl span:last-child{color:var(--s)}
+:root[data-theme="light"] .obj .fl span:last-child{color:#4d7c0f}
+.obj .fl span.null{color:var(--muted)!important;font-style:italic}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:none;opacity:1}}
+@keyframes flash{0%{background:var(--accent-bg)}100%{background:transparent}}
+.arrbox{animation:pop .3s;min-width:0;max-width:100%}
+.arrlbl{font:600 12px "IBM Plex Mono",monospace;margin-bottom:4px}
+.arrcells{display:flex;gap:4px;flex-wrap:wrap}
+.ac{display:flex;flex-direction:column;align-items:center;gap:2px}
+.ac span{min-width:44px;height:34px;padding:0 6px;display:grid;place-items:center;border:1px solid var(--line-2);border-radius:6px;background:var(--card);font:13px "IBM Plex Mono",monospace;color:var(--s)}
+.ac i{font:11px "IBM Plex Mono",monospace;color:var(--muted);font-style:normal}
+.ac span.cur,.g2 td.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-bg);color:var(--ink)}
+.ac span.flash,.g2 td.flash{animation:flash 1s}
+.ac span.null,.g2 td.null{color:var(--muted);font-style:italic}
+.g2{border-collapse:separate;border-spacing:4px;font:13px "IBM Plex Mono",monospace}
+.g2 th{color:var(--muted);font-weight:400;font-size:11px;padding:0 4px}
+.g2 td{min-width:40px;height:32px;text-align:center;border:1px solid var(--line-2);border-radius:6px;background:var(--card);color:var(--s)}
+:root[data-theme="light"] .ac span,:root[data-theme="light"] .g2 td{color:#4d7c0f}
+.console{background:#000;border:1px solid var(--line-2);color:#d4d4d4;font:12.5px/1.55 "IBM Plex Mono",monospace;border-radius:8px;padding:8px 10px;min-height:38px;white-space:pre-wrap}
+.console .err{color:#f87171}
+.uml{border:1px solid var(--line-2);border-radius:8px;font:12.5px/1.8 "IBM Plex Mono",monospace;overflow:hidden}
+.uml div{padding:0 10px}
+.uml .t{background:var(--ink);color:var(--bg);font-weight:600;text-align:center}
+.uml .on{background:var(--accent-bg);color:var(--accent)}
+.ctrl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.ctrl .ibtn{height:36px;min-width:40px;font-size:14px}
+.ctrl .stepn{font:12px "IBM Plex Mono",monospace;color:var(--muted);margin:0 8px}
+.ctrl .play{background:var(--btn);color:var(--btn-ink);border-color:var(--btn);font-weight:500}
+
+/* summary / details */
+ul.key{margin:4px 0;padding-left:0;list-style:none}
+ul.key li{margin:0;padding:8px 0 8px 22px;border-bottom:1px solid var(--line);position:relative;color:var(--ink-2)}
+ul.key li:last-child{border-bottom:0}
+ul.key li::before{content:"";position:absolute;left:4px;top:17px;width:6px;height:6px;border-radius:2px;background:var(--accent)}
+details{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-top:12px}
+details summary{cursor:pointer;font-weight:500;font-size:14px}
+details[open] summary{margin-bottom:6px}
+pre.code{background:var(--code-bg);color:var(--code-ink);border:1px solid var(--line-2);border-radius:8px;padding:12px 14px;font-size:13px;overflow:auto;margin:8px 0;letter-spacing:0}
+.yt{font-size:13px;color:var(--muted)}
+
+/* exercises */
+.ex{border-top:1px solid var(--line);padding-top:20px;margin-top:20px}
+.ex:first-of-type{border-top:0;margin-top:0;padding-top:0}
+.ex .q{font-weight:500;margin:8px 0 12px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;background:transparent;border:1px solid var(--line-2);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--ink-2)}
+.opt:hover{background:var(--card-2);color:var(--ink)}
+.opt.bad{border-color:var(--red);background:var(--red-bg)}
+.opt.good{border-color:var(--green);background:var(--green-bg);color:var(--ink)}
+.opt code{background:none;border:0;padding:0}
+textarea{width:100%;background:var(--code-bg);color:var(--code-ink);border:1px solid var(--line-2);border-radius:10px;padding:12px;font-size:13.5px;line-height:1.65;resize:vertical;tab-size:4}
+textarea:focus,input:focus{outline:1px solid var(--accent);border-color:var(--accent)}
+input.out{width:100%;background:var(--code-bg);color:var(--code-ink);border:1px solid var(--line-2);border-radius:8px;padding:10px 12px;font:13.5px "IBM Plex Mono",monospace}
+.fb{margin-top:12px;border-radius:10px;padding:10px 14px;font-size:14px;display:none;border:1px solid}
+.fb.show{display:block}
+.fb.bad{background:var(--red-bg);border-color:color-mix(in srgb,var(--red) 45%,transparent)}
+.fb.hint{background:var(--amber-bg);border-color:color-mix(in srgb,var(--amber) 45%,transparent)}
+.fb.good{background:var(--green-bg);border-color:color-mix(in srgb,var(--green) 45%,transparent)}
+.fb pre{margin:6px 0 0}
+
+/* quiz */
+.bar{height:3px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--card);border:1px solid var(--line-2);color:var(--ink);padding:12px 18px;border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.5);z-index:50;max-width:calc(100% - 32px);font-size:14px}
+.back{display:inline-block;margin-top:24px;text-decoration:none;color:var(--muted);font-size:14px}
+.back:hover{color:var(--ink)}
+.nav2{display:flex;justify-content:space-between;gap:10px;margin:24px 0 48px}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .side{display:none}
+  .tracer{grid-template-columns:1fr}
+  .analogy{flex-direction:column}
+  .analogy figure{max-width:none;flex:none}
+  .analogy figure img{height:220px}
+  .wrap{padding:0 16px}
+}
+@media (max-width:640px){
+  h1{font-size:28px}
+  .count{display:none}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat:nth-child(2){border-right:0}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .card{padding:18px}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="logo" href="#home"><i></i>CompPro Gym</a>
+  <span class="count" id="count"></span>
+  <button class="ibtn" id="voiceBtn" title="ตั้งค่าเสียงพากย์"></button>
+  <div class="vpanel" id="voicePanel" hidden></div>
+  <button class="ibtn" id="themeBtn" title="สลับธีม"></button>
+</div></header>
+<div class="shell"><aside class="side" id="side"></aside><main id="appScroll"><div class="wrap" id="app"></div></main></div>
+
+<script>
+/* =========================================================
+   CompPro Gym — เว็บฝึก C# ส่วนตัว
+   โครงสร้าง: DATA (บทเรียน/โจทย์) → ENGINE (tracer, checker, quiz) → ROUTER
+   ========================================================= */
+
+/* ---------- storage: ห่อ try/catch เพราะบาง browser บล็อก localStorage ---------- */
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem('cpg:'+k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem('cpg:'+k, JSON.stringify(v)); }catch(e){} }
+};
+const S = {
+  done: store.get('done', {}),        // บทที่ดูจบ
+  ex: store.get('ex', {}),            // ผลโจทย์แต่ละข้อ
+  review: store.get('review', {}),    // spaced repetition {id:{box,due}}
+  best: store.get('best', 0),
+  bestCh: store.get('bestCh', {}),         // คะแนนสูงสุดของ quiz รายบท
+  voice: store.get('voice', true),
+  theme: store.get('theme', 'dark'),
+  vlang: store.get('vlang', 'th'),         // ภาษาคลิปที่เลือกล่าสุด
+  voiceName: store.get('voiceName', ''),   // เสียงที่เลือก ('' = เลือกให้อัตโนมัติ)
+  rate: store.get('rate', 1),              // ความเร็วเสียง
+};
+const save = () => { for (const k of ['done','ex','review','best','bestCh','voice','theme','vlang','voiceName','rate']) store.set(k, S[k]); };
+
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pick = a => a[Math.floor(Math.random()*a.length)];
+/* ---------- ไอคอนเส้น (Lucide, ISC license) ---------- */
+const ICONS = {"boxes": "<path d=\"M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z\" /> <path d=\"m7 16.5-4.74-2.85\" /> <path d=\"m7 16.5 5-3\" /> <path d=\"M7 16.5v5.17\" /> <path d=\"M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z\" /> <path d=\"m17 16.5-5-3\" /> <path d=\"m17 16.5 4.74-2.85\" /> <path d=\"M17 16.5v5.17\" /> <path d=\"M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z\" /> <path d=\"M12 8 7.26 5.15\" /> <path d=\"m12 8 4.74-2.85\" /> <path d=\"M12 13.5V8\" />", "lock": "<rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\" /> <path d=\"M7 11V7a5 5 0 0 1 10 0v4\" />", "landmark": "<line x1=\"3\" x2=\"21\" y1=\"22\" y2=\"22\" /> <line x1=\"6\" x2=\"6\" y1=\"18\" y2=\"11\" /> <line x1=\"10\" x2=\"10\" y1=\"18\" y2=\"11\" /> <line x1=\"14\" x2=\"14\" y1=\"18\" y2=\"11\" /> <line x1=\"18\" x2=\"18\" y1=\"18\" y2=\"11\" /> <polygon points=\"12 2 20 7 4 7\" />", "zap": "<path d=\"M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z\" />", "car": "<path d=\"M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2\" /> <circle cx=\"7\" cy=\"17\" r=\"2\" /> <path d=\"M9 17h6\" /> <circle cx=\"17\" cy=\"17\" r=\"2\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "bot": "<path d=\"M12 8V4H8\" /> <rect width=\"16\" height=\"12\" x=\"4\" y=\"8\" rx=\"2\" /> <path d=\"M2 14h2\" /> <path d=\"M20 14h2\" /> <path d=\"M15 13v2\" /> <path d=\"M9 13v2\" />", "play": "<polygon points=\"6 3 20 12 6 21 6 3\" />", "pause": "<rect x=\"14\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\" /> <rect x=\"6\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\" />", "skip-back": "<polygon points=\"19 20 9 12 19 4 19 20\" /> <line x1=\"5\" x2=\"5\" y1=\"19\" y2=\"5\" />", "chevron-left": "<path d=\"m15 18-6-6 6-6\" />", "skip-forward": "<polygon points=\"5 4 15 12 5 20 5 4\" /> <line x1=\"19\" x2=\"19\" y1=\"5\" y2=\"19\" />", "volume-2": "<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\" /> <path d=\"M16 9a5 5 0 0 1 0 6\" /> <path d=\"M19.364 18.364a9 9 0 0 0 0-12.728\" />", "volume-x": "<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\" /> <line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\" /> <line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\" />", "moon": "<path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\" />", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\" /> <path d=\"M12 2v2\" /> <path d=\"M12 20v2\" /> <path d=\"m4.93 4.93 1.41 1.41\" /> <path d=\"m17.66 17.66 1.41 1.41\" /> <path d=\"M2 12h2\" /> <path d=\"M20 12h2\" /> <path d=\"m6.34 17.66-1.41 1.41\" /> <path d=\"m19.07 4.93-1.41 1.41\" />", "house": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "target": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <circle cx=\"12\" cy=\"12\" r=\"6\" /> <circle cx=\"12\" cy=\"12\" r=\"2\" />", "rotate-ccw": "<path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\" /> <path d=\"M3 3v5h5\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <polyline points=\"12 6 12 12 16 14\" />", "graduation-cap": "<path d=\"M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z\" /> <path d=\"M22 10v6\" /> <path d=\"M6 12.5V16a6 3 0 0 0 12 0v-3.5\" />", "clipboard-check": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "archive": "<rect width=\"20\" height=\"5\" x=\"2\" y=\"3\" rx=\"1\" /> <path d=\"M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8\" /> <path d=\"M10 12h4\" />", "scan-barcode": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <path d=\"M8 7v10\" /> <path d=\"M12 7v10\" /> <path d=\"M17 7v10\" />", "utensils": "<path d=\"M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2\" /> <path d=\"M7 2v20\" /> <path d=\"M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7\" />", "egg": "<path d=\"M12 22c6.23-.05 7.87-5.57 7.5-10-.36-4.34-3.95-9.96-7.5-10-3.55.04-7.14 5.66-7.5 10-.37 4.43 1.27 9.95 7.5 10z\" />", "grid-3x3": "<rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\" /> <path d=\"M3 9h18\" /> <path d=\"M3 15h18\" /> <path d=\"M9 3v18\" /> <path d=\"M15 3v18\" />", "chef-hat": "<path d=\"M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z\" /> <path d=\"M6 17h12\" />", "coins": "<circle cx=\"8\" cy=\"8\" r=\"6\" /> <path d=\"M18.09 10.37A6 6 0 1 1 10.34 18\" /> <path d=\"M7 6h1v4\" /> <path d=\"m16.71 13.88.7.71-2.82 2.82\" />", "corner-down-left": "<polyline points=\"9 10 4 15 9 20\" /> <path d=\"M20 4v7a4 4 0 0 1-4 4H4\" />", "calculator": "<rect width=\"16\" height=\"20\" x=\"4\" y=\"2\" rx=\"2\" /> <line x1=\"8\" x2=\"16\" y1=\"6\" y2=\"6\" /> <line x1=\"16\" x2=\"16\" y1=\"14\" y2=\"18\" /> <path d=\"M16 10h.01\" /> <path d=\"M12 10h.01\" /> <path d=\"M8 10h.01\" /> <path d=\"M12 14h.01\" /> <path d=\"M8 14h.01\" /> <path d=\"M12 18h.01\" /> <path d=\"M8 18h.01\" />", "repeat": "<path d=\"m17 2 4 4-4 4\" /> <path d=\"M3 11v-1a4 4 0 0 1 4-4h14\" /> <path d=\"m7 22-4-4 4-4\" /> <path d=\"M21 13v1a4 4 0 0 1-4 4H3\" />", "refresh-cw": "<path d=\"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8\" /> <path d=\"M21 3v5h-5\" /> <path d=\"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16\" /> <path d=\"M8 16H3v5\" />", "fast-forward": "<polygon points=\"13 19 22 12 13 5 13 19\" /> <polygon points=\"2 19 11 12 2 5 2 19\" />", "layers": "<path d=\"m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z\" /> <path d=\"m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65\" /> <path d=\"m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65\" />", "external-link": "<path d=\"M15 3h6v6\" /> <path d=\"M10 14 21 3\" /> <path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\" />"};
+const ic = (n, cls='') => `<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
+const BOT_AVA = `<div class="ava">${ic('bot')}</div>`;
+const lines = s => s.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+
+/* ---------- พี่บอท: ติวเตอร์สไตล์ตรง ๆ ดุนิด ๆ แต่ตลก ---------- */
+const BOT = {
+  right: ['ถูก! ✅ เก่งเกินคาดนะเนี่ย', 'ถูกเป๊ะ 🎯 ไปต่อ!', 'เยี่ยม ✅ แบบนี้ A มาแน่', 'ถูก! ✅ อย่าเพิ่งเหลิงล่ะ 😏'],
+  wrong1: ['ยังไม่ใช่ 😤 ลองดูอีกที', 'ผิด! แต่ไม่เป็นไร ใจเย็น ๆ', 'เกือบ… แต่ยังไม่ใช่ 👀'],
+  wrong2: ['โอเค ใบ้ให้แล้วนะ คิดตามนี้ 🤔', 'ยังไม่ได้อีก 😅 ลองตอบคำถามนี้ในหัวก่อน'],
+  reveal: ['งั้นดูเฉลยเลย แล้วจำให้ขึ้นใจนะ 📌', 'เฉลยมาแล้ว ข้อนี้จะกลับมาในโหมดทบทวน 😈'],
+};
+
+/* =========================================================
+   DATA — Chapter 10: Class
+   ========================================================= */
+
+/* Tracer builder: เขียนเป็นขั้น ๆ แล้วมันจะ snapshot memory ให้เอง */
+function trace(code){
+  const st = { vars:[], objs:[], out:[], cur:'', uml:-1 };
+  const steps = [];
+  const api = {
+    // l = บรรทัด (เลขเดียว หรือ [เริ่ม, จบ])
+    step(l, say, fn){
+      st.flash = []; st.newObj = null; st.ptr = null;
+      if (fn) fn(api);
+      steps.push({ l, say, s: JSON.parse(JSON.stringify(st)) });
+      return api;
+    },
+    v(name, val){ const f = st.vars.find(x => x[0]===name); f ? f[1]=val : st.vars.push([name, val]); },
+    drop(name){ st.vars = st.vars.filter(x => x[0]!==name); },
+    o(id, cls, fields, color){ st.objs.push({ id, cls, fields, color }); st.newObj = id; },
+    f(id, field, val){ const o = st.objs.find(x => x.id===id); const fl = o.fields.find(x => x[0]===field); fl[1] = val; st.flash.push(id+'.'+field); },
+    print(t){ st.out.push(['o', st.cur + t]); st.cur = ''; },   // Console.WriteLine
+    w(t){ st.cur += t; },                                        // Console.Write (ยังไม่ขึ้นบรรทัดใหม่)
+    // array 1 มิติ: แสดงเป็นกล่องเรียงกัน มีเลข index ใต้กล่อง
+    a(id, label, vals, color){ st.objs.push({ id, cls:label, arr:vals.map(String), color }); st.newObj = id; },
+    as(id, i, val){ st.objs.find(x => x.id===id).arr[i] = String(val); st.flash.push(id+'['+i+']'); },
+    // array 2 มิติ: แสดงเป็นตาราง แถว × คอลัมน์
+    g(id, label, rows, color){ st.objs.push({ id, cls:label, grid:rows.map(r => r.map(String)), color }); st.newObj = id; },
+    gs(id, r, c, val){ st.objs.find(x => x.id===id).grid[r][c] = String(val); st.flash.push(id+'['+r+','+c+']'); },
+    // ชี้ช่องที่กำลังใช้อยู่ (เช่น arr[i])
+    at(id, ...ix){ st.ptr = id + '[' + ix.join(',') + ']'; },
+    err(t){ st.out.push(['e', t]); },
+    u(i){ st.uml = i; },
+  };
+  return { code: lines(code), steps, build: api };
+}
+const C1 = '#ff8a5c', C2 = '#7dd3fc', C3 = '#d4d4d4';
+
+const CH10 = {
+  id:'ch10', title:'Ch10 · Class & Object', short:'Class',
+  lessons: []
+};
+
+/* ----- L1 Class vs Object ----- */
+(function(){
+  const t = trace(`
+class Robot
+{
+    public string name;
+    public int battery;
+}
+
+// ใน Main
+Robot r1 = new Robot();
+r1.name = "NongAI";
+r1.battery = 80;
+Robot r2 = new Robot();
+r2.name = "Jarvis";
+Console.WriteLine(r1.name + " " + r2.battery);`);
+  t.build
+   .step([1,5], 'นี่คือ <b>class Robot</b> = <b>แม่พิมพ์</b> 🧩 ยังไม่มีหุ่นจริงสักตัวนะ! แค่บอกว่า "หุ่นทุกตัวจะมี name กับ battery"')
+   .step(8, '<code>new Robot()</code> = เอาแม่พิมพ์มาปั๊ม <b>หุ่นจริง 1 ตัว</b> (object) ใน memory ส่วน <code>r1</code> แค่ถือ "ที่อยู่" ของหุ่นตัวนี้ สังเกตค่าเริ่มต้น: string = <b>null</b>, int = <b>0</b>', b => { b.o('#1','Robot',[['name','null'],['battery','0']],C1); b.v('r1','→ #1'); })
+   .step(9, 'ใช้ <b>จุด (.)</b> เข้าไปที่ field ของหุ่นตัวนั้น → ตั้งชื่อเป็น "NongAI"', b => b.f('#1','name','"NongAI"'))
+   .step(10, 'ใส่แบตให้ 80%', b => b.f('#1','battery','80'))
+   .step(11, 'ปั๊มหุ่น <b>ตัวที่ 2</b> จากแม่พิมพ์เดิม 👉 class เดียว สร้าง object ได้หลายตัว และแต่ละตัวมีข้อมูล<b>ของตัวเอง</b>', b => { b.o('#2','Robot',[['name','null'],['battery','0']],C2); b.v('r2','→ #2'); })
+   .step(12, 'ตั้งชื่อหุ่นตัวที่ 2 — หุ่นตัวที่ 1 ไม่โดนด้วยนะ', b => b.f('#2','name','"Jarvis"'))
+   .step(13, 'ผลคือ <b>NongAI 0</b> ⚠️ <code>r2.battery</code> ยังเป็น 0 เพราะเราไม่เคยตั้งค่า — ข้อสอบชอบหลอกจุดนี้!', b => b.print('NongAI 0'));
+  CH10.lessons.push({
+    id:'l1', icon:'boxes', title:'Class vs Object', sub:'แม่พิมพ์ กับ ของจริง',
+    analogy:{ img:'img/l1-cookie-cutters.jpg', credit:'ภาพ: Lyn Lomasi · CC0 · Wikimedia Commons', title:'Class = แม่พิมพ์คุกกี้ · Object = คุกกี้แต่ละชิ้น', text:'แม่พิมพ์อันเดียว ปั๊มคุกกี้ได้เป็นร้อยชิ้น แต่ละชิ้นแต่งหน้าไม่เหมือนกันก็ได้ แต่กินแม่พิมพ์ไม่ได้นะ 😂' },
+    yt:'C# class object ภาษาไทย',
+    video:{
+      th:[{ id:'199P8cmmFGs', title:'OOP คืออะไร' },{ id:'Pua2hJuH6BM', title:'สร้าง Class & Object' }],
+      en:[{ id:'9V5B3dNoVIA', title:'C# classes' },{ id:'heoTab1e41A', title:'C# objects' }] },
+    trace:t,
+    key:[
+      '<b>Class</b> = แบบ/แม่พิมพ์ (abstract) บอกว่ามี field อะไร มี method อะไร',
+      '<b>Object</b> = ของจริงที่สร้างด้วย <code>new</code> (เรียกอีกชื่อว่า <b>instance</b>)',
+      'เข้าถึงข้อมูลด้วยจุด: <code>r1.name</code>',
+      'ค่าเริ่มต้น: <code>string</code>→null, <code>int/double</code>→0, <code>bool</code>→false',
+    ],
+    more:`<p>ใน C# class หนึ่งมี 3 ส่วนหลัก:</p>
+<pre class="code">modifier class ClassName
+{
+    // 1. Field     → ตัวแปรเก็บข้อมูล (state)
+    // 2. Property  → ประตูเข้า-ออกข้อมูล
+    // 3. Method    → พฤติกรรม (behavior)
+}</pre><p>OOP ต่างจาก procedural ตรงที่มองโปรแกรมเป็น "ของ" ที่มีข้อมูล + ทำอะไรได้ ไม่ใช่แค่คำสั่งเรียงกันทีละบรรทัด</p>`,
+    ex:[
+      { id:'l1a', type:'mcq', lv:1, q:'ข้อไหนพูดถูก?', opts:['Class คือ object ที่สร้างเสร็จแล้ว','Object ถูกสร้างจาก class ด้วยคำว่า <code>new</code>','1 class สร้าง object ได้แค่ 1 ตัว','Object คือแม่พิมพ์ของ class'], ans:1,
+        ask:'คุกกี้ถูกสร้างจากอะไร? และใน C# คำไหนที่ใช้ "ปั๊ม" ของจริงออกมา?', why:'Class = แม่พิมพ์, Object = ของจริงที่สร้างด้วย <code>new</code> และ 1 class สร้างได้หลายตัว' },
+      { id:'l1b', type:'output', lv:1, q:'โค้ดนี้แสดงผลอะไร?', code:`Robot a = new Robot();
+Robot b = new Robot();
+a.battery = 50;
+b.battery = 90;
+a.battery = a.battery + 10;
+Console.WriteLine(a.battery + " " + b.battery);`, ans:'60 90',
+        ask:'a กับ b เป็นหุ่นคนละตัวกันมั้ย? ตอนบรรทัด 5 แตะหุ่นตัวไหน?', why:'a กับ b เป็นคนละ object → a: 50+10 = 60, b ยังเป็น 90' },
+      { id:'l1c', type:'output', lv:2, q:'โค้ดนี้แสดงผลอะไร? (class Robot เหมือนในวิดีโอ)', code:`Robot r = new Robot();
+Console.WriteLine(r.battery);`, ans:'0',
+        ask:'ยังไม่ได้ตั้งค่า battery เลย แล้ว int ที่เป็น field มีค่าเริ่มต้นเท่าไหร่?', why:'field ชนิด int มีค่าเริ่มต้น = 0' },
+      { id:'l1d', type:'write', lv:2, q:'สร้าง class <code>Phone</code> มี field <code>public string brand</code> และ <code>public int price</code> แล้วใน Main สร้าง object ชื่อ <code>p1</code> ตั้ง brand = "Apple"',
+        starter:`class Phone
+{
+    // เขียน field ตรงนี้
+
+}
+
+// ใน Main
+`,
+        rules:[
+          { re:/class\s+Phone\b/, msg:'ยังไม่มี <code>class Phone</code>' },
+          { re:/public\s+string\s+brand\s*;/, msg:'ยังไม่มี field <code>public string brand;</code> (อย่าลืม ;)' },
+          { re:/public\s+int\s+price\s*;/, msg:'ยังไม่มี field <code>public int price;</code>' },
+          { re:/Phone\s+p1\s*=\s*new\s+Phone\s*\(\s*\)\s*;/, msg:'ยังไม่ได้สร้าง object: รูปแบบคือ <code>Type ชื่อ = new Type();</code>' },
+          { re:/p1\s*\.\s*brand\s*=\s*"Apple"\s*;/, msg:'ยังไม่ได้ตั้ง <code>p1.brand</code> เป็น <code>"Apple"</code>' },
+        ],
+        ask:'สร้าง object ต้องมี 4 อย่าง: ชนิด (class), ชื่อตัวแปร, <code>=</code>, <code>new ชนิด()</code> ครบมั้ย?',
+        answer:`class Phone
+{
+    public string brand;
+    public int price;
+}
+
+// ใน Main
+Phone p1 = new Phone();
+p1.brand = "Apple";` },
+    ]
+  });
+})();
+
+/* ----- L2 Field & modifier ----- */
+(function(){
+  const t = trace(`
+class BankAccount
+{
+    private double balance;
+    public string owner;
+}
+
+// ใน Main
+BankAccount acc = new BankAccount();
+acc.owner = "Mew";
+acc.balance = 1000000;`);
+  t.build
+   .step(3, '<b>Field</b> = ตัวแปรที่อยู่ใน class <code>private</code> แปลว่า "ใช้ได้แค่ข้างใน class นี้เท่านั้น" 🔒')
+   .step(4, '<code>public</code> = ใครจะเข้ามาใช้ก็ได้ 🔓')
+   .step(8, 'สร้างบัญชี 1 บัญชี', b => { b.o('#1','BankAccount',[['balance 🔒','0'],['owner','null']],C1); b.v('acc','→ #1'); })
+   .step(9, '<code>owner</code> เป็น public → แก้จากข้างนอก (Main) ได้ ✅', b => b.f('#1','owner','"Mew"'))
+   .step(10, '💥 <b>compile error!</b> <code>balance</code> เป็น private เข้าจาก Main ไม่ได้ — ดีแล้ว ไม่งั้นใครก็เสกเงินล้านได้ 😂 แล้วจะเข้าถึงยังไง? → บทต่อไป <b>Property</b>', b => b.err("error CS0122: 'BankAccount.balance' is inaccessible due to its protection level"));
+  CH10.lessons.push({
+    id:'l2', icon:'lock', title:'Field & public/private', sub:'ใครแตะข้อมูลได้บ้าง',
+    analogy:{ img:'img/l2-wallet.jpg', credit:'ภาพ: Martin Kingsley · CC BY 2.0 · Wikimedia Commons', title:'private = เงินในกระเป๋าตังค์ · public = ป้ายชื่อที่ห้อยคอ', text:'ป้ายชื่อใครก็อ่านได้ แต่เงินในกระเป๋า คนอื่นห้ามล้วงเอง ต้องขอผ่านเจ้าของ' },
+    yt:'C# access modifier public private ภาษาไทย',
+    video:{
+      th:[{ id:'VgHGH55AxuI', title:'Access Modifier' },{ id:'-VaujJeZo9M', title:'สร้าง Field' },{ id:'FLig8RdrXws', title:'Encapsulation' }],
+      en:[{ id:'8FmE_-QXg3Y', title:'C# getters & setters (private)', note:'Bro Code ไม่มีคลิป access modifier ของ C# โดยตรง คลิปนี้อธิบาย private ไว้ด้วย' }] },
+    trace:t,
+    key:[
+      '<b>Field</b> = ตัวแปรที่ประกาศใน class เก็บ state ของ object',
+      '<code>public</code> → เข้าถึงได้จากทุก class',
+      '<code>private</code> → เข้าถึงได้แค่ใน class ตัวเอง',
+      'ไม่เขียน modifier เลย → C# ถือว่าเป็น <b>private</b>',
+      'ใช้ private ผิดที่ → <b>error CS0122</b> (โผล่ในข้อสอบ syntax error บ่อย)',
+    ],
+    more:`<p>การซ่อนข้อมูลแบบนี้เรียกว่า <b>Encapsulation</b>: class ห่อ field + method ไว้ด้วยกัน แล้วเลือกว่าจะเปิดอะไรให้ข้างนอกเห็น</p><p>หลักทั่วไป: <b>field → private</b>, แล้วเปิดให้ใช้ผ่าน <b>property/method → public</b></p>`,
+    ex:[
+      { id:'l2a', type:'bug', lv:1, q:'คลิกบรรทัดที่ทำให้ compile ไม่ผ่าน', code:`class Wallet
+{
+    private int money;
+    public string owner;
+}
+// ใน Main
+Wallet w = new Wallet();
+w.owner = "Ploy";
+w.money = 500;`, ans:9,
+        ask:'field ไหนเป็น private? แล้วตอนนี้เราอยู่ใน class Wallet หรืออยู่ใน Main?', why:'<code>money</code> เป็น private → เข้าจาก Main ไม่ได้ (CS0122)' },
+      { id:'l2b', type:'mcq', lv:1, q:'<code>private</code> หมายถึงอะไร?', opts:['เข้าถึงได้จากทุก class','เข้าถึงได้แค่ใน class เดียวกัน','เข้าถึงได้แค่ใน Main','ห้ามเปลี่ยนค่าตลอดไป'], ans:1,
+        ask:'กระเป๋าตังค์ของเรา ใครล้วงได้บ้าง?', why:'private = ใช้ได้แค่ข้างใน class ที่ประกาศเท่านั้น' },
+      { id:'l2c', type:'mcq', lv:2, q:'<code>class Car { string color; }</code> field <code>color</code> เป็น modifier อะไร?', opts:['public','private','static','ไม่มี modifier → error'], ans:1,
+        ask:'ถ้าไม่เขียน modifier อะไรเลย C# จะเลือกแบบปลอดภัยไว้ก่อน… แบบไหนปลอดภัยกว่า?', why:'ไม่เขียน modifier ให้ member ใน class → ค่าเริ่มต้นคือ private' },
+    ]
+  });
+})();
+
+/* ----- L3 Property ----- */
+(function(){
+  const t = trace(`
+class BankAccount
+{
+    private double balance;
+    public double Balance
+    {
+        get { return balance; }
+        set
+        {
+            if (value >= 0)
+                balance = value;
+        }
+    }
+}
+
+// ใน Main
+BankAccount acc = new BankAccount();
+acc.Balance = 500;
+acc.Balance = -100;
+Console.WriteLine(acc.Balance);`);
+  t.build
+   .step(3, '<code>balance</code> (ตัวเล็ก) = <b>field private</b> = ตู้เซฟ 🔒 คนนอกแตะไม่ได้')
+   .step(4, '<code>Balance</code> (ตัวใหญ่) = <b>Property</b> = พนักงานหน้าเคาน์เตอร์ 🧑‍💼 คนนอกคุยกับพนักงาน แล้วพนักงานไปเปิดตู้เซฟให้')
+   .step(16, 'สร้างบัญชี balance เริ่มที่ 0', b => { b.o('#1','BankAccount',[['balance 🔒','0']],C1); b.v('acc','→ #1'); })
+   .step(17, '<b>กำหนดค่า</b>ให้ property (มี <code>=</code> อยู่ทางขวา) → C# จะวิ่งไปเรียก <b>set</b> อัตโนมัติ')
+   .step(7, 'เข้ามาใน <b>set</b> ค่าที่ส่งมาจะอยู่ในคำพิเศษชื่อ <code>value</code> → value = 500', b => b.v('value','500'))
+   .step(9, 'พนักงานเช็กก่อน: 500 >= 0 ไหม? ✅ จริง')
+   .step(10, 'เก็บลงตู้เซฟ: balance = 500', b => { b.f('#1','balance 🔒','500'); })
+   .step(18, 'ลองโกง! ใส่ -100 💸', b => b.drop('value'))
+   .step(9, 'value = -100 → -100 >= 0 ไหม? ❌ เท็จ → <b>ข้ามบรรทัด 10</b> ไม่เก็บ! นี่แหละประโยชน์ของ property 🛡️', b => b.v('value','-100'))
+   .step(19, '<b>อ่านค่า</b> property (ไม่มี = ) → C# เรียก <b>get</b>', b => b.drop('value'))
+   .step(6, '<b>get</b> ส่งค่า balance ออกไป = 500')
+   .step(19, 'แสดงผล <b>500</b> (ไม่ใช่ -100 นะ!)', b => b.print('500'));
+  CH10.lessons.push({
+    id:'l3', icon:'landmark', title:'Property (get / set)', sub:'ประตูเข้า-ออกของ field',
+    analogy:{ img:'img/l3-bank-counter.jpg', credit:'ภาพ: Basher Eyre · CC BY-SA 2.0 · Wikimedia Commons', title:'Field = เงินในตู้เซฟหลังเคาน์เตอร์ · Property = พนักงานหน้าเคาน์เตอร์', text:'ลูกค้าเดินเข้าไปหลังเคาน์เตอร์เองไม่ได้ (private) ต้องยื่นเงิน (value) ให้พนักงาน → set, หรือขอดูยอด → get และพนักงานตรวจได้ว่ายอดติดลบมั้ย' },
+    yt:'C# property get set ภาษาไทย',
+    video:{
+      th:[{ id:'9yMY_5OHqXU', title:'สร้าง Property' },{ id:'czugZCmnWps', title:'Auto Property' }],
+      en:[{ id:'8FmE_-QXg3Y', title:'C# getters & setters' },{ id:'Z70AwnYYJOc', title:'Auto properties' }] },
+    trace:t,
+    key:[
+      'Property ใช้เข้าถึง <b>private field</b> อย่างปลอดภัย',
+      '<b>get</b> = อ่านค่า (<code>return field;</code>) · <b>set</b> = เขียนค่า (<code>field = value;</code>)',
+      '<code>value</code> = ค่าที่ถูกส่งมาตอน assign',
+      'ตั้งชื่อ: field ตัวเล็ก <code>balance</code>, property ตัวใหญ่ <code>Balance</code>',
+      '<code>x.Balance = 5</code> → เรียก set · <code>Console.WriteLine(x.Balance)</code> → เรียก get',
+    ],
+    more:`<p>เขียน property ได้ 3 แบบ (ออกสอบ!):</p>
+<pre class="code">// 1) Custom — ใส่ logic ได้
+public string Color
+{
+    get { return color; }
+    set { color = value; }
+}
+
+// 2) Expression-bodied (=>) — สั้นลง
+public string Name
+{
+    get => name;
+    set => name = value;
+}
+
+// 3) Auto-implemented (short-hand) — ไม่ต้องประกาศ field เอง
+public int Age { get; set; }</pre>`,
+    ex:[
+      { id:'l3a', type:'mcq', lv:1, q:'เติมช่องว่าง: <code>set { ______ }</code> สำหรับ field <code>name</code>', opts:['<code>value = Name;</code>','<code>Name = value;</code>','<code>name = value;</code>','<code>value = name;</code>'], ans:2,
+        ask:'set คือ "เอาค่าใหม่ไปเก็บลงตู้เซฟ" — ตู้เซฟคือ name หรือ Name? แล้วค่าใหม่ชื่ออะไร?', why:'เก็บค่าที่ส่งมา (<code>value</code>) ลง field (<code>name</code>) → <code>name = value;</code> ถ้าเขียน <code>Name = value;</code> จะเรียกตัวเองวนไม่จบ' },
+      { id:'l3b', type:'output', lv:2, q:'ใช้ class BankAccount จากวิดีโอ แสดงผลอะไร?', code:`BankAccount a = new BankAccount();
+a.Balance = 300;
+a.Balance = -50;
+a.Balance = a.Balance + 200;
+Console.WriteLine(a.Balance);`, ans:'500',
+        ask:'บรรทัด 3 set ค่า -50 ผ่านเงื่อนไข <code>value >= 0</code> มั้ย? ตอนบรรทัด 4 a.Balance ยังเป็นเท่าไหร่?', why:'300 → (-50 โดนปฏิเสธ) ยังเป็น 300 → 300+200 = 500' },
+      { id:'l3c', type:'bug', lv:2, q:'property นี้ทำงานผิด (set แล้วค่าไม่เปลี่ยน) คลิกบรรทัดที่ผิด', code:`class Student
+{
+    private string name;
+    public string Name
+    {
+        get { return name; }
+        set { value = name; }
+    }
+}`, ans:7,
+        ask:'set ควรเอาอะไรไปใส่ในอะไร? ฝั่งซ้ายของ = คือ "ที่เก็บ" นะ', why:'สลับข้างกัน! ต้องเป็น <code>name = value;</code>' },
+      { id:'l3d', type:'write', lv:3, q:'สร้าง class <code>Wallet</code> มี field <code>private int money</code> และ property <code>public int Money</code> ที่มีทั้ง get และ set (แบบ custom)',
+        starter:`class Wallet
+{
+
+}`,
+        rules:[
+          { re:/class\s+Wallet\b/, msg:'ยังไม่มี <code>class Wallet</code>' },
+          { re:/private\s+int\s+money\s*;/, msg:'ยังไม่มี field <code>private int money;</code>' },
+          { re:/public\s+int\s+Money\b/, msg:'ยังไม่มี property <code>public int Money</code> (M ตัวใหญ่)' },
+          { re:/get\s*(\{\s*return\s+money\s*;\s*\}|=>\s*money\s*;)/, msg:'ส่วน <b>get</b> ต้องส่งค่า field ออกไป: <code>get { return money; }</code>' },
+          { re:/set\s*(\{\s*money\s*=\s*value\s*;\s*\}|=>\s*money\s*=\s*value\s*;)/, msg:'ส่วน <b>set</b> ต้องเก็บ value ลง field: <code>set { money = value; }</code>' },
+        ],
+        ask:'get = "ขอดูยอด" ต้อง return อะไร? set = "ฝากเงิน" ต้องเอา value ไปใส่ที่ไหน?',
+        answer:`class Wallet
+{
+    private int money;
+    public int Money
+    {
+        get { return money; }
+        set { money = value; }
+    }
+}` },
+    ]
+  });
+})();
+
+/* ----- L4 Constructor ----- */
+(function(){
+  const t = trace(`
+class Account
+{
+    private string owner;
+    private double balance;
+
+    public Account()
+    {
+        owner = "unknown";
+        balance = 0;
+    }
+
+    public Account(string o, double b)
+    {
+        owner = o;
+        balance = b;
+    }
+}
+
+// ใน Main
+Account a1 = new Account();
+Account a2 = new Account("Ploy", 500);`);
+  t.build
+   .step(6, '<b>Constructor</b> = method พิเศษ ⚡ ชื่อ<b>เหมือน class</b> และ<b>ไม่มี return type</b> (ไม่มี void ด้วย!) ทำงานอัตโนมัติตอน <code>new</code>')
+   .step(12, 'มีได้<b>หลายตัว</b> ขอแค่ parameter ไม่เหมือนกัน (overloading)')
+   .step(20, '<code>new Account()</code> ไม่ส่งอะไรมา → C# เลือก constructor ที่<b>ไม่มี parameter</b>', b => b.o('#1','Account',[['owner','null'],['balance','0']],C1))
+   .step(8, 'ตั้งค่าเริ่มต้น owner = "unknown"', b => b.f('#1','owner','"unknown"'))
+   .step(9, 'balance = 0', b => b.f('#1','balance','0'))
+   .step(20, 'constructor จบ → a1 ได้ object ที่พร้อมใช้', b => b.v('a1','→ #1'))
+   .step(21, 'ส่งมา 2 ค่า (string, double) → เลือก constructor ที่มี <b>2 parameter</b> ตรงชนิด', b => b.o('#2','Account',[['owner','null'],['balance','0']],C2))
+   .step(12, 'parameter รับค่า: o = "Ploy", b = 500', b => { b.v('o','"Ploy"'); b.v('b','500'); })
+   .step(14, 'owner = o', b => b.f('#2','owner','"Ploy"'))
+   .step(15, 'balance = b', b => b.f('#2','balance','500'))
+   .step(21, 'เสร็จ! o กับ b หายไป (มันอยู่แค่ใน constructor) a2 ได้บัญชีที่มีเงิน 500 ตั้งแต่เกิด 🎉', b => { b.drop('o'); b.drop('b'); b.v('a2','→ #2'); });
+  CH10.lessons.push({
+    id:'l4', icon:'zap', title:'Constructor', sub:'ตั้งค่าตั้งแต่เกิด',
+    analogy:{ img:'img/l4-passbook.jpg', credit:'ภาพ: Parinaam · CC BY-SA 3.0 · Wikimedia Commons', title:'Constructor = ตอนเปิดบัญชีแล้วได้สมุดบัญชี', text:'พอเปิดบัญชี (new) สมุดที่ได้มามีชื่อเจ้าของ + เงินฝากแรกเข้ากรอกไว้ให้แล้ว บัญชีไม่เกิดมาแบบว่างเปล่า และมีหลายแบบฟอร์มให้เลือก (หลาย constructor)' },
+    yt:'C# constructor ภาษาไทย',
+    video:{
+      th:[{ id:'X0WT5sh6u4A', title:'Default Constructor' },{ id:'Pc7d-rOYenI', title:'Parameter Constructor' }],
+      en:[{ id:'cAhh6pYkHPQ', title:'C# constructors' },{ id:'OLxIscUoTgY', title:'Overloaded constructors' }] },
+    trace:t,
+    key:[
+      'ชื่อ <b>เหมือน class</b> เป๊ะ',
+      '<b>ไม่มี return type</b> (ไม่ใส่ void) และไม่ใส่ static',
+      'ทำงานอัตโนมัติตอน <code>new</code> ใช้ตั้งค่าเริ่มต้นให้ field',
+      'มีหลายตัวได้ ถ้า parameter ต่างกัน → C# เลือกตามค่าที่ส่งมา',
+      'ถ้าไม่เขียนเลย C# แถม constructor แบบไม่มี parameter ให้',
+    ],
+    more:`<p>⚠️ กับดัก: ถ้าเขียน constructor ที่มี parameter แล้ว C# จะ<b>ไม่แถม</b>ตัวที่ไม่มี parameter ให้อีก</p>
+<pre class="code">class Car
+{
+    public Car(string n) { }
+}
+Car c = new Car();   // ❌ error CS7036: ไม่มี constructor ที่รับ 0 argument</pre>`,
+    ex:[
+      { id:'l4a', type:'mcq', lv:1, q:'ข้อไหนคือ constructor ที่ถูกต้องของ <code>class Car</code>?', opts:['<code>public void Car() { }</code>','<code>public Car() { }</code>','<code>public int Car() { }</code>','<code>public car() { }</code>'], ans:1,
+        ask:'constructor มี return type มั้ย? แล้วชื่อต้องตรงกับ class แบบตัวพิมพ์ใหญ่เล็กด้วยมั้ย?', why:'ชื่อเหมือน class (C ใหญ่) + ไม่มี return type' },
+      { id:'l4b', type:'output', lv:2, q:'แสดงผลอะไร?', code:`class Bot
+{
+    public string Name;
+    public Bot() { Name = "Basic"; }
+    public Bot(string n) { Name = n; }
+}
+// ใน Main
+Bot x = new Bot();
+Bot y = new Bot("GPT");
+Console.WriteLine(x.Name + "-" + y.Name);`, ans:'Basic-GPT',
+        ask:'x ส่ง argument มากี่ตัว? y ส่งมากี่ตัว? แต่ละตัวเข้า constructor ไหน?', why:'x → Bot() ได้ "Basic", y → Bot(string) ได้ "GPT"' },
+      { id:'l4c', type:'bug', lv:2, q:'ตั้งใจให้บรรทัด 4 เป็น constructor แต่บรรทัด 10 error คลิกบรรทัดที่เป็น<b>ต้นเหตุ</b>', code:`class Student
+{
+    private string name;
+    public void Student(string n)
+    {
+        name = n;
+    }
+}
+// ใน Main
+Student s = new Student("Mew");`, ans:4,
+        ask:'constructor ห้ามมีอะไรนำหน้าชื่อ (นอกจาก public)?', why:'ใส่ <code>void</code> → มันกลายเป็น method ธรรมดา (และ C# ไม่ยอมให้ method ชื่อเดียวกับ class) ต้องลบ void ออก' },
+      { id:'l4d', type:'write', lv:3, q:'สร้าง class <code>Account</code> มี field <code>private string owner</code>, <code>private double balance</code> และ constructor ที่รับ <code>(string o, double b)</code> แล้วเก็บลง field',
+        starter:`class Account
+{
+
+}`,
+        rules:[
+          { re:/class\s+Account\b/, msg:'ยังไม่มี <code>class Account</code>' },
+          { re:/private\s+string\s+owner\s*;/, msg:'ยังไม่มี <code>private string owner;</code>' },
+          { re:/private\s+double\s+balance\s*;/, msg:'ยังไม่มี <code>private double balance;</code>' },
+          { not:/(void|int|string|double|static)\s+Account\s*\(/, msg:'constructor <b>ห้ามมี return type / static</b> นำหน้าชื่อ' },
+          { re:/public\s+Account\s*\(\s*string\s+o\s*,\s*double\s+b\s*\)/, msg:'ยังไม่มี constructor <code>public Account(string o, double b)</code>' },
+          { re:/owner\s*=\s*o\s*;/, msg:'ใน constructor ยังไม่ได้เก็บ <code>owner = o;</code>' },
+          { re:/balance\s*=\s*b\s*;/, msg:'ใน constructor ยังไม่ได้เก็บ <code>balance = b;</code>' },
+        ],
+        ask:'constructor หน้าตาเหมือน method แต่ขาดอะไรไป 1 อย่าง? แล้วข้างในต้องเอา parameter ไปใส่ field ตัวไหน?',
+        answer:`class Account
+{
+    private string owner;
+    private double balance;
+
+    public Account(string o, double b)
+    {
+        owner = o;
+        balance = b;
+    }
+}` },
+    ]
+  });
+})();
+
+/* ----- L5 Array of class ----- */
+(function(){
+  const t = trace(`
+class Car
+{
+    public string Name { get; set; }
+}
+
+// ใน Main
+Car[] cars = new Car[3];
+cars[0] = new Car();
+cars[0].Name = "Tesla";
+cars[1] = new Car();
+cars[1].Name = "BYD";
+Console.WriteLine(cars[0].Name);
+Console.WriteLine(cars[2].Name);`);
+  t.build
+   .step(3, 'class Car มี property แบบ auto <code>Name</code>')
+   .step(7, '<code>new Car[3]</code> = สร้าง<b>ลานจอดรถ 3 ช่อง</b> 🅿️ แต่ยัง<b>ไม่มีรถสักคัน!</b> ทุกช่องเป็น null', b => { b.o('A','Car[] (ลานจอด)',[['[0]','null'],['[1]','null'],['[2]','null']],C3); b.v('cars','→ ลานจอด'); })
+   .step(8, 'ต้อง <code>new Car()</code> สร้างรถจริงแล้วเอาไปจอดช่อง [0]', b => { b.o('#1','Car',[['Name','null']],C1); b.f('A','[0]','→ #1'); })
+   .step(9, 'ตั้งชื่อรถในช่อง [0]', b => b.f('#1','Name','"Tesla"'))
+   .step(10, 'สร้างคันที่ 2 จอดช่อง [1]', b => { b.o('#2','Car',[['Name','null']],C2); b.f('A','[1]','→ #2'); })
+   .step(11, 'ตั้งชื่อ', b => b.f('#2','Name','"BYD"'))
+   .step(12, 'แสดง Tesla ✅', b => b.print('Tesla'))
+   .step(13, '💥 <b>NullReferenceException!</b> ช่อง [2] ว่าง ไม่มีรถให้ถามชื่อ — error นี้เจอบ่อยมากในงานจริงและข้อสอบ', b => b.err('Unhandled exception. System.NullReferenceException: Object reference not set to an instance of an object.'));
+  CH10.lessons.push({
+    id:'l5', icon:'car', title:'Array of Class', sub:'เก็บ object หลายตัวใน array',
+    analogy:{ img:'img/l5-parking-lot.jpg', credit:'ภาพ: Öljylautta · Public domain · Wikimedia Commons', title:'Array = ลานจอดรถ · Object = รถแต่ละคัน', text:'ดูรูป: ตีเส้นช่องจอดไว้เต็มลาน แต่ไม่มีรถสักคัน = ทุกช่องเป็น null! ต้องเอารถ (new) มาจอดทีละช่องเอง' },
+    yt:'C# array of objects ภาษาไทย',
+    video:{
+      th:[{ id:'zwZxfIZnsW0', title:'Struct & Array', note:'Playlist ไทยไม่มีคลิป Array of Class ตรง ๆ แต่คลิปนี้ใช้หลักการเดียวกัน (เก็บข้อมูลหลายตัวใน array) — หรือสลับไปดู Bro Code ที่ตรงกว่า' }],
+      en:[{ id:'ZITVn87McQ8', title:'C# array of objects' }] },
+    trace:t,
+    key:[
+      'รูปแบบ: <code>ClassName[] ชื่อ = new ClassName[size];</code>',
+      'ตอนสร้าง ทุกช่องเป็น <b>null</b> ยังไม่มี object',
+      'ต้อง <code>arr[i] = new ClassName();</code> ทีละช่อง (มักใช้ for loop)',
+      'ใช้ช่องที่ยังเป็น null → <b>NullReferenceException</b>',
+    ],
+    more:`<p>รูปแบบที่ใช้บ่อยที่สุด — สร้าง object ให้ครบทุกช่องด้วย loop:</p>
+<pre class="code">Student[] students = new Student[3];
+for (int i = 0; i < students.Length; i++)
+{
+    students[i] = new Student();
+}
+
+foreach (Student s in students)
+{
+    Console.WriteLine(s.Name);
+}</pre>`,
+    ex:[
+      { id:'l5a', type:'mcq', lv:1, q:'หลังรัน <code>Car[] cars = new Car[3];</code> ตอนนี้มี Car object อยู่กี่ตัว?', opts:['3 ตัว','0 ตัว','1 ตัว','error'], ans:1,
+        ask:'สร้างลานจอด 3 ช่อง แต่เราเคย new Car() สักครั้งมั้ย?', why:'มีแค่ array 3 ช่องที่เป็น null ยังไม่มี Car object เลย' },
+      { id:'l5b', type:'bug', lv:2, q:'โค้ดนี้ crash ตอนรัน คลิกบรรทัดที่ crash', code:`Car[] cars = new Car[2];
+cars[0] = new Car();
+cars[0].Name = "Tesla";
+cars[1].Name = "BYD";
+Console.WriteLine(cars[1].Name);`, ans:4,
+        ask:'ช่อง [1] เคยมีใคร new Car() ไปจอดมั้ย?', why:'cars[1] ยังเป็น null → NullReferenceException ต้องเพิ่ม <code>cars[1] = new Car();</code> ก่อน' },
+      { id:'l5c', type:'output', lv:3, q:'แสดงผลอะไร? (class Item มี property <code>Price</code> แบบ auto)', code:`Item[] items = new Item[3];
+for (int i = 0; i < items.Length; i++)
+{
+    items[i] = new Item();
+    items[i].Price = (i + 1) * 100;
+}
+int total = 0;
+foreach (Item it in items)
+{
+    total += it.Price;
+}
+Console.WriteLine(total);`, ans:'600',
+        ask:'i = 0, 1, 2 → Price แต่ละช่องเป็น (i+1)*100 = เท่าไหร่บ้าง? แล้วรวมกันได้?', why:'100 + 200 + 300 = 600' },
+      { id:'l5d', type:'write', lv:3, q:'ใน Main: สร้าง array <code>students</code> ของ <code>Student</code> ขนาด 3 แล้วใช้ <code>for</code> loop สร้าง object ให้ครบทุกช่อง',
+        starter:`// class Student มีอยู่แล้ว
+// ใน Main
+`,
+        rules:[
+          { re:/Student\s*\[\s*\]\s+students\s*=\s*new\s+Student\s*\[\s*3\s*\]\s*;/, msg:'ยังไม่ได้สร้าง array: <code>Student[] students = new Student[3];</code>' },
+          { re:/for\s*\(/, msg:'ยังไม่มี <code>for</code> loop' },
+          { re:/<\s*(students\.Length|3)/, msg:'เงื่อนไข loop ควรเป็น <code>i &lt; students.Length</code> (หรือ &lt; 3)' },
+          { re:/students\s*\[\s*\w+\s*\]\s*=\s*new\s+Student\s*\(\s*\)\s*;/, msg:'ใน loop ยังไม่ได้ <code>students[i] = new Student();</code>' },
+        ],
+        ask:'array ขนาด 3 มี index อะไรบ้าง? loop ต้องวิ่ง i จากเท่าไหร่ถึงเท่าไหร่?',
+        answer:`Student[] students = new Student[3];
+for (int i = 0; i < students.Length; i++)
+{
+    students[i] = new Student();
+}` },
+    ]
+  });
+})();
+
+/* ----- L6 UML → Code ----- */
+(function(){
+  const t = trace(`
+public class Student
+{
+    private int id;
+    private string name;
+
+    public int Id
+    {
+        get { return id; }
+        set { id = value; }
+    }
+
+    public string Name
+    {
+        get { return name; }
+        set { name = value; }
+    }
+
+    public void Dance()
+    {
+        Console.Write("dance");
+    }
+}`);
+  t.uml = ['Student','- id: int','- name: string','+ Id{get;set;}: int','+ Name{get;set;}: string','+ Dance()'];
+  t.build
+   .step(1, 'ช่องบนสุดของ UML = <b>ชื่อ class</b>', b => b.u(0))
+   .step(3, '<code>-</code> = <b>private</b> · UML เขียน <code>ชื่อ: type</code> แต่ C# เขียน<b>กลับด้าน</b> <code>type ชื่อ;</code> ⚠️ จุดหลอกในข้อสอบ!', b => b.u(1))
+   .step(4, 'เหมือนกัน: <code>- name: string</code> → <code>private string name;</code>', b => b.u(2))
+   .step([6,10], '<code>+</code> = <b>public</b> มี <code>{get;set;}</code> = <b>property</b> ชื่อตัวใหญ่ <code>Id</code> ข้างในจับคู่กับ field <code>id</code>', b => b.u(3))
+   .step([12,16], 'property Name คู่กับ field name', b => b.u(4))
+   .step([18,21], '<code>+ Dance()</code> มีวงเล็บ = <b>method</b> public ไม่บอก type = <b>void</b>', b => b.u(5));
+  CH10.lessons.push({
+    id:'l6', icon:'ruler', title:'UML Class Diagram → Code', sub:'อ่านแบบแปลนแล้วเขียนโค้ด',
+    analogy:{ img:'img/l6-plan-to-house.jpg', credit:'ภาพ: Azmie Kasmy · CC BY-SA 4.0 · Wikimedia Commons', title:'UML = แบบแปลนบ้าน · Code = บ้านที่สร้างจริง', text:'ดูรูป: จากแปลนในคอม → โมเดล 3D → บ้านจริง เหมือนกัน UML คือแปลน เรา (ช่าง) อ่านสัญลักษณ์ให้ออก แล้วเขียนโค้ดให้ตรงแบบ' },
+    yt:'UML class diagram ภาษาไทย',
+    video:{
+      th:[{ id:'1PIECrX6x54', title:'Procedural vs OOP', note:'ยังไม่มีคลิปสอน UML ตรง ๆ คลิปนี้ช่วยปูพื้น OOP ที่หัวข้อ UML ใช้' }],
+      en:[] },
+    trace:t,
+    key:[
+      '<code>-</code> = private, <code>+</code> = public',
+      'UML: <code>name: string</code> → C#: <code>string name</code> (type มาก่อน!)',
+      'มี <code>{get;set;}</code> → property · มี <code>()</code> → method',
+    ],
+    more:`<p>UML 1 กล่องแบ่ง 3 ช่อง: <b>ชื่อ class</b> / <b>attribute (field)</b> / <b>property + method</b></p>`,
+    ex:[
+      { id:'l6a', type:'mcq', lv:1, q:'UML <code>- name: string</code> เขียนเป็น C# ว่าอะไร?', opts:['<code>private string name;</code>','<code>private name string;</code>','<code>public string name;</code>','<code>- string name;</code>'], ans:0,
+        ask:'เครื่องหมาย - แปลว่าอะไร? แล้วใน C# อะไรมาก่อน type หรือชื่อ?', why:'- = private และ C# เขียน type ก่อนชื่อ' },
+      { id:'l6b', type:'mcq', lv:2, q:'UML <code>+ Age{get;set;}: int</code> เขียนเป็น C# ว่าอะไร?', opts:['<code>private int Age;</code>','<code>public int age;</code>','<code>public int Age { get; set; }</code>','<code>public void Age()</code>'], ans:2,
+        ask:'+ คืออะไร? แล้ว {get;set;} บอกว่าเป็น field, property หรือ method?', why:'+ = public, {get;set;} = property' },
+    ]
+  });
+})();
+
+/* ----- Extra: ข้อสอบแนว syntax error (ใช้ใน Final Quiz) ----- */
+const EXTRA = [
+  { id:'x1', lesson:'l1', type:'bug', lv:1, q:'Syntax error อยู่บรรทัดไหน?', code:`Robot r = new Robot;
+r.name = "A";`, ans:1, ask:'หลัง new ชื่อ class ต้องมีอะไรต่อท้ายเสมอ?', why:'ต้องเป็น <code>new Robot()</code> — ลืมวงเล็บ' },
+  { id:'x2', lesson:'l3', type:'bug', lv:1, q:'Syntax error อยู่บรรทัดไหน?', code:`class Car
+{
+    public string Color { get; set }
+}`, ans:3, ask:'ใน <code>{ get; set }</code> ขาดอะไรไปหลัง set?', why:'ต้องเป็น <code>{ get; set; }</code> — ลืม ; หลัง set' },
+  { id:'x3', lesson:'l1', type:'bug', lv:2, q:'Syntax error อยู่บรรทัดไหน?', code:`class Phone
+{
+    public string brand
+    public int price;
+}`, ans:3, ask:'ทุกการประกาศ field ต้องจบด้วยอะไร?', why:'ลืม <code>;</code> ท้ายบรรทัด 3' },
+  { id:'x4', lesson:'l4', type:'mcq', lv:2, q:'<code>class Car { public Car(string n) { } }</code> แล้วเขียน <code>Car c = new Car();</code> จะเกิดอะไร?', opts:['ได้ object ปกติ','compile error เพราะไม่มี constructor แบบไม่มี parameter','runtime error NullReferenceException','c เป็น null'], ans:1,
+    ask:'เมื่อเราเขียน constructor เองแล้ว C# ยังแถมตัวที่ไม่มี parameter ให้มั้ย?', why:'เขียน constructor เองแล้ว C# จะไม่แถม default constructor → CS7036' },
+  { id:'x5', lesson:'l3', type:'output', lv:3, q:'แสดงผลอะไร?', code:`class Temp
+{
+    private int c;
+    public int C
+    {
+        get { return c; }
+        set { if (value > 100) c = 100; else c = value; }
+    }
+}
+// ใน Main
+Temp t = new Temp();
+t.C = 150;
+Console.WriteLine(t.C);
+t.C = 40;
+Console.WriteLine(t.C);`, ans:'100\n40', ask:'150 > 100 มั้ย? ถ้าใช่ c ถูกตั้งเป็นเท่าไหร่?', why:'150 เกิน 100 → เก็บ 100 · 40 ไม่เกิน → เก็บ 40 (แสดงคนละบรรทัด)' },
+  { id:'x6', lesson:'l2', type:'mcq', lv:3, q:'ข้อไหน<b>ไม่ใช่</b>เหตุผลที่ควรให้ field เป็น private แล้วเข้าถึงผ่าน property?', opts:['ตรวจค่าก่อนเก็บได้ (validation)','ป้องกันคนนอกแก้ค่ามั่ว ๆ','ทำให้โปรแกรมรันเร็วขึ้นมาก','ซ่อนรายละเอียดภายใน (encapsulation)'], ans:2,
+    ask:'property ช่วยเรื่องความปลอดภัยหรือเรื่องความเร็ว?', why:'property ไม่ได้ทำให้เร็วขึ้น — ประโยชน์คือ validation และ encapsulation' },
+  { id:'x7', lesson:'l5', type:'output', lv:2, q:'แสดงผลอะไร?', code:`Car[] cars = new Car[4];
+Console.WriteLine(cars.Length);
+Console.WriteLine(cars[0] == null);`, ans:'4\nTrue', ask:'Length นับจำนวนช่องหรือจำนวนรถ? แล้วช่อง [0] เคยมีรถมั้ย?', why:'Length = จำนวนช่อง (4) และช่องยังว่าง → True (C# พิมพ์ bool เป็น True ตัว T ใหญ่)' },
+];
+
+/* =========================================================
+   DATA — Chapter 9: Array
+   ========================================================= */
+const CH9 = { id:'ch9', title:'Ch9 · Array', short:'Array', lessons: [] };
+
+/* ----- A1 Array คืออะไร ----- */
+(function(){
+  const t = trace(`
+// ใน Main
+int[] scores = new int[3];
+scores[0] = 75;
+scores[2] = 90;
+Console.WriteLine(scores[1]);
+Console.WriteLine(scores.Length);
+string[] names = { "Mew", "Ploy" };
+Console.WriteLine(names[1]);
+Console.WriteLine(names[2]);`);
+  t.build
+   .step(2, '<code>int[]</code> วงเล็บเหลี่ยมหลังชนิด = <b>array</b> · <code>new int[3]</code> = สร้าง<b>ล็อกเกอร์ 3 ตู้</b> เลขตู้ (index) <b>เริ่มที่ 0</b> ทุกตู้มีค่าเริ่มต้นเป็น 0', b => { b.a('S', 'scores (int[3])', [0,0,0], C1); b.v('scores', '→ array 3 ช่อง'); })
+   .step(3, 'ใส่ 75 ลงตู้หมายเลข <b>0</b> (ตู้แรก)', b => { b.as('S', 0, 75); b.at('S', 0); })
+   .step(4, 'ใส่ 90 ลงตู้หมายเลข <b>2</b> ⚠️ ตู้สุดท้ายคือ 2 ไม่ใช่ 3 เพราะเริ่มนับที่ 0', b => { b.as('S', 2, 90); b.at('S', 2); })
+   .step(5, 'ตู้ 1 ยังไม่เคยใส่อะไร → ได้ค่าเริ่มต้น <b>0</b>', b => { b.at('S', 1); b.print('0'); })
+   .step(6, '<code>Length</code> = จำนวนตู้ทั้งหมด = <b>3</b> (ไม่มีวงเล็บนะ!)', b => b.print('3'))
+   .step(7, 'สร้าง + ใส่ค่าพร้อมกัน (initialize) ไม่ต้องบอกขนาด C# นับให้เอง = 2 ช่อง', b => { b.a('N', 'names (string[2])', ['"Mew"','"Ploy"'], C2); b.v('names', '→ array 2 ช่อง'); })
+   .step(8, '<code>names[1]</code> = ช่องที่ 2 = Ploy', b => { b.at('N', 1); b.print('Ploy'); })
+   .step(9, '💥 <b>IndexOutOfRangeException!</b> names มีแค่ช่อง 0 กับ 1 ไม่มีช่อง 2 — error นี้ออกสอบบ่อยมาก', b => b.err('Unhandled exception. System.IndexOutOfRangeException: Index was outside the bounds of the array.'));
+  CH9.lessons.push({
+    id:'a1', icon:'archive', title:'Array คืออะไร', sub:'ตู้ล็อกเกอร์ที่เลขเริ่มที่ 0',
+    analogy:{ img:'', credit:'', title:'Array = ตู้ล็อกเกอร์เรียงกัน · index = เลขตู้', text:'ทุกตู้เก็บของชนิดเดียวกัน (int ก็ int หมด) มีเลขตู้ติดไว้ แต่เลขตู้ของ C# <b>เริ่มที่ 0</b> ตู้สุดท้ายเลยเป็น Length − 1' },
+    yt:'สอน C# array ภาษาไทย',
+    video:{
+      th:[{ id:'TlDjHDM285E', title:'รู้จักกับ Array' },{ id:'Jgl97Ib1SQU', title:'การสร้าง Array' },{ id:'W7npW91vEEM', title:'นับจำนวนสมาชิก' }],
+      en:[{ id:'IHMmPVEOT64', title:'C# arrays' }] },
+    trace:t,
+    key:[
+      'Array = เก็บค่า<b>หลายตัว ชนิดเดียวกัน</b> ในตัวแปรเดียว แต่ละช่องเรียกว่า element',
+      'ประกาศ + สร้าง: <code>int[] nums = new int[5];</code> (ขนาดตายตัว เปลี่ยนทีหลังไม่ได้)',
+      'ใส่ค่าเลย: <code>int[] nums = {1, 2, 3};</code> หรือ <code>new int[3] {1, 2, 3}</code>',
+      'index เริ่ม <b>0</b> ถึง <b>Length − 1</b> · ค่าเริ่มต้น int → 0, string → null, bool → false',
+      'ใช้ index เกิน → <b>IndexOutOfRangeException</b> · <code>int num[2] = {1,2};</code> ❌ ผิด syntax',
+    ],
+    more:`<p>แยกประกาศกับสร้างก็ได้:</p>
+<pre class="code">string[] students;            // ประกาศ (ยังไม่มีตู้)
+students = new string[3];     // สร้าง 3 ตู้: students[0], [1], [2]</pre>
+<p>⚠️ ถ้าบอกขนาด แล้วใส่ค่าไม่ครบ/เกิน จะ compile error:</p>
+<pre class="code">int[] a = new int[3] { 1, 2 };        // ❌ ใส่ไม่ครบ 3 ตัว
+int[] b = new int[3] { 1, 2, 3, 4 };  // ❌ เกิน</pre>`,
+    ex:[
+      { id:'a1a', type:'mcq', lv:1, q:'<code>int[] a = new int[5];</code> index สุดท้ายคือเท่าไหร่?', opts:['5','4','6','1'], ans:1,
+        ask:'ล็อกเกอร์ 5 ตู้ เลขตู้เริ่มที่ 0 → 0, 1, 2, … ตู้ที่ 5 คือเลขอะไร?', why:'index เริ่ม 0 → ตู้สุดท้ายคือ Length − 1 = 4' },
+      { id:'a1b', type:'mcq', lv:1, q:'การประกาศ array ข้อไหนถูกต้องใน C#?', opts:['<code>int a[] = {1, 2, 3};</code>','<code>int[3] a;</code>','<code>int[] a = {1, 2, 3};</code>','<code>int a = new int[3];</code>'], ans:2,
+        ask:'C# ใส่ [] ไว้ตรงไหน: หลังชนิด หรือหลังชื่อตัวแปร?', why:'C# เขียน <code>[]</code> ต่อท้าย<b>ชนิด</b>: <code>int[]</code> (แบบ <code>int a[]</code> เป็นของภาษา C/Java)' },
+      { id:'a1c', type:'output', lv:2, q:'แสดงผลอะไร?', code:`string[] fruits = { "apple", "banana", "cherry" };
+fruits[1] = "mango";
+Console.WriteLine(fruits[0] + " " + fruits[1] + " " + fruits.Length);`, ans:'apple mango 3',
+        ask:'บรรทัด 2 เปลี่ยนช่องไหน? แล้ว Length นับจำนวนช่องทั้งหมดเท่าไหร่?', why:'ช่อง 1 ถูกเปลี่ยนจาก banana เป็น mango และ Length = 3' },
+      { id:'a1d', type:'bug', lv:2, q:'โค้ดนี้ crash ตอนรัน คลิกบรรทัดที่ crash', code:`int[] a = new int[3];
+a[0] = 10;
+a[1] = 20;
+a[3] = 40;
+Console.WriteLine(a[0]);`, ans:4,
+        ask:'array ขนาด 3 มี index อะไรบ้าง? มีช่อง 3 มั้ย?', why:'ขนาด 3 มีแค่ index 0–2 → <code>a[3]</code> = IndexOutOfRangeException' },
+      { id:'a1e', type:'write', lv:2, q:'สร้าง array <code>double[] prices</code> ขนาด 3 แล้วใส่ <code>9.5</code> ในช่องแรก และ <code>20</code> ในช่องสุดท้าย',
+        starter:`// ใน Main
+`,
+        rules:[
+          { re:/double\s*\[\s*\]\s+prices\s*=\s*new\s+double\s*\[\s*3\s*\]\s*;/, msg:'ยังไม่ได้สร้าง array: <code>double[] prices = new double[3];</code>' },
+          { not:/prices\s*\[\s*3\s*\]/, msg:'ไม่มีช่อง <code>[3]</code> นะ! ขนาด 3 มี index 0–2' },
+          { re:/prices\s*\[\s*0\s*\]\s*=\s*9\.5\s*;/, msg:'ยังไม่ได้ใส่ <code>9.5</code> ในช่องแรก <code>prices[0]</code>' },
+          { re:/prices\s*\[\s*(2|prices\.Length\s*-\s*1)\s*\]\s*=\s*20(\.0+)?\s*;/, msg:'ยังไม่ได้ใส่ <code>20</code> ในช่องสุดท้าย (index เท่าไหร่นะ?)' },
+        ],
+        ask:'ช่องแรกคือ index อะไร? ช่องสุดท้ายของ array ขนาด 3 คือ index อะไร?',
+        answer:`double[] prices = new double[3];
+prices[0] = 9.5;
+prices[2] = 20;` },
+    ]
+  });
+})();
+
+/* ----- A2 Loop กับ Array ----- */
+(function(){
+  const t = trace(`
+int[] prices = { 40, 25, 60 };
+int total = 0;
+for (int i = 0; i < prices.Length; i++)
+{
+    total = total + prices[i];
+}
+Console.WriteLine("Total = " + total);`);
+  t.build
+   .step(1, 'ตะกร้ามีของ 3 ชิ้น ราคา 40, 25, 60', b => { b.a('P', 'prices', [40,25,60], C1); b.v('prices', '→ array 3 ช่อง'); })
+   .step(2, 'ยอดรวมเริ่มที่ 0', b => b.v('total', '0'))
+   .step(3, 'เริ่ม loop: <code>i = 0</code> → เช็ก 0 &lt; 3 ✅ ใช้ <code>i</code> เป็นเลข index', b => { b.v('i', '0'); b.at('P', 0); })
+   .step(5, 'สแกนชิ้นที่ 0: total = 0 + 40 = <b>40</b>', b => { b.v('total', '40'); b.at('P', 0); })
+   .step(3, '<code>i++</code> → i = 1 → 1 &lt; 3 ✅', b => { b.v('i', '1'); b.at('P', 1); })
+   .step(5, 'total = 40 + 25 = <b>65</b>', b => { b.v('total', '65'); b.at('P', 1); })
+   .step(3, 'i = 2 → 2 &lt; 3 ✅', b => { b.v('i', '2'); b.at('P', 2); })
+   .step(5, 'total = 65 + 60 = <b>125</b>', b => { b.v('total', '125'); b.at('P', 2); })
+   .step(3, 'i = 3 → 3 &lt; 3 ❌ <b>ออกจาก loop</b> · ถ้าเขียน <code>&lt;=</code> จะเข้าไปใช้ prices[3] แล้วพังทันที!', b => b.v('i', '3'))
+   .step(7, 'แสดง Total = 125 ✅ ถ้ามีของ 1,000 ชิ้น โค้ดก็ยังยาวเท่าเดิม นี่คือพลังของ loop', b => { b.drop('i'); b.print('Total = 125'); });
+  CH9.lessons.push({
+    id:'a2', icon:'scan-barcode', title:'Loop กับ Array', sub:'ไล่ทีละช่องด้วย for + Length',
+    analogy:{ img:'', credit:'', title:'for loop = แคชเชียร์สแกนของทีละชิ้น', text:'หยิบชิ้นที่ 0, 1, 2… มาสแกน บวกราคาเข้ายอดรวมไปเรื่อย ๆ จนหมดตะกร้า (Length) ไม่ต้องเขียนบวกทีละบรรทัด' },
+    yt:'C# for loop array ภาษาไทย',
+    video:{
+      th:[{ id:'SHePqpqslwg', title:'เข้าถึงสมาชิกด้วย For Loop' },{ id:'W7npW91vEEM', title:'นับจำนวนสมาชิก (Length)' }],
+      en:[{ id:'IHMmPVEOT64', title:'C# arrays' }] },
+    trace:t,
+    key:[
+      'รูปแบบจำให้ขึ้นใจ: <code>for (int i = 0; i &lt; arr.Length; i++)</code>',
+      'ใช้ <code>&lt;</code> ไม่ใช่ <code>&lt;=</code> (ไม่งั้นเกินไป 1 ช่อง → IndexOutOfRange)',
+      '<code>arr.Length</code> ไม่มีวงเล็บ และ L ตัวใหญ่',
+      'หาผลรวม: <code>sum = sum + arr[i];</code> หรือ <code>sum += arr[i];</code>',
+    ],
+    more:`<p>หาค่ามากสุด (ออกสอบบ่อย):</p>
+<pre class="code">int max = arr[0];                 // สมมติว่าตัวแรกมากสุดก่อน
+for (int i = 1; i &lt; arr.Length; i++)
+{
+    if (arr[i] &gt; max) max = arr[i];
+}</pre>
+<p>ค่าเฉลี่ย: <code>double avg = (double)sum / arr.Length;</code> (ต้อง cast ไม่งั้นได้ int)</p>`,
+    ex:[
+      { id:'a2a', type:'mcq', lv:1, q:'จำนวนช่องของ array <code>arr</code> เขียนยังไง?', opts:['<code>arr.Length()</code>','<code>arr.length</code>','<code>arr.Length</code>','<code>arr.Count</code>'], ans:2,
+        ask:'Length เป็น property หรือ method? (property ไม่มีวงเล็บ) และ C# สนใจตัวพิมพ์ใหญ่เล็กมั้ย?', why:'<code>Length</code> เป็น property → ไม่มี () และ L ตัวใหญ่' },
+      { id:'a2b', type:'output', lv:2, q:'แสดงผลอะไร? (ระวังจุดเริ่ม loop!)', code:`int[] a = { 3, 5, 7 };
+int sum = 0;
+for (int i = 1; i < a.Length; i++)
+{
+    sum += a[i];
+}
+Console.WriteLine(sum);`, ans:'12',
+        ask:'loop เริ่มที่ i = เท่าไหร่? ช่อง 0 ถูกบวกด้วยมั้ย?', why:'เริ่ม i = 1 → บวกแค่ a[1] + a[2] = 5 + 7 = 12 (ข้ามตัวแรก)' },
+      { id:'a2c', type:'bug', lv:2, q:'โค้ดนี้ crash ตอนรอบสุดท้าย คลิกบรรทัดที่เป็น<b>ต้นเหตุ</b>', code:`int[] a = { 10, 20, 30 };
+for (int i = 0; i <= a.Length; i++)
+{
+    Console.WriteLine(a[i]);
+}`, ans:2,
+        ask:'i วิ่งไปถึงเท่าไหร่ถ้าใช้ <=? แล้ว array นี้มีช่องสุดท้ายคือเท่าไหร่?', why:'<code>&lt;=</code> ทำให้ i ไปถึง 3 แต่ช่องสุดท้ายคือ 2 → ต้องใช้ <code>&lt;</code>' },
+      { id:'a2d', type:'output', lv:3, q:'แสดงผลอะไร?', code:`int[] a = { 12, 45, 7, 30 };
+int max = a[0];
+for (int i = 1; i < a.Length; i++)
+{
+    if (a[i] > max) max = a[i];
+}
+Console.WriteLine(max);`, ans:'45',
+        ask:'max เริ่มที่ 12 แล้วเจอตัวไหนบ้างที่มากกว่า?', why:'12 → เจอ 45 มากกว่า → max = 45 → 7, 30 ไม่มากกว่า → ได้ 45' },
+      { id:'a2e', type:'write', lv:3, q:'มี <code>int[] nums</code> อยู่แล้ว ใช้ <b>for loop</b> หาผลรวมทุกตัว เก็บในตัวแปร <code>sum</code>',
+        starter:`// int[] nums มีอยู่แล้ว
+int sum = 0;
+`,
+        rules:[
+          { re:/int\s+sum\s*=\s*0\s*;/, msg:'ต้องมี <code>int sum = 0;</code> ก่อน loop' },
+          { re:/for\s*\(\s*int\s+(\w+)\s*=\s*0\s*;\s*\1\s*<\s*nums\s*\.\s*Length\s*;\s*\1\s*\+\+\s*\)/, msg:'ส่วนหัว for ยังไม่ถูก: <code>for (int i = 0; i &lt; nums.Length; i++)</code>' },
+          { re:/sum\s*(\+=\s*nums\s*\[\s*\w+\s*\]|=\s*sum\s*\+\s*nums\s*\[\s*\w+\s*\])\s*;/, msg:'ใน loop ยังไม่ได้บวกค่าเข้า sum: <code>sum += nums[i];</code>' },
+        ],
+        ask:'loop ต้องวิ่ง i จาก 0 ถึงเท่าไหร่? แล้วแต่ละรอบเอาค่าช่องไหนไปบวก?',
+        answer:`int sum = 0;
+for (int i = 0; i < nums.Length; i++)
+{
+    sum += nums[i];
+}` },
+    ]
+  });
+})();
+
+/* ----- A3 foreach ----- */
+(function(){
+  const t = trace(`
+int[] numbers = { 4, 5, 6 };
+int sum = 0;
+foreach (int n in numbers)
+{
+    sum = sum + n;
+}
+Console.WriteLine(sum);`);
+  t.build
+   .step(1, 'สายพานซูชิมี 3 จาน: 4, 5, 6', b => { b.a('A', 'numbers', [4,5,6], C2); b.v('numbers', '→ array 3 ช่อง'); })
+   .step(2, 'sum = 0', b => b.v('sum', '0'))
+   .step(3, '<code>foreach (int n in numbers)</code> = "ให้ <b>n</b> เป็นค่าของแต่ละช่อง ทีละช่อง" ไม่ต้องมี i ไม่ต้องเช็ก Length เอง · รอบแรก n = 4', b => { b.v('n', '4'); b.at('A', 0); })
+   .step(5, 'sum = 0 + 4 = 4', b => { b.v('sum', '4'); b.at('A', 0); })
+   .step(3, 'จานต่อไป n = 5', b => { b.v('n', '5'); b.at('A', 1); })
+   .step(5, 'sum = 4 + 5 = 9', b => { b.v('sum', '9'); b.at('A', 1); })
+   .step(3, 'จานสุดท้าย n = 6', b => { b.v('n', '6'); b.at('A', 2); })
+   .step(5, 'sum = 9 + 6 = 15', b => { b.v('sum', '15'); b.at('A', 2); })
+   .step(3, 'หมดจานแล้ว → ออกจาก loop เอง ไม่มีทาง index เกิน 👍', b => b.drop('n'))
+   .step(7, 'แสดง 15 · ⚠️ ข้อจำกัด: ใน foreach <b>ห้ามแก้ค่า n</b> (n = 10; → compile error) และไม่รู้ว่าเป็นช่องที่เท่าไหร่', b => b.print('15'));
+  CH9.lessons.push({
+    id:'a3', icon:'utensils', title:'foreach', sub:'ไล่ทุกช่องแบบไม่ต้องใช้ index',
+    analogy:{ img:'', credit:'', title:'foreach = ซูชิสายพาน', text:'จานวิ่งผ่านหน้าเราทีละจานจนหมด เราหยิบดูได้ทุกจาน แต่<b>ไม่รู้ว่าจานที่เท่าไหร่</b> (ไม่มี index) และ<b>เปลี่ยนจานบนสายพานไม่ได้</b> (อ่านอย่างเดียว)' },
+    yt:'C# foreach array ภาษาไทย',
+    video:{
+      th:[{ id:'YboQQ8ms5W0', title:'เข้าถึงสมาชิกด้วย ForEach' }],
+      en:[{ id:'WhACXlObR8s', title:'C# foreach loop' }] },
+    trace:t,
+    key:[
+      'รูปแบบ: <code>foreach (ชนิด ชื่อ in arrayName) { … }</code>',
+      'วิ่งจาก index 0 ถึง Length − 1 ให้อัตโนมัติ ไม่มีทาง index เกิน',
+      '<b>แก้ค่าตัวแปร loop ไม่ได้</b> (error CS1656) และไม่รู้ index',
+      'อยากรู้ index หรืออยากแก้ค่าใน array → ใช้ <code>for</code>',
+    ],
+    more:`<p>แบบฝึกจากสไลด์: เปลี่ยน for เป็น foreach</p>
+<pre class="code">// for
+for (int i = 0; i &lt; numbers.Length; i++)
+    sum = sum + numbers[i];
+
+// foreach (ผลเหมือนกัน)
+foreach (int i in numbers)
+    sum = sum + i;      // i คือ "ค่า" ไม่ใช่ index แล้วนะ!</pre>`,
+    ex:[
+      { id:'a3a', type:'mcq', lv:1, q:'เขียน foreach ข้อไหนถูก?', opts:['<code>foreach (numbers in int n)</code>','<code>foreach (int n : numbers)</code>','<code>foreach (int n in numbers)</code>','<code>foreach (n in numbers)</code>'], ans:2,
+        ask:'ต้องมีชนิดของตัวแปรมั้ย? แล้ว C# ใช้คำว่า in หรือ :', why:'<code>foreach (ชนิด ตัวแปร in array)</code> — แบบ <code>:</code> เป็นของ Java' },
+      { id:'a3b', type:'output', lv:1, q:'แสดงผลอะไร?', code:`string[] words = { "AI", "is", "cool" };
+foreach (string w in words)
+{
+    Console.Write(w + "-");
+}`, ans:'AI-is-cool-',
+        ask:'Write ขึ้นบรรทัดใหม่มั้ย? แล้วหลังคำสุดท้ายมี - ด้วยมั้ย?', why:'Write ไม่ขึ้นบรรทัดใหม่ และต่อ "-" ทุกคำรวมคำสุดท้าย' },
+      { id:'a3c', type:'bug', lv:2, q:'compile ไม่ผ่าน คลิกบรรทัดที่ผิด', code:`int[] nums = { 1, 2, 3 };
+foreach (int n in nums)
+{
+    n = n * 2;
+}`, ans:4,
+        ask:'foreach อนุญาตให้แก้ค่าตัวแปร loop (n) มั้ย?', why:'ตัวแปรของ foreach เป็นแบบอ่านอย่างเดียว → error CS1656 ถ้าจะแก้ค่าใน array ต้องใช้ for + index' },
+      { id:'a3d', type:'mcq', lv:2, q:'งานไหน<b>ต้องใช้ for</b> (foreach ทำไม่ได้)?', opts:['หาผลรวมทุกตัว','แสดงทุกตัวออกจอ','คูณ 2 ให้ทุกช่องแล้วเก็บกลับลง array','นับว่ามีเลขคู่กี่ตัว'], ans:2,
+        ask:'งานไหนต้อง "แก้ค่าใน array"?', why:'การเก็บค่ากลับลง array ต้องใช้ <code>arr[i] = …</code> → ต้องมี index → ใช้ for' },
+      { id:'a3e', type:'write', lv:3, q:'มี <code>int[] data</code> อยู่แล้ว ใช้ <b>foreach</b> นับว่ามีเลขคู่กี่ตัว เก็บใน <code>count</code>',
+        starter:`// int[] data มีอยู่แล้ว
+int count = 0;
+`,
+        rules:[
+          { re:/int\s+count\s*=\s*0\s*;/, msg:'ต้องมี <code>int count = 0;</code>' },
+          { re:/foreach\s*\(\s*int\s+\w+\s+in\s+data\s*\)/, msg:'ส่วนหัว foreach ยังไม่ถูก: <code>foreach (int x in data)</code>' },
+          { re:/%\s*2\s*==\s*0/, msg:'ยังไม่ได้เช็กเลขคู่: ใช้ <code>x % 2 == 0</code>' },
+          { re:/count\s*(\+\+|\+=\s*1|=\s*count\s*\+\s*1)/, msg:'ถ้าเป็นเลขคู่ต้องเพิ่ม count: <code>count++;</code>' },
+        ],
+        ask:'เลขคู่หาร 2 แล้วเศษเท่าไหร่? ใน C# ใช้เครื่องหมายอะไรหาเศษ?',
+        answer:`int count = 0;
+foreach (int x in data)
+{
+    if (x % 2 == 0)
+        count++;
+}` },
+    ]
+  });
+})();
+
+/* ----- A4 Array กับ Method ----- */
+(function(){
+  const t = trace(`
+static int Sum(int[] a)
+{
+    int s = 0;
+    foreach (int x in a) s += x;
+    return s;
+}
+
+// ใน Main
+int[] arr = { 1, 2, 3 };
+Console.WriteLine(Sum(arr));
+Console.WriteLine(arr[0] + arr[2]);`);
+  t.build
+   .step(1, 'method <code>Sum</code> รับ parameter ชนิด <code>int[]</code> = รับ<b>ทั้งถาด</b>')
+   .step(9, 'สร้างถาดไข่ 3 ช่อง', b => { b.a('A', 'array (ของ Main)', [1,2,3], C1); b.v('arr', '→ array'); })
+   .step(10, 'เรียก <code>Sum(arr)</code> ส่งแค่ชื่อ <b>ไม่มี []</b> = ส่งทั้งถาด', b => b.at('A', 0))
+   .step(1, 'ใน method <code>a</code> ชี้ไปที่<b>ถาดใบเดียวกัน</b>กับ arr (ไม่ได้ copy ถาดใหม่!)', b => b.v('a', '→ array เดียวกับ arr'))
+   .step(3, 's = 0', b => b.v('s', '0'))
+   .step(4, 'วน foreach: s = 1 → 3 → <b>6</b>', b => { b.v('s', '6'); b.at('A', 2); })
+   .step(5, '<code>return s;</code> ส่ง 6 กลับไปให้คนเรียก', b => b.v('s', '6 (ส่งกลับ)'))
+   .step(10, 'แสดง 6 · ตัวแปรใน method (a, s) หายไปแล้ว', b => { b.drop('a'); b.drop('s'); b.print('6'); })
+   .step(11, 'อีกแบบ: ส่ง/ใช้<b>ทีละใบ</b> เช่น arr[0] + arr[2] = 1 + 3 = <b>4</b>', b => { b.at('A', 2); b.print('4'); });
+  CH9.lessons.push({
+    id:'a4', icon:'egg', title:'Array กับ Method', sub:'ส่ง array เข้า method / return array',
+    analogy:{ img:'', credit:'', title:'ส่งไข่ใบเดียว vs ส่งทั้งถาด', text:'<code>Add(arr[0], arr[2])</code> = หยิบไข่บางใบไปให้ · <code>Sum(arr)</code> = ยื่นทั้งถาดไปเลย และ method <b>ส่งทั้งถาดกลับมา</b>ได้ด้วย (return array = คืนหลายค่าในครั้งเดียว)' },
+    yt:'C# ส่ง array เข้า method ภาษาไทย',
+    video:{
+      th:[{ id:'Qi4hVi9G7ms', title:'ส่ง Array เข้า Method' },{ id:'hArdYJQ5CWI', title:'รับ Array แล้ว return ค่า' },{ id:'DCLyv2GNvDM', title:'รับ Array แล้ว return Array' }],
+      en:[{ id:'IPpEefuFiVM', title:'C# methods', note:'Bro Code ไม่มีคลิปส่ง array เข้า method โดยตรง คลิปนี้ปูพื้นเรื่อง method' }] },
+    trace:t,
+    key:[
+      'รับทั้ง array: <code>static int Sum(int[] a)</code> · เรียก: <code>Sum(arr)</code> (ไม่มี [])',
+      'ส่งทีละตัว: <code>Add2Values(arr[0], arr[2])</code> → parameter เป็น int ธรรมดา',
+      'return array: <code>static int[] SetNumber() { … return a; }</code>',
+      'method return ได้แค่ 1 ค่า → อยากได้หลายค่า ให้ return เป็น array',
+      '⚠️ ส่งทั้ง array แล้ว method แก้ค่าในช่อง → <b>array ตัวจริงเปลี่ยนด้วย</b> (ถาดใบเดียวกัน)',
+    ],
+    more:`<pre class="code">static int[] SetNumber()
+{
+    int[] a = { 1, 2, 3, 4, 5 };
+    return a;                       // ส่งทั้ง array กลับ
+}
+
+// ใน Main
+int[] a = SetNumber();
+for (int i = 0; i &lt; a.Length; i++)
+    Console.WriteLine("a[" + i + "] is " + a[i]);</pre>`,
+    ex:[
+      { id:'a4a', type:'mcq', lv:1, q:'หัว method ที่รับ array ของ int ข้อไหนถูก?', opts:['<code>static int Total(int a[])</code>','<code>static int Total(int[] a)</code>','<code>static int Total(array a)</code>','<code>static int Total(int[] a[])</code>'], ans:1,
+        ask:'ชนิด array ของ int เขียนว่าอะไร (จากบท A1)?', why:'parameter ชนิด array เขียน <code>int[] ชื่อ</code> เหมือนการประกาศตัวแปร' },
+      { id:'a4b', type:'mcq', lv:1, q:'มี <code>int[] arr</code> จะส่งทั้ง array เข้า <code>Total</code> ยังไง?', opts:['<code>Total(arr[])</code>','<code>Total(int[] arr)</code>','<code>Total(arr)</code>','<code>Total(arr[0])</code>'], ans:2,
+        ask:'ตอนเรียก method ต้องใส่ชนิดหรือ [] ด้วยมั้ย?', why:'ตอนเรียกส่งแค่ชื่อตัวแปร <code>Total(arr)</code> · <code>arr[0]</code> คือส่งแค่ช่องเดียว' },
+      { id:'a4c', type:'output', lv:2, q:'แสดงผลอะไร?', code:`static void Double(int[] a)
+{
+    for (int i = 0; i < a.Length; i++)
+        a[i] = a[i] * 2;
+}
+// ใน Main
+int[] nums = { 1, 2, 3 };
+Double(nums);
+Console.WriteLine(nums[0] + " " + nums[2]);`, ans:'2 6',
+        ask:'a ใน method กับ nums ใน Main เป็นถาดใบเดียวกันหรือคนละใบ?', why:'ส่งทั้ง array = ถาดใบเดียวกัน → แก้ใน method แล้ว nums เปลี่ยนด้วย → 2 6' },
+      { id:'a4d', type:'output', lv:3, q:'แสดงผลอะไร? (ระวัง + ระหว่างตัวเลข)', code:`static int[] Make()
+{
+    int[] a = { 5, 6, 7 };
+    return a;
+}
+// ใน Main
+int[] r = Make();
+Console.WriteLine(r.Length + r[1]);`, ans:'9',
+        ask:'r.Length เป็นเท่าไหร่? r[1] เป็นเท่าไหร่? int + int ได้ตัวเลขหรือต่อ string?', why:'Length = 3, r[1] = 6 → 3 + 6 = 9 (เป็นการบวกเลข ไม่ใช่ต่อข้อความ)' },
+      { id:'a4e', type:'write', lv:3, q:'เขียน method <code>static int Max(int[] a)</code> ที่คืนค่ามากที่สุดใน array',
+        starter:`static int Max(int[] a)
+{
+
+}`,
+        rules:[
+          { re:/static\s+int\s+Max\s*\(\s*int\s*\[\s*\]\s+a\s*\)/, msg:'หัว method ต้องเป็น <code>static int Max(int[] a)</code>' },
+          { re:/int\s+\w+\s*=\s*(a\s*\[\s*0\s*\]|int\s*\.\s*MinValue)\s*;/, msg:'ต้องมีตัวแปรเก็บค่ามากสุด เริ่มจากตัวแรก: <code>int max = a[0];</code>' },
+          { re:/(for|foreach)\s*\(/, msg:'ต้องมี loop ไล่ดูทุกช่อง' },
+          { re:/if\s*\(/, msg:'ต้องมี <code>if</code> เช็กว่าตัวไหนมากกว่า max' },
+          { re:/return\s+\w+\s*;/, msg:'อย่าลืม <code>return max;</code>' },
+        ],
+        ask:'สมมติให้ตัวแรกมากสุดก่อน แล้วไล่ดูตัวที่เหลือ เจอตัวที่มากกว่าทำยังไง? สุดท้ายต้องส่งอะไรกลับ?',
+        answer:`static int Max(int[] a)
+{
+    int max = a[0];
+    for (int i = 1; i < a.Length; i++)
+    {
+        if (a[i] > max) max = a[i];
+    }
+    return max;
+}` },
+    ]
+  });
+})();
+
+/* ----- A5 Array 2 มิติ ----- */
+(function(){
+  const t = trace(`
+int[,] seats = new int[2, 3];
+seats[0, 1] = 1;
+seats[1, 2] = 1;
+Console.WriteLine(seats.GetLength(0));
+Console.WriteLine(seats.GetLength(1));
+for (int r = 0; r < seats.GetLength(0); r++)
+{
+    for (int c = 0; c < seats.GetLength(1); c++)
+    {
+        Console.Write(seats[r, c] + " ");
+    }
+    Console.WriteLine();
+}`);
+  const z = [[0,0,0],[0,0,0]];
+  t.build
+   .step(1, '<code>int[,]</code> มี<b>ลูกน้ำ</b>ในวงเล็บ = 2 มิติ · <code>new int[2, 3]</code> = โรงหนัง <b>2 แถว 3 ที่นั่ง</b> (แถวก่อน คอลัมน์ทีหลัง)', b => { b.g('G', 'seats [2 แถว, 3 คอลัมน์]', z, C2); b.v('seats', '→ ตาราง 2×3'); })
+   .step(2, 'จองแถว 0 ที่นั่ง 1 → <code>seats[0, 1] = 1</code> (ใช้ลูกน้ำ ไม่ใช่ [0][1])', b => { b.gs('G', 0, 1, 1); b.at('G', 0, 1); })
+   .step(3, 'จองแถว 1 ที่นั่ง 2', b => { b.gs('G', 1, 2, 1); b.at('G', 1, 2); })
+   .step(4, '<code>GetLength(0)</code> = จำนวน<b>แถว</b> = 2', b => b.print('2'))
+   .step(5, '<code>GetLength(1)</code> = จำนวน<b>คอลัมน์</b> = 3 · (ส่วน <code>Length</code> = ทุกช่องรวมกัน = 6)', b => b.print('3'))
+   .step(6, '<b>nested loop</b>: loop นอกวิ่งทีละ<b>แถว</b> r = 0', b => b.v('r', '0'))
+   .step(10, 'loop ในวิ่งทีละที่นั่ง c = 0 → พิมพ์ 0', b => { b.v('c', '0'); b.at('G', 0, 0); b.w('0 '); })
+   .step(10, 'c = 1 → พิมพ์ 1', b => { b.v('c', '1'); b.at('G', 0, 1); b.w('1 '); })
+   .step(10, 'c = 2 → พิมพ์ 0', b => { b.v('c', '2'); b.at('G', 0, 2); b.w('0 '); })
+   .step(12, 'จบแถว 0 → <code>WriteLine()</code> ขึ้นบรรทัดใหม่', b => { b.drop('c'); b.print(''); })
+   .step(6, 'r = 1 แถวต่อไป', b => b.v('r', '1'))
+   .step(10, 'c = 0, 1, 2 → พิมพ์ 0 0 1', b => { b.v('c', '2'); b.at('G', 1, 2); b.w('0 0 1 '); })
+   .step(12, 'ขึ้นบรรทัดใหม่ → ได้ตารางออกมาเป๊ะ 🎬 · ข้อสอบ trace output ชอบออกแบบนี้', b => { b.drop('c'); b.drop('r'); b.print(''); });
+  CH9.lessons.push({
+    id:'a5', icon:'grid-3x3', title:'Array 2 มิติ', sub:'ตาราง แถว × คอลัมน์ + nested loop',
+    analogy:{ img:'', credit:'', title:'Array 2 มิติ = ที่นั่งโรงหนัง', text:'ตั๋วบอก <b>แถว</b> กับ <b>เลขที่นั่ง</b> → <code>seats[แถว, ที่นั่ง]</code> ไล่เช็กทุกที่นั่งต้องเดินทีละแถว แล้วในแต่ละแถวไล่ทีละที่นั่ง = nested loop' },
+    yt:'C# array 2 มิติ ภาษาไทย',
+    video:{
+      th:[{ id:'R8mujcKfeuA', title:'Array 2 มิติ' },{ id:'u5e7wTrK-Pg', title:'การสร้าง' },{ id:'dfK1Lhjij-o', title:'เข้าถึงสมาชิก' },{ id:'cVIHZUeysfQ', title:'Length, GetLength' },{ id:'POcF4AWD7cw', title:'For Loop 2 มิติ' }],
+      en:[{ id:'G1kYoPr1Ru8', title:'C# multidimensional arrays' }] },
+    trace:t,
+    key:[
+      'สร้าง: <code>int[,] a = new int[แถว, คอลัมน์];</code> (ลูกน้ำ 1 ตัว = 2 มิติ)',
+      'ใช้งาน: <code>a[r, c]</code> ⚠️ ไม่ใช่ <code>a[r][c]</code>',
+      'ใส่ค่าเลย: <code>int[,] a = { {11, 12}, {21, 22} };</code> (ปีกกาในแต่ละคู่ = 1 แถว)',
+      '<code>GetLength(0)</code> = แถว · <code>GetLength(1)</code> = คอลัมน์ · <code>Length</code> = ทุกช่อง · <code>Rank</code> = จำนวนมิติ',
+      'ไล่ทุกช่อง = nested loop: นอก = แถว, ใน = คอลัมน์',
+    ],
+    more:`<p>ตัวอย่างจากสไลด์:</p>
+<pre class="code">int[,] a = new int[5, 2] { {0,0}, {1,2}, {2,4}, {3,6}, {4,8} };
+for (int r = 0; r &lt; a.GetLength(0); r++)
+    for (int c = 0; c &lt; a.GetLength(1); c++)
+        Console.WriteLine("a[{0},{1}] = {2}", r, c, a[r, c]);
+// a[0,0] = 0 · a[0,1] = 0 · a[1,0] = 1 · a[1,1] = 2 · …</pre>`,
+    ex:[
+      { id:'a5a', type:'mcq', lv:1, q:'<code>int[,] a = new int[3, 4];</code> แล้ว <code>a.Length</code> เท่ากับเท่าไหร่?', opts:['3','4','7','12'], ans:3,
+        ask:'Length ของ 2 มิตินับแค่แถว หรือนับทุกช่อง?', why:'Length = จำนวนช่องทั้งหมด = 3 × 4 = 12 (อยากได้แถวใช้ GetLength(0))' },
+      { id:'a5b', type:'output', lv:1, q:'แสดงผลอะไร?', code:`int[,] a = { { 11, 12, 13 }, { 21, 22, 23 } };
+Console.WriteLine(a[1, 0] + a[0, 2]);`, ans:'34',
+        ask:'a[1, 0] คือแถว 1 คอลัมน์ 0 = ? และ a[0, 2] = ?', why:'a[1,0] = 21, a[0,2] = 13 → 21 + 13 = 34' },
+      { id:'a5c', type:'output', lv:2, q:'แสดงผลอะไร?', code:`int[,] m = new int[4, 2];
+Console.WriteLine(m.GetLength(0) + "," + m.GetLength(1) + "," + m.Rank);`, ans:'4,2,2',
+        ask:'GetLength(0) คือแถวหรือคอลัมน์? Rank คืออะไร?', why:'แถว = 4, คอลัมน์ = 2, Rank = จำนวนมิติ = 2' },
+      { id:'a5d', type:'bug', lv:2, q:'Syntax error อยู่บรรทัดไหน?', code:`int[,] grid = new int[2, 3];
+grid[0][1] = 5;
+Console.WriteLine(grid[0, 1]);`, ans:2,
+        ask:'array แบบ [,] เข้าถึงช่องด้วยวงเล็บแบบไหน?', why:'array 2 มิติแบบ <code>[,]</code> ต้องใช้ <code>grid[0, 1]</code> (แบบ [0][1] เป็นของ jagged array)' },
+      { id:'a5e', type:'output', lv:3, q:'แสดงผลอะไร? (ผลรวมทีละแถว)', code:`int[,] a = { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+for (int r = 0; r < a.GetLength(0); r++)
+{
+    int s = 0;
+    for (int c = 0; c < a.GetLength(1); c++)
+        s += a[r, c];
+    Console.WriteLine(s);
+}`, ans:'3\n7\n11',
+        ask:'มีกี่แถว? แต่ละแถวบวกกันได้เท่าไหร่? s ถูกรีเซ็ตเป็น 0 ตอนไหน?', why:'แถว 0: 1+2 = 3 · แถว 1: 3+4 = 7 · แถว 2: 5+6 = 11 (s เริ่ม 0 ใหม่ทุกแถว)' },
+      { id:'a5f', type:'write', lv:3, q:'สร้าง <code>int[,] board</code> ขนาด 3×3 แล้วใช้ nested for ใส่ค่า <code>1</code> ทุกช่อง',
+        starter:`// ใน Main
+`,
+        rules:[
+          { re:/int\s*\[\s*,\s*\]\s+board\s*=\s*new\s+int\s*\[\s*3\s*,\s*3\s*\]\s*;/, msg:'ยังไม่ได้สร้าง: <code>int[,] board = new int[3, 3];</code>' },
+          { re:/for\s*\([\s\S]*for\s*\(/, msg:'ต้องมี for 2 ชั้น (nested loop)' },
+          { re:/<\s*(board\s*\.\s*GetLength\s*\(\s*[01]\s*\)|3)\s*;/, msg:'เงื่อนไข loop ควรเป็น <code>&lt; board.GetLength(0)</code> / <code>(1)</code> หรือ &lt; 3' },
+          { not:/board\s*\[\s*\w+\s*\]\s*\[/, msg:'array <code>[,]</code> ต้องเขียน <code>board[r, c]</code> ไม่ใช่ [r][c]' },
+          { re:/board\s*\[\s*\w+\s*,\s*\w+\s*\]\s*=\s*1\s*;/, msg:'ใน loop ยังไม่ได้ใส่ค่า: <code>board[r, c] = 1;</code>' },
+        ],
+        ask:'loop นอกวิ่งอะไร (แถว/คอลัมน์)? loop ในวิ่งอะไร? แล้วเข้าถึงช่องด้วย [ , ] ยังไง?',
+        answer:`int[,] board = new int[3, 3];
+for (int r = 0; r < board.GetLength(0); r++)
+{
+    for (int c = 0; c < board.GetLength(1); c++)
+    {
+        board[r, c] = 1;
+    }
+}` },
+    ]
+  });
+})();
+
+/* ----- Extra Ch9: ข้อสอบแนว syntax error / trace (ใช้ใน Quiz) ----- */
+const EXTRA9 = [
+  { id:'y1', lesson:'a1', type:'bug', lv:1, q:'Syntax error อยู่บรรทัดไหน?', code:`int num[2] = { 1, 2 };
+Console.WriteLine(num[0]);`, ans:1, ask:'C# วาง [] ไว้หลังอะไร และต้องบอกขนาดตอนใส่ค่าด้วย {} มั้ย?', why:'ต้องเป็น <code>int[] num = { 1, 2 };</code> (สไลด์บอกว่าแบบนี้ผิด)' },
+  { id:'y2', lesson:'a1', type:'bug', lv:1, q:'Syntax error อยู่บรรทัดไหน?', code:`int[] scores = new int[];
+scores[0] = 50;`, ans:1, ask:'new int[ ] ถ้าไม่ใส่ค่าด้วย {} ต้องบอกอะไรในวงเล็บ?', why:'สร้างแบบไม่ initialize ต้องบอกขนาด: <code>new int[5]</code>' },
+  { id:'y3', lesson:'a1', type:'mcq', lv:2, q:'<code>int[] a = new int[3] { 1, 2, 3, 4 };</code> จะเกิดอะไร?', opts:['ได้ array 4 ช่อง','ได้ array 3 ช่อง ตัวที่ 4 หายไป','compile error เพราะจำนวนค่าไม่ตรงกับขนาด','runtime error IndexOutOfRange'], ans:2,
+    ask:'บอกขนาด 3 แต่ใส่ค่า 4 ตัว C# จะยอมมั้ย?', why:'ขนาดกับจำนวนค่าต้องตรงกัน ไม่งั้น compile error' },
+  { id:'y4', lesson:'a2', type:'mcq', lv:1, q:'index ของช่องสุดท้ายใน array <code>arr</code> เขียนยังไง?', opts:['<code>arr.Length</code>','<code>arr.Length - 1</code>','<code>arr.Length + 1</code>','<code>arr[Length]</code>'], ans:1,
+    ask:'array 5 ช่อง ช่องสุดท้ายเลขอะไร? เทียบกับ Length แล้วต่างกันเท่าไหร่?', why:'index เริ่ม 0 → ช่องสุดท้าย = Length − 1' },
+  { id:'y5', lesson:'a3', type:'bug', lv:1, q:'Syntax error อยู่บรรทัดไหน?', code:`int[] nums = { 4, 5, 6 };
+foreach (n in nums)
+{
+    Console.WriteLine(n);
+}`, ans:2, ask:'ตัวแปรใน foreach ต้องบอกอะไรก่อนชื่อ?', why:'ต้องบอกชนิด: <code>foreach (int n in nums)</code>' },
+  { id:'y6', lesson:'a3', type:'output', lv:2, q:'แสดงผลอะไร?', code:`string[] names = { "Bo", "Mew", "Ploy", "Tan" };
+int count = 0;
+foreach (string s in names)
+{
+    if (s.Length > 2) count++;
+}
+Console.WriteLine(count);`, ans:'2', ask:'ชื่อไหนบ้างที่ยาวเกิน 2 ตัวอักษร?', why:'Mew (3) กับ Ploy (4) ยาวเกิน 2 → 2 ชื่อ' },
+  { id:'y7', lesson:'a5', type:'mcq', lv:2, q:'สร้าง array 2 มิติ 3 แถว 2 คอลัมน์ ข้อไหนถูก?', opts:['<code>int[][] a = new int[3][2];</code>','<code>int[,] a = new int[3, 2];</code>','<code>int[,] a = new int[2, 3];</code>','<code>int[2] a = new int[3];</code>'], ans:1,
+    ask:'2 มิติใน C# (แบบตาราง) เขียนยังไง? แล้วแถวหรือคอลัมน์มาก่อน?', why:'<code>int[,]</code> และ <code>[แถว, คอลัมน์]</code> = [3, 2]' },
+  { id:'y8', lesson:'a4', type:'output', lv:3, q:'แสดงผลอะไร?', code:`static int CountBig(int[] a, int limit)
+{
+    int n = 0;
+    foreach (int x in a)
+        if (x > limit) n++;
+    return n;
+}
+// ใน Main
+int[] scores = { 45, 80, 62, 90, 30 };
+Console.WriteLine(CountBig(scores, 60));`, ans:'3', ask:'ตัวไหนบ้างมากกว่า 60?', why:'80, 62, 90 มากกว่า 60 → 3 ตัว' },
+];
+
+/* =========================================================
+   DATA — Chapter 8: Methods
+   ========================================================= */
+const CH8 = { id:'ch8', title:'Ch8 · Methods', short:'Method', lessons: [] };
+
+/* ----- M1 Method คืออะไร + การเรียกใช้ ----- */
+(function(){
+  const t = trace(`
+static void SayHi()
+{
+    Console.WriteLine("Hi!");
+    Console.WriteLine("I am a method");
+}
+
+static void Main(string[] args)
+{
+    Console.WriteLine("Start");
+    SayHi();
+    SayHi();
+    Console.WriteLine("End");
+}`);
+  t.build
+   .step([1,5], '<b>method</b> = กลุ่มคำสั่งที่ตั้งชื่อไว้ เขียนครั้งเดียว เรียกใช้กี่ครั้งก็ได้ · ตอนนี้แค่ "เขียนสูตรเก็บไว้" ยังไม่ได้ทำงานนะ')
+   .step(7, 'โปรแกรมเริ่มที่ <code>Main</code> เสมอ ถึง SayHi จะเขียนไว้ข้างบนก็ตาม · method ต้องอยู่<b>นอก</b> Main')
+   .step(9, 'แสดง Start', b => b.print('Start'))
+   .step(10, '<b>เรียก</b> <code>SayHi()</code> → กระโดดไปทำใน method', b => b.v('ตอนนี้อยู่ใน', 'Main → SayHi'))
+   .step(3, 'ทำคำสั่งใน SayHi ทีละบรรทัด', b => b.print('Hi!'))
+   .step(4, '', b => b.print('I am a method'))
+   .step(11, 'ทำจบ → <b>กลับมาที่บรรทัดถัดจากที่เรียก</b> แล้วเรียกซ้ำอีกรอบ', b => b.v('ตอนนี้อยู่ใน', 'Main → SayHi'))
+   .step([3,4], 'ทำ SayHi อีกครั้ง โดยไม่ต้องเขียนโค้ดซ้ำ = <b>code reuse</b>', b => { b.print('Hi!'); b.print('I am a method'); })
+   .step(12, 'กลับ Main แสดง End จบโปรแกรม', b => { b.v('ตอนนี้อยู่ใน', 'Main'); b.print('End'); });
+  t.steps[5].say = 'บรรทัดถัดไปใน SayHi';
+  CH8.lessons.push({
+    id:'m1', icon:'chef-hat', title:'Method คืออะไร', sub:'เขียนครั้งเดียว เรียกใช้กี่ครั้งก็ได้',
+    analogy:{ img:'', credit:'', title:'Method = สูตรอาหารที่ตั้งชื่อไว้', text:'เขียนสูตร "ผัดกะเพรา" ไว้ครั้งเดียว อยากกินเมื่อไหร่ก็แค่เรียกชื่อสูตร ไม่ต้องเขียนขั้นตอนใหม่ทุกครั้ง · ตั้งชื่อ method เป็น<b>คำกริยา</b> เช่น <code>SayHi</code>, <code>CalTotal</code>' },
+    yt:'สอน C# method ภาษาไทย',
+    video:{
+      th:[{ id:'5jkrECOtGRc', title:'การสร้างเมธอด (Method)' }],
+      en:[{ id:'IPpEefuFiVM', title:'C# methods' }] },
+    trace:t,
+    key:[
+      'โครงสร้าง: <code>modifier returnType Name(parameters) { body }</code>',
+      'เช่น <code>public static void SayHi() { … }</code> · <code>void</code> = ไม่ส่งค่ากลับ',
+      'method ต้องอยู่<b>นอก Main</b> · โปรแกรมเริ่มที่ Main เสมอ',
+      'เรียกใช้: <code>SayHi();</code> → ทำจบแล้วกลับมาบรรทัดถัดไป',
+      'ข้อดี: อ่านง่าย แบ่งงานเป็นส่วนเล็ก และ <b>reuse</b> ได้ · ชื่อขึ้นต้นตัวใหญ่ทุกคำ (PascalCase)',
+    ],
+    more:`<p>5 ส่วนของ method:</p>
+<pre class="code">public  static  int   Sum ( int a, int b )   // 1 modifier · static · 2 return type · 3 ชื่อ · 4 parameters
+{
+    return a + b;                            // 5 body
+}</pre>
+<p><code>static</code> method เรียกได้เลยโดยไม่ต้องสร้าง object และเรียกได้เฉพาะ static method อื่น (เพราะ Main เป็น static)</p>`,
+    ex:[
+      { id:'m1a', type:'mcq', lv:1, q:'ข้อไหน<b>ไม่ใช่</b>ข้อดีของการใช้ method?', opts:['อ่านโค้ดง่ายขึ้น','ใช้โค้ดซ้ำได้ (reuse)','แบ่งโปรแกรมเป็นส่วนเล็ก ๆ','ทำให้โปรแกรมไม่มี error'], ans:3,
+        ask:'method ช่วยเรื่องการจัดระเบียบโค้ด หรือช่วยกัน bug ได้ 100%?', why:'method ช่วยให้อ่านง่าย แบ่งส่วน และ reuse ได้ แต่ไม่ได้กัน error' },
+      { id:'m1b', type:'output', lv:1, q:'แสดงผลอะไร? (ตามแบบฝึก Exercise#1 ในสไลด์)', code:`static void P1() { Console.WriteLine("**"); }
+static void P2() { Console.WriteLine(" **"); }
+
+static void Main(string[] args)
+{
+    P1();
+    P2();
+    P2();
+    P1();
+}`, ans:'**\n **\n **\n**',
+        ask:'Main เรียก method ตามลำดับไหน? P2 มีเว้นวรรคข้างหน้ามั้ย?', why:'P1 → P2 → P2 → P1 ตามลำดับที่เรียก (P2 มีช่องว่างนำหน้า)' },
+      { id:'m1c', type:'mcq', lv:2, q:'<code>public static void SayHi()</code> คำว่า <code>void</code> หมายถึงอะไร?', opts:['method นี้ไม่มี parameter','method นี้ไม่ส่งค่ากลับ','method นี้เรียกได้ครั้งเดียว','method นี้ไม่มีคำสั่งข้างใน'], ans:1,
+        ask:'void อยู่ตำแหน่งของ "return type" — แปลว่า return อะไรกลับมา?', why:'void = ไม่มีค่าส่งกลับ (ส่วน parameter ดูจากในวงเล็บ)' },
+      { id:'m1d', type:'mcq', lv:2, q:'ตามที่สไลด์สอน method ที่เราสร้างเอง (user-defined) ต้องเขียนไว้ที่ไหน?', opts:['ใน Main ก่อนเรียกใช้','นอก Main (แต่อยู่ใน class เดียวกัน)','ในไฟล์ใหม่เท่านั้น','ที่ไหนก็ได้ ขอแค่มี void'], ans:1,
+        ask:'สไลด์ Defining Method มีตัวหนาเตือนไว้ว่า "Our methods must be … of the Main( )"', why:'ตามสไลด์: <i>Our methods must be outside of the Main()</i> → เขียนนอก Main แต่อยู่ใน class เดียวกัน' },
+      { id:'m1e', type:'write', lv:2, q:'เขียน method <code>static void ShowLine()</code> ที่แสดง <code>"----------"</code> แล้วเรียกใช้ใน Main <b>2 ครั้ง</b>',
+        starter:`
+
+static void Main(string[] args)
+{
+
+}`,
+        rules:[
+          { re:/static\s+void\s+ShowLine\s*\(\s*\)/, msg:'ยังไม่มีหัว method <code>static void ShowLine()</code>' },
+          { re:/Console\s*\.\s*WriteLine\s*\(\s*"-+"\s*\)\s*;/, msg:'ใน method ต้องมี <code>Console.WriteLine("----------");</code>' },
+          { re:/(ShowLine\s*\(\s*\)\s*;[\s\S]*){2}/, msg:'ต้องเรียก <code>ShowLine();</code> ใน Main 2 ครั้ง' },
+        ],
+        ask:'method เขียนนอก Main แล้วใน Main เรียกด้วยชื่อ + () + ; กี่ครั้ง?',
+        answer:`static void ShowLine()
+{
+    Console.WriteLine("----------");
+}
+
+static void Main(string[] args)
+{
+    ShowLine();
+    ShowLine();
+}` },
+    ]
+  });
+})();
+
+/* ----- M2 Parameter ----- */
+(function(){
+  const t = trace(`
+static void ShowName(string name, int age)
+{
+    Console.WriteLine("Hello " + name);
+    Console.WriteLine("You are " + age + " years old.");
+}
+
+static void Main(string[] args)
+{
+    ShowName("Lisa", 23);
+    string n = "Mew";
+    ShowName(n, 19);
+}`);
+  t.build
+   .step(1, '<b>parameter</b> = ตัวแปรที่รอรับค่าจากคนเรียก · method นี้รับ 2 ค่า: string แล้วตามด้วย int')
+   .step(9, 'เรียกพร้อม<b>ส่งค่า</b> (argument) "Lisa" กับ 23 → ส่งตาม<b>ลำดับ</b>: ตัวแรกไป name ตัวที่สองไป age')
+   .step(1, 'ใน method: name = "Lisa", age = 23', b => { b.v('name', '"Lisa"'); b.v('age', '23'); })
+   .step(3, '', b => b.print('Hello Lisa'))
+   .step(4, '', b => b.print('You are 23 years old.'))
+   .step(10, 'จบ method → name กับ age หายไป (อยู่ได้แค่ใน method) · สร้างตัวแปร n ใน Main', b => { b.drop('name'); b.drop('age'); b.v('n', '"Mew"'); })
+   .step(11, 'ส่งตัวแปรก็ได้ → C# ส่ง<b>ค่า</b>ของ n ไปให้ (copy ค่า)', b => {})
+   .step(1, 'name = "Mew", age = 19', b => { b.v('name', '"Mew"'); b.v('age', '19'); })
+   .step([3,4], 'method เดิม แต่ผลต่างกันตามค่าที่ส่งเข้าไป 🎯', b => { b.print('Hello Mew'); b.print('You are 19 years old.'); });
+  t.steps[3].say = 'ใช้ name ได้เหมือนตัวแปรปกติ → Hello Lisa';
+  t.steps[4].say = 'ใช้ age → You are 23 years old.';
+  CH8.lessons.push({
+    id:'m2', icon:'coins', title:'Parameter', sub:'ส่งข้อมูลเข้า method',
+    analogy:{ img:'', credit:'', title:'Parameter = ช่องหยอดเหรียญ + ปุ่มเลือกของ', text:'ตู้กดน้ำต้องรู้ว่าเราจะเอาอะไร → เราส่งข้อมูลเข้าไป (เหรียญ + ปุ่ม) · ต้องส่ง<b>ครบ ชนิดถูก และเรียงถูกลำดับ</b> ไม่งั้นตู้ไม่ทำงาน' },
+    yt:'C# method parameter ภาษาไทย',
+    video:{
+      th:[{ id:'sa9v71d2Jcg', title:'เมธอดรับค่าข้อมูล' },{ id:'5cvYCB3k_kQ', title:'Default Parameter' }],
+      en:[{ id:'IPpEefuFiVM', title:'C# methods (parameters)' },{ id:'LjRyW-W4uDs', title:'Method overloading' }] },
+    trace:t,
+    key:[
+      'ประกาศ: <code>static void ShowName(string name, int age)</code> คั่นด้วย <b>,</b> และต้องบอกชนิดทุกตัว',
+      'เรียก: <code>ShowName("Lisa", 23);</code> ส่งตาม<b>ลำดับ</b> จำนวนและชนิดต้องตรง',
+      'parameter เป็นตัวแปร<b>เฉพาะใน method</b> ออกจาก method แล้วหายไป',
+      'ส่งตัวแปร int/double/string → ส่งแค่<b>ค่า</b> (copy) แก้ใน method ไม่กระทบตัวแปรใน Main',
+    ],
+    more:`<p>ตัวอย่างจาก Exercise#2 ในสไลด์:</p>
+<pre class="code">static void CalNumYear(int startYear, int endYear)
+{
+    if (startYear &gt; endYear)
+        Console.WriteLine("Invalid input!!!");
+    else
+        Console.WriteLine("Working experience: " + (endYear - startYear) + " years");
+}
+// เรียก: CalNumYear(tmpStartYear, tmpEndYear);   ← ส่งตัวแปรของ Main เข้าไป</pre>`,
+    ex:[
+      { id:'m2a', type:'mcq', lv:1, q:'มี <code>static void Greet(string name, int age)</code> เรียกแบบไหนถูก?', opts:['<code>Greet(20, "Ploy");</code>','<code>Greet("Ploy", 20);</code>','<code>Greet("Ploy");</code>','<code>Greet(string "Ploy", int 20);</code>'], ans:1,
+        ask:'parameter ตัวแรกเป็นชนิดอะไร ตัวที่สองชนิดอะไร? ตอนเรียกต้องใส่ชนิดด้วยมั้ย?', why:'ส่งตามลำดับและชนิด: string ก่อน int → <code>Greet("Ploy", 20)</code> และตอนเรียกไม่ต้องเขียนชนิด' },
+      { id:'m2b', type:'output', lv:2, q:'แสดงผลอะไร?', code:`static void AddTen(int x)
+{
+    x = x + 10;
+    Console.WriteLine("in: " + x);
+}
+
+static void Main(string[] args)
+{
+    int num = 5;
+    AddTen(num);
+    Console.WriteLine("out: " + num);
+}`, ans:'in: 15\nout: 5',
+        ask:'x ใน method เป็นตัวเดียวกับ num หรือแค่ได้ copy ค่าไป?', why:'int ส่งแบบ copy ค่า → x เปลี่ยนเป็น 15 แต่ num ใน Main ยังเป็น 5 (ต่างจากการส่ง array ใน Ch9!)' },
+      { id:'m2c', type:'bug', lv:2, q:'compile ไม่ผ่าน คลิกบรรทัดที่ผิด', code:`static void ShowName(string name, int age)
+{
+    Console.WriteLine(name + " " + age);
+}
+
+static void Main(string[] args)
+{
+    ShowName("Lisa");
+}`, ans:8,
+        ask:'method ต้องการกี่ค่า? ตอนเรียกส่งไปกี่ค่า?', why:'ต้องส่ง 2 ค่า แต่ส่งไปแค่ 1 → error CS7036 (ไม่มีค่าให้ parameter age)' },
+      { id:'m2d', type:'output', lv:2, q:'แสดงผลอะไร? (ตามลำดับ parameter)', code:`static void Info(int a, int b)
+{
+    Console.WriteLine(a - b);
+}
+
+static void Main(string[] args)
+{
+    int x = 3, y = 10;
+    Info(y, x);
+}`, ans:'7',
+        ask:'ส่ง y ไปเป็น a หรือ b? (ดูตำแหน่ง ไม่ใช่ชื่อ)', why:'ส่งตามตำแหน่ง: a = y = 10, b = x = 3 → 10 − 3 = 7' },
+      { id:'m2e', type:'write', lv:3, q:'เขียน method <code>static void ShowPrice(string item, double price)</code> ที่แสดง เช่น <code>Coffee costs 45 baht</code> แล้วเรียกใน Main ด้วย "Coffee" กับ 45',
+        starter:`
+
+static void Main(string[] args)
+{
+
+}`,
+        rules:[
+          { re:/static\s+void\s+ShowPrice\s*\(\s*string\s+item\s*,\s*double\s+price\s*\)/, msg:'หัว method ต้องเป็น <code>static void ShowPrice(string item, double price)</code>' },
+          { re:/Console\s*\.\s*Write(Line)?\s*\([^;]*item[^;]*price[^;]*\)\s*;/, msg:'ใน method ต้องแสดงทั้ง <code>item</code> และ <code>price</code>' },
+          { re:/ShowPrice\s*\(\s*"Coffee"\s*,\s*45(\.0+)?\s*\)\s*;/, msg:'ใน Main ต้องเรียก <code>ShowPrice("Coffee", 45);</code>' },
+        ],
+        ask:'parameter 2 ตัวคั่นด้วยอะไร? ตอนเรียกต้องส่ง string ก่อนหรือตัวเลขก่อน?',
+        answer:`static void ShowPrice(string item, double price)
+{
+    Console.WriteLine(item + " costs " + price + " baht");
+}
+
+static void Main(string[] args)
+{
+    ShowPrice("Coffee", 45);
+}` },
+    ]
+  });
+})();
+
+/* ----- M3 Return ----- */
+(function(){
+  const t = trace(`
+static int Sum(int num1, int num2)
+{
+    return num1 + num2;
+}
+
+static int FindMax(int a, int b)
+{
+    if (a >= b) return a;
+    else return b;
+}
+
+static void Main(string[] args)
+{
+    int total = Sum(3, 4);
+    Console.WriteLine("Sum = " + total);
+    Console.WriteLine("Max = " + FindMax(total, 10));
+}`);
+  t.build
+   .step(1, '<code>int</code> หน้าชื่อ = method นี้<b>ส่งค่า int กลับ</b> (ไม่ใช่ void แล้ว)')
+   .step(14, 'เรียก <code>Sum(3, 4)</code> แล้วจะเอา<b>ผลลัพธ์</b>ไปเก็บใน total')
+   .step(1, 'num1 = 3, num2 = 4', b => { b.v('num1', '3'); b.v('num2', '4'); })
+   .step(3, '<code>return</code> = ส่งค่า 7 กลับไป<b>และจบ method ทันที</b>', b => b.v('ค่าที่ return', '7'))
+   .step(14, 'เหมือนเอา 7 ไป<b>แทนที่</b> <code>Sum(3, 4)</code> → total = 7', b => { b.drop('num1'); b.drop('num2'); b.drop('ค่าที่ return'); b.v('total', '7'); })
+   .step(15, '', b => b.print('Sum = 7'))
+   .step(16, 'เรียก method ใน WriteLine ตรง ๆ ได้เลย → FindMax(7, 10)', b => {})
+   .step(6, 'a = 7, b = 10', b => { b.v('a', '7'); b.v('b', '10'); })
+   .step(8, '7 >= 10 ? ❌ ไม่จริง')
+   .step(9, 'return b → ส่ง 10 กลับ', b => b.v('ค่าที่ return', '10'))
+   .step(16, 'แสดง Max = 10 ✅', b => { b.drop('a'); b.drop('b'); b.drop('ค่าที่ return'); b.print('Max = 10'); });
+  t.steps[5].say = 'แสดง Sum = 7';
+  CH8.lessons.push({
+    id:'m3', icon:'corner-down-left', title:'Return', sub:'ส่งผลลัพธ์กลับให้คนเรียก',
+    analogy:{ img:'', credit:'', title:'Return = ของที่ตู้กดน้ำปล่อยออกมา', text:'ใส่เหรียญ (parameter) แล้วตู้<b>ส่งน้ำกลับมา 1 ขวด</b> (return) ให้เราเอาไปใช้ต่อ · ตู้บางแบบแค่ทำงานแต่ไม่ให้อะไรกลับ = <code>void</code>' },
+    yt:'C# method return ภาษาไทย',
+    video:{
+      th:[{ id:'_4-M9Qpk3rE', title:'เมธอด return ค่า' },{ id:'sIFLh-01Hy4', title:'รับค่าและ return' },{ id:'3AdJ9aRUgqY', title:'คุณสมบัติของ Return' }],
+      en:[{ id:'FaK5Nh20gVA', title:'C# return keyword' }] },
+    trace:t,
+    key:[
+      'return type หน้าชื่อต้อง<b>ตรงกับชนิดของค่าที่ return</b> เช่น <code>int</code> → return ค่า int',
+      'return ได้<b>ค่าเดียว</b> (อยากได้หลายค่า → return array, Ch9)',
+      '<code>return</code> แล้ว<b>จบ method ทันที</b> บรรทัดหลังจากนั้นไม่ทำ',
+      'ไม่ใช่ void แล้ว<b>ทุกทาง</b>ต้องมี return (ไม่งั้น error CS0161)',
+      '4 แบบตามสไลด์: ไม่รับ/ไม่ส่งกลับ · ไม่รับ/ส่งกลับ · รับ/ไม่ส่งกลับ · รับ/ส่งกลับ',
+    ],
+    more:`<p>4 รูปแบบ (ออกสอบแน่นอน):</p>
+<pre class="code">static void   SayHi()            { … }              // 1 ไม่รับ + ไม่ส่งกลับ
+static int    GetNumMajor()      { return 5; }      // 2 ไม่รับ + ส่งกลับ
+static void   ShowName(string n) { … }              // 3 รับ + ไม่ส่งกลับ
+static int    Sum(int a, int b)  { return a + b; }  // 4 รับ + ส่งกลับ</pre>
+<p>⚠️ <code>void</code> method เอาไปใช้เป็นค่าไม่ได้: <code>int x = SayHi();</code> ❌</p>`,
+    ex:[
+      { id:'m3a', type:'mcq', lv:1, q:'<code>static double Avg(int a, int b)</code> เป็นแบบไหนใน 4 แบบ?', opts:['ไม่รับ + ไม่ส่งกลับ','ไม่รับ + ส่งกลับ','รับ + ไม่ส่งกลับ','รับ + ส่งกลับ'], ans:3,
+        ask:'ในวงเล็บมี parameter มั้ย? return type เป็น void หรือไม่?', why:'มี parameter (a, b) และ return type เป็น double → รับ + ส่งกลับ' },
+      { id:'m3b', type:'output', lv:1, q:'แสดงผลอะไร?', code:`static int GetNumMajor()
+{
+    int numMajor = 5;
+    return numMajor;
+}
+
+static void Main(string[] args)
+{
+    Console.WriteLine("IT school has " + GetNumMajor() + " majors.");
+}`, ans:'IT school has 5 majors.',
+        ask:'GetNumMajor() ส่งค่าอะไรกลับมาแทนที่ตัวเอง?', why:'return 5 → เอา 5 ไปต่อในข้อความ' },
+      { id:'m3c', type:'output', lv:2, q:'แสดงผลอะไร? (ระวัง return จบ method ทันที)', code:`static int Check(int n)
+{
+    if (n > 0) return 1;
+    return -1;
+    Console.WriteLine("never");
+}
+
+static void Main(string[] args)
+{
+    Console.WriteLine(Check(5) + Check(-2));
+}`, ans:'0',
+        ask:'Check(5) ได้เท่าไหร่? Check(-2) ได้เท่าไหร่? บรรทัด "never" เคยทำมั้ย?', why:'Check(5) = 1, Check(-2) = −1 → 1 + (−1) = 0 · บรรทัดหลัง return ไม่มีวันทำ' },
+      { id:'m3d', type:'bug', lv:2, q:'compile ไม่ผ่าน คลิกบรรทัดที่ผิด', code:`static void SayHi()
+{
+    Console.WriteLine("Hi");
+}
+
+static void Main(string[] args)
+{
+    int r = SayHi();
+}`, ans:8,
+        ask:'SayHi ส่งค่าอะไรกลับมามั้ย (void)? แล้วเอาไปเก็บใน int ได้มั้ย?', why:'void ไม่มีค่าส่งกลับ → เอาไปใส่ตัวแปรไม่ได้ (CS0029)' },
+      { id:'m3e', type:'write', lv:3, q:'เขียน method <code>static int FindMax(int num1, int num2)</code> คืนค่าที่มากกว่า (ตาม Exercise#3 ในสไลด์)',
+        starter:`static int FindMax(int num1, int num2)
+{
+
+}`,
+        rules:[
+          { re:/static\s+int\s+FindMax\s*\(\s*int\s+num1\s*,\s*int\s+num2\s*\)/, msg:'หัว method ต้องเป็น <code>static int FindMax(int num1, int num2)</code>' },
+          { re:/(if\s*\(\s*num1\s*>=?\s*num2\s*\)|if\s*\(\s*num2\s*<=?\s*num1\s*\)|if\s*\(\s*num2\s*>=?\s*num1\s*\)|if\s*\(\s*num1\s*<=?\s*num2\s*\)|Math\s*\.\s*Max\s*\(\s*num1\s*,\s*num2\s*\)|\?)/, msg:'ต้องเปรียบเทียบ num1 กับ num2 (ใช้ if)' },
+          { re:/return\s+[^;]+;/, msg:'ต้องมี <code>return</code> ส่งค่าที่มากกว่ากลับ' },
+        ],
+        ask:'ถ้า num1 มากกว่าหรือเท่ากับ num2 ต้อง return อะไร? ถ้าไม่ใช่ล่ะ?',
+        answer:`static int FindMax(int num1, int num2)
+{
+    int maxValue = 0;
+    if (num1 >= num2)
+        maxValue = num1;
+    else
+        maxValue = num2;
+    return maxValue;
+}` },
+    ]
+  });
+})();
+
+/* ----- M4 Math methods (built-in) ----- */
+(function(){
+  const t = trace(`
+Console.WriteLine(Math.Max(10, 2));
+Console.WriteLine(Math.Min(10, 2));
+Console.WriteLine(Math.Pow(2, 10));
+Console.WriteLine(Math.Sqrt(81));
+Console.WriteLine(Math.Round(5.75));
+Console.WriteLine(Math.Ceiling(5.25));
+Console.WriteLine(Math.Floor(5.75));
+Console.WriteLine(Math.Round(2.5));`);
+  t.build
+   .step(1, '<b>built-in method</b> = method สำเร็จรูปที่ C# เตรียมไว้ให้ · <code>Math.Max(x, y)</code> = ค่ามากกว่า → 10', b => b.print('10'))
+   .step(2, '<code>Math.Min</code> = ค่าน้อยกว่า → 2 · (Max/Min รับ<b>แค่ 2 ค่า</b>นะ)', b => b.print('2'))
+   .step(3, '<code>Math.Pow(2, 10)</code> = 2 ยกกำลัง 10 = 1024 · ⚠️ Pow คืนค่าเป็น <b>double</b>', b => b.print('1024'))
+   .step(4, '<code>Math.Sqrt(81)</code> = รากที่สอง = 9', b => b.print('9'))
+   .step(5, '<code>Math.Round</code> = ปัดไปจำนวนเต็มที่ใกล้สุด → 5.75 ≈ 6', b => b.print('6'))
+   .step(6, '<code>Math.Ceiling</code> = ปัด<b>ขึ้น</b>เสมอ (ceiling = เพดาน) → 5.25 → 6', b => b.print('6'))
+   .step(7, '<code>Math.Floor</code> = ปัด<b>ลง</b>เสมอ (floor = พื้น) → 5.75 → 5', b => b.print('5'))
+   .step(8, '😈 กับดัก: <code>Math.Round(2.5)</code> ได้ <b>2</b> ไม่ใช่ 3! เพราะ C# ปัด .5 ไปหา<b>เลขคู่</b> (3.5 → 4, 2.5 → 2)', b => b.print('2'));
+  CH8.lessons.push({
+    id:'m4', icon:'calculator', title:'Math Methods', sub:'method สำเร็จรูปของ C#',
+    analogy:{ img:'', credit:'', title:'Built-in method = ปุ่มบนเครื่องคิดเลข', text:'ไม่ต้องเขียนสูตรหารากที่สองเอง แค่กดปุ่ม √ · C# เตรียม method ไว้ให้ใน <code>Math</code> (และ <code>Console.WriteLine</code>, <code>ReadLine</code> ก็เป็น built-in เหมือนกัน)' },
+    yt:'C# Math method ภาษาไทย',
+    video:{
+      th:[{ id:'zIZH0xHK4sY', title:'ฟังก์ชั่นทางคณิตศาสตร์' }],
+      en:[{ id:'tzRK0QFEte0', title:'C# Math class' }] },
+    trace:t,
+    key:[
+      'Method แบ่งตามที่มา: <b>built-in</b> (มีให้แล้ว เช่น WriteLine, Math.Pow) กับ <b>user-defined</b> (เราเขียนเอง)',
+      '<code>Math.Max(x, y)</code> / <code>Math.Min(x, y)</code> รับ<b>แค่ 2 ค่า</b>',
+      '<code>Math.Pow(x, n)</code> = x<sup>n</sup> · <code>Math.Sqrt(x)</code> = √x → ทั้งคู่คืน <b>double</b>',
+      '<code>Round</code> ปัดใกล้สุด · <code>Ceiling</code> ปัดขึ้น · <code>Floor</code> ปัดลง',
+      'Round(.5) ปัดไปเลขคู่: Round(2.5) = 2, Round(3.5) = 4',
+    ],
+    more:`<pre class="code">int big = Math.Max(10, 2);          // ✅ 10
+int x = Math.Max(1, 2, 3);          // ❌ ไม่มีแบบรับ 3 ค่า (CS1501)
+int p = Math.Pow(2, 3);             // ❌ Pow คืน double → ต้อง (int)Math.Pow(2, 3)
+double r = Math.Sqrt(16);           // ✅ 4</pre>`,
+    ex:[
+      { id:'m4a', type:'mcq', lv:1, q:'<code>Math.Ceiling(4.1)</code> ได้เท่าไหร่?', opts:['4','4.1','5','4.5'], ans:2,
+        ask:'Ceiling = เพดาน → ปัดขึ้นหรือปัดลง?', why:'Ceiling ปัดขึ้นเสมอ → 5' },
+      { id:'m4b', type:'output', lv:1, q:'แสดงผลอะไร?', code:`Console.WriteLine(Math.Floor(9.99));
+Console.WriteLine(Math.Sqrt(25));
+Console.WriteLine(Math.Pow(3, 2));`, ans:'9\n5\n9',
+        ask:'Floor ปัดไปทางไหน? √25 = ? 3 ยกกำลัง 2 = ?', why:'Floor(9.99) = 9 · √25 = 5 · 3² = 9' },
+      { id:'m4c', type:'mcq', lv:2, q:'<code>Math.Round(2.5)</code> ได้เท่าไหร่ใน C#?', opts:['2','3','2.5','error'], ans:0,
+        ask:'C# ปัด .5 ไปหาเลขอะไร (คู่หรือคี่)?', why:'C# ใช้การปัดแบบ "banker\'s rounding" → .5 ไปหาเลขคู่ → 2' },
+      { id:'m4d', type:'bug', lv:2, q:'compile ไม่ผ่าน คลิกบรรทัดที่ผิด', code:`int a = 7, b = 3, c = 9;
+int big = Math.Max(a, b, c);
+Console.WriteLine(big);`, ans:2,
+        ask:'Math.Max รับได้กี่ค่า?', why:'Math.Max รับแค่ 2 ค่า → ต้องเขียน <code>Math.Max(a, Math.Max(b, c))</code>' },
+      { id:'m4e', type:'output', lv:3, q:'แสดงผลอะไร?', code:`double price = 99.4;
+int a = (int)Math.Ceiling(price);
+int b = (int)Math.Round(price);
+Console.WriteLine(a + b);`, ans:'199',
+        ask:'Ceiling(99.4) = ? Round(99.4) = ? แล้วบวกกันเป็นเลข', why:'Ceiling → 100, Round → 99 → 100 + 99 = 199' },
+    ]
+  });
+})();
+
+const EXTRA8 = [
+  { id:'z1', lesson:'m3', type:'bug', lv:2, q:'compile ไม่ผ่าน คลิกบรรทัดที่ผิด', code:`static int Grade(int score)
+{
+    if (score >= 50)
+    {
+        return 1;
+    }
+}`, ans:1, ask:'ถ้า score < 50 method จะ return อะไร?', why:'ไม่ใช่ทุกทางที่มี return → error CS0161 "not all code paths return a value" (ปัญหาอยู่ที่ method Grade)' },
+  { id:'z2', lesson:'m3', type:'mcq', lv:1, q:'method ข้อไหนเป็นแบบ "ไม่รับ parameter แต่ส่งค่ากลับ"?', opts:['<code>static void A()</code>','<code>static int B()</code>','<code>static void C(int x)</code>','<code>static int D(int x)</code>'], ans:1,
+    ask:'วงเล็บว่าง = ไม่รับ · return type ไม่ใช่ void = ส่งกลับ', why:'<code>static int B()</code> วงเล็บว่างและคืน int' },
+  { id:'z3', lesson:'m4', type:'bug', lv:2, q:'compile ไม่ผ่าน คลิกบรรทัดที่ผิด', code:`int side = 4;
+int area = Math.Pow(side, 2);
+Console.WriteLine(area);`, ans:2, ask:'Math.Pow คืนค่าเป็นชนิดอะไร? เก็บลง int ตรง ๆ ได้มั้ย?', why:'Pow คืน double → ใส่ int ตรง ๆ ไม่ได้ (CS0266) ต้อง <code>(int)Math.Pow(side, 2)</code>' },
+  { id:'z4', lesson:'m2', type:'output', lv:2, q:'แสดงผลอะไร?', code:`static int Calc(int a, int b)
+{
+    return a * 2 + b;
+}
+
+static void Main(string[] args)
+{
+    Console.WriteLine(Calc(1, 5) + Calc(5, 1));
+}`, ans:'18', ask:'Calc(1, 5) = 1*2+5 = ? Calc(5, 1) = ?', why:'Calc(1,5) = 7, Calc(5,1) = 11 → 18 (ลำดับ argument สำคัญ!)' },
+  { id:'z5', lesson:'m2', type:'bug', lv:3, q:'compile ไม่ผ่าน คลิกบรรทัดที่ผิด', code:`static void Total(int price)
+{
+    int vat = price * 7 / 100;
+}
+
+static void Main(string[] args)
+{
+    Total(100);
+    Console.WriteLine(vat);
+}`, ans:9, ask:'ตัวแปร vat ประกาศไว้ที่ไหน? Main มองเห็นมั้ย?', why:'vat เป็นตัวแปรใน method Total เท่านั้น → Main ไม่รู้จัก (CS0103) ต้อง return ค่าออกมาแทน' },
+];
+
+/* =========================================================
+   DATA — Chapter 7: Loop Part 2
+   ========================================================= */
+const CH7 = { id:'ch7', title:'Ch7 · Loop Part 2', short:'Loop', lessons: [] };
+
+/* ----- K1 ทวน loop + trace ----- */
+(function(){
+  const t = trace(`
+int sum = 0;
+int i = 1;
+while (i <= 3)
+{
+    sum += i;
+    i++;
+}
+Console.WriteLine(sum);`);
+  t.build
+   .step(1, 'sum = 0', b => b.v('sum', '0'))
+   .step(2, '<b>START</b> (initialization) = จุดเริ่ม i = 1', b => b.v('i', '1'))
+   .step(3, '<b>STOP?</b> (condition) เช็ก<b>ก่อน</b>เข้า loop: 1 <= 3 ✅ (นี่คือ pretest loop)', b => b.v('รอบ', '1'))
+   .step(5, 'sum = 0 + 1 = 1', b => b.v('sum', '1'))
+   .step(6, '<b>STEP</b> (update) i = 2 · ถ้าลืมบรรทัดนี้ = loop ไม่มีวันจบ!', b => b.v('i', '2'))
+   .step(3, '2 <= 3 ✅ รอบ 2', b => b.v('รอบ', '2'))
+   .step([5,6], 'sum = 1 + 2 = 3 · i = 3', b => { b.v('sum', '3'); b.v('i', '3'); })
+   .step(3, '3 <= 3 ✅ รอบ 3', b => b.v('รอบ', '3'))
+   .step([5,6], 'sum = 3 + 3 = 6 · i = 4', b => { b.v('sum', '6'); b.v('i', '4'); })
+   .step(3, '4 <= 3 ❌ → <b>ออกจาก loop</b> (รอบที่ 4 แค่เช็กแล้วออก)', b => b.v('รอบ', '4 (ออก)'))
+   .step(8, 'แสดง 6 · นี่คือการ "trace" แบบตารางในสไลด์: จดรอบ, i, sum ทีละรอบ', b => b.print('6'));
+  CH7.lessons.push({
+    id:'k1', icon:'repeat', title:'ทวน Loop + Trace', sub:'START · STOP · STEP',
+    analogy:{ img:'', credit:'', title:'Loop = วิ่งรอบสนาม', text:'ต้องมี <b>จุดเริ่ม</b> (START), <b>กติกาว่าเมื่อไหร่หยุด</b> (STOP), และ<b>การนับรอบ</b> (STEP) · ขาดอันไหนไปก็วิ่งไม่จบหรือไม่ได้เริ่ม' },
+    yt:'สอน C# while loop for loop ภาษาไทย',
+    video:{
+      th:[{ id:'9oakRGApArA', title:'While Loop' },{ id:'LCzQ1um80DI', title:'For Loop' },{ id:'FveroYjmFxw', title:'สรุป Loop แต่ละแบบ' }],
+      en:[{ id:'EyghyKO4BlA', title:'C# while loops' },{ id:'h4hY2hho73Q', title:'C# for loops' }] },
+    trace:t,
+    key:[
+      'loop ทุกแบบต้องมี <b>START</b> (เริ่ม) · <b>STOP</b> (เงื่อนไข) · <b>STEP</b> (เปลี่ยนค่า)',
+      '<code>while</code> / <code>for</code> = <b>pretest</b> เช็กเงื่อนไขก่อนทำ',
+      '<code>for (START; STOP; STEP)</code> รวม 3 อย่างไว้ในบรรทัดเดียว คั่นด้วย <b>;</b>',
+      'trace = จดตาราง รอบ / ตัวแปร / ผลลัพธ์ ทีละรอบ (ออกสอบแน่นอน)',
+    ],
+    more:`<p>แปลง while ↔ for (จากสไลด์):</p>
+<pre class="code">int i = 1;                      for (int i = 1; i &lt;= 10; i++)
+while (i &lt;= 10)                 {
+{                                   Console.WriteLine("Hi");
+    Console.WriteLine("Hi");    }
+    i++;
+}</pre>
+<p>ข้อผิดพลาดที่พบบ่อย: ลืม START/STOP/STEP · มี <code>;</code> เกินหลัง while/for · ใช้ <code>,</code> แทน <code>;</code> ใน for · ลืม { }</p>`,
+    ex:[
+      { id:'k1a', type:'output', lv:1, q:'แสดงผลอะไร? (Ex3 จากสไลด์)', code:`for (int k = 1; k <= 3; k++)
+{
+    if (k % 2 == 1)
+    {
+        Console.WriteLine(k);
+    }
+}`, ans:'1\n3',
+        ask:'k = 1, 2, 3 ตัวไหนหาร 2 แล้วเหลือเศษ 1 (เลขคี่)?', why:'k = 1 และ 3 เป็นเลขคี่ → แสดง 1 และ 3' },
+      { id:'k1b', type:'mcq', lv:1, q:'<code>for (int i = 10; i >= 1; i--)</code> แปลงเป็น while ข้อไหนถูก?', opts:['<code>int i = 10; while (i >= 1) { …; i--; }</code>','<code>while (int i = 10; i >= 1; i--) { … }</code>','<code>int i = 10; while (i >= 1) { … } i--;</code>','<code>int i = 1; while (i <= 10) { …; i--; }</code>'], ans:0,
+        ask:'START ไปอยู่ก่อน while · STOP อยู่ในวงเล็บ · STEP อยู่ตรงไหน (ในหรือนอก { })?', why:'START ไว้ก่อน loop, STOP ในวงเล็บ while, STEP เป็นบรรทัดสุดท้าย<b>ใน</b> { }' },
+      { id:'k1c', type:'output', lv:2, q:'แสดงผลอะไร?', code:`int i = 1, sum = 0;
+while (i <= 4)
+{
+    sum += i * 2;
+    i++;
+}
+Console.WriteLine(sum + " " + i);`, ans:'20 5',
+        ask:'แต่ละรอบบวก i*2: 2, 4, 6, 8 รวมเท่าไหร่? ตอนออกจาก loop i เป็นเท่าไหร่?', why:'2+4+6+8 = 20 และ i ออกมาที่ 5 (ค่าที่ทำให้เงื่อนไขเป็นเท็จ)' },
+      { id:'k1d', type:'bug', lv:2, q:'Syntax error อยู่บรรทัดไหน?', code:`int total = 0;
+for (int i = 0, i < 5, i++)
+{
+    total += i;
+}`, ans:2,
+        ask:'ใน for คั่น 3 ส่วนด้วยเครื่องหมายอะไร?', why:'ต้องใช้ <code>;</code> → <code>for (int i = 0; i &lt; 5; i++)</code>' },
+      { id:'k1e', type:'write', lv:2, q:'ใช้ <b>while</b> แสดงเลข 10 ถึง 1 (นับถอยหลัง) บรรทัดละตัว',
+        starter:`// ใน Main
+`,
+        rules:[
+          { re:/int\s+(\w+)\s*=\s*10\s*;/, msg:'START: ต้องเริ่มที่ <code>int i = 10;</code>' },
+          { re:/while\s*\(\s*\w+\s*(>=\s*1|>\s*0)\s*\)/, msg:'STOP: เงื่อนไขควรเป็น <code>while (i &gt;= 1)</code>' },
+          { not:/while\s*\([^)]*\)\s*;/, msg:'ห้ามมี <code>;</code> หลัง while(...) ไม่งั้น loop ว่างวนไม่จบ' },
+          { re:/Console\s*\.\s*WriteLine\s*\(\s*\w+\s*\)\s*;/, msg:'ใน loop ต้องแสดงค่า <code>Console.WriteLine(i);</code>' },
+          { re:/(\w+\s*--|\w+\s*-=\s*1|\w+\s*=\s*\w+\s*-\s*1)\s*;/, msg:'STEP: อย่าลืมลดค่า <code>i--;</code> ไม่งั้นวนไม่จบ' },
+        ],
+        ask:'นับถอยหลัง: เริ่มที่เท่าไหร่ หยุดเมื่อไหร่ แต่ละรอบเปลี่ยนค่ายังไง?',
+        answer:`int i = 10;
+while (i >= 1)
+{
+    Console.WriteLine(i);
+    i--;
+}` },
+    ]
+  });
+})();
+
+/* ----- K2 do...while ----- */
+(function(){
+  const t = trace(`
+int i = 5;
+do
+{
+    Console.WriteLine("do: " + i);
+    i++;
+} while (i <= 3);
+
+int j = 5;
+while (j <= 3)
+{
+    Console.WriteLine("while: " + j);
+    j++;
+}
+Console.WriteLine("End");`);
+  t.build
+   .step(1, 'i = 5 (ตั้งใจให้เงื่อนไขเป็นเท็จตั้งแต่แรก)', b => b.v('i', '5'))
+   .step(2, '<code>do</code> = <b>ทำก่อน</b> ยังไม่เช็กอะไรเลย')
+   .step(4, 'ทำรอบแรกไปแล้ว!', b => b.print('do: 5'))
+   .step(5, 'i = 6', b => b.v('i', '6'))
+   .step(6, 'ค่อย<b>เช็กหลังทำ</b>: 6 <= 3 ❌ ออก · ⚠️ ต้องมี <code>;</code> ปิดท้าย <code>while (…);</code> ด้วย', b => {})
+   .step(8, 'ลองแบบ while ด้วยค่าเดียวกัน j = 5', b => b.v('j', '5'))
+   .step(9, 'while <b>เช็กก่อน</b>: 5 <= 3 ❌ → <b>ไม่เข้า loop เลยสักรอบ</b>', b => {})
+   .step(14, 'สรุป: do…while ทำ<b>อย่างน้อย 1 รอบเสมอ</b> (posttest) · while อาจไม่ทำเลย (pretest)', b => b.print('End'));
+  CH7.lessons.push({
+    id:'k2', icon:'refresh-cw', title:'do…while', sub:'ทำก่อน ค่อยเช็ก (posttest)',
+    analogy:{ img:'', credit:'', title:'do…while = ชิมก่อน แล้วค่อยถามว่าเอาอีกมั้ย', text:'ร้านบุฟเฟต์ให้<b>ชิมก่อน 1 คำเสมอ</b> แล้วค่อยถาม "เอาอีกมั้ย?" · ต่างจาก while ที่ถามก่อน ถ้าตอบไม่เอา ก็ไม่ได้กินเลย · เหมาะกับ<b>เมนู</b>ที่ต้องโชว์อย่างน้อย 1 ครั้ง' },
+    yt:'C# do while loop ภาษาไทย',
+    video:{
+      th:[{ id:'QzVdkSqZY5A', title:'Do..While Loop' },{ id:'FveroYjmFxw', title:'สรุป Loop แต่ละแบบ' }],
+      en:[{ id:'EyghyKO4BlA', title:'C# while loops (มี do-while ด้วย)' }] },
+    trace:t,
+    key:[
+      'รูปแบบ: <code>do { … } while (เงื่อนไข);</code> ← มี <b>;</b> ปิดท้าย!',
+      '<b>posttest</b>: ทำก่อน แล้วค่อยเช็ก → ทำ<b>อย่างน้อย 1 รอบ</b>เสมอ',
+      'while / for = <b>pretest</b>: เช็กก่อน อาจไม่ทำเลย',
+      'ใช้บ่อยกับเมนู: แสดงเมนู → รับค่า → วนจนกว่าจะเลือก Exit',
+    ],
+    more:`<p>ตัวอย่างเมนูจากสไลด์:</p>
+<pre class="code">int menu = 0;
+do
+{
+    Console.WriteLine("--Menu--\\n1. Cake\\n2. Tea\\n3. Exit");
+    menu = int.Parse(Console.ReadLine());
+    if (menu == 1) Console.WriteLine("50 baht");
+    else if (menu == 2) Console.WriteLine("30 baht");
+    else Console.WriteLine("Thanks");
+} while (menu != 3);</pre>`,
+    ex:[
+      { id:'k2a', type:'mcq', lv:1, q:'ข้อไหนถูกเกี่ยวกับ do…while?', opts:['เช็กเงื่อนไขก่อนทำทุกรอบ','อาจไม่ทำเลยสักรอบ','ทำอย่างน้อย 1 รอบเสมอ','ไม่ต้องมี ; ปิดท้าย'], ans:2,
+        ask:'คำว่า do มาก่อน while แปลว่าทำก่อนหรือเช็กก่อน?', why:'do…while เป็น posttest → ทำก่อนเช็ก → อย่างน้อย 1 รอบ' },
+      { id:'k2b', type:'output', lv:1, q:'แสดงผลอะไร?', code:`int n = 10;
+do
+{
+    Console.WriteLine(n);
+    n++;
+} while (n < 5);`, ans:'10',
+        ask:'ก่อนเช็กเงื่อนไขครั้งแรก ได้ทำ WriteLine ไปแล้วกี่ครั้ง?', why:'ทำ 1 รอบก่อน (แสดง 10) แล้วเช็ก 11 < 5 เป็นเท็จ → ออก' },
+      { id:'k2c', type:'bug', lv:2, q:'Syntax error อยู่บรรทัดไหน?', code:`int i = 1;
+do
+{
+    Console.WriteLine(i);
+    i++;
+} while (i <= 3)`, ans:6,
+        ask:'do…while ต่างจาก while ตรงที่ท้ายบรรทัด while ต้องมีอะไร?', why:'ต้องปิดด้วย <code>;</code> → <code>} while (i &lt;= 3);</code>' },
+      { id:'k2d', type:'output', lv:2, q:'แสดงผลอะไร?', code:`int x = 1;
+do
+{
+    Console.Write(x + " ");
+    x = x * 3;
+} while (x < 30);`, ans:'1 3 9 27',
+        ask:'x เปลี่ยนเป็น 1 → 3 → 9 → 27 → ? หยุดตอนไหน? (เช็กหลังพิมพ์)', why:'พิมพ์ 1 (x→3) · 3 (x→9) · 9 (x→27) · 27 < 30 ยังผ่าน → พิมพ์ 27 (x→81) · 81 < 30 เท็จ → ออก' },
+      { id:'k2e', type:'write', lv:3, q:'ใช้ <b>do…while</b> แสดง 1 ถึง 5 บรรทัดละตัว',
+        starter:`// ใน Main
+`,
+        rules:[
+          { re:/int\s+\w+\s*=\s*1\s*;/, msg:'START: <code>int i = 1;</code>' },
+          { re:/do\s*\{/, msg:'ต้องขึ้นต้นด้วย <code>do {</code>' },
+          { re:/\}\s*while\s*\(\s*\w+\s*(<=\s*5|<\s*6)\s*\)\s*;/, msg:'ท้าย loop: <code>} while (i &lt;= 5);</code> อย่าลืม ;' },
+          { re:/(\w+\s*\+\+|\w+\s*\+=\s*1)\s*;/, msg:'STEP: อย่าลืม <code>i++;</code>' },
+        ],
+        ask:'do…while: ทำอะไรใน { } บ้าง แล้วปิดท้ายด้วยอะไร?',
+        answer:`int i = 1;
+do
+{
+    Console.WriteLine(i);
+    i++;
+} while (i <= 5);` },
+    ]
+  });
+})();
+
+/* ----- K3 break / continue / infinite loop ----- */
+(function(){
+  const t = trace(`
+for (int i = 1; i <= 5; i++)
+{
+    if (i == 2) continue;
+    if (i == 4) break;
+    Console.Write(i + " ");
+}
+Console.WriteLine("| done");`);
+  t.build
+   .step(1, 'i = 1', b => b.v('i', '1'))
+   .step([3,4], 'ไม่ใช่ 2 ไม่ใช่ 4 → ผ่าน')
+   .step(5, 'พิมพ์ 1', b => b.w('1 '))
+   .step(1, 'i++ → i = 2', b => b.v('i', '2'))
+   .step(3, '<code>continue</code> = <b>ข้ามรอบนี้</b> ไปรอบถัดไปทันที (บรรทัด 4–5 ไม่ทำ) ⏭️')
+   .step(1, 'i++ → i = 3 (continue ใน for ยังทำ i++ ให้)', b => b.v('i', '3'))
+   .step(5, 'พิมพ์ 3', b => b.w('3 '))
+   .step(1, 'i = 4', b => b.v('i', '4'))
+   .step(4, '<code>break</code> = <b>ออกจาก loop ทันที</b> 🚪 ไม่สนเงื่อนไข i <= 5 แล้ว')
+   .step(7, 'ได้ "1 3 | done" · 5 ไม่เคยได้พิมพ์ เพราะ break ไปก่อน', b => { b.drop('i'); b.print('| done'); });
+  CH7.lessons.push({
+    id:'k3', icon:'fast-forward', title:'break / continue', sub:'ออกจาก loop / ข้ามรอบ + infinite loop',
+    analogy:{ img:'', credit:'', title:'continue = กดข้ามเพลง · break = ปิดเพลย์ลิสต์', text:'ฟังเพลงตาม playlist: เจอเพลงที่ไม่ชอบก็<b>กดข้าม</b>ไปเพลงต่อไป (continue) แต่ถ้าถึงป้ายรถเมล์แล้วก็<b>ปิดทั้ง playlist</b> ลงรถเลย (break)' },
+    yt:'C# break continue ภาษาไทย',
+    video:{
+      th:[{ id:'d7cYXTW7kBc', title:'Break & Continue' }],
+      en:[{ id:'EyghyKO4BlA', title:'C# while loops (infinite loop)' }] },
+    trace:t,
+    key:[
+      '<code>break</code> = ออกจาก loop<b>ทั้งหมด</b>ทันที',
+      '<code>continue</code> = ข้าม<b>รอบนี้</b> ไปรอบถัดไป (ข้ามคำสั่งที่เหลือในรอบ)',
+      '⚠️ continue ใน <code>while</code> ต้องอยู่<b>หลัง</b> STEP (i++) ไม่งั้นวนไม่จบ',
+      '<b>Infinite loop</b> = loop ไม่มีวันจบ เกิดจากลืม START/STOP/STEP หรือมี ; เกินหลัง while',
+      'loop ที่ตั้งใจให้วนไม่จบ (<code>while (true)</code>) ต้องมี break',
+    ],
+    more:`<p>เทียบ break กับ continue (จากสไลด์):</p>
+<pre class="code">for (i = -5; i &lt;= 5; i++)        for (i = -5; i &lt;= 5; i++)
+{                                {
+    if (i == 0) break;               if (i == 0) continue;
+    Console.Write(i + " ");          Console.Write(i + " ");
+}                                }
+// -5 -4 -3 -2 -1                // -5 -4 -3 -2 -1 1 2 3 4 5</pre>
+<p>Infinite loop ที่เจอบ่อย:</p>
+<pre class="code">for (int i = 1; i &lt;= 10; )  { … }     // ลืม STEP
+int i = 1; while (i &lt;= 10); { i++; }  // มี ; เกินหลัง while → loop ว่างวนไม่จบ</pre>`,
+    ex:[
+      { id:'k3a', type:'output', lv:1, q:'แสดงผลอะไร?', code:`for (int i = 1; i <= 10; i++)
+{
+    if (i == 5) continue;
+    if (i == 8) break;
+    Console.Write(i + " ");
+}`, ans:'1 2 3 4 6 7',
+        ask:'i = 5 เกิดอะไร? i = 8 เกิดอะไร?', why:'ข้าม 5 (continue) และหยุดที่ 8 (break) → 1 2 3 4 6 7' },
+      { id:'k3b', type:'mcq', lv:1, q:'<code>for (int i = 1; i <= 10; ) { Console.WriteLine("Hi"); }</code> ขาดอะไร?', opts:['START','STOP','STEP','ไม่ขาดอะไร'], ans:2,
+        ask:'ส่วนที่ 3 ใน for (หลัง ; ตัวที่สอง) คืออะไร?', why:'ไม่มี i++ (STEP) → i เป็น 1 ตลอด → infinite loop' },
+      { id:'k3c', type:'bug', lv:2, q:'loop นี้วนไม่จบ (infinite) คลิกบรรทัดที่เป็นต้นเหตุ', code:`int i = 1;
+while (i <= 10)
+{
+    if (i == 5)
+        continue;
+    Console.Write(i + " ");
+    i++;
+}`, ans:5,
+        ask:'พอ i = 5 แล้ว continue กระโดดไปไหน? i++ ได้ทำมั้ย?', why:'continue ข้าม i++ → i ติดอยู่ที่ 5 ตลอด ต้องเพิ่ม i++ ก่อน continue (สไลด์เตือนเรื่องนี้)' },
+      { id:'k3d', type:'output', lv:2, q:'แสดงผลอะไร?', code:`int n = 0;
+while (true)
+{
+    n += 3;
+    if (n > 10) break;
+}
+Console.WriteLine(n);`, ans:'12',
+        ask:'n = 3, 6, 9, 12 … ตัวไหนที่ทำให้ n > 10 ครั้งแรก?', why:'3 → 6 → 9 → 12 (12 > 10 → break) → 12' },
+      { id:'k3e', type:'bug', lv:3, q:'loop นี้ทำงานผิด (วนไม่จบ) คลิกบรรทัดที่ผิด', code:`int i = 1;
+while (i <= 3);
+{
+    Console.WriteLine(i);
+    i++;
+}`, ans:2,
+        ask:'มีอะไรเกินมาท้ายบรรทัด while?', why:'<code>;</code> หลัง while ทำให้ loop มีแต่คำสั่งว่าง → i ไม่เคยเพิ่ม → วนไม่จบ' },
+    ]
+  });
+})();
+
+/* ----- K4 Nested loop ----- */
+(function(){
+  const t = trace(`
+for (int r = 1; r <= 3; r++)
+{
+    for (int c = 1; c <= r; c++)
+    {
+        Console.Write("x");
+    }
+    Console.WriteLine();
+}`);
+  t.build
+   .step(1, '<b>loop นอก</b> = แถว (row) เริ่ม r = 1', b => b.v('r', '1'))
+   .step(3, '<b>loop ใน</b> = คอลัมน์ c วิ่ง 1 ถึง <b>r</b> → แถวนี้วิ่งรอบเดียว', b => b.v('c', '1'))
+   .step(5, '', b => b.w('x'))
+   .step(7, 'loop ในจบ → ขึ้นบรรทัดใหม่', b => { b.drop('c'); b.print(''); })
+   .step(1, 'r = 2', b => b.v('r', '2'))
+   .step([3,5], 'c = 1, 2 → พิมพ์ x 2 ตัว · loop ใน<b>วิ่งจนจบก่อน</b> loop นอกถึงขยับ', b => { b.v('c', '2'); b.w('xx'); })
+   .step(7, '', b => { b.drop('c'); b.print(''); })
+   .step(1, 'r = 3', b => b.v('r', '3'))
+   .step([3,5], 'c = 1, 2, 3 → xxx', b => { b.v('c', '3'); b.w('xxx'); })
+   .step(7, 'ได้สามเหลี่ยม! 🔺 จำนวนรอบทั้งหมด = 1 + 2 + 3 = 6 (ถ้าใน loop ใช้ <= 3 คงที่ จะได้ 3 × 3 = 9)', b => { b.drop('c'); b.drop('r'); b.print(''); });
+  t.steps[2].say = 'พิมพ์ x (Write ไม่ขึ้นบรรทัด)';
+  t.steps[6].say = 'ขึ้นบรรทัดใหม่';
+  CH7.lessons.push({
+    id:'k4', icon:'layers', title:'Nested Loop', sub:'loop ซ้อน loop = แถว × คอลัมน์',
+    analogy:{ img:'', credit:'', title:'Nested loop = เข็มนาฬิกา', text:'<b>เข็มนาที (loop ใน)</b> ต้องหมุนครบรอบก่อน <b>เข็มชั่วโมง (loop นอก)</b> ถึงขยับไป 1 ช่อง · คิดแบบ<b>แถวกับคอลัมน์</b>: loop นอก = แถว, loop ใน = ของในแถวนั้น' },
+    yt:'C# nested loop ภาษาไทย',
+    video:{
+      th:[{ id:'LCzQ1um80DI', title:'For Loop (พื้นฐานก่อนซ้อน)', note:'Playlist ไทยไม่มีคลิป nested loop โดยตรง แนะนำสลับไปดู Bro Code ซึ่งตรงเรื่องกว่า หรือดู animation ด้านล่าง' },{ id:'POcF4AWD7cw', title:'For Loop ใน Array 2 มิติ (nested)' }],
+      en:[{ id:'WFzLcZk137s', title:'C# nested loops' }] },
+    trace:t,
+    key:[
+      'loop ซ้อน loop: loop ใน<b>วิ่งครบทุกรอบ</b> ก่อน loop นอกขยับ 1 รอบ',
+      'จำนวนรอบรวม = รอบนอก × รอบใน (เช่น 3 × 5 = 15)',
+      'วาดรูป: loop นอก = แถว, loop ใน = จำนวนตัวในแถว, จบแถวด้วย <code>Console.WriteLine();</code>',
+      'สามเหลี่ยม: ให้ loop ในวิ่งถึง <code>r</code> (ไม่ใช่ค่าคงที่)',
+    ],
+    more:`<p>แบบในสไลด์ (Sample 1–4 / Exercise 1):</p>
+<pre class="code">// สี่เหลี่ยม 3×5            // สามเหลี่ยมกลับหัว           // 1 / 12 / 123 …
+for (r = 1; r &lt;= 3; r++)    for (r = 5; r &gt;= 1; r--)     for (r = 1; r &lt;= 5; r++)
+{                           {                             {
+  for (c = 1; c &lt;= 5; c++)    for (c = 1; c &lt;= r; c++)      for (c = 1; c &lt;= r; c++)
+    Console.Write("x");          Console.Write("x");           Console.Write(c);
+  Console.WriteLine();        Console.WriteLine();          Console.WriteLine();
+}                           }                             }</pre>`,
+    ex:[
+      { id:'k4a', type:'mcq', lv:1, q:'loop นอกวน 4 รอบ loop ในวน 5 รอบ คำสั่งใน loop ในทำทั้งหมดกี่ครั้ง?', opts:['9','5','4','20'], ans:3,
+        ask:'loop นอกแต่ละรอบ loop ในวิ่งกี่ครั้ง? แล้วมีกี่รอบนอก?', why:'4 × 5 = 20 ครั้ง' },
+      { id:'k4b', type:'output', lv:1, q:'แสดงผลอะไร?', code:`for (int r = 1; r <= 2; r++)
+{
+    for (int c = 1; c <= 3; c++)
+    {
+        Console.Write("*");
+    }
+    Console.WriteLine();
+}`, ans:'***\n***',
+        ask:'มีกี่แถว? แต่ละแถวมี * กี่ตัว?', why:'2 แถว แถวละ 3 ตัว' },
+      { id:'k4c', type:'output', lv:2, q:'แสดงผลอะไร? (Exercise 1.2 จากสไลด์ แต่ 3 แถว)', code:`for (int r = 1; r <= 3; r++)
+{
+    for (int c = 1; c <= r; c++)
+    {
+        Console.Write(c);
+    }
+    Console.WriteLine();
+}`, ans:'1\n12\n123',
+        ask:'แต่ละแถวพิมพ์ c ตั้งแต่ 1 ถึงเท่าไหร่?', why:'แถว r พิมพ์ 1..r → 1 / 12 / 123' },
+      { id:'k4d', type:'output', lv:3, q:'แสดงผลอะไร?', code:`for (int r = 3; r >= 1; r--)
+{
+    for (int c = 1; c <= r; c++)
+    {
+        Console.Write(r);
+    }
+    Console.WriteLine();
+}`, ans:'333\n22\n1',
+        ask:'r เริ่มที่ 3 ลดลง · แต่ละแถวพิมพ์ "r" หรือ "c"? กี่ตัว?', why:'พิมพ์ค่า r ซ้ำ r ครั้ง → 333 / 22 / 1' },
+      { id:'k4e', type:'write', lv:3, q:'ใช้ nested for พิมพ์สามเหลี่ยมกลับหัวแบบนี้ (Exercise 1.1):<br><code>11111</code> · <code>1111</code> · <code>111</code> · <code>11</code> · <code>1</code> (บรรทัดละแถว)',
+        starter:`// ใน Main
+`,
+        rules:[
+          { re:/for\s*\(\s*int\s+(\w+)\s*=\s*5\s*;\s*\1\s*>=?\s*[01]\s*;\s*\1\s*--\s*\)/, msg:'loop นอก (แถว) ควรนับถอยหลัง: <code>for (int r = 5; r &gt;= 1; r--)</code>' },
+          { re:/for\s*\(\s*int\s+(\w+)\s*=\s*1\s*;\s*\1\s*<=\s*\w+\s*;\s*\1\s*\+\+\s*\)/, msg:'loop ใน: <code>for (int c = 1; c &lt;= r; c++)</code>' },
+          { re:/Console\s*\.\s*Write\s*\(\s*("1"|1)\s*\)\s*;/, msg:'ใน loop ในต้อง <code>Console.Write("1");</code> (Write ไม่ใช่ WriteLine)' },
+          { re:/Console\s*\.\s*WriteLine\s*\(\s*\)\s*;/, msg:'จบแต่ละแถวต้อง <code>Console.WriteLine();</code>' },
+        ],
+        ask:'แถวแรกมี 1 กี่ตัว แถวสุดท้ายกี่ตัว? loop นอกควรนับขึ้นหรือนับลง?',
+        answer:`for (int r = 5; r >= 1; r--)
+{
+    for (int c = 1; c <= r; c++)
+    {
+        Console.Write("1");
+    }
+    Console.WriteLine();
+}` },
+    ]
+  });
+})();
+
+const EXTRA7 = [
+  { id:'w1', lesson:'k3', type:'output', lv:2, q:'แสดงผลอะไร? (break vs continue จากสไลด์)', code:`for (int i = -2; i <= 2; i++)
+{
+    if (i == 0) continue;
+    Console.Write(10 / i + " ");
+}`, ans:'-5 -10 10 5', ask:'i = -2, -1, 0, 1, 2 → ตัวไหนถูกข้าม? 10 / i ของแต่ละตัว (หารแบบ int)?', why:'ข้าม 0 · 10/−2 = −5, 10/−1 = −10, 10/1 = 10, 10/2 = 5' },
+  { id:'w2', lesson:'k1', type:'mcq', lv:1, q:'loop ข้อไหนเป็น <b>posttest</b>?', opts:['for','while','do…while','foreach'], ans:2,
+    ask:'loop ไหนเช็กเงื่อนไข "หลัง" ทำ?', why:'do…while เช็กหลังทำ (posttest) ส่วนที่เหลือเช็กก่อน (pretest)' },
+  { id:'w3', lesson:'k4', type:'output', lv:2, q:'แสดงผลอะไร?', code:`int count = 0;
+for (int i = 0; i < 3; i++)
+    for (int j = 0; j < 4; j++)
+        count++;
+Console.WriteLine(count);`, ans:'12', ask:'loop นอกกี่รอบ × loop ในกี่รอบ?', why:'3 × 4 = 12' },
+  { id:'w4', lesson:'k2', type:'output', lv:2, q:'แสดงผลอะไร?', code:`int i = 3;
+do
+{
+    Console.Write(i + " ");
+    i--;
+} while (i > 0);`, ans:'3 2 1', ask:'i = 3 → 2 → 1 → 0 หยุดตอนไหน?', why:'พิมพ์ 3, 2, 1 แล้ว i = 0 → 0 > 0 เป็นเท็จ → ออก' },
+  { id:'w5', lesson:'k3', type:'mcq', lv:2, q:'ข้อไหน<b>ไม่ใช่</b>สาเหตุของ infinite loop?', opts:['ลืม STEP (i++)','มี ; เกินหลัง while (…)','ใช้ break ใน loop','continue ใน while อยู่ก่อน i++'], ans:2,
+    ask:'break ทำให้ loop "จบ" หรือ "วนต่อ"?', why:'break ทำให้ออกจาก loop → ช่วยหยุด ไม่ใช่สาเหตุของ infinite loop' },
+  { id:'w6', lesson:'k1', type:'output', lv:3, q:'แสดงผลอะไร?', code:`int i = 1;
+while (i < 20)
+{
+    i = i * 2;
+}
+Console.WriteLine(i);`, ans:'32', ask:'i = 1 → 2 → 4 → 8 → 16 → ? หยุดเมื่อไหร่?', why:'16 < 20 ยังเข้า loop → i = 32 → 32 < 20 เท็จ → ออก → 32' },
+];
+
+const CHAPTERS = [
+  CH10,
+  CH9,
+  CH8,
+  CH7,
+];
+
+/* index โจทย์ทั้งหมดไว้หาเร็ว ๆ */
+const ALL = {};
+for (const ch of CHAPTERS) for (const L of ch.lessons) for (const e of L.ex) { e.lesson = L.id; ALL[e.id] = e; }
+for (const e of [...EXTRA, ...EXTRA9, ...EXTRA8, ...EXTRA7]) ALL[e.id] = e;
+const allLessons = () => CHAPTERS.flatMap(c => c.lessons);
+const lessonById = id => allLessons().find(l => l.id === id);
+const chapterOf = id => CHAPTERS.find(c => c.lessons.some(l => l.id === id));
+
+/* =========================================================
+   ENGINE
+   ========================================================= */
+
+/* ---------- syntax highlight C# แบบง่าย ---------- */
+const KW = new Set('class public private protected static void new return get set value if else for foreach in while do int double string bool char float decimal var true false null using namespace this'.split(' '));
+function hl(line){
+  return line.replace(/(\/\/.*$)|("(?:[^"\\]|\\.)*")|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)|([^\w"]+)/g, (m, c, s, n, w, o) => {
+    if (c) return `<span class="tk-c">${esc(c)}</span>`;
+    if (s) return `<span class="tk-s">${esc(s)}</span>`;
+    if (n) return `<span class="tk-n">${n}</span>`;
+    if (w) return KW.has(w) ? `<span class="tk-k">${w}</span>` : /^[A-Z]/.test(w) ? `<span class="tk-t">${w}</span>` : w;
+    return esc(o);
+  });
+}
+function codeBox(code, opts={}){
+  const arr = Array.isArray(code) ? code : lines(code);
+  return `<div class="codebox">${arr.map((l, i) => `<div class="ln${opts.pick?' pick':''}" data-n="${i+1}"><i>${i+1}</i><span>${hl(l) || ' '}</span></div>`).join('')}</div>`;
+}
+
+/* ---------- เสียงพากย์ (Web Speech API) ----------
+   เสียงขึ้นกับ browser: Edge มีเสียงไทย AI "Premwadee/Niwat (Natural)" ฟังดีสุด, Chrome มี "Google ไทย"
+   เลยให้คะแนนเสียงแต่ละตัว แล้วเลือกตัวที่ดีที่สุดให้อัตโนมัติ (ผู้ใช้เปลี่ยนเองได้ในแผงตั้งค่า) */
+const HAS_TTS = 'speechSynthesis' in window;
+let VOICES = [];
+const voiceScore = v => (/natural|neural/i.test(v.name) ? 20 : 0) + (/online/i.test(v.name) ? 6 : 0)
+  + (/premwadee|niwat|achara/i.test(v.name) ? 4 : 0) + (/google/i.test(v.name) ? 8 : 0) + (v.localService ? 0 : 1);
+function loadVoices(){
+  try{ VOICES = speechSynthesis.getVoices().filter(v => /^th/i.test(v.lang)).sort((a, b) => voiceScore(b) - voiceScore(a)); }catch(e){ VOICES = []; }
+  if ($('#voicePanel') && !$('#voicePanel').hidden) renderVoicePanel();
+}
+if (HAS_TTS){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+const pickVoice = () => VOICES.find(v => v.name === S.voiceName) || VOICES[0] || null;
+
+/* แปลงข้อความบนจอ → คำที่อ่านออกเสียงได้ลื่น ๆ (เช่น acc.Balance → "acc จุด Balance") */
+function toSpeech(html){
+  const dec = s => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
+  const OPS = [
+    [/>=/g, ' มากกว่าหรือเท่ากับ '], [/<=/g, ' น้อยกว่าหรือเท่ากับ '], [/==/g, ' เท่ากับ '], [/!=/g, ' ไม่เท่ากับ '],
+    [/=>/g, ' '], [/\+\+/g, ' บวกหนึ่ง '], [/\+=/g, ' บวกเพิ่ม '],
+  ];
+  // ในโค้ด (<code>): "=" อ่านว่า "เท่ากับ", จุดอ่านว่า "จุด", [0] อ่านว่า "ช่อง 0"
+  const CODE = [...OPS, [/(\w)\.(?=[A-Za-z_])/g, '$1 จุด '], [/\[(\w+)\]/g, ' ช่อง $1 '], [/\(\s*\)/g, ''], [/=/g, ' เท่ากับ ']];
+  let t = html.replace(/<code>([\s\S]*?)<\/code>/g, (m, c) => { let x = dec(c); for (const [a, b] of CODE) x = x.replace(a, b); return ' ' + x + ' '; });
+  t = dec(t.replace(/<[^>]+>/g, ' ')).replace(/\p{Extended_Pictographic}|️|‍/gu, '');
+  // ในประโยคทั่วไป: "A = B" แปลว่า "A คือ B"
+  const PROSE = [...OPS, [/→/g, ' แล้วก็ '], [/\(\s*[^\w\s฀-๿]\s*\)/g, ''], [/(\w)\.(?=[A-Za-z_])/g, '$1 จุด '],
+    [/\[(\w+)\]/g, ' ช่อง $1 '], [/=/g, ' คือ '], [/#(\d+)/g, ' หมายเลข $1 '], [/\bnull\b/g, 'นัล'], [/\bvoid\b/g, 'วอยด์'], [/(\d)\s*%/g, '$1 เปอร์เซ็นต์'],
+    [/[;{}"`|·]/g, ' '], [/\s+/g, ' '], [/ช่อง\s+ช่อง/g, 'ช่อง']];
+  for (const [a, b] of PROSE) t = t.replace(a, b);
+  return t.trim();
+}
+/* ตัดเป็นท่อนสั้น ๆ: Chrome มักตัดเสียงกลางคันถ้าประโยคยาวเกิน ~15 วินาที */
+function chunks(t, max = 140){
+  const out = []; let cur = '';
+  for (const w of t.split(' ')) {
+    if (cur && (cur + ' ' + w).length > max) { out.push(cur); cur = w; } else cur = cur ? cur + ' ' + w : w;
+  }
+  if (cur) out.push(cur);
+  return out;
+}
+let speakId = 0;
+function speak(html, onend, force){
+  if ((!S.voice && !force) || !HAS_TTS) { onend && setTimeout(onend, 2600); return; }
+  try{
+    speechSynthesis.cancel();
+    const my = ++speakId, parts = chunks(toSpeech(html)), voice = pickVoice();
+    let i = 0;
+    const next = () => {
+      if (my !== speakId) return;                    // มีการกดหยุด/เปลี่ยนขั้นไปแล้ว
+      if (i >= parts.length) { onend && onend(); return; }
+      const u = new SpeechSynthesisUtterance(parts[i++]);
+      u.lang = voice ? voice.lang : 'th-TH'; if (voice) u.voice = voice;
+      u.rate = S.rate; u.pitch = 1;
+      u.onend = next; u.onerror = next;
+      speechSynthesis.speak(u);
+    };
+    next();
+  }catch(e){ onend && setTimeout(onend, 2600); }
+}
+const stopSpeak = () => { speakId++; try{ speechSynthesis.cancel(); }catch(e){} };
+
+/* ---------- แผงตั้งค่าเสียง ---------- */
+function renderVoicePanel(){
+  const cur = pickVoice();
+  const natural = VOICES.some(v => /natural|neural/i.test(v.name));
+  $('#voicePanel').innerHTML = `
+    <div class="vp-row"><b>เสียงพากย์</b>
+      <label class="switch"><input type="checkbox" id="vpOn" ${S.voice ? 'checked' : ''}><span></span></label></div>
+    ${!HAS_TTS ? `<p class="sub">browser นี้ไม่รองรับเสียงอ่าน</p>` : !VOICES.length ? `<p class="vp-note">เครื่องนี้ไม่มีเสียงภาษาไทย 😢 ลองเปิดเว็บด้วย <b>Microsoft Edge</b> จะได้เสียงไทยแบบ AI ที่ฟังเหมือนคนจริง</p>` : `
+    <label class="vp-lbl">เลือกเสียง</label>
+    <select id="vpVoice">${VOICES.map(v => `<option value="${esc(v.name)}" ${cur && v.name === cur.name ? 'selected' : ''}>${esc(v.name.replace(/^Microsoft\s*/i, ''))}${/natural|neural/i.test(v.name) ? ' ⭐' : ''}</option>`).join('')}</select>
+    <label class="vp-lbl">ความเร็ว <span id="vpRateTxt">${S.rate.toFixed(2)}x</span></label>
+    <input type="range" id="vpRate" min="0.7" max="1.5" step="0.05" value="${S.rate}">
+    <button class="btn ghost" id="vpTest" style="width:100%;justify-content:center;margin-top:10px">${ic('play')} ลองฟัง</button>
+    ${natural ? '' : `<p class="vp-note">💡 อยากได้เสียงที่ฟังเหมือนคนจริงกว่านี้ เปิดเว็บด้วย <b>Microsoft Edge</b> แล้วเลือกเสียงที่มี ⭐ (Natural)</p>`}`}`;
+  $('#vpOn').onchange = e => { S.voice = e.target.checked; save(); applyVoice(); if (!S.voice) stopSpeak(); };
+  if ($('#vpVoice')) {
+    $('#vpVoice').onchange = e => { S.voiceName = e.target.value; save(); };
+    $('#vpRate').oninput = e => { S.rate = +e.target.value; $('#vpRateTxt').textContent = S.rate.toFixed(2) + 'x'; save(); };
+    $('#vpTest').onclick = () => speak('หวัดดี พี่บอทเอง วันนี้มาเรียน <code>Class</code> กัน ถ้า <code>acc.Balance</code> มากกว่าหรือเท่ากับ 0 ก็เก็บค่าไว้ ผ่านแน่ A!', null, true);
+  }
+}
+
+/* ---------- Tracer: โค้ดรันทีละบรรทัด + memory + console ---------- */
+function mountTracer(el, t){
+  let i = 0, playing = false, timer = null;
+  el.innerHTML = `
+    <div class="tutor" style="margin-bottom:12px">${BOT_AVA}<div class="bub" data-say></div></div>
+    <div class="tracer">
+      <div>${codeBox(t.code)}</div>
+      <div class="side-p">
+        ${t.uml ? `<div class="panel"><h4>UML</h4><div class="uml" data-uml></div></div>` : `
+        <div class="panel"><h4>ตัวแปร (variables)</h4><div class="vars" data-vars></div></div>
+        <div class="panel"><h4>ใน memory (array / object)</h4><div class="objs" data-objs></div></div>`}
+        <div class="panel"><h4>Console (output)</h4><div class="console" data-out></div></div>
+      </div>
+    </div>
+    <div class="ctrl">
+      <button class="ibtn" data-a="first" title="เริ่มใหม่">${ic('skip-back')}</button>
+      <button class="ibtn" data-a="prev" title="ย้อน">${ic('chevron-left')}</button>
+      <button class="ibtn play" data-a="play" title="เล่นอัตโนมัติ">${ic('play')} เล่น</button>
+      <button class="ibtn" data-a="next" title="ถัดไป">${ic('skip-forward')}</button>
+      <span class="stepn" data-step></span>
+    </div>`;
+  const lns = [...el.querySelectorAll('.ln')];
+  const render = (say=true) => {
+    const st = t.steps[i];
+    const [a, b] = Array.isArray(st.l) ? st.l : [st.l, st.l];
+    lns.forEach((ln, k) => ln.classList.toggle('cur', k+1 >= a && k+1 <= b));
+    lns[a-1].scrollIntoView({ block:'nearest', behavior:'smooth' });
+    $('[data-say]', el).innerHTML = st.say;
+    $('[data-step]', el).textContent = `ขั้น ${i+1} / ${t.steps.length}`;
+    const s = st.s;
+    if (t.uml){
+      $('[data-uml]', el).innerHTML = t.uml.map((u, k) => `<div class="${k===0?'t':''} ${k===s.uml && k>0?'on':''}">${esc(u)}</div>`).join('');
+      if (s.uml === 0) $('[data-uml] .t', el).style.outline = '3px solid var(--amber)';
+    } else {
+      $('[data-vars]', el).innerHTML = s.vars.length ? s.vars.map(([n, v]) => `<span class="var"><b>${esc(n)}</b> = ${esc(v)}</span>`).join('') : '<small style="color:var(--muted)">ยังไม่มี</small>';
+      const cell = (o, key, v) => `${s.flash.includes(o.id+key)?'flash':''} ${s.ptr===o.id+key?'cur':''} ${v==='null'?'null':''}`;
+      $('[data-objs]', el).innerHTML = s.objs.length ? s.objs.map(o => o.arr ? `
+        <div class="arrbox" style="${o.id===s.newObj?'':'animation:none'}">
+          <div class="arrlbl" style="color:${o.color}">${esc(o.cls)}</div>
+          <div class="arrcells">${o.arr.map((v, k) => `<div class="ac"><span class="${cell(o, '['+k+']', v)}">${esc(v)}</span><i>[${k}]</i></div>`).join('')}</div>
+        </div>` : o.grid ? `
+        <div class="arrbox" style="${o.id===s.newObj?'':'animation:none'}">
+          <div class="arrlbl" style="color:${o.color}">${esc(o.cls)}</div>
+          <table class="g2"><tr><th></th>${o.grid[0].map((_, c) => `<th>c${c}</th>`).join('')}</tr>
+            ${o.grid.map((row, r) => `<tr><th>r${r}</th>${row.map((v, c) => `<td class="${cell(o, '['+r+','+c+']', v)}">${esc(v)}</td>`).join('')}</tr>`).join('')}</table>
+        </div>` : `<div class="obj" style="border-color:${o.color}${o.id===s.newObj?'':';animation:none'}">
+          <div class="hd" style="background:${o.color}">${esc(o.id.startsWith('#') ? o.id+' : '+o.cls : o.cls)}</div>
+          ${o.fields.map(([f, v]) => `<div class="fl ${s.flash.includes(o.id+'.'+f)?'flash':''}"><span>${esc(f)}</span><span class="${v==='null'?'null':''}">${esc(v)}</span></div>`).join('')}
+        </div>`).join('') : '<small style="color:var(--muted)">ยังไม่มี</small>';
+    }
+    $('[data-out]', el).innerHTML = s.out.map(([k, x]) => k === 'e' ? `<span class="err">${esc(x)}</span>` : esc(x)).concat(s.cur ? [esc(s.cur)] : []).join('\n');
+    if (say && playing) speak(st.say, () => { if (playing) timer = setTimeout(() => go(1, true), 500); });
+  };
+  const go = (d, auto) => {
+    clearTimeout(timer);
+    if (!auto) { stopSpeak(); }
+    const n = i + d;
+    if (n < 0) return;
+    if (n >= t.steps.length) { stop(); return; }
+    i = n; render();
+  };
+  const playBtn = $('[data-a="play"]', el);
+  const stop = () => { playing = false; clearTimeout(timer); stopSpeak(); playBtn.innerHTML = ic('play') + ' เล่น'; };
+  el.addEventListener('click', e => {
+    const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return;
+    if (a === 'play') {
+      if (playing) return stop();
+      playing = true; playBtn.innerHTML = ic('pause') + ' หยุด';
+      if (i >= t.steps.length - 1) i = 0;
+      render();
+    }
+    if (a === 'next') { const p = playing; stop(); go(1); if (S.voice && !p) speak(t.steps[i].say); }
+    if (a === 'prev') { stop(); go(-1); }
+    if (a === 'first') { stop(); i = 0; render(false); }
+  });
+  render(false);
+  return { stop };
+}
+
+/* ---------- Checker สำหรับโจทย์เขียนโค้ด ----------
+   ลำดับการช่วย (ตามที่เลือก): d) ชี้บรรทัดที่ผิด → c) ถามกลับให้คิด → a) บอกคำตอบ */
+function syntaxScan(code){
+  const L = code.split('\n');
+  let depth = 0;
+  for (let k = 0; k < L.length; k++){
+    const raw = L[k].replace(/\/\/.*$/, '').replace(/"(?:[^"\\]|\\.)*"/g, '""');
+    const t = raw.trim();
+    for (const ch of raw){ if (ch === '{') depth++; if (ch === '}') depth--; }
+    if (depth < 0) return { line:k+1, msg:'มี <code>}</code> เกินมา' };
+    if (/\bnew\s+[A-Z]\w*\s*;/.test(t)) return { line:k+1, msg:'หลัง <code>new ชื่อClass</code> ต้องมี <code>()</code>' };
+    if (/Console\.(writeline|Writeline|writeLine)/.test(t)) return { line:k+1, msg:'สะกดผิด ต้องเป็น <code>Console.WriteLine</code> (C# สนใจตัวพิมพ์ใหญ่-เล็ก)' };
+    if (!t || /[;{},]$/.test(t)) continue;
+    if (/^(class|public|private|protected|static|if|else|for|foreach|while|do|namespace|get|set)\b/.test(t) || /\)\s*$/.test(t) && /^(if|for|foreach|while)\b/.test(t)) {
+      // header line: ควรตามด้วย { บรรทัดถัดไป
+      const next = (L.slice(k+1).find(x => x.trim()) || '').trim();
+      if (next.startsWith('{')) continue;
+      if (/^(if|else|for|foreach|while)\b/.test(t)) continue; // if/for แบบไม่มีปีกกา
+      if (/\b(int|double|string|bool|char|float|decimal|[A-Z]\w*(\[\])?)\s+\w+\s*$/.test(t) || /=/.test(t)) return { line:k+1, msg:'น่าจะลืม <code>;</code> (semicolon) ท้ายบรรทัดนี้' };
+      continue;
+    }
+    const next = (L.slice(k+1).find(x => x.trim()) || '').trim();
+    if (next.startsWith('{')) continue;
+    return { line:k+1, msg:'น่าจะลืม <code>;</code> (semicolon) ท้ายบรรทัดนี้' };
+  }
+  if (depth > 0) return { line:L.length, msg:'ปีกกา <code>{</code> ยังปิดไม่ครบ ขาด <code>}</code> อีก '+depth+' ตัว' };
+  return null;
+}
+function checkWrite(code, rules){
+  const syn = syntaxScan(code);
+  if (syn) return { ok:false, ...syn, kind:'syntax' };
+  const flat = code.replace(/\/\/.*$/gm, '');
+  for (const r of rules){
+    if (r.re && !r.re.test(flat)) return { ok:false, msg:r.msg };
+    if (r.not && r.not.test(flat)) {
+      const k = flat.split('\n').findIndex(x => r.not.test(x));
+      return { ok:false, msg:r.msg, line: k >= 0 ? k+1 : undefined };
+    }
+  }
+  return { ok:true };
+}
+
+/* ---------- บันทึกผล + spaced repetition ---------- */
+const DAY = 864e5;
+function record(id, firstTry){
+  S.ex[id] = firstTry ? 'ok' : 'retry';
+  if (!firstTry) S.review[id] = { box:0, due: Date.now() + 60e3 * 10 }; // ผิด → กลับมาทวนอีก 10 นาที
+  save();
+}
+function reviewResult(id, ok){
+  const r = S.review[id] || { box:0 };
+  if (ok) { r.box++; if (r.box >= 3) { delete S.review[id]; save(); return; } r.due = Date.now() + [1,3,7][r.box-1] * DAY; }
+  else { r.box = 0; r.due = Date.now() + 60e3 * 10; }
+  S.review[id] = r; save();
+}
+const dueList = () => Object.entries(S.review).filter(([id, r]) => r.due <= Date.now() && ALL[id]).map(([id]) => id);
+
+/* ---------- แสดงโจทย์ 1 ข้อ ----------
+   onDone(firstTry) ถูกเรียกครั้งเดียวเมื่อจบข้อ (ตอบถูก หรือ ดูเฉลย) */
+function mountItem(el, it, onDone, opts={}){
+  let tries = 0, finished = false;
+  const lvl = `<span class="pill lv">Lv.${it.lv}</span>`;
+  const typeName = { mcq:'เลือกตอบ', output:'ทาย output', bug:'หาบั๊ก', write:'เขียนโค้ด' }[it.type];
+  el.innerHTML = `<div class="row">${lvl}<span class="pill">${typeName}</span>${S.ex[it.id]==='ok'?'<span class="pill ok">✓ เคยทำถูก</span>':''}</div>
+    <div class="q">${it.q}</div><div data-body></div><div class="fb" data-fb></div>`;
+  const body = $('[data-body]', el), fb = $('[data-fb]', el);
+  const say = (cls, html) => { fb.className = 'fb show ' + cls; fb.innerHTML = html; };
+  const finish = (first) => { if (finished) return; finished = true; onDone && onDone(first); };
+  const wrong = (pointer) => {
+    tries++;
+    if (tries === 1) say('bad', `<b>${pick(BOT.wrong1)}</b>${pointer ? '<br>'+pointer : ''}`);
+    else if (tries === 2) say('hint', `<b>${pick(BOT.wrong2)}</b><br>🤔 ${it.ask}${pointer ? '<br>'+pointer : ''}`);
+    else reveal();
+  };
+  const reveal = () => {
+    say('hint', `<b>${pick(BOT.reveal)}</b><br>${answerHtml()}<br>💡 ${it.why || ''}`);
+    markAnswer(); finish(false);
+  };
+  const right = () => { say('good', `<b>${pick(BOT.right)}</b><br>💡 ${it.why || 'โค้ดผ่านทุกเงื่อนไข'}`); markAnswer(); finish(tries === 0); };
+  const answerHtml = () => it.type === 'mcq' ? 'คำตอบ: ' + it.opts[it.ans]
+    : it.type === 'output' ? 'คำตอบ:<pre class="code">' + esc(it.ans) + '</pre>'
+    : it.type === 'bug' ? 'คำตอบ: บรรทัด ' + it.ans
+    : 'ตัวอย่างคำตอบ:<pre class="code">' + it.answer.split('\n').map(hl).join('\n') + '</pre>';
+  let markAnswer = () => {};
+
+  if (it.code) body.insertAdjacentHTML('beforeend', codeBox(it.code, { pick: it.type === 'bug' }));
+
+  if (it.type === 'mcq'){
+    body.insertAdjacentHTML('beforeend', `<div class="opts" style="margin-top:8px">${it.opts.map((o, k) => `<button class="opt" data-k="${k}">${'ABCD'[k]}. ${o}</button>`).join('')}</div>`);
+    markAnswer = () => body.querySelectorAll('.opt')[it.ans].classList.add('good');
+    body.addEventListener('click', e => {
+      const b = e.target.closest('.opt'); if (!b || finished) return;
+      if (+b.dataset.k === it.ans) right(); else { b.classList.add('bad'); wrong(); }
+    });
+  }
+  if (it.type === 'bug'){
+    body.insertAdjacentHTML('beforeend', `<p class="sub" style="margin-top:6px;font-size:14px">👆 คลิกที่บรรทัดในโค้ด</p>`);
+    const lnEls = [...body.querySelectorAll('.ln')];
+    markAnswer = () => lnEls[it.ans-1].classList.add('good');
+    body.addEventListener('click', e => {
+      const ln = e.target.closest('.ln'); if (!ln || finished) return;
+      if (+ln.dataset.n === it.ans) right(); else { ln.classList.add('bad'); wrong(`บรรทัด ${ln.dataset.n} ไม่ใช่ตัวปัญหา`); }
+    });
+  }
+  if (it.type === 'output'){
+    const multi = it.ans.includes('\n');
+    body.insertAdjacentHTML('beforeend', `<div style="margin-top:8px">${multi ? `<textarea rows="3" class="out" placeholder="พิมพ์ output (บรรทัดละ 1 ผลลัพธ์)"></textarea>` : `<input class="out" placeholder="พิมพ์ output ที่คิดว่าจะออก">`}</div>
+      <div class="row" style="margin-top:8px"><button class="btn" data-go>ส่งคำตอบ</button><button class="btn ghost" data-giveup>ยอมแพ้ ดูเฉลย</button></div>`);
+    const inp = $('.out', body);
+    const norm = s => s.trim().split('\n').map(x => x.trim().replace(/\s+/g, ' ')).filter(Boolean);
+    const go = () => {
+      if (finished) return;
+      const me = norm(inp.value), ans = norm(it.ans);
+      if (!me.length) return;
+      if (me.join('\n') === ans.join('\n')) return right();
+      const k = ans.findIndex((x, j) => x !== me[j]);
+      wrong(ans.length > 1 ? `👉 บรรทัดที่ ${k+1} ของ output ยังไม่ถูก` : '');
+    };
+    $('[data-go]', body).onclick = go;
+    $('[data-giveup]', body).onclick = () => !finished && reveal();
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !multi) go(); });
+  }
+  if (it.type === 'write'){
+    body.insertAdjacentHTML('beforeend', `<textarea rows="${Math.max(8, it.starter.split('\n').length + 5)}" spellcheck="false"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn" data-go>ตรวจโค้ด</button><button class="btn ghost" data-giveup>ยอมแพ้ ดูเฉลย</button></div>`);
+    const ta = $('textarea', body);
+    ta.value = it.starter;
+    editorKeys(ta);
+    $('[data-go]', body).onclick = () => {
+      if (finished) return;
+      const r = checkWrite(ta.value, it.rules);
+      if (r.ok) return right();
+      const where = r.line ? `📍 <b>บรรทัด ${r.line}:</b> ` : '📍 ';
+      wrong(where + r.msg);
+    };
+    $('[data-giveup]', body).onclick = () => !finished && reveal();
+  }
+}
+/* textarea: Tab = 4 spaces, Enter = คง indent เดิม (เหมือน IDE นิด ๆ) */
+function editorKeys(ta){
+  ta.addEventListener('keydown', e => {
+    const s = ta.selectionStart, v = ta.value;
+    if (e.key === 'Tab'){ e.preventDefault(); ta.setRangeText('    ', s, ta.selectionEnd, 'end'); }
+    if (e.key === 'Enter'){
+      const lineStart = v.lastIndexOf('\n', s - 1) + 1;
+      let ind = v.slice(lineStart, s).match(/^\s*/)[0];
+      if (v[s-1] === '{') ind += '    ';
+      e.preventDefault(); ta.setRangeText('\n' + ind, s, ta.selectionEnd, 'end');
+    }
+  });
+}
+
+/* =========================================================
+   PAGES
+   ========================================================= */
+const app = $('#app');
+let cleanup = null;
+
+function pageHome(){
+  const lessons = allLessons();
+  const total = Object.keys(ALL).length, okN = Object.keys(ALL).filter(id => S.ex[id] === 'ok').length;
+  const due = dueList().length;
+  const doneN = lessons.filter(l => S.done[l.id]).length;
+  const next = lessons.find(l => !S.done[l.id]);
+  app.innerHTML = `
+    <div style="margin-top:40px"><span class="eyebrow"><b>C#</b> Computer Programming · Final 26 พ.ย.</span></div>
+    <h1>ฝึกให้เห็นภาพ<br><span style="color:var(--muted)">แล้วค่อยลงมือเขียน</span></h1>
+    <p class="sub">ดูคลิป → ดู animation → ลงมือทำ → quiz · ครั้งละ 30–60 นาทีพอ</p>
+    <div class="card">
+      <div class="tutor">${BOT_AVA}<div class="bub">${
+        due ? `มีโจทย์ที่เคยผิด <b>${due} ข้อ</b> รอทบทวนอยู่นะ ทำก่อนเลย ไม่งั้นลืมแน่ 😤`
+        : next ? `ต่อที่ <b>${chapterOf(next.id).short} · ${next.title}</b> เลย (เรียงจากเรื่องที่งงที่สุดก่อน: Class → Array → Method → Loop)`
+        : `ดูครบทุกบทแล้ว 🔥 ไปลุย <b>Final Quiz</b> แล้วทำคะแนนให้ถึง 80% (A) ให้ได้!`
+      }</div></div>
+      <div class="stats" style="margin-top:14px">
+        <div class="stat"><b>${doneN}/${lessons.length}</b><small>บทเรียนที่ดูจบ</small></div>
+        <div class="stat"><b>${okN}/${total}</b><small>โจทย์ที่ทำถูก</small></div>
+        <div class="stat hot"><b>${S.best}%</b><small>Final Quiz รวมทุกบท สูงสุด · เป้า A = 80%</small></div>
+        <div class="stat"><b>${due}</b><small>รอทบทวน</small></div>
+      </div>
+      <div class="row" style="margin-top:14px">
+        ${next ? `<a class="btn" style="text-decoration:none" href="#l/${next.id}">${ic('play')} เรียนต่อ: ${next.title}</a>` : ''}
+        ${due ? `<a class="btn ghost" style="text-decoration:none" href="#review">${ic('rotate-ccw')} ทบทวน (${due})</a>` : ''}
+        <a class="btn ghost" style="text-decoration:none" href="#quiz">${ic('clipboard-check')} Final Quiz (ทุกบท)</a>
+      </div>
+    </div>
+    ${CHAPTERS.map(c => `
+      <div class="row" style="margin-top:28px;margin-bottom:10px;justify-content:space-between"><h2 style="margin:0">${c.title} ${c.soon ? '<span class="pill">เร็ว ๆ นี้</span>' : ''}</h2>
+        ${c.soon ? '' : `<a class="btn ghost" style="padding:6px 12px;font-size:13px" href="#quiz/${c.id}">${ic('clipboard-check')} Quiz ${c.short}${S.bestCh[c.id] != null ? ' · ดีสุด ' + S.bestCh[c.id] + '%' : ''}</a>`}</div>
+      ${c.soon ? `<p class="sub">กำลังทำ…</p>` : `
+      <div class="grid">${c.lessons.map((l, k) => `
+        <a class="lesson" href="#l/${l.id}">
+          <div class="em">${ic(l.icon)}</div>
+          <div class="n">0${k+1}</div><h3>${l.title}</h3>
+          <p class="sub" style="font-size:14px">${l.sub}</p>
+          <div class="row" style="margin-top:8px">${S.done[l.id] ? '<span class="pill ok">✓ ดูจบแล้ว</span>' : ''}<span class="pill">${l.ex.length} โจทย์</span></div>
+        </a>`).join('')}</div>`}
+    `).join('')}
+    <p class="sub" style="margin:30px 0;font-size:13px">ความคืบหน้าเก็บไว้ในเบราว์เซอร์นี้เท่านั้น · <a href="#" id="reset">ล้างข้อมูล</a></p>`;
+  $('#reset').onclick = e => { e.preventDefault(); if (confirm('ล้างความคืบหน้าทั้งหมด?')) { for (const k of ['done','ex','review','bestCh']) S[k] = {}; S.best = 0; save(); pageHome(); } };
+}
+
+function pageLesson(id){
+  const L = lessonById(id); if (!L) return pageHome();
+  const ch = chapterOf(id), idx = ch.lessons.indexOf(L), prev = ch.lessons[idx-1], next = ch.lessons[idx+1];
+  app.innerHTML = `
+    <a class="back" href="#home">← หน้าแรก</a>
+    <h1><span class="h1-ic">${ic(L.icon)}</span>${L.title}</h1>
+    <p class="sub">${ch.title} · บทที่ ${idx+1}/${ch.lessons.length} · ${L.sub}</p>
+
+    <div class="card">
+      <div class="step-h"><span class="no">01</span><h2>ดูคนสอนจริง</h2><span class="sub" style="margin-left:auto;font-size:13px">เลือกภาษาที่ชอบได้</span></div>
+      <div data-video></div>
+    </div>
+
+    <div class="card">
+      <div class="step-h"><span class="no">02</span><h2>ดูให้เห็นภาพ</h2></div>
+      <div class="analogy" style="margin:0 0 16px">${L.analogy.img ? `<figure><img src="${L.analogy.img}" alt="${esc(L.analogy.title)}" loading="lazy"><figcaption>${L.analogy.credit}</figcaption></figure>` : `<figure class="noimg">${ic(L.icon)}</figure>`}<div class="txt"><b>${L.analogy.title}</b><p>${L.analogy.text}</p></div></div>
+      <p class="sub" style="margin:0 0 12px;font-size:14px">กด <b style="color:var(--ink)">เล่น</b> ให้พี่บอทพากย์ หรือกด <b style="color:var(--ink)">ถัดไป</b> ไปทีละขั้นเอง แล้วดูกล่อง memory ทางขวาเปลี่ยนตามโค้ดแต่ละบรรทัด</p>
+      <div data-tracer></div>
+    </div>
+
+    <div class="card">
+      <div class="step-h"><span class="no">03</span><h2>สรุปสั้น ๆ</h2></div>
+      <ul class="key">${L.key.map(k => `<li>${k}</li>`).join('')}</ul>
+      <details><summary>ดูละเอียดเพิ่ม</summary>${L.more}</details>
+    </div>
+
+    <div class="card">
+      <div class="step-h"><span class="no">04</span><h2>ลงมือทำ</h2></div>
+      <p class="sub" style="font-size:14px;margin-bottom:14px">ตอบผิดไม่เป็นไร พี่บอทจะช่วยตามลำดับ: ชี้จุดผิด → ถามให้คิด → เฉลย</p>
+      ${L.ex.map(e => `<div class="ex" data-ex="${e.id}"></div>`).join('')}
+    </div>
+
+    <div class="nav2">
+      ${prev ? `<a class="btn ghost" style="text-decoration:none" href="#l/${prev.id}">← ${prev.title}</a>` : '<span></span>'}
+      ${next ? `<a class="btn" style="text-decoration:none" href="#l/${next.id}">ต่อไป: ${next.title} →</a>` : `<a class="btn" style="text-decoration:none" href="#quiz/${ch.id}">${ic('clipboard-check')} ไปทำ Quiz ${ch.short} →</a>`}
+    </div>`;
+  mountVideo($('[data-video]'), L);
+  const tr = mountTracer($('[data-tracer]'), L.trace);
+  cleanup = tr.stop;
+  for (const e of L.ex) mountItem($(`[data-ex="${e.id}"]`), e, first => record(e.id, first));
+  S.done[L.id] = true; save();
+}
+
+/* Final Quiz: ปรับความยากอัตโนมัติ — ถูก 2 ข้อติด → ขึ้น level, ผิด → ลง level */
+function pageQuiz(chId){
+  const N = 12, ch = CHAPTERS.find(c => c.id === chId);
+  const pool = Object.values(ALL).filter(e => e.type !== 'write' && (!ch || chapterOf(e.lesson) === ch));
+  const qTitle = ch ? 'Quiz · ' + ch.title : 'Final Quiz · ทุกบท';
+  let lv = 1, streak = 0, n = 0, score = 0;
+  const used = new Set(), wrongL = {};
+  const nextItem = () => {
+    for (const d of [0, 1, -1, 2, -2]) {
+      const c = pool.filter(e => e.lv === lv + d && !used.has(e.id));
+      if (c.length) return pick(c);
+    }
+    return null;
+  };
+  const show = () => {
+    const it = nextItem();
+    if (n >= N || !it) return finish();
+    used.add(it.id);
+    app.innerHTML = `<a class="back" href="#home">← ออก</a>
+      <h1><span class="h1-ic">${ic('clipboard-check')}</span>${qTitle}</h1>
+      <p class="sub">ข้อ ${n+1}/${N} · ระดับตอนนี้ Lv.${lv} · คะแนน ${score}</p>
+      <div class="bar" style="margin:12px 0"><i style="width:${n/N*100}%"></i></div>
+      <div class="card"><div data-it></div><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn" data-next disabled>ข้อต่อไป →</button></div></div>`;
+    mountItem($('[data-it]'), it, first => {
+      n++;
+      if (first) { score++; streak++; if (streak >= 2 && lv < 3) { lv++; streak = 0; } }
+      else { streak = 0; if (lv > 1) lv--; wrongL[it.lesson] = (wrongL[it.lesson] || 0) + 1; S.review[it.id] = { box:0, due: Date.now() }; }
+      S.ex[it.id] = first ? 'ok' : 'retry'; save();
+      const b = $('[data-next]'); b.disabled = false; b.onclick = show; b.focus();
+    });
+  };
+  const finish = () => {
+    const pct = Math.round(score / Math.max(n, 1) * 100);
+    const prevBest = ch ? (S.bestCh[ch.id] ?? -1) : S.best;
+    const isBest = pct > prevBest;
+    if (isBest) { if (ch) S.bestCh[ch.id] = pct; else S.best = pct; save(); }
+    const grade = pct >= 80 ? 'A' : pct >= 75 ? 'B+' : pct >= 70 ? 'B' : pct >= 65 ? 'C+' : pct >= 60 ? 'C' : pct >= 50 ? 'D' : 'F';
+    const weak = Object.entries(wrongL).sort((a, b) => b[1] - a[1]);
+    app.innerHTML = `<a class="back" href="#home">← หน้าแรก</a>
+      <h1>ผลสอบ: ${pct}% ${isBest ? '🏆 สถิติใหม่!' : ''}</h1>
+      <div class="card">
+        <div class="tutor">${BOT_AVA}<div class="bub">${
+          pct >= 80 ? `ระดับ <b>${grade}</b> 🔥 แบบนี้เป็นที่ 1 ได้จริง แต่อย่าเพิ่งเหลิง ทำซ้ำให้ได้ทุกรอบ`
+          : pct >= 60 ? `ได้ประมาณ <b>${grade}</b> ยังไม่ถึง A นะ 😤 กลับไปดูบทที่ผิดบ่อยแล้วมาสอบใหม่`
+          : `<b>${grade}</b>… ไม่เป็นไร รอบแรกทุกคนก็พัง 😅 กลับไปดู animation ของบทข้างล่างอีกรอบ แล้วค่อยมาใหม่`
+        }</div></div>
+        <p>ถูก <b>${score}/${n}</b> · ระดับสุดท้าย Lv.${lv} · สถิติดีสุด ${ch ? S.bestCh[ch.id] : S.best}%</p>
+        ${weak.length ? `<h3>จุดที่ต้องฝึกเพิ่ม</h3><ul class="key">${weak.map(([l, c]) => { const L = lessonById(l); return `<li><a href="#l/${l}">${L.title}</a> — ผิด ${c} ข้อ</li>`; }).join('')}</ul><p class="sub" style="font-size:14px">ข้อที่ผิดถูกใส่ไว้ในโหมดทบทวนแล้ว</p>` : '<p>ไม่ผิดเลยสักข้อ 😳 เก่งเกิน</p>'}
+        <div class="row"><a class="btn" style="text-decoration:none" href="#quiz${ch ? '/' + ch.id : ''}" onclick="setTimeout(route)">สอบใหม่</a><a class="btn ghost" style="text-decoration:none" href="#home">หน้าแรก</a></div>
+      </div>`;
+  };
+  show();
+}
+
+function pageReview(){
+  const ids = dueList();
+  if (!ids.length) {
+    app.innerHTML = `<a class="back" href="#home">← หน้าแรก</a><h1><span class="h1-ic">${ic('rotate-ccw')}</span>ทบทวน</h1><div class="card"><div class="tutor">${BOT_AVA}<div class="bub">ตอนนี้ไม่มีอะไรต้องทวน 👍 ข้อที่เคยผิดจะกลับมาให้ทำซ้ำ: อีก 10 นาที → 1 วัน → 3 วัน → 7 วัน จนจำได้จริง</div></div></div>`;
+    return;
+  }
+  let k = 0;
+  const show = () => {
+    if (k >= ids.length) return pageReview();
+    const it = ALL[ids[k]];
+    app.innerHTML = `<a class="back" href="#home">← หน้าแรก</a><h1><span class="h1-ic">${ic('rotate-ccw')}</span>ทบทวน</h1><p class="sub">ข้อ ${k+1}/${ids.length} · ข้อที่เคยทำผิด</p>
+      <div class="card"><div data-it></div><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn" data-next disabled>ต่อไป →</button></div></div>`;
+    mountItem($('[data-it]'), it, first => { reviewResult(it.id, first); const b = $('[data-next]'); b.disabled = false; b.onclick = () => { k++; show(); }; });
+  };
+  show();
+}
+
+/* ---------- คลิป YouTube: ฝังพร้อมเวลาเริ่ม-จบ ----------
+   ใส่ในบทเรียนแบบ: video:[{ id:'VIDEO_ID', start:200, end:465, title:'ชื่อคลิป' }] (วินาที) */
+/* YouTube ยอมให้ฝังเฉพาะหน้าที่บอกได้ว่ามาจากเว็บไหน (มี referrer)
+   หน้า artifact ทำงานใน sandbox ไม่มี referrer → เจอ Error 153 เลยใช้การ์ดลิงก์แทน */
+const CAN_EMBED = /(^|\.)github\.io$|^localhost$|^127\./.test(location.hostname);
+const watchUrl = v => `https://www.youtube.com/watch?v=${encodeURIComponent(v.id)}${v.start ? '&t=' + v.start + 's' : ''}`;
+function mountVideo(el, L){
+  const V = L.video || {};
+  const has = l => (V[l] || []).length > 0;
+  let lang = has(S.vlang) ? S.vlang : (has('th') ? 'th' : 'en'), k = 0;
+  const show = () => {
+    const vids = V[lang] || [];
+    const seg = `<div class="vlang">
+        <button class="${lang==='th'?'on':''}" data-l="th">ไทย</button>
+        <button class="${lang==='en'?'on':''}" data-l="en">English · Bro Code</button>
+      </div>`;
+    let body;
+    if (!vids.length) {
+      body = `<div class="video-empty">ยังไม่มีคลิป${lang==='en'?'ภาษาอังกฤษ':'ภาษาไทย'}สำหรับบทนี้<br>
+        <a class="yt" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(L.yt)}">หาคลิปบน YouTube ↗</a></div>`;
+    } else {
+      const v = vids[Math.min(k, vids.length-1)];
+      const q = new URLSearchParams({ rel:'0', modestbranding:'1' });
+      if (v.start) q.set('start', v.start); if (v.end) q.set('end', v.end);
+      body = (vids.length > 1 ? `<div class="vtabs">${vids.map((x, j) => `<button class="${j===k?'on':''}" data-v="${j}">${j+1}. ${esc(x.title)}</button>`).join('')}</div>` : '')
+        + (CAN_EMBED
+          ? `<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.id)}?${q}" title="${esc(v.title)}" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`
+          : `<a class="video vcard" target="_blank" rel="noopener" href="${watchUrl(v)}">
+               <img src="https://i.ytimg.com/vi/${encodeURIComponent(v.id)}/hqdefault.jpg" alt="" onerror="this.remove()">
+               <span class="vplay">${ic('play')}</span>
+               <span class="vcap"><b>${esc(v.title)}</b><small>กดเพื่อดูบน YouTube (เปิดแท็บใหม่)</small></span>
+             </a>`)
+        + `<div class="row" style="margin-top:8px;justify-content:space-between">${v.note ? `<p class="sub" style="font-size:14px;flex:1">ℹ️ ${v.note}</p>` : '<span></span>'}<a class="yt" target="_blank" rel="noopener" href="${watchUrl(v)}">เปิดบน YouTube ↗</a></div>`;
+    }
+    el.innerHTML = seg + body;
+    el.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { lang = b.dataset.l; S.vlang = lang; save(); k = 0; show(); });
+    el.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { k = +b.dataset.v; show(); });
+  };
+  show();
+}
+
+/* ---------- sidebar ---------- */
+function renderSide(h){
+  const due = dueList().length;
+  $('#side').innerHTML = `
+    <h5>เมนู</h5>
+    <a href="#home" class="${h==='home'?'on':''}">${ic('house')} หน้าแรก</a>
+    <a href="#quiz" class="${h==='quiz'?'on':''}">${ic('target')} Final Quiz</a>
+    <a href="#review" class="${h==='review'?'on':''}">${ic('rotate-ccw')} ทบทวน ${due ? `<span class="badge">${due}</span>` : ''}</a>
+    <a href="../../Introduction-to-Software-Engineering/practice/">${ic('external-link')} ไปวิชา Intro2SE</a>
+    ${CHAPTERS.map(c => `<h5>${c.title}</h5>` + (c.soon ? `<a class="soon">เร็ว ๆ นี้</a>` :
+      c.lessons.map(l => `<a href="#l/${l.id}" class="${h==='l/'+l.id?'on':''}"><span class="dot ${S.done[l.id]?'ok':''}"></span>${l.title}</a>`).join('')
+      + `<a href="#quiz/${c.id}" class="${h==='quiz/'+c.id?'on':''}">${ic('clipboard-check')} Quiz ${c.short}</a>`)).join('')}`;
+}
+
+/* ---------- router ---------- */
+function route(){
+  if (cleanup) { cleanup(); cleanup = null; }
+  stopSpeak();
+  const h = location.hash.slice(1) || 'home';
+  if (h.startsWith('l/')) pageLesson(h.slice(2));
+  else if (h === 'quiz' || h.startsWith('quiz/')) pageQuiz(h.split('/')[1]);
+  else if (h === 'review') pageReview();
+  else pageHome();
+  window.scrollTo(0, 0);
+  renderSide(h);
+  updateCount();
+}
+window.addEventListener('hashchange', route);
+
+/* ---------- top bar: countdown, voice, theme ---------- */
+function updateCount(){
+  const d = Math.ceil((new Date('2026-11-26T09:00:00+07:00') - Date.now()) / DAY);
+  $('#count').innerHTML = d > 0 ? `${ic('clock')} Final อีก ${d} วัน` : d === 0 ? `${ic('clock')} วันนี้สอบ! สู้ ๆ` : `${ic('graduation-cap')} สอบเสร็จแล้ว`;
+}
+function applyTheme(){ document.documentElement.dataset.theme = S.theme; $('#themeBtn').innerHTML = ic(S.theme === 'dark' ? 'moon' : 'sun'); }
+function applyVoice(){ $('#voiceBtn').innerHTML = ic(S.voice ? 'volume-2' : 'volume-x'); }
+$('#themeBtn').onclick = () => { S.theme = S.theme === 'dark' ? 'light' : 'dark'; save(); applyTheme(); };
+/* กดปุ่มลำโพง → เปิดแผงตั้งค่าเสียง, คลิกที่อื่น → ปิด */
+$('#voiceBtn').onclick = e => {
+  e.stopPropagation();
+  const p = $('#voicePanel'); p.hidden = !p.hidden;
+  if (!p.hidden) { loadVoices(); renderVoicePanel(); }
+};
+document.addEventListener('click', e => { const p = $('#voicePanel'); if (!p.hidden && !p.contains(e.target)) p.hidden = true; });
+
+/* เตือนพักทุก 45 นาที (สมาธิอยู่ได้ 30–60 นาที) */
+setInterval(() => {
+  const t = document.createElement('div'); t.className = 'toast';
+  t.innerHTML = ic('bot') + ' เรียนมา 45 นาทีแล้ว พักสายตา 5 นาที ลุกไปกินน้ำก่อน เดี๋ยวสมองค้าง 🧠💤';
+  document.body.appendChild(t); setTimeout(() => t.remove(), 9000);
+}, 45 * 60e3);
+
+applyTheme(); applyVoice(); route();
+</script>
+</body>
+</html>

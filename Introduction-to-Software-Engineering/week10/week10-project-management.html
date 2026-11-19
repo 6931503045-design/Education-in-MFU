@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intro2SE Ch9 — Project Management &amp; Process, Year-1 Core</title>
+<style>
+/* Intro2SE HTML slide-deck theme + engine
+   Matches the Intro2SE pptx (intro2se-weekNN.fig) look:
+   Space Grotesk + JetBrains Mono, #EEF0F3 bg, colored-circle motif,
+   white cards, red/yellow/blue/green accents.
+   Keyboard-navigable single-slide-at-a-time deck. Print = all slides. */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root{
+  --bg:#EEF0F3; --ink:#0B0F19; --text:#3A4250; --muted:#7A8290;
+  --border:#E4E7EC; --border-2:#C8CCD3; --white:#FFFFFF; --panel:#F7F8FA;
+  --yellow:#FFC233; --red:#FF5A47; --blue:#2D5BFF; --green:#16B670;
+  --disp:"Space Grotesk",-apple-system,"Segoe UI","Noto Sans Thai",sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --shadow:0 1.2vh 3vh rgba(11,15,25,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--disp);color:var(--text);background:#0b1b2e}
+
+#deck{position:relative;height:100vh;width:100vw;overflow:hidden}
+.slide{
+  position:absolute;inset:0;display:none;flex-direction:column;
+  padding:4.5vh 6vw 6vh;
+  background:linear-gradient(150deg,#f2f4f7 0%,#e9ecf1 100%);
+  overflow:hidden;
+}
+.slide.active{display:flex;animation:f .3s ease}
+@keyframes f{from{opacity:0;transform:translateY(1vh)}to{opacity:1;transform:none}}
+
+/* ---- top chrome bar ---- */
+.chrome{
+  display:flex;align-items:center;justify-content:space-between;gap:1vw;
+  font-family:var(--mono);font-weight:700;font-size:1.05vw;color:var(--ink);
+  padding-bottom:2.2vh;flex:0 0 auto;
+}
+.chrome .l{display:flex;align-items:center;gap:.7vw;min-width:0}
+.chrome .play{color:var(--blue)}
+.chrome .crumb{color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chrome .count{color:var(--muted);font-weight:500;white-space:nowrap}
+
+/* body region */
+.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.body.top{justify-content:flex-start}
+
+/* ---- typography ---- */
+.kicker{font-family:var(--mono);font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  font-size:1.05vw;color:var(--muted);margin-bottom:1.4vh;display:block}
+.kicker.blue{color:var(--blue)} .kicker.red{color:var(--red)}
+.kicker.green{color:var(--green)} .kicker.gold{color:#a67a00}
+h1.head{font-family:var(--disp);font-weight:700;color:var(--ink);
+  font-size:4.6vw;line-height:1.05;letter-spacing:-.01em;margin-bottom:1.4vh}
+h2.head{font-family:var(--disp);font-weight:700;color:var(--ink);
+  font-size:3.2vw;line-height:1.1;letter-spacing:-.01em;margin-bottom:2vh}
+.dek{font-size:1.7vw;line-height:1.5;color:var(--text);max-width:80%;margin-bottom:2.4vh}
+.dek.narrow{max-width:64%}
+p{margin:0 0 1vh} strong{color:var(--ink);font-weight:700}
+.sub{font-size:1.35vw;color:var(--muted);margin-top:1vh}
+
+/* ---- title slide ---- */
+.title-slide .kicker{font-size:1.2vw}
+.title-slide h1.head{font-size:6vw;max-width:62%}
+.title-slide .lead{font-size:1.7vw;color:var(--text);max-width:52%;margin-top:3vh;line-height:1.5}
+.circles{position:absolute;right:6vw;top:50%;transform:translateY(-50%);width:34vw;height:70vh}
+.circles i{position:absolute;border-radius:50%;display:block}
+.circles .c1{width:13vw;height:13vw;background:var(--blue);right:6vw;top:6vh}
+.circles .c2{width:9vw;height:9vw;background:var(--green);left:0;top:34vh}
+.circles .c3{width:7vw;height:7vw;background:var(--yellow);right:0;top:40vh}
+.circles .c4{width:15vw;height:15vw;background:var(--red);right:9vw;bottom:2vh}
+
+/* ---- generic grids ---- */
+.grid{display:grid;gap:1.4vw}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+
+/* ---- browser cards (mac dots) ---- */
+.bcard{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);
+  padding:2.4vh 1.7vw;display:flex;flex-direction:column;min-width:0}
+.bcard .dots{display:flex;gap:.5vw;margin-bottom:2vh}
+.bcard .dots i{width:.85vw;height:.85vw;border-radius:50%;display:block}
+.bcard .dots i:nth-child(1){background:var(--red)}
+.bcard .dots i:nth-child(2){background:var(--yellow)}
+.bcard .dots i:nth-child(3){background:var(--green)}
+.bcard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  font-size:1vw;color:var(--muted);margin-bottom:1.2vh}
+.bcard h3{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.9vw;line-height:1.1;margin-bottom:1.4vh}
+.bcard p{font-size:1.35vw;line-height:1.45;color:var(--text)}
+.bcard .foot{margin-top:auto;padding-top:1.6vh}
+
+/* chip row */
+.chips{display:flex;align-items:center;gap:.7vw;flex-wrap:wrap}
+.chips .chip{font-family:var(--mono);font-weight:500;font-size:1.1vw;color:var(--text);
+  background:var(--panel);border-radius:999px;padding:.7vh 1vw}
+.chips .chip.hot{background:#ffe9e6;color:var(--red)}
+.chips .arw{color:var(--muted);font-size:1.1vw}
+.squares{display:flex;gap:.6vw}
+.squares i{width:2.4vw;height:2.4vw;border-radius:.5vw;display:block}
+.squares .y{background:var(--yellow)} .squares .r{background:var(--red)} .squares .g{background:var(--green)}
+
+/* ---- big color cards (red/yellow/green) ---- */
+.ccard{border-radius:1.2vw;padding:3vh 1.8vw;display:flex;flex-direction:column;color:#fff;min-height:52vh}
+.ccard.red{background:var(--red)} .ccard.yellow{background:var(--yellow);color:var(--ink)}
+.ccard.green{background:var(--green)} .ccard.blue{background:var(--blue)}
+.ccard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  font-size:1vw;opacity:.8;margin-bottom:2vh}
+.ccard h3{font-family:var(--disp);font-weight:700;font-size:2.3vw;line-height:1.05;margin-bottom:2.2vh}
+.ccard p{font-size:1.35vw;line-height:1.45}
+.ccard .ico{margin-top:auto;align-self:flex-end;font-size:3vw;opacity:.9}
+
+/* ---- stage/step light cards (with progress bar or chip) ---- */
+.scard{background:var(--white);border-radius:1.1vw;box-shadow:var(--shadow);
+  padding:2.4vh 1.4vw;display:flex;flex-direction:column;min-width:0}
+.scard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  font-size:.92vw;color:var(--muted);margin-bottom:1vh}
+.scard h3{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;line-height:1.1;margin-bottom:1.2vh}
+.scard p{font-size:1.15vw;line-height:1.4;color:var(--text);flex:1}
+.scard .bar{display:flex;gap:.3vw;margin-top:1.6vh}
+.scard .bar i{height:.7vh;flex:1;border-radius:999px;background:var(--border-2)}
+.scard .bar.n1 i:nth-child(-n+1),.scard .bar.n2 i:nth-child(-n+2),
+.scard .bar.n3 i:nth-child(-n+3),.scard .bar.n4 i:nth-child(-n+4),
+.scard .bar.n5 i:nth-child(-n+5){background:var(--col,var(--blue))}
+.scard.c-red{--col:var(--red)} .scard.c-yellow{--col:var(--yellow)}
+.scard.c-blue{--col:var(--blue)} .scard.c-green{--col:var(--green)}
+.scard .chip{align-self:flex-start;margin-top:1.4vh;font-family:var(--mono);font-weight:500;
+  font-size:1vw;color:var(--text);background:var(--panel);border-radius:.5vw;padding:.5vh .9vw}
+
+/* ---- do / don't two cards ---- */
+.dcard{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);padding:2.6vh 1.8vw}
+.dcard .pill{display:inline-block;font-family:var(--mono);font-weight:700;font-size:1vw;
+  color:#fff;border-radius:999px;padding:.5vh 1.1vw;margin-bottom:1.8vh}
+.dcard.do .pill{background:var(--green)} .dcard.dont .pill{background:var(--red)}
+.dcard .item{padding:1.2vh 0;border-top:1px solid var(--border)}
+.dcard .item:first-of-type{border-top:none}
+.dcard .item h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.4vw;margin-bottom:.5vh}
+.dcard .item p{font-size:1.15vw;line-height:1.4;color:var(--text)}
+
+/* ---- list + panel ---- */
+.listpanel{display:grid;grid-template-columns:1fr 1.05fr;gap:3vw;align-items:center}
+.expl h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.6vw;margin:1.8vh 0 .6vh}
+.expl h4:first-child{margin-top:0}
+.expl p{font-size:1.3vw;line-height:1.45;color:var(--text)}
+.panel{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);padding:1vh 1.6vw}
+.panel .row{display:flex;align-items:center;gap:1vw;padding:1.6vh .4vw;border-top:1px solid var(--border)}
+.panel .row:first-child{border-top:none}
+.panel .row .sq{width:1.6vw;height:1.6vw;border-radius:.4vw;flex:0 0 auto}
+.panel .row .n{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;flex:0 0 auto;width:1.6vw}
+.panel .row .txt{font-size:1.3vw;color:var(--ink);flex:1}
+.panel .row .tag{font-family:var(--mono);font-size:1vw;color:var(--muted)}
+.b-blue{background:var(--blue)} .b-red{background:var(--red)}
+.b-yellow{background:var(--yellow)} .b-green{background:var(--green)} .b-purple{background:#7C4DFF}
+
+/* ---- pills (before you leave) ---- */
+.pillrows{display:flex;flex-direction:column;gap:1.4vh}
+.pillrow{display:flex;align-items:center;gap:1.4vw}
+.pillrow .k{font-size:1.4vw;color:var(--ink);width:12vw;flex:0 0 auto}
+.pillrow .v{font-family:var(--mono);font-weight:500;font-size:1.35vw;color:#fff;
+  border-radius:999px;padding:1.1vh 1.6vw;flex:1}
+
+/* ---- quote ---- */
+.quote{background:var(--panel);border-left:.5vw solid var(--yellow);border-radius:0 1vw 1vw 0;
+  padding:2.6vh 2vw}
+.quote p{font-size:2.2vw;line-height:1.35;color:var(--ink);font-weight:500}
+.quote .by{font-size:1.4vw;color:var(--muted);font-style:italic;margin-top:1.6vh}
+
+/* ---- horizontal flow ---- */
+.flow{display:flex;align-items:stretch;gap:1vw;flex-wrap:nowrap}
+.flow .node{background:var(--white);border-radius:1vw;box-shadow:var(--shadow);
+  padding:2vh 1.2vw;flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0;text-align:center}
+.flow .node .t{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.4vw;line-height:1.1}
+.flow .node .s{font-size:1vw;color:var(--muted);margin-top:.6vh}
+.flow .arw{align-self:center;color:var(--muted);font-size:1.8vw;flex:0 0 auto}
+.flow .node.on-blue{background:var(--blue);color:#fff} .flow .node.on-blue .t{color:#fff}
+.flow .node.on-green{background:var(--green);color:#fff} .flow .node.on-green .t{color:#fff}
+
+/* ---- table ---- */
+.table-wrap{overflow:auto;border-radius:1vw;box-shadow:var(--shadow);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--white);font-size:1.25vw}
+thead th{font-family:var(--mono);font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  font-size:1vw;color:#fff;background:var(--ink);text-align:left;padding:1.4vh 1.1vw}
+tbody td{padding:1.4vh 1.1vw;border-top:1px solid var(--border);vertical-align:top;line-height:1.35}
+tbody tr:nth-child(even){background:var(--panel)}
+td.b,th.b{font-weight:700;color:var(--ink)}
+
+/* summary 2x2 (dark) */
+.slide.dark{background:linear-gradient(150deg,#141a4a 0%,#0f1440 100%)}
+.slide.dark h2.head,.slide.dark .kicker{color:#fff}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:2.6vh 3vw;margin-top:1vh}
+.quad .q h4{font-family:var(--disp);font-weight:700;color:#fff;font-size:1.9vw;margin-bottom:.8vh}
+.quad .q p{font-size:1.3vw;line-height:1.45;color:#cfd4ea}
+.quad .q .tag{font-family:var(--mono);font-size:1vw;color:#8b93c7;text-transform:uppercase;letter-spacing:.06em}
+
+/* footer line */
+.foot-note{margin-top:2.4vh;font-size:1.2vw;color:var(--muted)}
+.rule{height:1px;background:var(--border);margin:2vh 0}
+
+/* ---- deck controls ---- */
+.bar{position:fixed;bottom:0;left:0;height:.6vh;background:var(--blue);transition:width .3s;z-index:6}
+.hint{position:fixed;bottom:1.6vh;left:50%;transform:translateX(-50%);font-family:var(--mono);
+  font-size:.85vw;color:var(--muted);z-index:6}
+
+/* ---- print: every slide on its own page ---- */
+@media print{
+  #deck{height:auto;overflow:visible}
+  .slide{display:flex!important;position:relative;height:100vh;page-break-after:always;
+    inset:auto;break-inside:avoid}
+  .bar,.hint{display:none}
+}
+
+/* ---- embedded figure images (from Week2.pptx) ---- */
+.fig{display:block;margin:0 auto;max-width:100%;max-height:44vh;height:auto;width:auto;
+  background:#fff;border-radius:1vw;box-shadow:var(--shadow);padding:1.6vh 1.6vw}
+.fig.sm{max-height:28vh}
+.figcap{text-align:center;font-family:var(--mono);font-size:1vw;color:var(--muted);margin-top:.9vh}
+
+</style>
+<style>
+  /* deeper green for SVG box fills carrying text — theme green (#16B670) fails AA on white (~2.6:1); this passes (~5:1) */
+  :root{ --gbox:#0B7A4A; }
+  /* dark closing slide: invert the chrome bar text (ink-on-navy ≈ invisible otherwise) */
+  .slide.dark .chrome .l{ color:#e8ecf7; }
+  .slide.dark .chrome .crumb, .slide.dark .chrome .count{ color:#aeb6dd; }
+  /* dark code block (git log, snippets, prompt) */
+  .code{background:#0f1440;border-radius:1vw;padding:2vh 1.6vw;font-family:var(--mono);
+    font-size:1.05vw;line-height:1.7;color:#c8d0f0;overflow:auto;white-space:pre}
+  .code.sm{font-size:.95vw;line-height:1.6}
+  .code .k{color:#7aa2ff}.code .c{color:#8891b8}.code .s{color:#7ee0b8}.code .g{color:#ffcf6b}.code .r{color:#ff8f7d}
+  .codecap{font-family:var(--mono);font-size:1vw;color:var(--muted);margin:.2vh 0 1vh}
+  /* numbered fundamentals panel */
+  .num-row{display:flex;align-items:flex-start;gap:1.1vw;padding:1.5vh .4vw;border-top:1px solid var(--border)}
+  .num-row:first-child{border-top:none}
+  .num-row .n{font-family:var(--mono);font-weight:700;color:#fff;background:var(--blue);
+    width:2.2vw;height:2.2vw;border-radius:.5vw;display:flex;align-items:center;justify-content:center;
+    font-size:1.15vw;flex:0 0 auto}
+  .num-row .n.g{background:var(--green)} .num-row .n.y{background:var(--yellow);color:var(--ink)}
+  .num-row .n.r{background:var(--red)} .num-row .n.p{background:#7C4DFF}
+  .num-row h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;margin-bottom:.3vh}
+  .num-row p{font-size:1.2vw;line-height:1.4;color:var(--text)}
+  /* label chip inline */
+  .lead-tag{display:inline-block;font-family:var(--mono);font-weight:700;font-size:.9vw;letter-spacing:.04em;
+    text-transform:uppercase;color:#fff;background:var(--blue);border-radius:.4vw;padding:.4vh .8vw;margin-bottom:1.2vh}
+  .lead-tag.g{background:var(--green)} .lead-tag.r{background:var(--red)} .lead-tag.y{background:var(--yellow);color:var(--ink)}
+  /* flow arrow label */
+  .flow .arw small{display:block;font-family:var(--mono);font-size:.7vw;color:var(--muted);text-align:center}
+  .flow.wrap{flex-wrap:wrap;gap:1.2vh 1vw}
+  /* red flow node (theme only ships on-blue / on-green) */
+  .flow .node.on-red{background:var(--red);color:#fff} .flow .node.on-red .t{color:#fff}
+  /* inline code — subtle mono chip on light surfaces */
+  code{font-family:var(--mono);font-size:.9em;background:var(--panel);border-radius:.3vw;padding:.1vh .45vw;color:var(--ink)}
+  .foot-note code{font-size:.95em}
+  /* shave a few px off dense scard+foot-note slides so nothing clips at 16:9 */
+  .scard{padding-top:2vh;padding-bottom:2vh}
+  .scard .bar{margin-top:1.2vh}
+  .body > .foot-note:last-child{margin-top:1.9vh}
+  /* "IN PLAIN TERMS" — a plain-language restatement / analogy for Year-1 readers */
+  .plain{background:#EAF1FF;border-left:.5vw solid var(--blue);border-radius:0 .7vw .7vw 0;
+    padding:1.15vh 1.2vw;margin-top:1.6vh}
+  .plain .lab{display:inline-block;font-family:var(--mono);font-weight:700;font-size:.82vw;
+    letter-spacing:.05em;text-transform:uppercase;color:var(--blue);margin-bottom:.35vh}
+  .plain p{font-size:1.18vw;line-height:1.42;color:var(--ink);margin:0}
+  .plain.g{background:#E4F6EE;border-left-color:var(--green)} .plain.g .lab{color:#0B7A4A}
+  .plain.r{background:#FFECE9;border-left-color:var(--red)} .plain.r .lab{color:#C43A2B}
+  .slide.dark .plain{background:#16224a} .slide.dark .plain p{color:#e8ecf7}
+  /* compact SVG figure block with a mono caption */
+  .figblock{margin:.6vh 0 0}
+  .figblock .cap{font-family:var(--mono);font-size:.92vw;color:var(--muted);text-align:center;margin-top:.4vh}
+
+  /* ---- step reveal: Right/Space shows the next answer, Left hides it ---- */
+  .frag{transition:opacity .25s}
+  .frag:not(.on){opacity:0;visibility:hidden}
+  .mark{transition:background .25s,color .25s}
+  .mark.on{background:#E4F6EE;color:#0B7A4A;font-weight:700;border-radius:.4vw}
+  .mark.on b{color:#0B7A4A}
+  .ans{color:#0B7A4A;font-weight:700}
+  .stepnote{font-family:var(--mono);font-size:.85vw;color:var(--muted);margin-top:1.4vh}
+  /* concept-check slides get a warm tint so they read as "your turn" */
+  .slide.cc{background:linear-gradient(150deg,#fbf6ea 0%,#f1ead8 100%)}
+  .slide.cc .kicker{color:#a67a00}
+  .cc table{font-size:1.2vw}
+  .cc tbody td{padding:1.15vh 1.1vw}
+  /* All concept checks: larger type for the back row (professor, 19 Oct) */
+  .slide.cc table{font-size:1.65vw}
+  .slide.cc thead th{font-size:1.25vw;padding:1.3vh 1.2vw}
+  .slide.cc tbody td{padding:1.9vh 1.2vw;line-height:1.3}
+  .slide.cc .plain p{font-size:1.45vw}
+  .slide.cc .plain .lab{font-size:1vw}
+  .slide.cc .askbox h4{font-size:1.75vw}
+  .slide.cc .askbox p{font-size:1.45vw}
+  .slide.cc .askbox li{font-size:1.4vw}
+  .slide.cc .stepnote{font-size:1.05vw}
+  .askbox{background:var(--white);border-radius:1.1vw;box-shadow:var(--shadow);padding:2vh 1.5vw}
+  .askbox h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.45vw;margin-bottom:.8vh}
+  .askbox p{font-size:1.2vw;line-height:1.42;color:var(--text)}
+  .askbox p.ans{color:#0B7A4A}
+  .askbox ul{list-style:none;display:grid;gap:.6vh;margin-top:.6vh}
+  .askbox li{font-size:1.15vw;line-height:1.35;color:var(--ink);background:var(--panel);border-radius:.5vw;padding:.7vh .8vw}
+  /* question focus (Critique) */
+  .qf{background:var(--white);border-left:.5vw solid var(--red);border-radius:0 1vw 1vw 0;box-shadow:var(--shadow);padding:2.2vh 1.8vw}
+  .qf .lab{display:block;font-family:var(--mono);font-weight:700;font-size:.85vw;letter-spacing:.05em;text-transform:uppercase;color:var(--red);margin-bottom:.8vh}
+  .qf p{font-size:1.42vw;line-height:1.45;color:var(--ink)}
+  .qf p.th{font-size:1.12vw;line-height:1.6;color:var(--text);margin-top:1.2vh;font-family:"Noto Sans Thai","Sarabun",var(--disp)}
+  .th{font-family:"Noto Sans Thai","Sarabun",var(--disp)}
+  /* timer */
+  .timer{display:flex;align-items:center;gap:.9vw;margin-top:1.8vh}
+  .timer .t{font-family:var(--mono);font-weight:700;font-size:3vw;color:var(--ink);min-width:8.5vw}
+  .timer.run .t{color:var(--blue)} .timer.done .t{color:var(--red)}
+  .timer button{font-family:var(--mono);font-weight:700;font-size:.95vw;border:none;border-radius:999px;
+    padding:.9vh 1.2vw;background:var(--ink);color:#fff;cursor:pointer}
+  .timer button.ghost{background:var(--white);color:var(--ink);box-shadow:var(--shadow)}
+  .timer .k{font-family:var(--mono);font-size:.8vw;color:var(--muted)}
+  /* MCQ practice */
+  .mcq{background:var(--white);border-radius:1.1vw;box-shadow:var(--shadow);padding:1.7vh 1.4vw;min-width:0}
+  .mcq .q{font-size:1.18vw;line-height:1.36;color:var(--ink);font-weight:600;margin-bottom:.9vh}
+  .mcq .q strong{text-decoration:underline;text-underline-offset:.3vh}
+  .mcq .q .n{font-family:var(--mono);color:var(--blue);margin-right:.4vw}
+  .mcq ol{list-style:none;display:grid;gap:.25vh}
+  .mcq li{font-size:1.05vw;line-height:1.32;color:var(--text);padding:.4vh .6vw}
+  .mcq li b{font-family:var(--mono);margin-right:.5vw;color:var(--muted)}
+  /* concept map */
+  .cmap{display:grid;grid-template-columns:1fr 1fr;gap:1.6vw}
+  .cmap .col{background:var(--white);border-radius:1.1vw;box-shadow:var(--shadow);padding:2vh 1.5vw}
+  .cmap .col > .lab{font-family:var(--mono);font-weight:700;font-size:.95vw;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1.2vh;display:block}
+  .cmap .step{display:flex;gap:1vw;align-items:flex-start;padding:1vh 0;border-top:1px solid var(--border)}
+  .cmap .step:first-of-type{border-top:none}
+  .cmap .step h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.35vw;width:7.5vw;flex:0 0 auto}
+  .cmap .step p{font-size:1.1vw;line-height:1.4;color:var(--text);margin:0}
+  /* editable "to be confirmed" fields on the announcement slide */
+  .tbc{background:#FFF3D1;border-bottom:.3vh dashed #a67a00;padding:0 .4vw;border-radius:.3vw;outline:none;color:var(--ink)}
+  .tbc:focus{background:#ffe7a3}
+  .slide.dark a{color:#9fb6ff}
+  /* ISO/IEC 25010:2023 nine-card grid */
+  .iso9{gap:1.1vh 1vw!important}
+  .iso9 .scard{padding:1.2vh 1.1vw}
+  .iso9 .scard h3{font-size:1.3vw;margin-bottom:.5vh}
+  .iso9 .scard p{font-size:1.02vw;line-height:1.3}
+  .iso9 .scard .chip{margin-top:.6vh;font-size:.78vw;padding:.3vh .6vw}
+  .chip.new{background:#FFECE9;color:#C43A2B;font-weight:700}
+  @media print{
+    .frag{opacity:1!important;visibility:visible!important}
+    .timer button,.timer .k{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+
+<section class="slide title-slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Project Management / Make progress visible</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">CHAPTER 9: YEAR-1 CORE, PROJECT MANAGEMENT &amp; PROCESS</span>
+    <h1 class="head">How a small team <em>actually</em> gets it done</h1>
+    <p class="lead">Good software is also a question of <strong>how you work</strong>: break the work down, make progress visible, name the risks, share the load, and improve every cycle. Process is what keeps a four-person team from quietly falling apart the week before the demo.</p>
+  </div>
+  <div class="circles"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Where we are</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">THE GOLDEN THREAD: ONE STEP FURTHER</span>
+    <h2 class="head">Process is how the work gets from backlog to demo</h2>
+    <div class="flow wrap" style="margin-bottom:2.4vh"><div class="node"><div class="t">Problem</div><div class="s">Wk 3</div></div><div class="arw">→</div><div class="node"><div class="t">FR / NFR</div><div class="s">SRS</div></div><div class="arw">→</div><div class="node"><div class="t">Model</div><div class="s">UML</div></div><div class="arw">→</div><div class="node"><div class="t">Design</div><div class="s">Wk 5</div></div><div class="arw">→</div><div class="node"><div class="t">Code</div><div class="s">Wk 6</div></div><div class="arw">→</div><div class="node"><div class="t">Test</div><div class="s">Ch7</div></div><div class="arw">→</div><div class="node"><div class="t">Quality</div><div class="s">Ch8</div></div><div class="arw">→</div><div class="node on-blue"><div class="t">PM</div><div class="s" style="color:#cfe0ff">Ch9</div></div><div class="arw">→</div><div class="node"><div class="t">Ethics</div><div class="s">Ch10</div></div></div>
+    <div class="grid g3">
+      <div class="scard c-blue"><div class="lbl">Ideas 1 and 2</div><h3>Plan &amp; track</h3><p>Break work into small tasks; run short sprints on a board.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">Ideas 3 and 4</div><h3>Risk &amp; roles</h3><p>Name the top risk early; give everyone a clear, rotating role.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">Idea 5</div><h3>Improve</h3><p>Retrospective: what went well, what didn't, what we'll change.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <p class="foot-note">This connects straight to your <strong>down-only contribution factor</strong>: visible tasks and commits are how the team shows everyone pulled their weight.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Planning &amp; estimation</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">IDEA 1: SMALL TASKS, ROUGH ESTIMATES</span>
+    <h2 class="head">Break work down until each piece is easy to judge</h2>
+    <div class="grid g2">
+      <div class="bcard"><span class="lbl">Break it down</span><h3>One FR → a few tasks</h3><p>“Add reminders” becomes: model, due-date logic, list UI, test. Small tasks are easy to estimate, assign and finish.</p></div>
+      <div class="bcard"><span class="lbl">Estimate roughly</span><h3>Small / Medium / Large</h3><p>You can't predict hours precisely — don't pretend to. A rough size is enough to spot the task that's secretly huge.</p></div>
+    </div>
+    <div class="plain g"><span class="lab">In plain terms</span>
+      <p>A task you can't estimate is a task you don't understand yet — split it until you do. Progress becomes <strong>visible</strong> when work is many small done/not-done pieces instead of one big “nearly there.”</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Estimation</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">IDEA 1b: ESTIMATION (COHN; SOMMERVILLE CH23)</span>
+    <h2 class="head">Size with story points, not false-precise hours</h2>
+    <div class="grid g3">
+      <div class="scard c-blue"><div class="lbl">Relative size</div><h3>Story points</h3><p>Compare tasks to each other (1, 2, 3, 5, 8…) instead of guessing exact hours no one can predict.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">Together</div><h3>Planning poker</h3><p>Everyone estimates at once, then the outliers explain — that conversation is where hidden complexity surfaces.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">Forecast</div><h3>Velocity</h3><p>Points finished per sprint. After a sprint or two you can forecast what the team can realistically take on.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <div class="plain"><span class="lab">In plain terms</span><p>A task you can't size is one you don't understand yet — split it (Idea 1). Relative sizing is faster and, across many tasks, more honest than fake-precise hours.</p></div>
+    <p class="foot-note">Sources: <strong>Cohn (2005) Agile Estimating and Planning</strong>; Sommerville 9e, Ch23 Project planning.</p>
+  </div>
+</section>
+<section class="slide cc">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Concept check 4</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker">CONCEPT CHECK 4: BREAK DOWN AND FORECAST</span>
+    <h2 class="head">Split the FR, then forecast with velocity</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="askbox"><h4>FR: "A student can book a tutoring room"</h4><p>Call out tasks, then vote S / M / L for each.</p>
+        <ul>
+          <li class="frag" data-f="t">Pick date and time page</li>
+          <li class="frag" data-f="t">Check whether the room is free</li>
+          <li class="frag" data-f="t">Save the booking</li>
+          <li class="frag" data-f="t">Confirm and cancel page</li>
+          <li class="frag" data-f="t">Tests</li>
+        </ul>
+      </div>
+      <div>
+        <div class="askbox"><h4>Forecast</h4><p>Sprint 1 finished <strong>18</strong> points, sprint 2 finished <strong>22</strong>. <strong>60</strong> points remain. About how many more sprints?</p>
+          <p class="ans frag">Velocity = (18 + 22) / 2 = 20 points per sprint, so 60 / 20 = about 3 sprints.</p></div>
+        <div class="askbox" style="margin-top:1.6vh"><h4>Why story points, not hours?</h4>
+          <p class="ans frag">Comparing sizes is easier than guessing exact hours, and across many tasks it comes out more accurate.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Concept check 4, explained: split and size</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">CONCEPT CHECK 4, EXPLAINED (1 OF 3): HOW TO SPLIT AND SIZE</span>
+    <h2 class="head">Walk the user's path, then size by what could go wrong</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:42%">The student does</th><th>The system needs (a task)</th></tr></thead>
+          <tbody>
+            <tr><td>Picks a date and time</td><td class="b">Pick date and time page (UI)</td></tr>
+            <tr><td>Presses "Book"</td><td class="b">Check whether the room is free (logic)</td></tr>
+            <tr><td></td><td class="b">Save the booking (data)</td></tr>
+            <tr><td>Sees the result, may cancel</td><td class="b">Confirm and cancel page (UI)</td></tr>
+            <tr><td>Every step</td><td class="b">Tests (a task too, not an afterthought)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:40%">Task</th><th style="width:15%">Size</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td>Date and time page</td><td class="b">S / M</td><td>A plain form</td></tr>
+            <tr><td>Room is free?</td><td class="b">M / L</td><td>Overlapping times; two students booking at once</td></tr>
+            <tr><td>Save the booking</td><td class="b">S</td><td>Insert one record</td></tr>
+            <tr><td>Confirm and cancel</td><td class="b">M</td><td>Two actions; check the booking is <strong>yours</strong> (Ch8: IDOR)</td></tr>
+            <tr><td>Tests</td><td class="b">M</td><td>Full room, overlaps, cancelling someone else's booking</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:1.6vh">
+      <div class="plain"><span class="lab">A good task</span><p>Says what to build and has a clear done / not done. "Build the booking system" is still too big. Can't size it? Split it again.</p></div>
+      <div class="plain g"><span class="lab">When the room splits on a vote</span><p>The person who said L explains what they see. That is planning poker: hidden complexity comes out of the disagreement.</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Concept check 4, explained: points</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">CONCEPT CHECK 4, EXPLAINED (2 OF 3): WHERE THE POINTS COME FROM</span>
+    <h2 class="head">Points = size compared with a reference task, not hours</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="panel" style="padding:.4vh 1.6vw">
+        <div class="num-row"><span class="n">1</span><div><h4>Pick a reference task</h4><p>A small task everyone understands. "Save the booking" = <strong>1 point</strong>.</p></div></div>
+        <div class="num-row"><span class="n g">2</span><div><h4>Compare every other task with it</h4><p>About the same = same points. About twice = 2. Bigger = the next number up the scale: <strong>1, 2, 3, 5, 8, 13</strong>.</p></div></div>
+        <div class="num-row"><span class="n y">3</span><div><h4>Size = effort + complexity + uncertainty</h4><p>A task you are unsure about gets more points, even if the code looks short.</p></div></div>
+        <div class="num-row"><span class="n r">4</span><div><h4>Vote together (planning poker)</h4><p>Everyone shows a card at once. Highest and lowest explain, then vote again. 13 or more? Split the task.</p></div></div>
+      </div>
+      <div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th style="width:46%">Task (from the last slide)</th><th style="width:16%">S/M/L</th><th>Points</th></tr></thead>
+            <tbody>
+              <tr><td>Save the booking</td><td>S</td><td class="b">1 (reference)</td></tr>
+              <tr><td>Date and time page</td><td>S / M</td><td class="b">2</td></tr>
+              <tr><td>Confirm and cancel</td><td>M</td><td class="b">3</td></tr>
+              <tr><td>Tests</td><td>M</td><td class="b">3</td></tr>
+              <tr><td>Room is free?</td><td>M / L</td><td class="b">5</td></tr>
+              <tr><td class="b">This FR in total</td><td></td><td class="b">14 points</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="plain g" style="margin-top:1.6vh"><span class="lab">Why the gaps grow (1, 2, 3, 5, 8)</span><p>Bigger tasks are less certain, so we stop pretending to tell 6 from 7. Points belong to one team: never compare one team's points with another's.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Concept check 4, explained: forecast</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">CONCEPT CHECK 4, EXPLAINED (3 OF 3): HOW TO FORECAST</span>
+    <h2 class="head">Velocity: average what you actually finished, then divide</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="panel" style="padding:.4vh 1.6vw">
+        <div class="num-row"><span class="n">1</span><div><h4>Velocity = average points Done per sprint</h4><p>(18 + 22) / 2 = <strong>20 points per sprint</strong>. Count only Done work; "nearly done" counts as 0.</p></div></div>
+        <div class="num-row"><span class="n g">2</span><div><h4>Sprints needed = points left / velocity</h4><p>60 / 20 = <strong>about 3 sprints</strong>.</p></div></div>
+        <div class="num-row"><span class="n y">3</span><div><h4>Say "about", not "exactly"</h4><p>Velocity moves (18, then 22). A forecast is a planning tool, not a promise.</p></div></div>
+      </div>
+      <div>
+        <div class="plain r"><span class="lab">Common traps</span><p>60 / 22 = 2.7, "so 3": right number, wrong reasoning (best sprint only, too optimistic).<br>60 / 18 = 3.3: worst sprint only, too cautious. Use the average.</p></div>
+        <div class="plain g" style="margin-top:1.6vh"><span class="lab">Why story points, not hours?</span><p>People compare sizes ("about twice as big") better than they guess hours. Across many tasks, over- and under-estimates cancel out. A 3-point task stays 3 points whoever does it; hours depend on the person.</p></div>
+      </div>
+    </div>
+    <p class="foot-note">Only Done counts, which is why the board limits Doing (next slide). Sources: Cohn (2005); Sommerville 9e, Ch23.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Sprints &amp; boards</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">IDEA 2: SHORT CYCLES, A VISIBLE BOARD</span>
+    <h2 class="head">Work in sprints; track it on To-do / Doing / Done</h2>
+    <div class="figblock">
+      <svg viewBox="0 0 900 250" style="width:100%;height:30vh;display:block;margin:.4vh auto">
+        <rect x="20"  y="20" width="280" height="210" rx="12" fill="#fff" stroke="var(--border-2)" stroke-width="2"/>
+        <rect x="310" y="20" width="280" height="210" rx="12" fill="#fff" stroke="var(--blue)" stroke-width="3"/>
+        <rect x="600" y="20" width="280" height="210" rx="12" fill="#fff" stroke="var(--green)" stroke-width="2"/>
+        <text x="160" y="52" text-anchor="middle" font-family="var(--mono)" font-weight="700" font-size="17" fill="var(--muted)">TO-DO</text>
+        <text x="450" y="52" text-anchor="middle" font-family="var(--mono)" font-weight="700" font-size="17" fill="var(--blue)">DOING (max 2)</text>
+        <text x="740" y="52" text-anchor="middle" font-family="var(--mono)" font-weight="700" font-size="17" fill="var(--green)">DONE</text>
+        <rect x="40" y="70" width="240" height="38" rx="7" fill="var(--panel)"/><text x="52" y="94" font-family="var(--disp)" font-size="15" fill="var(--ink)">list UI (FR-2)</text>
+        <rect x="40" y="116" width="240" height="38" rx="7" fill="var(--panel)"/><text x="52" y="140" font-family="var(--disp)" font-size="15" fill="var(--ink)">edit task (FR-3)</text>
+        <rect x="330" y="70" width="240" height="38" rx="7" fill="#eaf1ff"/><text x="342" y="94" font-family="var(--disp)" font-size="15" fill="var(--ink)">due-date logic (FR-1)</text>
+        <rect x="620" y="70" width="240" height="38" rx="7" fill="#e4f6ee"/><text x="632" y="94" font-family="var(--disp)" font-size="15" fill="var(--ink)">task model</text>
+        <rect x="620" y="116" width="240" height="38" rx="7" fill="#e4f6ee"/><text x="632" y="140" font-family="var(--disp)" font-size="15" fill="var(--ink)">repo + CI setup</text>
+      </svg>
+      <div class="cap">A sprint = a short fixed cycle (e.g. 1 week). The board shows, at a glance, who's doing what</div>
+    </div>
+    <div class="plain"><span class="lab">Why limit “Doing”</span><p>Too many things half-done = nothing finished. Finish before you start the next — that's how a small team ships.</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Scrum in one slide</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">IDEA 2b: SCRUM IN ONE SLIDE (THE SCRUM GUIDE)</span>
+    <h2 class="head">A light framework around the sprint</h2>
+    <div class="flow" style="margin:1vh 0 2vh">
+      <div class="node"><div class="t">Product Backlog</div><div class="s">all the work, ranked</div></div>
+      <div class="arw">→</div>
+      <div class="node on-blue"><div class="t">Sprint Planning</div><div class="s" style="color:#cfe0ff">pick this sprint</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Sprint + Daily Scrum</div><div class="s">build, sync daily</div></div>
+      <div class="arw">→</div>
+      <div class="node on-green"><div class="t">Review + Retro</div><div class="s" style="color:#d6f5e6">show + improve</div></div>
+    </div>
+    <div class="grid g3">
+      <div class="bcard"><span class="lbl">Roles</span><h3>Who</h3><p>Product Owner (what &amp; order), Scrum Master (process), Developers (build).</p></div>
+      <div class="bcard"><span class="lbl">Events</span><h3>When</h3><p>Sprint, Planning, Daily Scrum, Review, Retrospective.</p></div>
+      <div class="bcard"><span class="lbl">Artifacts</span><h3>What</h3><p>Product Backlog, Sprint Backlog, the Increment (a usable slice).</p></div>
+    </div>
+    <p class="foot-note">Source: Schwaber &amp; Sutherland, <strong>The Scrum Guide (2020)</strong>; Sommerville 9e, Ch22 (agile project management).</p>
+    <div class="plain g"><span class="lab">In plain terms</span><p>Scrum is just a <strong>rhythm</strong> you already half-do: plan a little, work a short burst, show what you made, talk about how it went — then repeat. The role and event names are only labels for those parts.</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Burndown chart</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">IDEA 2c: TRACK A SPRINT WITH A BURNDOWN</span>
+    <h2 class="head">Work remaining should fall toward zero</h2>
+    <div class="figblock">
+      <svg viewBox="0 0 820 300" style="width:100%;height:36vh;display:block;margin:.3vh auto">
+        <line x1="70" y1="40" x2="70" y2="255" stroke="var(--border-2)" stroke-width="2"/>
+        <line x1="70" y1="255" x2="780" y2="255" stroke="var(--border-2)" stroke-width="2"/>
+        <text x="38" y="150" text-anchor="middle" font-family="var(--mono)" font-size="12" fill="var(--muted)" transform="rotate(-90 38 150)">work left →</text>
+        <text x="425" y="290" text-anchor="middle" font-family="var(--mono)" font-size="12" fill="var(--muted)">days of the sprint →</text>
+        <line x1="70" y1="50" x2="780" y2="255" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 5"/>
+        <text x="610" y="150" font-family="var(--mono)" font-size="12" fill="var(--muted)">ideal</text>
+        <polyline points="70,50 170,52 270,110 370,100 470,150 570,120 670,70 780,40 780,40" fill="none" stroke="var(--blue)" stroke-width="3"/>
+        <polyline points="70,50 170,52 270,110 370,100 470,150 570,120 670,70 780,40" fill="none" stroke="var(--red)" stroke-width="3.5"/>
+        <text x="500" y="190" font-family="var(--mono)" font-size="12" fill="var(--red)" font-weight="700">actual (above line = behind)</text>
+      </svg>
+      <div class="cap">Above the ideal line = behind schedule; below = ahead. The point is to <em>see it early</em> and adjust</div>
+    </div>
+    <p class="foot-note">A simple, honest status everyone can read at a glance — Scrum practice (Cohn, 2005).</p>
+    <div class="plain g"><span class="lab">In plain terms</span><p>It's a <strong>fuel gauge for your work</strong>. The dotted line is “where you should be by now”; if the real line stays above it, you'll run out of time — and you can see that early enough to react.</p></div>
+  </div>
+</section>
+<section class="slide cc">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Concept check 5</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker">CONCEPT CHECK 5: SCRUM AND THE BURNDOWN</span>
+    <h2 class="head">Role, event or artifact? And are we on time?</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Term</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td class="b">Product Owner</td><td class="frag ans">Role</td></tr>
+            <tr><td class="b">Daily Scrum</td><td class="frag ans">Event</td></tr>
+            <tr><td class="b">Sprint Backlog</td><td class="frag ans">Artifact</td></tr>
+            <tr><td class="b">Scrum Master</td><td class="frag ans">Role</td></tr>
+            <tr><td class="b">Retrospective</td><td class="frag ans">Event</td></tr>
+            <tr><td class="b">Increment</td><td class="frag ans">Artifact</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="askbox"><h4>A 10-day sprint, day 5</h4><p>The ideal line says 50% of the work is left. The actual line says 70% is left.</p>
+          <p class="ans frag">Behind schedule: the actual line is above the ideal line. Talk about it now, not on the last day.</p></div>
+        <div class="askbox" style="margin-top:1.6vh"><h4>Why limit the Doing column?</h4>
+          <p class="ans frag">Many half-finished tasks means nothing is done. Finish before you start something new.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Concept check 5, explained: classify</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">CONCEPT CHECK 5, EXPLAINED (1 OF 3): ROLE, EVENT OR ARTIFACT?</span>
+    <h2 class="head">Ask one question: is it a who, a when, or a what?</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="panel" style="padding:.4vh 1.6vw">
+        <div class="num-row"><span class="n">1</span><div><h4>Who? It is a person = role</h4><p>3 roles: Product Owner (what to build, in what order), Scrum Master (keeps the process working), Developers (build it).</p></div></div>
+        <div class="num-row"><span class="n g">2</span><div><h4>When? It happens on the calendar = event</h4><p>5 events: Sprint, Sprint Planning, Daily Scrum, Sprint Review, Retrospective.</p></div></div>
+        <div class="num-row"><span class="n y">3</span><div><h4>What? You can open it or show it = artifact</h4><p>3 artifacts: Product Backlog, Sprint Backlog, Increment.</p></div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:36%">Term</th><th style="width:22%">Type</th><th>How you know</th></tr></thead>
+          <tbody>
+            <tr><td class="b">Product Owner</td><td>Role</td><td>A person: ranks the backlog</td></tr>
+            <tr><td class="b">Daily Scrum</td><td>Event</td><td>A 15-min daily meeting</td></tr>
+            <tr><td class="b">Sprint Backlog</td><td>Artifact</td><td>A list you can open</td></tr>
+            <tr><td class="b">Scrum Master</td><td>Role</td><td>A person, not the boss</td></tr>
+            <tr><td class="b">Retrospective</td><td>Event</td><td>A meeting, end of sprint</td></tr>
+            <tr><td class="b">Increment</td><td>Artifact</td><td>The slice you can demo</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="plain r" style="margin-top:1.6vh"><span class="lab">Common traps</span><p>"Sprint Backlog" and "Sprint Review" share a word but differ: one is a list (artifact), one is a meeting (event). The Sprint itself is an event: the box that holds the other events.</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Concept check 5, explained: burndown</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">CONCEPT CHECK 5, EXPLAINED (2 OF 3): HOW TO READ A BURNDOWN</span>
+    <h2 class="head">The y-axis is work left: higher means behind</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="panel" style="padding:1.4vh 1.4vw">
+        <svg viewBox="0 0 420 250" style="width:100%;height:auto;display:block" role="img" aria-label="Burndown chart: on day 5 the ideal line is at 50 percent and the actual line at 70 percent">
+          <line x1="50" y1="20" x2="50" y2="210" stroke="#8891b8" stroke-width="1.5"/>
+          <line x1="50" y1="210" x2="400" y2="210" stroke="#8891b8" stroke-width="1.5"/>
+          <text x="44" y="24" font-size="12" text-anchor="end" fill="#55607f">100%</text>
+          <text x="44" y="119" font-size="12" text-anchor="end" fill="#55607f">50%</text>
+          <text x="44" y="214" font-size="12" text-anchor="end" fill="#55607f">0</text>
+          <text x="50" y="230" font-size="12" text-anchor="middle" fill="#55607f">day 0</text>
+          <text x="225" y="230" font-size="12" text-anchor="middle" fill="#55607f">day 5</text>
+          <text x="400" y="230" font-size="12" text-anchor="middle" fill="#55607f">day 10</text>
+          <text x="225" y="246" font-size="11" text-anchor="middle" fill="#55607f">days of the sprint</text>
+          <line x1="50" y1="20" x2="400" y2="210" stroke="#55607f" stroke-width="2" stroke-dasharray="6 5"/>
+          <polyline points="50,20 85,30 120,45 155,65 190,75 225,77" fill="none" stroke="#E5533D" stroke-width="3"/>
+          <line x1="225" y1="20" x2="225" y2="210" stroke="#1F5BFF" stroke-width="1" stroke-dasharray="2 4"/>
+          <circle cx="225" cy="115" r="5" fill="#55607f"/>
+          <circle cx="225" cy="77" r="5" fill="#E5533D"/>
+          <text x="235" y="119" font-size="13" fill="#55607f">ideal 50%</text>
+          <text x="235" y="73" font-size="13" fill="#E5533D" font-weight="700">actual 70%</text>
+          <text x="330" y="160" font-size="12" fill="#55607f">ideal</text>
+        </svg>
+      </div>
+      <div class="panel" style="padding:.4vh 1.6vw">
+        <div class="num-row"><span class="n">1</span><div><h4>Find today on the x-axis</h4><p>Day 5 of 10: halfway through the sprint.</p></div></div>
+        <div class="num-row"><span class="n g">2</span><div><h4>Read both lines</h4><p>Ideal = 50% left. Actual = 70% left.</p></div></div>
+        <div class="num-row"><span class="n y">3</span><div><h4>Compare</h4><p>Actual above ideal = more work left than planned = <strong>behind</strong>. The ideal drops 10% a day, so a 20% gap is about <strong>2 days behind</strong>.</p></div></div>
+        <div class="num-row"><span class="n r">4</span><div><h4>Act now</h4><p>Say it at the Daily Scrum: split the stuck task, pair on it, or agree with the Product Owner what to drop.</p></div></div>
+      </div>
+    </div>
+    <div class="plain r" style="margin-top:1.6vh"><span class="lab">Common traps</span><p>"Higher line = more done": no, the line shows work <strong>left</strong>. A line that goes up means new work was added mid-sprint. Waiting until day 10 to react is the real failure.</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Concept check 5, explained: Doing limit</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">CONCEPT CHECK 5, EXPLAINED (3 OF 3): WHY LIMIT DOING?</span>
+    <h2 class="head">Same people, same work: only the order changes</h2>
+    <p class="dek" style="margin-bottom:1.4vh">2 developers, 4 tasks of 2 days each. What is Done if the sprint ends on day 3?</p>
+    <div class="grid g2" style="align-items:start">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:34%">A. Start all 4</th><th>Day 2</th><th>Day 3</th><th>Day 4</th></tr></thead>
+          <tbody>
+            <tr><td>Juggle 2 each</td><td>4 half</td><td>4 nearly</td><td>4 Done</td></tr>
+            <tr><td class="b">Done on day 3</td><td></td><td class="b">0</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:34%">B. Doing max 2</th><th>Day 2</th><th>Day 3</th><th>Day 4</th></tr></thead>
+          <tbody>
+            <tr><td>Finish 1, then start 1</td><td>2 Done</td><td>2 Done + 2 half</td><td>4 Done</td></tr>
+            <tr><td class="b">Done on day 3</td><td></td><td class="b">2</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:1.6vh">
+      <div class="plain g"><span class="lab">What the limit buys you</span><p>Finished work you can demo and test early. Velocity and the burndown only move when a task is <strong>Done</strong> (Concept check 4).</p></div>
+      <div class="plain"><span class="lab">It also shows problems</span><p>When Doing is full, a stuck task blocks the column, so the team sees it today instead of on the last day.</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Risk awareness</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">IDEA 3: NAME THE RISK BEFORE IT BITES</span>
+    <h2 class="head">A risk is something that might go wrong — say it out loud</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:38%">Risk (it <em>might</em> happen)</th><th>A response you plan now</th></tr></thead>
+        <tbody>
+          <tr><td class="b">The one coder gets sick before the demo</td><td>Pair up; commit daily so work isn't on one laptop.</td></tr>
+          <tr><td class="b">The hard feature turns out impossible</td><td>Build it first; have a simpler fallback ready.</td></tr>
+          <tr><td class="b">A teammate goes quiet</td><td>Visible board + daily check-in surfaces it early, not at the end.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="plain g"><span class="lab">Light, not heavy</span><p>You don't need a risk register — just name your <strong>top one or two</strong> and decide what you'd do. Surprises hurt small teams the most.</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Risk management</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker green">IDEA 3b: RISK MANAGEMENT (SOMMERVILLE §22.1)</span>
+    <h2 class="head">Four steps, three kinds of risk</h2>
+    <div class="flow" style="margin:.6vh 0 2vh">
+      <div class="node on-blue"><div class="t">Identify</div><div class="s" style="color:#cfe0ff">what could go wrong</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Analyse</div><div class="s">likelihood × impact</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Plan</div><div class="s">avoid / reduce / accept</div></div>
+      <div class="arw">→</div>
+      <div class="node on-green"><div class="t">Monitor</div><div class="s" style="color:#d6f5e6">re-check each sprint</div></div>
+    </div>
+    <div class="grid g2" style="align-items:center">
+      <div>
+        <div class="num-row"><span class="n">1</span><div><h4>Project risks</h4><p>Hit the schedule or resources — e.g. a teammate leaves.</p></div></div>
+        <div class="num-row"><span class="n y">2</span><div><h4>Product risks</h4><p>Hit quality or performance — e.g. the hard feature is too slow.</p></div></div>
+        <div class="num-row"><span class="n r">3</span><div><h4>Business risks</h4><p>Hit the wider goal — e.g. no one actually needs it.</p></div></div>
+      </div>
+      <div class="figblock">
+        <svg viewBox="0 0 320 240" style="width:100%;height:28vh;display:block">
+          <g>
+            <rect x="80" y="30"  width="70" height="50" fill="var(--yellow)"/><rect x="150" y="30" width="70" height="50" fill="var(--red)"/><rect x="220" y="30" width="70" height="50" fill="var(--red)"/>
+            <rect x="80" y="80"  width="70" height="50" fill="var(--green)"/><rect x="150" y="80" width="70" height="50" fill="var(--yellow)"/><rect x="220" y="80" width="70" height="50" fill="var(--red)"/>
+            <rect x="80" y="130" width="70" height="50" fill="var(--green)"/><rect x="150" y="130" width="70" height="50" fill="var(--green)"/><rect x="220" y="130" width="70" height="50" fill="var(--yellow)"/>
+          </g>
+          <text x="185" y="205" text-anchor="middle" font-family="var(--mono)" font-size="12" fill="var(--muted)">impact →</text>
+          <text x="55" y="105" text-anchor="middle" font-family="var(--mono)" font-size="12" fill="var(--muted)" transform="rotate(-90 55 105)">likelihood →</text>
+        </svg>
+      </div>
+    </div>
+    <p class="foot-note">Source: Sommerville 9e, <strong>§22.1 Risk management</strong> — identify → analyse → plan → monitor.</p>
+    <div class="plain g"><span class="lab">In plain terms</span><p>It's <strong>weather forecasting for your project</strong>: spot the storm coming (identify), judge how bad it'll be (analyse), pack an umbrella or change the route (plan), and keep watching the sky (monitor).</p></div>
+  </div>
+</section>
+<section class="slide cc">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Concept check 6</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker">CONCEPT CHECK 6: RISK</span>
+    <h2 class="head">What kind of risk, and which response?</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:60%">Situation</th><th>Kind</th></tr></thead>
+          <tbody>
+            <tr><td>A team member drops the course mid-term.</td><td class="frag ans">Project risk (schedule, resources)</td></tr>
+            <tr><td>The search page is very slow with lots of data.</td><td class="frag ans">Product risk (quality, performance)</td></tr>
+            <tr><td>It's finished, but nobody wants to use it.</td><td class="frag ans">Business risk (the wider goal)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:66%">Planned response</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td>Cut the riskiest feature out of scope.</td><td class="frag ans">Avoid</td></tr>
+            <tr><td>Pair up and commit daily so work isn't stuck with one person.</td><td class="frag ans">Reduce</td></tr>
+            <tr><td>Accept that the settings page colours may not be perfect; the impact is low.</td><td class="frag ans">Accept</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="stepnote">Sommerville §22.1: identify, analyse (likelihood x impact), plan (avoid / reduce / accept), monitor.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Roles &amp; responsibility</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">IDEA 4: CLEAR ROLES, SHARED LOAD</span>
+    <h2 class="head">Everyone owns something — and roles can rotate</h2>
+    <div class="grid g4">
+      <div class="scard c-blue"><div class="lbl">Rotating</div><h3>Coordinator</h3><p>Keeps the board current, runs the check-in.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">Rotating</div><h3>Repo owner</h3><p>Guards <code>main</code>, reviews PRs, tags releases.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-yellow"><div class="lbl">Rotating</div><h3>Quality</h3><p>Owns the linter &amp; tests staying green.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">Rotating</div><h3>Demo / docs</h3><p>Owns the prototype walkthrough &amp; README.</p><div class="bar n4"><i></i><i></i><i></i></div></div>
+    </div>
+    <div class="plain"><span class="lab">The hard truth</span><p>Responsibility is <strong>individual</strong>, even in a team. Your commits and tasks are your evidence — and they feed the down-only contribution factor.</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ The retrospective</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">IDEA 5: HOW TEAMS ACTUALLY IMPROVE</span>
+    <h2 class="head">End each sprint with three honest questions</h2>
+    <div class="grid g3">
+      <div class="ccard green" style="min-height:44vh"><div class="lbl">Keep</div><h3>What went well?</h3><p>Name it so you do it again on purpose — not by luck.</p></div>
+      <div class="ccard red" style="min-height:44vh"><div class="lbl">Drop</div><h3>What didn't?</h3><p>Be specific and blameless — the process failed, not the person.</p></div>
+      <div class="ccard blue" style="min-height:44vh"><div class="lbl">Change</div><h3>What will we do differently?</h3><p>Pick <strong>one</strong> change for next sprint. One real change beats ten wishes.</p></div>
+    </div>
+    <p class="foot-note">15 minutes, every cycle. This single habit is what separates a team that improves from one that repeats the same bad week.</p>
+  </div>
+</section>
+<section class="slide cc">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Concept check 7</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">CONCEPT CHECK 7: A BLAMELESS RETROSPECTIVE</span>
+    <h2 class="head">Say it again, about the process, not the person</h2>
+    <div class="quote" style="border-left-color:var(--red);margin-bottom:2.4vh"><p>"Because Ton was slow, the team missed the deadline."</p><p class="by th">"เพราะต้นทำงานช้า ทีมเลยส่งไม่ทัน" (talk to your neighbour for 1 minute)</p></div>
+    <div class="plain g frag"><span class="lab">One good rewrite</span><p>"The search-page task was too big, and nobody saw it was stuck until the last day. Next sprint we'll split tasks smaller and check in every day."</p></div>
+    <p class="stepnote frag">It names the process problem, blames no one, and commits to <strong>one</strong> change.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Your project + AI</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">DO THIS WITH YOUR TEAM</span>
+    <h2 class="head">Let process carry the last mile to the demo</h2>
+    <div class="grid g2">
+      <div class="dcard do"><span class="pill">PROJECT STEP</span>
+        <div class="item"><h4>Keep the board current</h4><p>A task isn't “done” until it's merged. The board is your honest status.</p></div>
+        <div class="item"><h4>Short daily check-in</h4><p>Five minutes: done / doing / blocked. Surfaces trouble while it's small.</p></div>
+      </div>
+      <div class="dcard dont" style="border:none"><span class="pill" style="background:var(--red)">AI-FIRST — VERIFY!</span>
+        <div class="item"><h4>Use AI to break down work</h4><p>Ask it to split an FR into tasks — then sanity-check the sizes yourselves.</p></div>
+        <div class="item"><h4>AI doesn't own the plan</h4><p>It can suggest; accountability for scope and deadlines stays with the team.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Exam review</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker green">EXAM REVIEW: TWO CHAPTERS ON ONE PAGE</span>
+    <h2 class="head">What the final exam can ask from Ch8 and Ch9</h2>
+    <div class="cmap">
+      <div class="col"><span class="lab" style="color:var(--blue)">Ch8 Quality &amp; Security</span>
+        <div class="step"><h4>Quality</h4><p>5 attributes, each checked a different way; ISO/IEC 25010:2023 has 9 characteristics (Safety is new); review (people) vs linter (tool, static); cost of defects (Boehm).</p></div>
+        <div class="step"><h4>Security</h4><p>Big three: validate input on the server, access control, no secrets in the repo. IDOR = broken access control (OWASP #1).</p></div>
+        <div class="step"><h4>Privacy</h4><p>PDPA: consent, minimise, protect (see, correct, delete).</p></div>
+      </div>
+      <div class="col"><span class="lab" style="color:var(--green)">Ch9 Project Management</span>
+        <div class="step"><h4>Plan</h4><p>Break FRs into tasks; S / M / L; story points (relative); planning poker; velocity = points per sprint.</p></div>
+        <div class="step"><h4>Track</h4><p>Sprint; To-do / Doing / Done with a Doing limit; Scrum 3 roles, 5 events, 3 artifacts; burndown (above ideal = behind).</p></div>
+        <div class="step"><h4>Protect</h4><p>Risk: identify, analyse, plan (avoid / reduce / accept), monitor; project / product / business; rotating roles.</p></div>
+        <div class="step"><h4>Improve</h4><p>Retrospective: keep / drop / change, blameless, one real change.</p></div>
+      </div>
+    </div>
+    <p class="foot-note">Final exam: Ch1 to Ch10, English MCQ (4 options) + short answer. You will be asked to explain, choose or classify, not to design a system.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Exam practice: MCQ 1 to 4</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker green">EXAM PRACTICE: MCQ 1 TO 4 (ALONE, ON YOUR OWN PAPER, NOT GRADED)</span>
+    <h2 class="head">Practice like the real exam</h2>
+    <div class="grid g2" style="gap:1.4vh 1.4vw">
+      <div class="mcq"><p class="q"><span class="n">1.</span>In Scrum, which of the following is an <strong>artifact</strong>?</p><ol><li><b>A.</b>Sprint Review.</li><li><b>B.</b>Product Owner.</li><li class="mark"><b>C.</b>Product Backlog.</li><li><b>D.</b>Daily Scrum.</li></ol></div><div class="mcq"><p class="q"><span class="n">2.</span>Nobody on the team has used live video before, so the team removes the video-call feature from the project scope. Which risk response is this?</p><ol><li class="mark"><b>A.</b>Avoid.</li><li><b>B.</b>Reduce.</li><li><b>C.</b>Accept.</li><li><b>D.</b>Monitor.</li></ol></div><div class="mcq"><p class="q"><span class="n">3.</span>In planning poker, why does everyone reveal their estimate <strong>at the same time</strong>?</p><ol><li><b>A.</b>To finish the meeting faster.</li><li class="mark"><b>B.</b>So no one is anchored by the first or loudest estimate.</li><li><b>C.</b>So the Product Owner can pick the final number.</li><li><b>D.</b>To convert story points into hours.</li></ol></div><div class="mcq"><p class="q"><span class="n">4.</span>Which retrospective note is written in a <strong>blameless</strong> way?</p><ol><li><b>A.</b>"Mint was slow, so we missed the deadline."</li><li><b>B.</b>"Nobody worked hard enough this sprint."</li><li><b>C.</b>"The AI tool ruined our code."</li><li class="mark"><b>D.</b>"All testing was left to the last day; next sprint we test each task when it moves to Done."</li></ol></div>
+    </div>
+    <p class="stepnote">About 7 minutes for MCQ 1 to 8. Answers are revealed one by one afterwards.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Exam practice: MCQ 5 to 8</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker green">EXAM PRACTICE: MCQ 5 TO 8</span>
+    <h2 class="head">Practice like the real exam</h2>
+    <div class="grid g2" style="gap:1.4vh 1.4vw">
+      <div class="mcq"><p class="q"><span class="n">5.</span>On a sprint burndown chart, the actual line stays <strong>above</strong> the ideal line. What does this mean?</p><ol><li><b>A.</b>The team is ahead of schedule.</li><li class="mark"><b>B.</b>The team is behind schedule.</li><li><b>C.</b>The sprint has no remaining work.</li><li><b>D.</b>The estimates were too large.</li></ol></div><div class="mcq"><p class="q"><span class="n">6.</span>A team finished 18 story points in sprint 1 and 22 in sprint 2. About how many sprints will 60 remaining points take?</p><ol><li><b>A.</b>2.</li><li class="mark"><b>B.</b>3.</li><li><b>C.</b>4.</li><li><b>D.</b>6.</li></ol></div><div class="mcq"><p class="q"><span class="n">7.</span>"We build the app, but nobody actually needs it." In Sommerville's classification this is a ...</p><ol><li><b>A.</b>project risk.</li><li><b>B.</b>product risk.</li><li class="mark"><b>C.</b>business risk.</li><li><b>D.</b>technical risk.</li></ol></div><div class="mcq"><p class="q"><span class="n">8.</span>Why does a team limit the number of tasks in the "Doing" column?</p><ol><li><b>A.</b>To make the board look tidy.</li><li><b>B.</b>To give the Scrum Master more control.</li><li class="mark"><b>C.</b>To finish work before starting new work, so items actually get done.</li><li><b>D.</b>To reduce the number of commits.</li></ol></div>
+    </div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ References &amp; further reading</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">REFERENCES: WHERE THIS COMES FROM</span>
+    <h2 class="head">Textbook &amp; source references</h2>
+    <div class="panel" style="padding:.4vh 1.6vw"><div class="num-row"><span class="n ">1</span><div><h4>Sommerville, I. (2011) Software Engineering, 9e</h4><p>Ch22 Project management (§22.1 Risk management); Ch23 Project planning.</p></div></div>
+<div class="num-row"><span class="n g">2</span><div><h4>Schwaber &amp; Sutherland — The Scrum Guide (2020)</h4><p>Roles, events and artifacts of Scrum; the sprint &amp; retrospective.</p></div></div>
+<div class="num-row"><span class="n y">3</span><div><h4>Cohn, M. (2005) Agile Estimating and Planning</h4><p>Story points, planning poker, velocity, the burndown.</p></div></div>
+<div class="num-row"><span class="n r">4</span><div><h4>Standish Group — CHAOS Report</h4><p>Industry data on why software projects succeed or fail.</p></div></div></div>
+    <p class="foot-note">Read Ch22 risk management before the exam. Skim the Scrum Guide for the 3 roles, 5 events and 3 artifacts.</p>
+  </div>
+</section>
+<section class="slide dark">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch9-project-management.fig <span class="crumb">/ Summary</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">CHAPTER 9: IN FOUR LINES</span>
+    <h2 class="head">Small tasks, a visible board, named risks, steady improvement</h2>
+    <div class="quad">
+      <div class="q"><div class="tag">Plan</div><h4>Break down &amp; size</h4><p>Many small, estimable tasks beat one big “nearly done.”</p></div>
+      <div class="q"><div class="tag">Track</div><h4>Sprints on a board</h4><p>To-do / Doing / Done, with a limit on Doing — finish before you start.</p></div>
+      <div class="q"><div class="tag">Protect</div><h4>Risks &amp; roles</h4><p>Name the top risk; give everyone a clear, rotating role — responsibility is individual.</p></div>
+      <div class="q"><div class="tag">Improve</div><h4>Retrospective</h4><p>Keep / drop / change, every cycle. One real change at a time.</p></div>
+    </div>
+    <p class="foot-note" style="color:#8b93c7">Reading: Sommerville (project management &amp; Agile), Scrum Guide (skim). Next: Ch10 — Professional Ethics &amp; Practice + Dev Tools.</p>
+  </div>
+</section>
+
+</div>
+<div class="bar" id="bar"></div><span class="hint">← / →, click edges, Home / End, Ctrl/Cmd-P to print</span>
+<script>
+/* Intro2SE slide-deck engine: keyboard + click nav, progress bar, counter,
+   step reveal (.frag / .mark, grouped by data-f; going back re-hides answers), countdown timer (.timer),
+   editable to-be-confirmed fields (.tbc, remembered in this browser). */
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, bar=document.getElementById('bar');
+  function pad(n){return String(n).padStart(2,'0');}
+  function steps(s){
+    var g=[], seen={};
+    [].slice.call(s.querySelectorAll('.frag,.mark')).forEach(function(el){
+      var k=el.getAttribute('data-f');
+      if(k===null){g.push([el]);}
+      else if(seen[k]){seen[k].push(el);}
+      else{seen[k]=[el];g.push(seen[k]);}
+    });
+    return g;
+  }
+  function setSteps(s,n){
+    steps(s).forEach(function(grp,k){grp.forEach(function(el){el.classList.toggle('on',k<n);});});
+    s._n=n;
+  }
+  slides.forEach(function(s,k){
+    var c=s.querySelector('.count'); if(c) c.textContent=pad(k+1)+' / '+pad(slides.length);
+    setSteps(s,0);
+  });
+  function show(n,allSteps){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){ s.classList.toggle('active',k===i); });
+    setSteps(slides[i], allSteps ? steps(slides[i]).length : 0);
+    if(bar) bar.style.width=((i+1)/slides.length*100)+'%';
+  }
+  function next(){ var s=slides[i]; if(s._n<steps(s).length) setSteps(s,s._n+1); else if(i<slides.length-1) show(i+1,false); }
+  function prev(){ var s=slides[i]; if(s._n>0) setSteps(s,s._n-1); else if(i>0) show(i-1,false); }
+
+  /* countdown timers */
+  function fmt(t){return Math.floor(t/60)+':'+pad(t%60);}
+  [].slice.call(document.querySelectorAll('.timer')).forEach(function(tm){
+    var total=+tm.getAttribute('data-sec')||420, left=total, h=null;
+    var out=tm.querySelector('.t'), go=tm.querySelector('.go'), rs=tm.querySelector('.rs');
+    function paint(){ out.textContent=fmt(left); go.textContent=h?'Pause':(left<total&&left>0?'Resume':'Start'); }
+    function stop(){ clearInterval(h); h=null; tm.classList.remove('run'); paint(); }
+    function start(){ if(left<=0) return; tm.classList.add('run'); tm.classList.remove('done');
+      h=setInterval(function(){ left--; if(left<=0){ left=0; stop(); tm.classList.add('done'); out.textContent='0:00'; return;} paint(); },1000); paint(); }
+    tm._toggle=function(){ h?stop():start(); };
+    tm._reset=function(){ stop(); left=total; tm.classList.remove('done'); paint(); };
+    go.addEventListener('click',tm._toggle); rs.addEventListener('click',tm._reset); paint();
+  });
+
+  /* editable fields, remembered per browser */
+  [].slice.call(document.querySelectorAll('.tbc[data-key]')).forEach(function(el){
+    var k='intro2se:'+el.getAttribute('data-key');
+    try{ var v=localStorage.getItem(k); if(v) el.textContent=v; }catch(e){}
+    el.addEventListener('input',function(){ try{ localStorage.setItem(k,el.textContent); }catch(e){} });
+  });
+
+  document.addEventListener('keydown',function(e){
+    if(e.target.isContentEditable){ if(e.key==='Escape') e.target.blur(); return; }
+    if(['ArrowRight','ArrowDown',' ','PageDown'].indexOf(e.key)>-1){e.preventDefault();next();}
+    else if(['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key)>-1){e.preventDefault();prev();}
+    else if(e.key==='Home'){show(0,false);} else if(e.key==='End'){show(slides.length-1,false);}
+    else if(e.key==='t'||e.key==='T'){ var tm=slides[i].querySelector('.timer'); if(tm) tm._toggle(); }
+    else if(e.key==='r'||e.key==='R'){ var tr=slides[i].querySelector('.timer'); if(tr) tr._reset(); }
+  });
+  document.getElementById('deck').addEventListener('click',function(e){
+    if(e.target.closest('a,button,[contenteditable]')) return;
+    if(e.clientX<innerWidth*0.25) prev(); else next();
+  });
+  show(0,false);
+})();
+</script>
+</body>
+</html>
