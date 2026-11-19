@@ -1397,7 +1397,7 @@ function pageHome(){
   const doneN = lessons.filter(l => S.done[l.id]).length;
   const next = lessons.find(l => !S.done[l.id]);
   app.innerHTML = `
-    <div style="margin-top:40px"><span class="eyebrow"><b>SE</b> Intro to Software Engineering · Final 23 พ.ย.–4 ธ.ค.</span></div>
+    <div style="margin-top:40px"><span class="eyebrow"><b>SE</b> Intro to Software Engineering · Final 27 พ.ย.</span></div>
     <h1>เข้าใจ concept<br><span style="color:var(--muted)">แล้วตอบข้อสอบได้</span></h1>
     <p class="sub">ดูคลิป → ดูภาพทีละขั้น → ตอบแบบข้อสอบจริง (English MCQ + short answer) · ครั้งละ 30–60 นาทีพอ</p>
     <div class="card">
@@ -1620,8 +1620,8 @@ window.addEventListener('hashchange', route);
 
 /* ---------- top bar: countdown, voice, theme ---------- */
 function updateCount(){
-  const d = Math.ceil((new Date('2026-11-23T00:00:00+07:00') - Date.now()) / DAY);
-  $('#count').innerHTML = d > 0 ? `${ic('clock')} Final เริ่ม 23 พ.ย. (อีก ${d} วัน)` : `${ic('clock')} ช่วงสอบ Final 23 พ.ย.–4 ธ.ค. สู้ ๆ`;
+  const d = Math.ceil((new Date('2026-11-27T00:00:00+07:00') - Date.now()) / DAY);
+  $('#count').innerHTML = d > 0 ? `${ic('clock')} Final อีก ${d} วัน` : d === 0 ? `${ic('clock')} วันนี้สอบ! สู้ ๆ` : `${ic('graduation-cap')} สอบเสร็จแล้ว`;
 }
 function applyTheme(){ document.documentElement.dataset.theme = S.theme; $('#themeBtn').innerHTML = ic(S.theme === 'dark' ? 'moon' : 'sun'); }
 function applyVoice(){ $('#voiceBtn').innerHTML = ic(S.voice ? 'volume-2' : 'volume-x'); }
