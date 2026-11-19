@@ -1,0 +1,1068 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intro2SE Ch10 — Professional Ethics &amp; Practice, Year-1 Core</title>
+<style>
+/* Intro2SE HTML slide-deck theme + engine
+   Matches the Intro2SE pptx (intro2se-weekNN.fig) look:
+   Space Grotesk + JetBrains Mono, #EEF0F3 bg, colored-circle motif,
+   white cards, red/yellow/blue/green accents.
+   Keyboard-navigable single-slide-at-a-time deck. Print = all slides. */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root{
+  --bg:#EEF0F3; --ink:#0B0F19; --text:#3A4250; --muted:#7A8290;
+  --border:#E4E7EC; --border-2:#C8CCD3; --white:#FFFFFF; --panel:#F7F8FA;
+  --yellow:#FFC233; --red:#FF5A47; --blue:#2D5BFF; --green:#16B670;
+  --disp:"Space Grotesk",-apple-system,"Segoe UI","Noto Sans Thai",sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --shadow:0 1.2vh 3vh rgba(11,15,25,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--disp);color:var(--text);background:#0b1b2e}
+
+#deck{position:relative;height:100vh;width:100vw;overflow:hidden}
+.slide{
+  position:absolute;inset:0;display:none;flex-direction:column;
+  padding:4.5vh 6vw 6vh;
+  background:linear-gradient(150deg,#f2f4f7 0%,#e9ecf1 100%);
+  overflow:hidden;
+}
+.slide.active{display:flex;animation:f .3s ease}
+@keyframes f{from{opacity:0;transform:translateY(1vh)}to{opacity:1;transform:none}}
+
+/* ---- top chrome bar ---- */
+.chrome{
+  display:flex;align-items:center;justify-content:space-between;gap:1vw;
+  font-family:var(--mono);font-weight:700;font-size:1.05vw;color:var(--ink);
+  padding-bottom:2.2vh;flex:0 0 auto;
+}
+.chrome .l{display:flex;align-items:center;gap:.7vw;min-width:0}
+.chrome .play{color:var(--blue)}
+.chrome .crumb{color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chrome .count{color:var(--muted);font-weight:500;white-space:nowrap}
+
+/* body region */
+.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.body.top{justify-content:flex-start}
+
+/* ---- typography ---- */
+.kicker{font-family:var(--mono);font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  font-size:1.05vw;color:var(--muted);margin-bottom:1.4vh;display:block}
+.kicker.blue{color:var(--blue)} .kicker.red{color:var(--red)}
+.kicker.green{color:var(--green)} .kicker.gold{color:#a67a00}
+h1.head{font-family:var(--disp);font-weight:700;color:var(--ink);
+  font-size:4.6vw;line-height:1.05;letter-spacing:-.01em;margin-bottom:1.4vh}
+h2.head{font-family:var(--disp);font-weight:700;color:var(--ink);
+  font-size:3.2vw;line-height:1.1;letter-spacing:-.01em;margin-bottom:2vh}
+.dek{font-size:1.7vw;line-height:1.5;color:var(--text);max-width:80%;margin-bottom:2.4vh}
+.dek.narrow{max-width:64%}
+p{margin:0 0 1vh} strong{color:var(--ink);font-weight:700}
+.sub{font-size:1.35vw;color:var(--muted);margin-top:1vh}
+
+/* ---- title slide ---- */
+.title-slide .kicker{font-size:1.2vw}
+.title-slide h1.head{font-size:6vw;max-width:62%}
+.title-slide .lead{font-size:1.7vw;color:var(--text);max-width:52%;margin-top:3vh;line-height:1.5}
+.circles{position:absolute;right:6vw;top:50%;transform:translateY(-50%);width:34vw;height:70vh}
+.circles i{position:absolute;border-radius:50%;display:block}
+.circles .c1{width:13vw;height:13vw;background:var(--blue);right:6vw;top:6vh}
+.circles .c2{width:9vw;height:9vw;background:var(--green);left:0;top:34vh}
+.circles .c3{width:7vw;height:7vw;background:var(--yellow);right:0;top:40vh}
+.circles .c4{width:15vw;height:15vw;background:var(--red);right:9vw;bottom:2vh}
+
+/* ---- generic grids ---- */
+.grid{display:grid;gap:1.4vw}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+
+/* ---- browser cards (mac dots) ---- */
+.bcard{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);
+  padding:2.4vh 1.7vw;display:flex;flex-direction:column;min-width:0}
+.bcard .dots{display:flex;gap:.5vw;margin-bottom:2vh}
+.bcard .dots i{width:.85vw;height:.85vw;border-radius:50%;display:block}
+.bcard .dots i:nth-child(1){background:var(--red)}
+.bcard .dots i:nth-child(2){background:var(--yellow)}
+.bcard .dots i:nth-child(3){background:var(--green)}
+.bcard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  font-size:1vw;color:var(--muted);margin-bottom:1.2vh}
+.bcard h3{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.9vw;line-height:1.1;margin-bottom:1.4vh}
+.bcard p{font-size:1.35vw;line-height:1.45;color:var(--text)}
+.bcard .foot{margin-top:auto;padding-top:1.6vh}
+
+/* chip row */
+.chips{display:flex;align-items:center;gap:.7vw;flex-wrap:wrap}
+.chips .chip{font-family:var(--mono);font-weight:500;font-size:1.1vw;color:var(--text);
+  background:var(--panel);border-radius:999px;padding:.7vh 1vw}
+.chips .chip.hot{background:#ffe9e6;color:var(--red)}
+.chips .arw{color:var(--muted);font-size:1.1vw}
+.squares{display:flex;gap:.6vw}
+.squares i{width:2.4vw;height:2.4vw;border-radius:.5vw;display:block}
+.squares .y{background:var(--yellow)} .squares .r{background:var(--red)} .squares .g{background:var(--green)}
+
+/* ---- big color cards (red/yellow/green) ---- */
+.ccard{border-radius:1.2vw;padding:3vh 1.8vw;display:flex;flex-direction:column;color:#fff;min-height:52vh}
+.ccard.red{background:var(--red)} .ccard.yellow{background:var(--yellow);color:var(--ink)}
+.ccard.green{background:var(--green)} .ccard.blue{background:var(--blue)}
+.ccard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  font-size:1vw;opacity:.8;margin-bottom:2vh}
+.ccard h3{font-family:var(--disp);font-weight:700;font-size:2.3vw;line-height:1.05;margin-bottom:2.2vh}
+.ccard p{font-size:1.35vw;line-height:1.45}
+.ccard .ico{margin-top:auto;align-self:flex-end;font-size:3vw;opacity:.9}
+
+/* ---- stage/step light cards (with progress bar or chip) ---- */
+.scard{background:var(--white);border-radius:1.1vw;box-shadow:var(--shadow);
+  padding:2.4vh 1.4vw;display:flex;flex-direction:column;min-width:0}
+.scard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  font-size:.92vw;color:var(--muted);margin-bottom:1vh}
+.scard h3{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;line-height:1.1;margin-bottom:1.2vh}
+.scard p{font-size:1.15vw;line-height:1.4;color:var(--text);flex:1}
+.scard .bar{display:flex;gap:.3vw;margin-top:1.6vh}
+.scard .bar i{height:.7vh;flex:1;border-radius:999px;background:var(--border-2)}
+.scard .bar.n1 i:nth-child(-n+1),.scard .bar.n2 i:nth-child(-n+2),
+.scard .bar.n3 i:nth-child(-n+3),.scard .bar.n4 i:nth-child(-n+4),
+.scard .bar.n5 i:nth-child(-n+5){background:var(--col,var(--blue))}
+.scard.c-red{--col:var(--red)} .scard.c-yellow{--col:var(--yellow)}
+.scard.c-blue{--col:var(--blue)} .scard.c-green{--col:var(--green)}
+.scard .chip{align-self:flex-start;margin-top:1.4vh;font-family:var(--mono);font-weight:500;
+  font-size:1vw;color:var(--text);background:var(--panel);border-radius:.5vw;padding:.5vh .9vw}
+
+/* ---- do / don't two cards ---- */
+.dcard{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);padding:2.6vh 1.8vw}
+.dcard .pill{display:inline-block;font-family:var(--mono);font-weight:700;font-size:1vw;
+  color:#fff;border-radius:999px;padding:.5vh 1.1vw;margin-bottom:1.8vh}
+.dcard.do .pill{background:var(--green)} .dcard.dont .pill{background:var(--red)}
+.dcard .item{padding:1.2vh 0;border-top:1px solid var(--border)}
+.dcard .item:first-of-type{border-top:none}
+.dcard .item h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.4vw;margin-bottom:.5vh}
+.dcard .item p{font-size:1.15vw;line-height:1.4;color:var(--text)}
+
+/* ---- list + panel ---- */
+.listpanel{display:grid;grid-template-columns:1fr 1.05fr;gap:3vw;align-items:center}
+.expl h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.6vw;margin:1.8vh 0 .6vh}
+.expl h4:first-child{margin-top:0}
+.expl p{font-size:1.3vw;line-height:1.45;color:var(--text)}
+.panel{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);padding:1vh 1.6vw}
+.panel .row{display:flex;align-items:center;gap:1vw;padding:1.6vh .4vw;border-top:1px solid var(--border)}
+.panel .row:first-child{border-top:none}
+.panel .row .sq{width:1.6vw;height:1.6vw;border-radius:.4vw;flex:0 0 auto}
+.panel .row .n{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;flex:0 0 auto;width:1.6vw}
+.panel .row .txt{font-size:1.3vw;color:var(--ink);flex:1}
+.panel .row .tag{font-family:var(--mono);font-size:1vw;color:var(--muted)}
+.b-blue{background:var(--blue)} .b-red{background:var(--red)}
+.b-yellow{background:var(--yellow)} .b-green{background:var(--green)} .b-purple{background:#7C4DFF}
+
+/* ---- pills (before you leave) ---- */
+.pillrows{display:flex;flex-direction:column;gap:1.4vh}
+.pillrow{display:flex;align-items:center;gap:1.4vw}
+.pillrow .k{font-size:1.4vw;color:var(--ink);width:12vw;flex:0 0 auto}
+.pillrow .v{font-family:var(--mono);font-weight:500;font-size:1.35vw;color:#fff;
+  border-radius:999px;padding:1.1vh 1.6vw;flex:1}
+
+/* ---- quote ---- */
+.quote{background:var(--panel);border-left:.5vw solid var(--yellow);border-radius:0 1vw 1vw 0;
+  padding:2.6vh 2vw}
+.quote p{font-size:2.2vw;line-height:1.35;color:var(--ink);font-weight:500}
+.quote .by{font-size:1.4vw;color:var(--muted);font-style:italic;margin-top:1.6vh}
+
+/* ---- horizontal flow ---- */
+.flow{display:flex;align-items:stretch;gap:1vw;flex-wrap:nowrap}
+.flow .node{background:var(--white);border-radius:1vw;box-shadow:var(--shadow);
+  padding:2vh 1.2vw;flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0;text-align:center}
+.flow .node .t{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.4vw;line-height:1.1}
+.flow .node .s{font-size:1vw;color:var(--muted);margin-top:.6vh}
+.flow .arw{align-self:center;color:var(--muted);font-size:1.8vw;flex:0 0 auto}
+.flow .node.on-blue{background:var(--blue);color:#fff} .flow .node.on-blue .t{color:#fff}
+.flow .node.on-green{background:var(--green);color:#fff} .flow .node.on-green .t{color:#fff}
+
+/* ---- table ---- */
+.table-wrap{overflow:auto;border-radius:1vw;box-shadow:var(--shadow);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--white);font-size:1.25vw}
+thead th{font-family:var(--mono);font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  font-size:1vw;color:#fff;background:var(--ink);text-align:left;padding:1.4vh 1.1vw}
+tbody td{padding:1.4vh 1.1vw;border-top:1px solid var(--border);vertical-align:top;line-height:1.35}
+tbody tr:nth-child(even){background:var(--panel)}
+td.b,th.b{font-weight:700;color:var(--ink)}
+
+/* summary 2x2 (dark) */
+.slide.dark{background:linear-gradient(150deg,#141a4a 0%,#0f1440 100%)}
+.slide.dark h2.head,.slide.dark .kicker{color:#fff}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:2.6vh 3vw;margin-top:1vh}
+.quad .q h4{font-family:var(--disp);font-weight:700;color:#fff;font-size:1.9vw;margin-bottom:.8vh}
+.quad .q p{font-size:1.3vw;line-height:1.45;color:#cfd4ea}
+.quad .q .tag{font-family:var(--mono);font-size:1vw;color:#8b93c7;text-transform:uppercase;letter-spacing:.06em}
+
+/* footer line */
+.foot-note{margin-top:2.4vh;font-size:1.2vw;color:var(--muted)}
+.rule{height:1px;background:var(--border);margin:2vh 0}
+
+/* ---- deck controls ---- */
+.bar{position:fixed;bottom:0;left:0;height:.6vh;background:var(--blue);transition:width .3s;z-index:6}
+.hint{position:fixed;bottom:1.6vh;left:50%;transform:translateX(-50%);font-family:var(--mono);
+  font-size:.85vw;color:var(--muted);z-index:6}
+
+/* ---- print: every slide on its own page ---- */
+@media print{
+  #deck{height:auto;overflow:visible}
+  .slide{display:flex!important;position:relative;height:100vh;page-break-after:always;
+    inset:auto;break-inside:avoid}
+  .bar,.hint{display:none}
+}
+
+/* ---- embedded figure images (from Week2.pptx) ---- */
+.fig{display:block;margin:0 auto;max-width:100%;max-height:44vh;height:auto;width:auto;
+  background:#fff;border-radius:1vw;box-shadow:var(--shadow);padding:1.6vh 1.6vw}
+.fig.sm{max-height:28vh}
+.figcap{text-align:center;font-family:var(--mono);font-size:1vw;color:var(--muted);margin-top:.9vh}
+
+</style>
+<style>
+  /* deeper green for SVG box fills carrying text — theme green (#16B670) fails AA on white (~2.6:1); this passes (~5:1) */
+  :root{ --gbox:#0B7A4A; }
+  /* dark closing slide: invert the chrome bar text (ink-on-navy ≈ invisible otherwise) */
+  .slide.dark .chrome .l{ color:#e8ecf7; }
+  .slide.dark .chrome .crumb, .slide.dark .chrome .count{ color:#aeb6dd; }
+  /* dark code block (git log, snippets, prompt) */
+  .code{background:#0f1440;border-radius:1vw;padding:2vh 1.6vw;font-family:var(--mono);
+    font-size:1.05vw;line-height:1.7;color:#c8d0f0;overflow:auto;white-space:pre}
+  .code.sm{font-size:.95vw;line-height:1.6}
+  .code .k{color:#7aa2ff}.code .c{color:#8891b8}.code .s{color:#7ee0b8}.code .g{color:#ffcf6b}.code .r{color:#ff8f7d}
+  .codecap{font-family:var(--mono);font-size:1vw;color:var(--muted);margin:.2vh 0 1vh}
+  /* numbered fundamentals panel */
+  .num-row{display:flex;align-items:flex-start;gap:1.1vw;padding:1.5vh .4vw;border-top:1px solid var(--border)}
+  .num-row:first-child{border-top:none}
+  .num-row .n{font-family:var(--mono);font-weight:700;color:#fff;background:var(--blue);
+    width:2.2vw;height:2.2vw;border-radius:.5vw;display:flex;align-items:center;justify-content:center;
+    font-size:1.15vw;flex:0 0 auto}
+  .num-row .n.g{background:var(--green)} .num-row .n.y{background:var(--yellow);color:var(--ink)}
+  .num-row .n.r{background:var(--red)} .num-row .n.p{background:#7C4DFF}
+  .num-row h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;margin-bottom:.3vh}
+  .num-row p{font-size:1.2vw;line-height:1.4;color:var(--text)}
+  /* label chip inline */
+  .lead-tag{display:inline-block;font-family:var(--mono);font-weight:700;font-size:.9vw;letter-spacing:.04em;
+    text-transform:uppercase;color:#fff;background:var(--blue);border-radius:.4vw;padding:.4vh .8vw;margin-bottom:1.2vh}
+  .lead-tag.g{background:var(--green)} .lead-tag.r{background:var(--red)} .lead-tag.y{background:var(--yellow);color:var(--ink)}
+  /* flow arrow label */
+  .flow .arw small{display:block;font-family:var(--mono);font-size:.7vw;color:var(--muted);text-align:center}
+  .flow.wrap{flex-wrap:wrap;gap:1.2vh 1vw}
+  /* red flow node (theme only ships on-blue / on-green) */
+  .flow .node.on-red{background:var(--red);color:#fff} .flow .node.on-red .t{color:#fff}
+  /* inline code — subtle mono chip on light surfaces */
+  code{font-family:var(--mono);font-size:.9em;background:var(--panel);border-radius:.3vw;padding:.1vh .45vw;color:var(--ink)}
+  .foot-note code{font-size:.95em}
+  /* shave a few px off dense scard+foot-note slides so nothing clips at 16:9 */
+  .scard{padding-top:2vh;padding-bottom:2vh}
+  .scard .bar{margin-top:1.2vh}
+  .body > .foot-note:last-child{margin-top:1.9vh}
+  /* "IN PLAIN TERMS" — a plain-language restatement / analogy for Year-1 readers */
+  .plain{background:#EAF1FF;border-left:.5vw solid var(--blue);border-radius:0 .7vw .7vw 0;
+    padding:1.15vh 1.2vw;margin-top:1.6vh}
+  .plain .lab{display:inline-block;font-family:var(--mono);font-weight:700;font-size:.82vw;
+    letter-spacing:.05em;text-transform:uppercase;color:var(--blue);margin-bottom:.35vh}
+  .plain p{font-size:1.18vw;line-height:1.42;color:var(--ink);margin:0}
+  .plain.g{background:#E4F6EE;border-left-color:var(--green)} .plain.g .lab{color:#0B7A4A}
+  .plain.r{background:#FFECE9;border-left-color:var(--red)} .plain.r .lab{color:#C43A2B}
+  .slide.dark .plain{background:#16224a} .slide.dark .plain p{color:#e8ecf7}
+  /* compact SVG figure block with a mono caption */
+  .figblock{margin:.6vh 0 0}
+  .figblock .cap{font-family:var(--mono);font-size:.92vw;color:var(--muted);text-align:center;margin-top:.4vh}
+
+  /* ---- step reveal: Right/Space shows the next answer, Left hides it ---- */
+  .frag{transition:opacity .25s}
+  .frag:not(.on){opacity:0;visibility:hidden}
+  .mark{transition:background .25s,color .25s}
+  .mark.on{background:#E4F6EE;color:#0B7A4A;font-weight:700;border-radius:.4vw}
+  .mark.on b{color:#0B7A4A}
+  .ans{color:#0B7A4A;font-weight:700}
+  .ans.no{color:#C43A2B}
+  .stepnote{font-family:var(--mono);font-size:.85vw;color:var(--muted);margin-top:1.4vh}
+  /* concept-check slides get a warm tint so they read as "your turn" */
+  .slide.cc{background:linear-gradient(150deg,#fbf6ea 0%,#f1ead8 100%)}
+  .slide.cc .kicker{color:#a67a00}
+  .cc table{font-size:1.2vw}
+  .cc tbody td{padding:1.15vh 1.1vw}
+  /* All concept checks: larger type for the back row (professor, 19 Oct) */
+  .slide.cc table{font-size:1.65vw}
+  .slide.cc thead th{font-size:1.25vw;padding:1.3vh 1.2vw}
+  .slide.cc tbody td{padding:1.9vh 1.2vw;line-height:1.3}
+  .slide.cc .plain p{font-size:1.45vw}
+  .slide.cc .plain .lab{font-size:1vw}
+  .slide.cc .askbox h4{font-size:1.75vw}
+  .slide.cc .askbox p{font-size:1.45vw}
+  .slide.cc .askbox li{font-size:1.4vw}
+  .slide.cc .stepnote{font-size:1.05vw}
+  .askbox{background:var(--white);border-radius:1.1vw;box-shadow:var(--shadow);padding:2vh 1.5vw}
+  .askbox h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.45vw;margin-bottom:.8vh}
+  .askbox p{font-size:1.2vw;line-height:1.42;color:var(--text)}
+  .askbox p.ans{color:#0B7A4A}
+  .askbox ul{list-style:none;display:grid;gap:.6vh;margin-top:.6vh}
+  .askbox li{font-size:1.15vw;line-height:1.35;color:var(--ink);background:var(--panel);border-radius:.5vw;padding:.7vh .8vw}
+  /* question focus (Critique) */
+  .qf{background:var(--white);border-left:.5vw solid var(--red);border-radius:0 1vw 1vw 0;box-shadow:var(--shadow);padding:2.2vh 1.8vw}
+  .qf .lab{display:block;font-family:var(--mono);font-weight:700;font-size:.85vw;letter-spacing:.05em;text-transform:uppercase;color:var(--red);margin-bottom:.8vh}
+  .qf p{font-size:1.42vw;line-height:1.45;color:var(--ink)}
+  .qf p.th{font-size:1.12vw;line-height:1.6;color:var(--text);margin-top:1.2vh;font-family:"Noto Sans Thai","Sarabun",var(--disp)}
+  .th{font-family:"Noto Sans Thai","Sarabun",var(--disp)}
+  /* timer */
+  .timer{display:flex;align-items:center;gap:.9vw;margin-top:1.8vh}
+  .timer .t{font-family:var(--mono);font-weight:700;font-size:3vw;color:var(--ink);min-width:8.5vw}
+  .timer.run .t{color:var(--blue)} .timer.done .t{color:var(--red)}
+  .timer button{font-family:var(--mono);font-weight:700;font-size:.95vw;border:none;border-radius:999px;
+    padding:.9vh 1.2vw;background:var(--ink);color:#fff;cursor:pointer}
+  .timer button.ghost{background:var(--white);color:var(--ink);box-shadow:var(--shadow)}
+  .timer .k{font-family:var(--mono);font-size:.8vw;color:var(--muted)}
+  /* MCQ practice */
+  .mcq{background:var(--white);border-radius:1.1vw;box-shadow:var(--shadow);padding:1.7vh 1.4vw;min-width:0}
+  .mcq .q{font-size:1.18vw;line-height:1.36;color:var(--ink);font-weight:600;margin-bottom:.9vh}
+  .mcq .q strong{text-decoration:underline;text-underline-offset:.3vh}
+  .mcq .q .n{font-family:var(--mono);color:var(--blue);margin-right:.4vw}
+  .mcq ol{list-style:none;display:grid;gap:.25vh}
+  .mcq li{font-size:1.05vw;line-height:1.32;color:var(--text);padding:.4vh .6vw}
+  .mcq li b{font-family:var(--mono);margin-right:.5vw;color:var(--muted)}
+  /* concept map */
+  .cmap{display:grid;grid-template-columns:1fr 1fr;gap:1.6vw}
+  .cmap .col{background:var(--white);border-radius:1.1vw;box-shadow:var(--shadow);padding:2vh 1.5vw}
+  .cmap .col > .lab{font-family:var(--mono);font-weight:700;font-size:.95vw;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1.2vh;display:block}
+  .cmap .step{display:flex;gap:1vw;align-items:flex-start;padding:1vh 0;border-top:1px solid var(--border)}
+  .cmap .step:first-of-type{border-top:none}
+  .cmap .step h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.35vw;width:7.5vw;flex:0 0 auto}
+  .cmap .step p{font-size:1.1vw;line-height:1.4;color:var(--text);margin:0}
+  /* editable "to be confirmed" fields on the announcement slide */
+  .tbc{background:#FFF3D1;border-bottom:.3vh dashed #a67a00;padding:0 .4vw;border-radius:.3vw;outline:none;color:var(--ink)}
+  .tbc:focus{background:#ffe7a3}
+  .slide.dark a{color:#9fb6ff}
+  /* ISO/IEC 25010:2023 nine-card grid */
+  .iso9{gap:1.1vh 1vw!important}
+  .iso9 .scard{padding:1.2vh 1.1vw}
+  .iso9 .scard h3{font-size:1.3vw;margin-bottom:.5vh}
+  .iso9 .scard p{font-size:1.02vw;line-height:1.3}
+  .iso9 .scard .chip{margin-top:.6vh;font-size:.78vw;padding:.3vh .6vw}
+  .chip.new{background:#FFECE9;color:#C43A2B;font-weight:700}
+  @media print{
+    .frag{opacity:1!important;visibility:visible!important}
+    .timer button,.timer .k{display:none}
+  }
+</style>
+<style>.sched table{font-size:1.02vw}.sched tbody td{padding:.5vh .9vw;line-height:1.25}.sched thead th{padding:.8vh .9vw}</style>
+</head>
+<body>
+<div id="deck">
+
+<section class="slide title-slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Professional Ethics &amp; Practice / The last chapter</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">CHAPTER 10: YEAR-1 CORE, PROFESSIONAL ETHICS &amp; PRACTICE</span>
+    <h1 class="head">“Make it work” is <em>not</em> the whole job</h1>
+    <p class="lead">Software touches people's money, health and privacy. An engineer owes a duty to the <strong>public</strong>, to the <strong>truth</strong>, and to the people who use what we build, and in the AI era, a <strong>person</strong> always stays accountable.</p>
+  </div>
+  <div class="circles"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Today</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">TODAY: THE LAST CHAPTER, THEN GET READY FOR THE DEMO</span>
+    <h2 class="head">Today: Ch10, then get ready for the demo and oral exam</h2>
+    <div class="flow wrap" style="margin-bottom:2.4vh">
+      <div class="node on-blue"><div class="t">Ch10 Ethics &amp; Practice</div><div class="s" style="color:#cfe0ff">3 concept checks</div></div><div class="arw">→</div>
+      <div class="node on-red"><div class="t">Demo day</div><div class="s" style="color:#ffe1dc">your slot, what to present</div></div><div class="arw">→</div>
+      <div class="node"><div class="t">Scoring</div><div class="s">demo, oral, contribution</div></div><div class="arw">→</div>
+      <div class="node on-green"><div class="t">Exam practice</div><div class="s" style="color:#d6f5e6">4 MCQ on Ch10</div></div>
+    </div>
+    <div class="grid g3">
+      <div class="scard c-blue"><div class="lbl">Goal</div><h3>Understand the concepts</h3><p>Ch10 is on the final exam (Ch1 to Ch10, English MCQ with 4 options + short answer).</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-yellow"><div class="lbl">Concept checks</div><h3>Answer together</h3><p>After each topic: a short situation, the whole room answers at once. Not graded.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">Your team</div><h3>Find your slot</h3><p>13 teams on Mon 9 Nov, 13 on Mon 16 Nov, 12 minutes each. Know your time and what to show.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <p class="foot-note">This chapter ties straight into your <strong>AI-Use Statement</strong> and the <strong>oral exam</strong>. It also includes a case study on <strong>AI backdoors</strong>.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Where we are</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">THE GOLDEN THREAD: THE FINAL CHAPTER</span>
+    <h2 class="head">From how we build to who we build for</h2>
+    <div class="flow wrap" style="margin-bottom:2.4vh"><div class="node"><div class="t">Problem</div><div class="s">Ch1</div></div><div class="arw">→</div><div class="node"><div class="t">FR / NFR</div><div class="s">Ch3</div></div><div class="arw">→</div><div class="node"><div class="t">Model</div><div class="s">Ch4</div></div><div class="arw">→</div><div class="node"><div class="t">Design</div><div class="s">Ch5</div></div><div class="arw">→</div><div class="node"><div class="t">Code</div><div class="s">Ch6</div></div><div class="arw">→</div><div class="node"><div class="t">Test</div><div class="s">Ch7</div></div><div class="arw">→</div><div class="node"><div class="t">Quality</div><div class="s">Ch8</div></div><div class="arw">→</div><div class="node"><div class="t">PM</div><div class="s">Ch9</div></div><div class="arw">→</div><div class="node on-blue"><div class="t">Ethics</div><div class="s" style="color:#cfe0ff">Ch10</div></div></div>
+    <div class="grid g3">
+      <div class="scard c-blue"><div class="lbl">Ideas 1 and 2</div><h3>Ethics &amp; data</h3><p>The ACM/IEEE Code, four everyday issues, and data ethics: can vs should.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">Ideas 3 and 4</div><h3>Responsible AI &amp; practice</h3><p>A person stays accountable, with an AI backdoor case study; habits that make you easy to work with.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">Idea 5</div><h3>Dev tools</h3><p>IDE, Git and GitHub, tests, and a taste of CI.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <p class="foot-note">Ch8 asked “can it be trusted?”, Ch9 asked “how does the team finish?”. Ch10 asks <strong>“should we build it this way, and who answers for it?”</strong></p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ SE ethics</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">IDEA 1: DUTIES BEYOND “IT COMPILES”</span>
+    <h2 class="head">Professional codes spell out what we owe</h2>
+    <div class="grid g3">
+      <div class="bcard"><span class="lbl">Public interest</span><h3>People come first</h3><p>Act consistently with public health, safety and welfare, above your own or your client's convenience.</p></div>
+      <div class="bcard"><span class="lbl">Honesty</span><h3>Be truthful</h3><p>Don't overstate what the software does, hide known defects, or take credit for others' work.</p></div>
+      <div class="bcard"><span class="lbl">Competence &amp; care</span><h3>Do work you can stand behind</h3><p>Only sign off on work you believe is right, and keep learning. The <strong>ACM/IEEE Code</strong> is the shared standard.</p></div>
+    </div>
+    <div class="plain"><span class="lab">In plain terms</span><p>A profession is a promise. Doctors, engineers and now software builders hold power over people's lives. The code of ethics is how we keep that trust.</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Where the Code comes from</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">IDEA 1a: WHY SOFTWARE ENGINEERING NEEDED ITS OWN CODE</span>
+    <h2 class="head">Two societies, one code for a new profession</h2>
+    <div class="flow wrap" style="margin-bottom:2vh">
+      <div class="node"><div class="t">1993</div><div class="s">IEEE-CS steering committee; ACM commission</div></div><div class="arw">→</div>
+      <div class="node"><div class="t">1994</div><div class="s">Joint ACM + IEEE-CS committee</div></div><div class="arw">→</div>
+      <div class="node"><div class="t">1997</div><div class="s">Draft in <em>Comm. ACM</em>, for comments</div></div><div class="arw">→</div>
+      <div class="node on-blue"><div class="t">1999</div><div class="s" style="color:#cfe0ff">Version 5.2 approved</div></div>
+    </div>
+    <div class="grid g3">
+      <div class="scard c-blue"><div class="lbl">The goal</div><h3>Make SE a profession</h3><p>The joint committee set out to define standard terms, a body of knowledge, curricula and <strong>ethical standards</strong> for software engineers.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">What a code does</div><h3>Educate, inspire, inform</h3><p>It tells members what peers expect, tells the <strong>public</strong> what the profession is responsible for, and gives practical advice. It is <strong>not a law</strong>.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">Who it covers</div><h3>Including students</h3><p>Practitioners, educators, managers, policy makers, <strong>trainees and students</strong> of the profession. That means you, now.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <div class="plain"><span class="lab">The preamble, in one line</span><p>People who build software have real chances “to do good and to cause harm”, and to enable others to do either. The code exists so that power is used for good.</p></div>
+    <p class="foot-note">Source: Gotterbarn, Miller &amp; Rogerson, “Software Engineering Code of Ethics,” <em>Comm. ACM</em> 40(11), Nov 1997 (draft for comment). Final version 5.2 approved 1999.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ The eight principles</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">IDEA 1b: THE EIGHT PRINCIPLES (ACM/IEEE-CS, 1999)</span>
+    <h2 class="head">The Software Engineering Code of Ethics</h2>
+    <div class="grid g4" style="gap:1vw">
+      <div class="scard c-blue"><div class="lbl">1</div><h3>Public</h3><p>Act in the public interest.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">2</div><h3>Client &amp; employer</h3><p>Serve them, within the public interest.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-yellow"><div class="lbl">3</div><h3>Product</h3><p>Meet the highest standards you can.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">4</div><h3>Judgment</h3><p>Keep it independent and honest.</p><div class="bar n4"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">5</div><h3>Management</h3><p>Lead ethically.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-blue"><div class="lbl">6</div><h3>Profession</h3><p>Protect its integrity and reputation.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-yellow"><div class="lbl">7</div><h3>Colleagues</h3><p>Be fair and supportive; credit their work.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">8</div><h3>Self</h3><p>Keep learning, keep ethical.</p><div class="bar n4"><i></i><i></i><i></i></div></div>
+    </div>
+    <p class="foot-note">Source: ACM/IEEE-CS Software Engineering Code of Ethics (Gotterbarn, Miller &amp; Rogerson, <em>Comm. ACM</em>, 1999); Sommerville 9e, Fig 1.3. The 1997 draft listed Product first; the approved 1999 version moved <strong>Public</strong> to the top.</p>
+    <div class="plain g"><span class="lab">In plain terms</span><p>Read the <strong>first word</strong> of each line: Public comes first, then the people you serve, the product, your own judgment. Ethics radiates outward, starting from “do no harm to the public.”</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Three levels of obligation</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">IDEA 1c: HOW THE CODE IS BUILT</span>
+    <h2 class="head">Every principle works at three levels</h2>
+    <div class="grid g3">
+      <div class="scard c-yellow"><div class="lbl">Level 1: Aspire</div><h3>To be human</h3><p>Values every person shares, such as honesty and fairness. They set a direction and need your own ethical judgment.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-blue"><div class="lbl">Level 2: Expect</div><h3>To be professional</h3><p>Duties every professional owes, because people <strong>affected by your work</strong> deserve special care.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">Level 3: Demand</div><h3>To use good practices</h3><p>Specific, often measurable behaviours of software engineering today, close to the current state of the art.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <div class="table-wrap" style="margin-top:1.8vh">
+      <table>
+        <thead><tr><th style="width:18%">Level</th><th>Example for “Public” (our illustration of the idea)</th></tr></thead>
+        <tbody>
+          <tr><td class="b">Aspire</td><td>Be fair and truthful in everything you say about the software.</td></tr>
+          <tr><td class="b">Expect</td><td>Accept full responsibility for your own work, including the parts AI drafted.</td></tr>
+          <tr><td class="b">Demand</td><td>Approve software only if you have good grounds to believe it is safe, meets its specification and has passed appropriate tests.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="foot-note">Source: Gotterbarn, Miller &amp; Rogerson (1997), preamble. The code does not label each clause with a level; the table shows how the idea applies.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Principles 1 to 4 in practice</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">IDEA 1d: WHAT EACH PRINCIPLE ASKS (1 TO 4)</span>
+    <h2 class="head">Principles 1 to 4: what they ask you to do</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:17%">Principle</th><th style="width:52%">Key clauses (paraphrased)</th><th>In this course</th></tr></thead>
+        <tbody>
+          <tr><td class="b">1 Public</td><td>Disclose any danger the software may cause; approve only software you believe is safe and tested; never put your own, your employer's or a client's interest ahead of the public's; accept full responsibility for your work.</td><td>“The AI wrote it” is not a defence; you own what you submit.</td></tr>
+          <tr><td class="b">2 Client &amp; employer</td><td>Work only within your competence; keep their information confidential (unless the public is at risk); tell them early if a project is likely to fail, overrun, or break copyright; never use illegally obtained software.</td><td>Tell the team <em>before</em> the deadline; no pirated tools or unlicensed code.</td></tr>
+          <tr><td class="b">3 Product</td><td>Specifications documented and approved; realistic estimates with a risk assessment; adequate testing, debugging and review; respect the privacy of users; use only accurate data from legal sources.</td><td>SRS + acceptance criteria (Ch3), tests (Ch7), PDPA (Ch8), risk (Ch9).</td></tr>
+          <tr><td class="b">4 Judgment</td><td>Stay objective when evaluating software; sign only documents within your competence; reject bribery; disclose conflicts of interest; temper technical judgment with human values.</td><td>Never sign a test report you did not run.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="foot-note">Clauses paraphrased from Gotterbarn, Miller &amp; Rogerson (1997). Principle numbers follow the approved 1999 version (Sommerville Fig 1.3).</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Principles 5 to 8 in practice</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">IDEA 1e: WHAT EACH PRINCIPLE ASKS (5 TO 8)</span>
+    <h2 class="head">Principles 5 to 8: what they ask you to do</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:17%">Principle</th><th style="width:52%">Key clauses (paraphrased)</th><th>In this course</th></tr></thead>
+        <tbody>
+          <tr><td class="b">5 Management</td><td>Tell people the standards before holding them to them; assign work by education and experience, while helping people grow; agree fairly who owns what; never ask anyone to break the code.</td><td>Team leads rotate (Ch9); agree roles and ownership in the charter.</td></tr>
+          <tr><td class="b">6 Profession</td><td>Be accurate about what the software does, avoiding deceptive or misleading claims; take responsibility for finding, fixing and reporting errors; obey the law, as far as it is consistent with public welfare.</td><td>At the demo, show what works; don't oversell.</td></tr>
+          <tr><td class="b">7 Colleagues</td><td>Credit fully the work of others; review others' work objectively, candidly and with a record; give colleagues a fair hearing; ask experts when outside your competence.</td><td>Pull-request reviews (Ch6); honest credit in the AI-Use Statement.</td></tr>
+          <tr><td class="b">8 Self</td><td>Keep learning design, development, testing and management; improve your documentation; know the law and the code that govern your work.</td><td>AI makes learning faster, not optional.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="foot-note">Clauses paraphrased from Gotterbarn, Miller &amp; Rogerson (1997). Principle numbers follow the approved 1999 version (Sommerville Fig 1.3).</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ When principles conflict</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">IDEA 1f: USING THE CODE WHEN IT GETS HARD</span>
+    <h2 class="head">The code is not an algorithm: five questions to ask</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="panel" style="padding:.4vh 1.4vw">
+        <div class="num-row"><span class="n">1</span><div><h4>Who is affected?</h4><p>Think broadly: users, third parties, people who never touch the app.</p></div></div>
+        <div class="num-row"><span class="n g">2</span><div><h4>Are we treating people with respect?</h4><p>You and your colleagues, towards every person involved.</p></div></div>
+        <div class="num-row"><span class="n y">3</span><div><h4>How would a well-informed public see it?</h4><p>If they knew all the facts, would they accept your decision?</p></div></div>
+        <div class="num-row"><span class="n r">4</span><div><h4>What happens to the least empowered?</h4><p>The people with the least power to complain or protect themselves.</p></div></div>
+        <div class="num-row"><span class="n p">5</span><div><h4>Would an ideal professional do this?</h4><p>Would respected, experienced peers who knew the facts judge it worthy?</p></div></div>
+      </div>
+      <div>
+        <div class="bcard"><span class="lbl">Try it</span><h3>Ship Friday, or fix the leak?</h3><p>Affected: every user whose data can leak. Least empowered: users who never chose this app. Informed public: would not accept “we knew, but the deadline came first.” <strong>Answer: report the risk and delay or fix (Principle 1).</strong></p></div>
+        <div class="plain g"><span class="lab">Why five questions, not a rulebook</span><p>Principles can conflict with each other or with other rules. The code gives no automatic answer; it gives you a <strong>way to judge</strong>, and a written standard the whole team can point to when they say no.</p></div>
+      </div>
+    </div>
+    <p class="foot-note">Source: Gotterbarn, Miller &amp; Rogerson (1997), preamble. Not exhaustive: the code warns against using any single clause in isolation to justify a mistake.</p>
+  </div>
+</section>
+<section class="slide cc">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Concept check 1</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">CONCEPT CHECK 1: THE EIGHT PRINCIPLES</span>
+    <h2 class="head">Which principle does it break?</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:56%">Situation</th><th style="width:20%">Principle</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Your manager says ship on Friday, although the team knows a bug can leak users' data.</td><td class="frag ans" data-f="a">1 Public</td><td class="frag" data-f="a">People's data before the deadline (also 3 and 4)</td></tr>
+          <tr><td>You sign a test report saying all tests passed, but you never ran them.</td><td class="frag ans" data-f="b">4 Judgment</td><td class="frag" data-f="b">Sign only what you believe is true</td></tr>
+          <tr><td>You present a classmate's module as your own work in the demo.</td><td class="frag ans" data-f="c">7 Colleagues</td><td class="frag" data-f="c">Credit the work of others</td></tr>
+          <tr><td>A team lead tells juniors to hide known defects from the client.</td><td class="frag ans" data-f="d">5 Management</td><td class="frag" data-f="d">Leaders must lead ethically</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="plain g frag"><span class="lab">Follow-up</span><p>Doesn't Principle 2 say “serve your employer”? <strong>Yes, but only within the public interest. Principle 1 comes first.</strong></p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Four everyday issues</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">IDEA 1g: WHERE ETHICS SHOWS UP (SOMMERVILLE §1.2)</span>
+    <h2 class="head">Four issues you'll meet in ordinary work</h2>
+    <div class="grid g4" style="gap:1.1vw">
+      <div class="bcard"><span class="lbl">#1</span><h3>Confidentiality</h3><p>Respect your employer's and client's information, with or without a signed agreement.</p></div>
+      <div class="bcard"><span class="lbl">#2</span><h3>Competence</h3><p>Don't misrepresent your skill, and don't take on work beyond it.</p></div>
+      <div class="bcard"><span class="lbl">#3</span><h3>IP rights</h3><p>Know and respect patents, copyright and licences. Protect what isn't yours.</p></div>
+      <div class="bcard"><span class="lbl">#4</span><h3>Computer misuse</h3><p>Don't use your skills to harm others' systems, from time-wasting to malware.</p></div>
+    </div>
+    <div class="plain"><span class="lab">Connects to this course</span><p>Confidentiality + IP = why you never commit secrets or copy code without a licence. Competence + misuse = why “the AI wrote it” never excuses harm.</p></div>
+    <p class="foot-note">Source: Sommerville 9e, §1.2 Software engineering ethics.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Data ethics &amp; privacy</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">IDEA 2: CAN vs SHOULD</span>
+    <h2 class="head">Just because you <em>can</em> collect it doesn't mean you <em>should</em></h2>
+    <div class="grid g3">
+      <div class="scard c-blue"><div class="lbl">Minimise</div><h3>Collect the least</h3><p>Only what the feature truly needs. Every extra field is a liability you now have to protect.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">Protect</div><h3>Guard what you hold</h3><p>Secure it, limit who can see it, and honour people's right to see, correct and delete (PDPA, Ch8).</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">Be transparent</div><h3>Say what and why</h3><p>Tell people what you collect and how it's used, in plain language, before they hand it over.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <div class="plain g"><span class="lab">Carries Ch8 forward</span><p>Security was the <em>how</em>; data ethics is the <em>whether</em>. The most private data is the data you chose never to collect. Which fields in your prototype are not really needed?</p></div>
+  </div>
+</section>
+<section class="slide cc">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Concept check 2</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">CONCEPT CHECK 2: EVERYDAY ISSUES &amp; DATA ETHICS</span>
+    <h2 class="head">Which issue or data rule is it?</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:62%">Situation</th><th>Issue or rule</th></tr></thead>
+        <tbody>
+          <tr><td>You post a screenshot of a client's internal dashboard in a public Discord to ask for help.</td><td class="frag ans" data-f="a">Confidentiality</td></tr>
+          <tr><td>You paste code from a GitHub repo that has no licence into your product.</td><td class="frag ans" data-f="b">IP rights</td></tr>
+          <tr><td>After one tutorial, you tell a client you are an expert and take the job.</td><td class="frag ans" data-f="c">Competence</td></tr>
+          <tr><td>A study-reminder app asks for your national ID number and birthday at sign-up.</td><td class="frag ans" data-f="d">Minimise</td></tr>
+          <tr><td>The app shares usage data with an ad partner, but the privacy notice never says so.</td><td class="frag ans" data-f="e">Be transparent</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="plain g frag"><span class="lab">Follow-up</span><p>The last two are legal and technical problems too. <strong>Ch8 PDPA said what the law requires; Ch10 asks whether we should collect it at all.</strong></p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Responsible AI use</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">IDEA 3: AI-FIRST, BUT A PERSON IS ACCOUNTABLE</span>
+    <h2 class="head">AI can be wrong or biased, and it cannot be responsible</h2>
+    <div class="grid g2">
+      <div class="dcard do">
+        <span class="pill">DO</span>
+        <div class="item"><h4>Keep a human sign-off</h4><p>A person reads, tests and approves. Accountability can't be delegated to a model.</p></div>
+        <div class="item"><h4>Be transparent</h4><p>Disclose where AI was used. That is exactly what your <strong>AI-Use Statement</strong> is for.</p></div>
+        <div class="item"><h4>Watch for bias and error</h4><p>AI reflects its training data. Check outputs against reality, especially about people.</p></div>
+      </div>
+      <div class="dcard dont">
+        <span class="pill">DON'T</span>
+        <div class="item"><h4>“The AI said so”</h4><p>Not a defence. If you shipped it, you own it, bug and bias included.</p></div>
+        <div class="item"><h4>Paste private data into prompts</h4><p>Treat a prompt as public. Never feed real personal data or secrets.</p></div>
+        <div class="item"><h4>Pass AI work off as fully your own</h4><p>Honesty (Idea 1) applies to how the work was made, too.</p></div>
+      </div>
+    </div>
+    <div class="plain"><span class="lab">In plain terms</span><p>AI is like a <strong>very fast intern</strong>: brilliant first drafts, but you sign the work before it goes out. If it's wrong, the boss (you) answers for it, never the intern. This is one of the four oral-exam criteria.</p></div>
+  </div>
+</section>
+<section class="slide cc">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Concept check 3</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">CONCEPT CHECK 3: RESPONSIBLE AI</span>
+    <h2 class="head">Responsible AI use, or not?</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:54%">Situation</th><th style="width:17%">Verdict</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>AI drafts your unit tests; you run them and fix two wrong expected values.</td><td class="frag ans" data-f="a">Responsible</td><td class="frag" data-f="a">A person checked and signed off</td></tr>
+          <tr><td>You paste a real clinic's patient list into a chatbot to “make test data”.</td><td class="frag ans no" data-f="b">Not OK</td><td class="frag" data-f="b">Real personal data in a prompt</td></tr>
+          <tr><td>The AI-Use Statement says “no AI used”, but AI generated the UI layout.</td><td class="frag ans no" data-f="c">Not OK</td><td class="frag" data-f="c">Honesty: disclose, don't hide</td></tr>
+          <tr><td>AI-written code leaks data; the team's report says “the AI caused it”.</td><td class="frag ans no" data-f="d">Not OK</td><td class="frag" data-f="d">Accountability stays with the team</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="plain g frag"><span class="lab">Follow-up</span><p>Is using AI itself the problem? <strong>No. Using AI well is expected in this course. Hiding it, or shipping what you can't explain, is the problem.</strong></p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Case study: AI backdoor</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker red">CASE STUDY: IN THE NEWS, OCTOBER 2026</span>
+    <h2 class="head">A trusted AI tool update carried a backdoor</h2>
+    <div class="flow" style="margin-bottom:1.8vh">
+      <div class="node"><div class="t">Marketplace</div><div class="s">attacker gets a tampered build served</div></div><div class="arw">→</div>
+      <div class="node on-red"><div class="t">“Normal” update</div><div class="s" style="color:#ffe1dc">v2.1.312 and 2.1.313, about 11 hours</div></div><div class="arw">→</div>
+      <div class="node"><div class="t">Developer machine</div><div class="s">attacker SSH key added</div></div><div class="arw">→</div>
+      <div class="node on-red"><div class="t">Backdoor</div><div class="s" style="color:#ffe1dc">reverse tunnel opened</div></div>
+    </div>
+    <div class="grid g2">
+      <div class="bcard"><span class="lbl">The incident, 29 Oct 2026</span><h3>Claude Code extension on the Cursor Marketplace</h3><p>Cursor says at most 5,000 users received it and other extensions were not affected. Cursor says the tampered version was not developed by Anthropic; Anthropic says none of its systems were compromised. How the attacker got in has not been stated in the sources we checked.</p></div>
+      <div class="bcard"><span class="lbl">Same month: two related cases</span><h3>Packages and model weights</h3><p><strong>LiteLLM 1.107.0 (21 Oct):</strong> stolen GitHub tokens ran the release workflow; the PyPI build had a credential stealer and backdoor. <strong>Imperial College study:</strong> a tampered speech model reacted to one chosen voice. Research in a sandbox, not a real attack.</p></div>
+    </div>
+    <div class="plain r"><span class="lab">Backdoor, in plain terms</span><p>A hidden way in that bypasses normal login. The tool looks normal and has your permissions, so <strong>trust is the attack path</strong>.</p></div>
+    <p class="foot-note">Sources: Cursor security notice; Microsoft Security Blog, 30 Oct 2026; SafeDep; Help Net Security, 22 Oct 2026. Developing story: check for updates.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Case study: in the news</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">CASE STUDY: READ THE ORIGINAL REPORTS</span>
+    <h2 class="head">In the news, October 2026</h2>
+    <div class="grid g3">
+      <div class="bcard"><span class="lbl">Cursor, official notice</span><h3>Security notice: malicious version of Anthropic.claude-code</h3><p>Primary source. See also Microsoft's analysis.</p><p class="foot"><a href="https://cursor.com/blog/claude-code-extension-security-notice" target="_blank" rel="noopener">Cursor notice</a> | <a href="https://www.microsoft.com/en-us/security/blog/2026/10/30/inside-malicious-claude-code-branded-cursor-extension-persistent-ssh-backdoor/" target="_blank" rel="noopener">Microsoft</a></p></div>
+      <div class="bcard"><span class="lbl">SafeDep</span><h3>October 2026 Security Incident Review</h3><p>Covers the Cursor Marketplace and LiteLLM incidents.</p><p class="foot"><a href="https://safedep.io/october-2026-security-incident-review/" target="_blank" rel="noopener">Read the review</a></p></div>
+      <div class="bcard"><span class="lbl">Help Net Security, 22 Oct 2026</span><h3>Say a few words, and a rigged AI asks for $5,000</h3><p>Imperial College research, tested in a sandbox.</p><p class="foot"><a href="https://www.helpnetsecurity.com/2026/10/22/research-speech-model-backdoor/" target="_blank" rel="noopener">Read the report</a></p></div>
+    </div>
+    <div class="plain"><span class="lab">Read like an engineer</span><p>Who is the source? What is confirmed, and what is still unknown? Is it a real incident or a research test?</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Case study: what it teaches</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker red">CASE STUDY: DISCUSS, THEN USE THE CODE</span>
+    <h2 class="head">Who is responsible, and what would you do?</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:36%">Question</th><th style="width:20%">Ch10 link</th><th>A professional response</th></tr></thead>
+        <tbody>
+          <tr><td>Who is affected?</td><td class="b">Five questions</td><td>Developers, and everyone whose data or code sits on their machines.</td></tr>
+          <tr><td>You installed the update. What do you do first?</td><td class="b">1 Public, 6 Profession</td><td>Report it, follow the vendor's notice, check SSH keys and tunnels, rotate credentials. Uninstalling alone may not be enough.</td></tr>
+          <tr><td>“The tool was official.” A full defence?</td><td class="b">Accountability</td><td>No. It explains how it happened, but your team still owns what it ships.</td></tr>
+          <tr><td>What should a team change?</td><td class="b">3 Product, Ch8</td><td>Check where tools come from, delay brand-new versions, use short-lived scoped secrets, limit what AI agents can do.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="plain g"><span class="lab">Keep using AI, but</span><p>Treat AI tools, packages and models as <strong>supply-chain dependencies</strong>: useful, powerful, and never trusted without checks. A human stays accountable.</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Backdoor in your own code</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker red">CONCEPT: BACKDOOR IN CODE</span>
+    <h2 class="head">A backdoor can also arrive in code AI writes for you</h2>
+    <div class="grid g2">
+      <div class="bcard"><span class="lbl">Example: login function</span><h3><code>if password == "dev-2569": return True</code></h3><p>Nobody asked for this line, yet all login tests still pass. Anyone who knows the value gets in without a real password.</p></div>
+      <div class="bcard"><span class="lbl">Why tests miss it</span><h3>Tests check what should work</h3><p>They rarely check for an extra way in. That is why you <strong>read the code</strong> before committing, and why review still matters.</p></div>
+    </div>
+    <div class="plain r"><span class="lab">What to do</span><p><strong>Remove the line, tell the team, and test the login again.</strong> Bug or backdoor, intended or not, the risk is the same, and the team that ships it owns it.</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Case study: local models</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker red">CASE STUDY: WHAT ABOUT A LOCAL MODEL?</span>
+    <h2 class="head">“Local” does not mean “trusted”</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:24%">Route</th><th style="width:44%">How it works</th><th>Can it send data out?</th></tr></thead>
+        <tbody>
+          <tr><td class="b">Hidden code in the file</td><td>Pickle files or <code>trust_remote_code</code> can run code when loaded.</td><td>Yes, like ordinary malware. No trigger needed.</td></tr>
+          <tr><td class="b">Backdoor in the weights</td><td>Training makes the model change its output on a trigger.</td><td>Not alone. Weights are numbers; they need software around them.</td></tr>
+          <tr><td class="b">Model + tools or UI</td><td>A triggered output calls a tool, or puts data in a link or image URL.</td><td>Yes, if the tool has permission or the UI loads the URL.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid g2" style="margin-top:1.6vh">
+      <div class="plain g" style="margin-top:0"><span class="lab">Reduce the risk</span><p>Check the publisher and hash; prefer <code>safetensors</code>; avoid <code>trust_remote_code</code>; use a sandbox with no network; give tools the least privilege; a person confirms risky actions.</p></div>
+      <div class="plain r" style="margin-top:0"><span class="lab">The limit</span><p>A file scan finds hidden code, not behaviour learned in training. Design so that <strong>even a triggered model cannot get data out</strong>.</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Professional practice</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">IDEA 4: HABITS THAT MATTER AS MUCH AS CODE</span>
+    <h2 class="head">Being easy to work with is an engineering skill</h2>
+    <div class="grid g4">
+      <div class="scard c-blue"><div class="lbl">Communicate</div><h3>Clearly and early</h3><p>Say what you're doing, and say when you're stuck, before the deadline.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">Commit</div><h3>Keep your word</h3><p>Deliver what you said, or renegotiate early. Reliability is reputation.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-yellow"><div class="lbl">Feedback</div><h3>Give and take it</h3><p>Critique the work, not the person; receive it without defensiveness.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">Document</div><h3>Leave a trail</h3><p>A README and clear commits so others, and future-you, can follow.</p><div class="bar n4"><i></i><i></i><i></i></div></div>
+    </div>
+    <div class="plain"><span class="lab">Why it's graded</span><p>These are the habits the oral exam and the GitHub contribution factor reward: the parts of engineering that no model does for you.</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Tools &amp; dev environments</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">IDEA 5: WHAT A REAL TEAM BUILDS WITH</span>
+    <h2 class="head">The toolkit, and where CI fits</h2>
+    <div class="flow" style="margin:1vh 0 2.2vh">
+      <div class="node"><div class="t">IDE</div><div class="s">write + AI assist</div></div>
+      <div class="arw">→</div>
+      <div class="node on-blue"><div class="t">Git / GitHub</div><div class="s" style="color:#cfe0ff">version control</div></div>
+      <div class="arw">→<small>on push</small></div>
+      <div class="node on-green"><div class="t">CI</div><div class="s" style="color:#d6f5e6">runs tests automatically</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Deploy</div><div class="s">users can try it</div></div>
+    </div>
+    <p class="dek" style="margin:0">You already use the IDE, Git and tests. <strong>CI (Continuous Integration)</strong> is the new idea: a service that <strong>runs your tests on every push</strong>, so a broken change is caught in minutes, by a machine, before it reaches the team.</p>
+    <div class="plain g"><span class="lab">In plain terms</span><p>CI is a <strong>tireless teammate</strong> who re-runs every test the moment you push. Our prototypes are static, so you don't need to set up CI; <strong>GitHub Pages</strong>, which republishes your site on every push, is the same idea at the Deploy step.</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Your project + AI</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">DO THIS WITH YOUR TEAM</span>
+    <h2 class="head">Finish like a professional</h2>
+    <div class="grid g2">
+      <div class="dcard do"><span class="pill">PROJECT STEP</span>
+        <div class="item"><h4>Keep the AI-Use Statement honest</h4><p>A milestone without it is capped at 50%, and it is your transparency on record.</p></div>
+        <div class="item"><h4>Collect the minimum</h4><p>Trim the personal data your prototype shows or asks for before the demo; be ready to justify every field. Use made-up data only.</p></div>
+      </div>
+      <div class="dcard dont" style="border:none"><span class="pill" style="background:var(--red)">AI-FIRST: OWN IT</span>
+        <div class="item"><h4>Be ready to explain any line</h4><p>At the oral exam, “the AI wrote it” is not an answer. Understanding is.</p></div>
+        <div class="item"><h4>Disclose, don't hide</h4><p>Using AI well is expected and rewarded; hiding it is the problem.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ References &amp; further reading</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">REFERENCES: WHERE THIS COMES FROM</span>
+    <h2 class="head">Textbook &amp; source references</h2>
+    <div class="panel" style="padding:.4vh 1.6vw"><div class="num-row"><span class="n ">1</span><div><h4>Sommerville, I. (2011) Software Engineering, 9e</h4><p>§1.2 Software engineering ethics: confidentiality, competence, IP, misuse; Fig 1.3 the ACM/IEEE Code.</p></div></div>
+<div class="num-row"><span class="n g">2</span><div><h4>ACM/IEEE-CS Code of Ethics (1999)</h4><p>Gotterbarn, Miller &amp; Rogerson: draft in <em>Comm. ACM</em> 40(11), 1997; version 5.2 approved 1999. Eight principles, three levels of obligation.</p></div></div>
+<div class="num-row"><span class="n y">3</span><div><h4>Leveson &amp; Turner (1993)</h4><p>An investigation of the Therac-25 accidents: accountability and safety, <em>IEEE Computer</em> 26(7).</p></div></div>
+<div class="num-row"><span class="n r">4</span><div><h4>US EPA (2015)</h4><p>Volkswagen defeat-device notice: dishonest code written to cheat an emissions test.</p></div></div>
+<div class="num-row"><span class="n p">5</span><div><h4>PDPA B.E. 2562 (2019)</h4><p>The data-protection duty behind “collect the minimum, be transparent.”</p></div></div></div>
+    <p class="foot-note">Before the final exam: read the eight principles and Sommerville §1.2. Your AI-Use Statement is Principle 4 (honest judgment) in practice.</p>
+  </div>
+</section>
+<section class="slide dark">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Summary</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">CHAPTER 10: IN FOUR LINES</span>
+    <h2 class="head">Build for people, stay accountable, leave a clear trail</h2>
+    <div class="quad">
+      <div class="q"><div class="tag">Ethics</div><h4>Duties beyond the code</h4><p>Public interest, honesty, competence. The ACM/IEEE Code is the shared standard; Public comes first.</p></div>
+      <div class="q"><div class="tag">Data</div><h4>Can vs should</h4><p>Minimise, protect, be transparent. The safest data is what you never collected.</p></div>
+      <div class="q"><div class="tag">AI</div><h4>A person is accountable</h4><p>Disclose use, keep a human sign-off, watch for bias. Check AI tools and models like any dependency. “The AI said so” is never a defence.</p></div>
+      <div class="q"><div class="tag">Practice</div><h4>Habits and tools</h4><p>Communicate, commit, give feedback, document; let IDE, Git, tests and CI carry the work.</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Demo day schedule</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">DEMO + ORAL EXAM: WHEN IS YOUR TEAM?</span>
+    <h2 class="head">13 teams a day, 12 minutes each, in our usual class slot</h2>
+    <div class="grid g2 sched" style="align-items:start">
+      <div><p class="codecap"><strong>Group A</strong>: Mon 9 Nov, 12:00 to 14:50</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th style="width:34%">Slot</th><th style="width:24%">Group</th><th>Team</th></tr></thead>
+        <tbody>
+            <tr><td>12:05 to 12:17</td><td class="b">Group 1</td><td>Aura</td></tr>
+            <tr><td>12:17 to 12:29</td><td class="b">Group 2</td><td>5 idoiots</td></tr>
+            <tr><td>12:29 to 12:41</td><td class="b">Group 3</td><td>I&#x27;m so hungry ahh</td></tr>
+            <tr><td>12:41 to 12:53</td><td class="b">Group 4</td><td>Apollo</td></tr>
+            <tr><td>12:53 to 13:05</td><td class="b">Group 5</td><td>Viounique</td></tr>
+            <tr><td>13:05 to 13:17</td><td class="b">Group 6</td><td>dek70</td></tr>
+            <tr><td>13:17 to 13:29</td><td class="b">Group 7</td><td>Gamza007</td></tr>
+            <tr><td>13:29 to 13:41</td><td class="b">Group 8</td><td>MedMind</td></tr>
+            <tr><td>13:41 to 13:53</td><td class="b">Group 9</td><td>Hew Khao Mak</td></tr>
+            <tr><td>13:53 to 14:05</td><td class="b">Group 10</td><td>Strategic</td></tr>
+            <tr><td>14:05 to 14:17</td><td class="b">Group 11</td><td>ILY3000</td></tr>
+            <tr><td>14:17 to 14:29</td><td class="b">Group 12</td><td>PhomPen Duke</td></tr>
+            <tr><td>14:29 to 14:41</td><td class="b">Group 13</td><td>Socrates and Skeletons</td></tr>
+        </tbody></table></div></div>
+      <div><p class="codecap"><strong>Group B</strong>: Mon 16 Nov, 12:00 to 14:50</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th style="width:34%">Slot</th><th style="width:24%">Group</th><th>Team</th></tr></thead>
+        <tbody>
+            <tr><td>12:05 to 12:17</td><td class="b">Group 14</td><td>Larb Lamphon</td></tr>
+            <tr><td>12:17 to 12:29</td><td class="b">Group 15</td><td>I don&#x27;t know</td></tr>
+            <tr><td>12:29 to 12:41</td><td class="b">Group 16</td><td>16RideRight</td></tr>
+            <tr><td>12:41 to 12:53</td><td class="b">Group 17</td><td>ByteSquad</td></tr>
+            <tr><td>12:53 to 13:05</td><td class="b">Group 18</td><td>MFU888</td></tr>
+            <tr><td>13:05 to 13:17</td><td class="b">Group 19</td><td>Yhar Bid</td></tr>
+            <tr><td>13:17 to 13:29</td><td class="b">Group 20</td><td>Home sick</td></tr>
+            <tr><td>13:29 to 13:41</td><td class="b">Group 21</td><td>lumen Inc.</td></tr>
+            <tr><td>13:41 to 13:53</td><td class="b">Group 22</td><td>Hallo world</td></tr>
+            <tr><td>13:53 to 14:05</td><td class="b">Group 23</td><td>Trauma squad</td></tr>
+            <tr><td>14:05 to 14:17</td><td class="b">Group 24</td><td>team 24</td></tr>
+            <tr><td>14:17 to 14:29</td><td class="b">Group 25</td><td>Team25</td></tr>
+            <tr><td>14:29 to 14:41</td><td class="b">Group 26</td><td>The last one</td></tr>
+        </tbody></table></div></div>
+    </div>
+    <p class="foot-note">12:00 to 12:05 set-up and briefing; 14:41 to 14:50 spare time. Arrive 10 minutes before your slot with the prototype already open. The whole team must be present: the oral part is individual.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ What to present</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">YOUR 12 MINUTES: 5 MIN DEMO + 6 MIN QUESTIONS (+1 MIN SET-UP)</span>
+    <h2 class="head">Present in this order: follow the Golden Thread</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="table-wrap"><table>
+        <thead><tr><th style="width:9%">#</th><th>Topic (5-min demo)</th><th style="width:16%">Time</th></tr></thead>
+        <tbody>
+          <tr><td class="b">1</td><td><strong>Problem and user</strong>: who has the pain, and what it is (M1)</td><td>0:30</td></tr>
+          <tr><td class="b">2</td><td><strong>Must FRs</strong>: the MVP list from your SRS (M2)</td><td>0:30</td></tr>
+          <tr><td class="b">3</td><td><strong>Live click-through</strong>: every Must FR happy path + 1 unhappy path (empty or error). Point: "this screen = FR-3 = this diagram = this acceptance test"</td><td>3:00</td></tr>
+          <tr><td class="b">4</td><td><strong>AI use</strong>: where AI helped, what you checked and changed</td><td>0:30</td></tr>
+          <tr><td class="b">5</td><td><strong>Next step</strong>: one thing you would improve, and why</td><td>0:30</td></tr>
+        </tbody></table></div>
+      <div>
+        <div class="panel" style="padding:.4vh 1.4vw">
+          <div class="num-row"><span class="n">Q</span><div><h4>6 min questions: every member answers</h4><p>1 to 2 questions each, about <strong>your own part</strong> and your AI use. Scored on the oral criteria (3 slides on).</p></div></div>
+        </div>
+        <div class="plain g" style="margin-top:1.4vh"><span class="lab">Have ready before your slot</span><p>Prototype opens in a browser from the repo (no server, no DB). Demo slides, Final Report with the Golden Thread table, and the AI-Use Statement in the repo. Laptop and display adapter tested.</p></div>
+        <div class="plain r" style="margin-top:1.4vh"><span class="lab">Over time</span><p>At 5:00 the demo stops and questions start. Unshown features count as not shown.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ How the demo is scored</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">TEAM SCORE: M3 FINAL PROTOTYPE + DEMO = 30 POINTS (15% OF THE COURSE)</span>
+    <h2 class="head">Marks are for the Golden Thread, not for a pretty app</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th style="width:34%">Criterion</th><th style="width:11%">Points</th><th>Full marks look like</th></tr></thead>
+      <tbody>
+        <tr><td class="b">Clickable prototype covers every Must FR</td><td class="b">12</td><td>Every Must-FR happy path is clickable end to end (no real DB), plus an unhappy path (empty or error state)</td></tr>
+        <tr><td class="b">Golden Thread coherence</td><td class="b">6</td><td>You can point: this feature = FR-3 = this diagram = this acceptance test</td></tr>
+        <tr><td class="b">Demo and presentation</td><td class="b">6</td><td>Tells the Problem to Solution story, on time, answers "why" questions</td></tr>
+        <tr><td class="b">Engineering and AI-first process</td><td class="b">6</td><td>Clean repo (prototype + docs inside), README says how to open it, honest AI-Use Statement</td></tr>
+      </tbody></table></div>
+    <div class="grid g3" style="margin-top:1.6vh">
+      <div class="plain r"><span class="lab">AI-use gate</span><p>No AI-Use Statement: M3 capped at 50%.</p></div>
+      <div class="plain r"><span class="lab">Coherence gate</span><p>Problem, design and prototype about different things: capped at 50%.</p></div>
+      <div class="plain"><span class="lab">Late or missing</span><p>Late = half. Not handed in = 0. Heavy gaps = returned for revision.</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Final project marking rubric</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">FINAL PROJECT MARKING RUBRIC: M3 = 30 POINTS</span>
+    <h2 class="head">What each score level looks like</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th style="width:20%">Criterion</th><th>Strong</th><th>Developing</th><th>Weak</th><th style="width:13%">0</th></tr></thead>
+      <tbody>
+        <tr><td class="b">Prototype, Must FRs (12)</td><td><strong>10 to 12:</strong> every Must FR clickable, plus an unhappy path</td><td><strong>6 to 9:</strong> most Must FRs, or no unhappy path</td><td><strong>1 to 5:</strong> few flows work end to end</td><td>Won't open</td></tr>
+        <tr><td class="b">Golden Thread (6)</td><td><strong>5 to 6:</strong> every Must FR maps to diagram and test</td><td><strong>3 to 4:</strong> some links missing</td><td><strong>1 to 2:</strong> mostly disconnected</td><td>No table</td></tr>
+        <tr><td class="b">Demo (6)</td><td><strong>5 to 6:</strong> clear story, on time, answers “why”</td><td><strong>3 to 4:</strong> clear, but weak on “why”</td><td><strong>1 to 2:</strong> unclear or incomplete</td><td>No demo</td></tr>
+        <tr><td class="b">Engineering and AI (6)</td><td><strong>5 to 6:</strong> clean repo, working README, specific AI-Use Statement</td><td><strong>3 to 4:</strong> complete, but thin</td><td><strong>1 to 2:</strong> items missing or unclear</td><td>Nothing usable</td></tr>
+      </tbody>
+    </table></div>
+    <p class="foot-note">Then apply: no AI-Use Statement or broken thread = capped at 50%; late = half; contribution factor per person.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ How the oral exam is scored</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">INDIVIDUAL SCORE: ORAL EXAM = 4 CRITERIA x 0 TO 5 = 20, SCALED TO 10%</span>
+    <h2 class="head">Explain your own part, and how you used AI</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th style="width:25%">Criterion</th><th>5 strong</th><th>3 ok</th><th>1 weak</th><th style="width:11%">0</th></tr></thead>
+      <tbody>
+        <tr><td class="b">Understands the concept</td><td>Explains clearly, correct</td><td>Mostly correct</td><td>Confused</td><td>No idea</td></tr>
+        <tr><td class="b">Can explain own work</td><td>Owns it, in detail</td><td>Partial</td><td>Shaky</td><td>Can't</td></tr>
+        <tr><td class="b">AI use: transparent and critical</td><td>What AI did, what you changed, and why</td><td>Some awareness</td><td>"AI did it"</td><td>Hides or denies</td></tr>
+        <tr><td class="b">Communication</td><td>Clear, confident</td><td>Adequate</td><td>Unclear</td><td>None</td></tr>
+      </tbody></table></div>
+    <div class="grid g2" style="margin-top:1.6vh">
+      <div class="plain r"><span class="lab">Red flag</span><p>Can't explain work your team credits to you: "can explain own work" = 0, and it is noted as possible undisclosed AI use or free-riding.</p></div>
+      <div class="plain"><span class="lab">Sample questions</span><p>Pick one feature: which problem, which FR, which test proves it? Walk me through your part. Where did you use AI, and what did you change? What would break if this input changed?</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Individual contribution</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">YOUR PROJECT MARK = TEAM SCORE x CONTRIBUTION FACTOR (GITHUB ONLY, NO PEER REVIEW)</span>
+    <h2 class="head">Start at 1.00; it only goes down, with evidence</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="table-wrap"><table>
+        <thead><tr><th style="width:20%">Factor</th><th style="width:30%">Level</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="b">1.00</td><td>Normal (most students)</td><td>Visible work in the repo matching your role in the Team Charter</td></tr>
+          <tr><td class="b">0.70</td><td>Partial</td><td>Thin or last-minute GitHub work, after a chance to explain</td></tr>
+          <tr><td class="b">0.40</td><td>Barely any</td><td>No verifiable work in the repo across the project</td></tr>
+        </tbody></table></div>
+      <div class="panel" style="padding:.4vh 1.6vw">
+        <p class="codecap" style="margin-top:1vh">A factor is lowered only when both are true</p>
+        <div class="num-row"><span class="n">1</span><div><h4>GitHub shows little or no work</h4><p>Commits, PRs, issues, committed docs, diagrams, prototype. Judged on meaning, not commit count.</p></div></div>
+        <div class="num-row"><span class="n g">2</span><div><h4>You saw the evidence and had 3 days to explain</h4><p>Non-code work (design, docs, PM, testing) must be pointable in the repo.</p></div></div>
+      </div>
+    </div>
+    <div class="plain g" style="margin-top:1.6vh"><span class="lab">Do it now</span><p>Open your repo: Insights, Contributors. If your work is not there under your own account, it does not count. The instructor marks the demo, the oral exam and the factor on one score sheet per team.</p></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Exam review</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker green">EXAM REVIEW: CH10 ON ONE PAGE</span>
+    <h2 class="head">What the final exam can ask from Ch10</h2>
+    <div class="cmap">
+      <div class="col"><span class="lab" style="color:var(--blue)">Ethics &amp; data</span>
+        <div class="step"><h4>Code</h4><p>ACM/IEEE-CS, 8 principles: Public, Client &amp; employer, Product, Judgment, Management, Profession, Colleagues, Self. Public comes first; Principle 2 is within the public interest. Three levels: aspire, expect, demand. Not an algorithm: ask who is affected, and how the least empowered fare.</p></div>
+        <div class="step"><h4>Everyday</h4><p>Sommerville §1.2: confidentiality, competence, IP rights, computer misuse.</p></div>
+        <div class="step"><h4>Data</h4><p>Can vs should: minimise, protect, be transparent.</p></div>
+      </div>
+      <div class="col"><span class="lab" style="color:var(--green)">AI &amp; practice</span>
+        <div class="step"><h4>AI</h4><p>Human sign-off, disclose use, watch for bias; never paste private data; “the AI said so” is not a defence.</p></div>
+        <div class="step"><h4>Habits</h4><p>Communicate, commit, feedback, document.</p></div>
+        <div class="step"><h4>Tools</h4><p>IDE, Git/GitHub, tests; CI runs the tests automatically on every push; deploy.</p></div>
+      </div>
+    </div>
+    <p class="foot-note">Final exam: Ch1 to Ch10, English MCQ (4 options) + short answer. You will be asked to explain, choose or classify.</p>
+  </div>
+</section>
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ Exam practice: Ch10</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker green">EXAM PRACTICE: CH10 MCQ 1 TO 4 (ALONE, ON YOUR OWN PAPER, NOT GRADED)</span>
+    <h2 class="head">Practice like the real exam</h2>
+    <div class="grid g2" style="gap:1.4vh 1.4vw">
+      <div class="mcq"><p class="q"><span class="n">1.</span>In the ACM/IEEE-CS Software Engineering Code of Ethics, which principle comes <strong>first</strong>?</p><ol><li><b>A.</b>Client and employer.</li><li><b>B.</b>Product.</li><li class="mark"><b>C.</b>Public.</li><li><b>D.</b>Self.</li></ol></div><div class="mcq"><p class="q"><span class="n">2.</span>A study-reminder prototype asks every user for their national ID number. Which data-ethics principle does this break <strong>most directly</strong>?</p><ol><li><b>A.</b>Transparency.</li><li class="mark"><b>B.</b>Data minimisation.</li><li><b>C.</b>Competence.</li><li><b>D.</b>Intellectual property.</li></ol></div><div class="mcq"><p class="q"><span class="n">3.</span>A bug in AI-generated code exposes users' data after release. Who is <strong>accountable</strong>?</p><ol><li><b>A.</b>The company that trained the AI model.</li><li><b>B.</b>No one, because the code was generated automatically.</li><li class="mark"><b>C.</b>The engineers who reviewed and shipped the code.</li><li><b>D.</b>The user who reported the bug.</li></ol></div><div class="mcq"><p class="q"><span class="n">4.</span>What does <strong>Continuous Integration (CI)</strong> do?</p><ol><li><b>A.</b>It writes the unit tests for you.</li><li class="mark"><b>B.</b>It runs the tests automatically on every push.</li><li><b>C.</b>It deploys the system once, at the end of the project.</li><li><b>D.</b>It replaces code review.</li></ol></div>
+    </div>
+    <p class="stepnote">About 4 minutes. Answers are revealed one by one afterwards.</p>
+  </div>
+</section>
+<section class="slide dark">
+  <div class="chrome"><span class="l"><span class="play"></span> intro2se-ch10-ethics-practice.fig <span class="crumb">/ What's next</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">THAT'S CH10, AND THE LAST CONTENT CLASS</span>
+    <h2 class="head">Next: demo, oral exam, final exam</h2>
+    <div class="quad">
+      <div class="q"><div class="tag">Critique papers</div><h4>8 sheets this term</h4><p>No Critique today. You started by spotting AI mistakes and finished by asking your own questions.</p></div>
+      <div class="q"><div class="tag">Team deliverables</div><h4>Final Report + AI-Use Statement</h4><p>Due <span class="tbc" contenteditable="true" data-key="ch10-m3-due">date to be confirmed</span>. Golden Thread table, demo slides, repo frozen. Commit from your own account.</p></div>
+      <div class="q"><div class="tag">Demo + oral exam</div><h4>Group A Mon 9 Nov</h4><p>Group B Mon 16 Nov, 12:00 to 14:50, 12 minutes per team. Re-read your team's AI-Use Statement first.</p></div>
+      <div class="q"><div class="tag">Final exam</div><h4>23 Nov to 4 Dec</h4><p>Ch1 to Ch10, English MCQ + short answer. The Ch10 self-study handbook is posted in Classroom.</p></div>
+    </div>
+  </div>
+</section>
+
+
+</div>
+<div class="bar" id="bar"></div><span class="hint">← / →, click edges, Home / End, Ctrl/Cmd-P to print</span>
+<script>
+/* Intro2SE slide-deck engine: keyboard + click nav, progress bar, counter,
+   step reveal (.frag / .mark, grouped by data-f; going back re-hides answers), countdown timer (.timer),
+   editable to-be-confirmed fields (.tbc, remembered in this browser). */
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, bar=document.getElementById('bar');
+  function pad(n){return String(n).padStart(2,'0');}
+  function steps(s){
+    var g=[], seen={};
+    [].slice.call(s.querySelectorAll('.frag,.mark')).forEach(function(el){
+      var k=el.getAttribute('data-f');
+      if(k===null){g.push([el]);}
+      else if(seen[k]){seen[k].push(el);}
+      else{seen[k]=[el];g.push(seen[k]);}
+    });
+    return g;
+  }
+  function setSteps(s,n){
+    steps(s).forEach(function(grp,k){grp.forEach(function(el){el.classList.toggle('on',k<n);});});
+    s._n=n;
+  }
+  slides.forEach(function(s,k){
+    var c=s.querySelector('.count'); if(c) c.textContent=pad(k+1)+' / '+pad(slides.length);
+    setSteps(s,0);
+  });
+  function show(n,allSteps){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){ s.classList.toggle('active',k===i); });
+    setSteps(slides[i], allSteps ? steps(slides[i]).length : 0);
+    if(bar) bar.style.width=((i+1)/slides.length*100)+'%';
+  }
+  function next(){ var s=slides[i]; if(s._n<steps(s).length) setSteps(s,s._n+1); else if(i<slides.length-1) show(i+1,false); }
+  function prev(){ var s=slides[i]; if(s._n>0) setSteps(s,s._n-1); else if(i>0) show(i-1,false); }
+
+  /* countdown timers */
+  function fmt(t){return Math.floor(t/60)+':'+pad(t%60);}
+  [].slice.call(document.querySelectorAll('.timer')).forEach(function(tm){
+    var total=+tm.getAttribute('data-sec')||420, left=total, h=null;
+    var out=tm.querySelector('.t'), go=tm.querySelector('.go'), rs=tm.querySelector('.rs');
+    function paint(){ out.textContent=fmt(left); go.textContent=h?'Pause':(left<total&&left>0?'Resume':'Start'); }
+    function stop(){ clearInterval(h); h=null; tm.classList.remove('run'); paint(); }
+    function start(){ if(left<=0) return; tm.classList.add('run'); tm.classList.remove('done');
+      h=setInterval(function(){ left--; if(left<=0){ left=0; stop(); tm.classList.add('done'); out.textContent='0:00'; return;} paint(); },1000); paint(); }
+    tm._toggle=function(){ h?stop():start(); };
+    tm._reset=function(){ stop(); left=total; tm.classList.remove('done'); paint(); };
+    go.addEventListener('click',tm._toggle); rs.addEventListener('click',tm._reset); paint();
+  });
+
+  /* editable fields, remembered per browser */
+  [].slice.call(document.querySelectorAll('.tbc[data-key]')).forEach(function(el){
+    var k='intro2se:'+el.getAttribute('data-key');
+    try{ var v=localStorage.getItem(k); if(v) el.textContent=v; }catch(e){}
+    el.addEventListener('input',function(){ try{ localStorage.setItem(k,el.textContent); }catch(e){} });
+  });
+
+  document.addEventListener('keydown',function(e){
+    if(e.target.isContentEditable){ if(e.key==='Escape') e.target.blur(); return; }
+    if(['ArrowRight','ArrowDown',' ','PageDown'].indexOf(e.key)>-1){e.preventDefault();next();}
+    else if(['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key)>-1){e.preventDefault();prev();}
+    else if(e.key==='Home'){show(0,false);} else if(e.key==='End'){show(slides.length-1,false);}
+    else if(e.key==='t'||e.key==='T'){ var tm=slides[i].querySelector('.timer'); if(tm) tm._toggle(); }
+    else if(e.key==='r'||e.key==='R'){ var tr=slides[i].querySelector('.timer'); if(tr) tr._reset(); }
+  });
+  document.getElementById('deck').addEventListener('click',function(e){
+    if(e.target.closest('a,button,[contenteditable]')) return;
+    if(e.clientX<innerWidth*0.25) prev(); else next();
+  });
+  show(0,false);
+})();
+</script>
+</body>
+</html>

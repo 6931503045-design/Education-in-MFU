@@ -1,0 +1,1647 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intro2SE Gym</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===== Theme tokens — โทนแบบ Profound: ดำ-ขาว-เทา + accent ส้มนิดเดียว ===== */
+:root, :root[data-theme="dark"]{
+  --bg:#000; --bg-2:#0a0a0a; --card:#0c0c0d; --card-2:#141415; --ink:#edf2f5; --ink-2:#d1d1d1; --muted:#828282; --line:#1f1f1f; --line-2:#2c2c2c;
+  --accent:#ff7a45; --accent-bg:rgba(255,122,69,.12);
+  --green:#4ade80; --green-bg:rgba(74,222,128,.08); --red:#f87171; --red-bg:rgba(248,113,113,.08); --amber:#fbbf24; --amber-bg:rgba(251,191,36,.08);
+  --btn:#fff; --btn-ink:#222;
+  --code-bg:#070707; --code-ink:#e5e5e5; --hl:rgba(255,255,255,.07); --ln:#3d3d3d;
+  --k:#ff8a5c; --t:#7dd3fc; --s:#bef264; --n:#fca5a5; --c:#5a5a5a;
+  --glow:radial-gradient(1200px 500px at 50% -200px, rgba(255,255,255,.07), transparent 70%);
+}
+:root[data-theme="light"]{
+  --bg:#fafafa; --bg-2:#fff; --card:#fff; --card-2:#f4f4f5; --ink:#111; --ink-2:#333; --muted:#6b6b6b; --line:#e7e7e7; --line-2:#d9d9d9;
+  --accent:#e85d27; --accent-bg:rgba(232,93,39,.1);
+  --green:#15803d; --green-bg:rgba(21,128,61,.07); --red:#c62828; --red-bg:rgba(198,40,40,.06); --amber:#a16207; --amber-bg:rgba(161,98,7,.08);
+  --btn:#111; --btn-ink:#fff;
+  --code-bg:#0c0c0d; --code-ink:#e5e5e5; --hl:rgba(255,255,255,.08); --ln:#444;
+  --glow:radial-gradient(1200px 500px at 50% -200px, rgba(0,0,0,.05), transparent 70%);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);background-image:var(--glow);background-repeat:no-repeat;color:var(--ink);font:16px/1.65 Inter,"IBM Plex Sans Thai",system-ui,sans-serif;letter-spacing:-.005em;-webkit-font-smoothing:antialiased}
+code,.mono,textarea{font-family:"IBM Plex Mono",ui-monospace,monospace}
+:not(pre)>code{background:var(--card-2);border:1px solid var(--line-2);padding:0 5px;border-radius:5px;font-size:.86em;letter-spacing:0}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:10px;height:56px;padding:0 20px}
+.logo{font-weight:600;font-size:17px;letter-spacing:-.02em;text-decoration:none;color:var(--ink);white-space:nowrap;display:flex;align-items:center;gap:8px}
+.logo i{width:20px;height:20px;border-radius:6px;background:var(--ink);display:inline-block;position:relative}
+.logo i::after{content:"";position:absolute;inset:6px;border-radius:2px;background:var(--accent)}
+.count{margin-left:auto;font-size:13px;color:var(--accent);background:var(--accent-bg);padding:4px 10px;border-radius:6px;white-space:nowrap}
+.ibtn{border:1px solid var(--line-2);background:transparent;border-radius:8px;height:34px;min-width:34px;padding:0 10px;font-size:14px;color:var(--ink-2)}
+.ibtn:hover{background:var(--card-2)}
+
+/* app shell: sidebar + content (เหมือนแอปทำงาน) */
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:calc(100vh - 56px)}
+.shell>*,.tracer>*{min-width:0}
+.side{border-right:1px solid var(--line);padding:18px 12px;position:sticky;top:56px;height:calc(100vh - 56px);overflow:auto}
+.side h5{margin:18px 10px 6px;font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0}
+.side h5:first-child{margin-top:0}
+.side a{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;text-decoration:none;color:var(--ink-2);font-size:14px}
+.side a:hover{background:var(--card-2)}
+.side a.on{background:var(--card-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2)}
+.side a .dot{width:7px;height:7px;border-radius:50%;border:1px solid var(--muted);flex:0 0 7px}
+.side a .dot.ok{background:var(--green);border-color:var(--green)}
+.side a.soon{opacity:.4;pointer-events:none}
+.side .badge{margin-left:auto;font-size:11px;background:var(--accent);color:#000;border-radius:5px;padding:0 6px;font-weight:600}
+.wrap{max-width:960px;margin:0 auto;padding:0 28px}
+
+/* type */
+h1{font-size:40px;line-height:1.15;font-weight:500;letter-spacing:-.025em;margin:36px 0 8px}
+h2{font-size:20px;font-weight:500;letter-spacing:-.015em;margin:0 0 12px}
+h3{font-size:16px;font-weight:500;margin:0 0 4px}
+.sub{color:var(--muted);margin:0;font-size:15px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);border:1px solid var(--line-2);border-radius:999px;padding:3px 12px 3px 4px}
+.eyebrow b{background:var(--accent-bg);color:var(--accent);font-weight:500;border-radius:999px;padding:0 8px}
+
+/* cards & bits */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;margin:16px 0}
+.step-h{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.step-h .no{font:500 12px "IBM Plex Mono",monospace;color:var(--muted);border:1px solid var(--line-2);border-radius:6px;padding:1px 7px}
+.step-h h2{margin:0}
+.pill{display:inline-block;font-size:12px;font-weight:500;padding:1px 8px;border-radius:6px;color:var(--muted);border:1px solid var(--line-2)}
+.pill.ok{color:var(--green);border-color:color-mix(in srgb,var(--green) 40%,transparent)}
+.pill.lv{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:0;background:var(--btn);color:var(--btn-ink);font-weight:500;font-size:14px;padding:9px 16px;border-radius:8px;text-decoration:none;letter-spacing:-.01em}
+.btn:hover{opacity:.9}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2)}
+.btn.ghost:hover{background:var(--card-2)}
+.btn:disabled{opacity:.35;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* tutor bubble */
+.tutor{display:flex;gap:12px;align-items:flex-start}
+.tutor .ava{flex:0 0 36px;height:36px;border-radius:8px;border:1px solid var(--line-2);background:var(--card-2);display:grid;place-items:center;font-size:18px}
+.tutor .bub{border:1px solid var(--line);background:var(--bg-2);border-radius:10px;padding:9px 14px;flex:1;min-height:42px;font-size:15px;color:var(--ink-2)}
+.tutor .bub b{color:var(--ink)}
+
+/* home */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.lesson{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;transition:border-color .15s,background .15s}
+.lesson:hover{border-color:var(--line-2);background:var(--card-2)}
+.lesson .em{color:var(--accent);width:40px;height:40px;border-radius:8px;border:1px solid var(--line-2);display:grid;place-items:center;margin-bottom:12px}
+.lesson .n{font:12px "IBM Plex Mono",monospace;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stat{padding:16px 18px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat b{display:block;font-size:30px;font-weight:500;letter-spacing:-.03em}
+.stat small{color:var(--muted);font-size:13px}
+.stat.hot b{color:var(--accent)}
+
+/* video + analogy */
+.video{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;border:1px solid var(--line-2);background:var(--bg-2)}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+/* voice settings panel */
+.vpanel{position:fixed;top:62px;right:16px;z-index:30;width:300px;max-width:calc(100vw - 32px);background:var(--card);border:1px solid var(--line-2);border-radius:12px;padding:16px;box-shadow:0 20px 50px rgba(0,0,0,.45);font-size:14px}
+.vpanel[hidden]{display:none}
+.vp-row{display:flex;justify-content:space-between;align-items:center}
+.vp-lbl{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:14px 0 6px}
+.vpanel select{width:100%;background:var(--bg-2);color:var(--ink);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;font:inherit}
+.vpanel input[type=range]{width:100%;accent-color:var(--accent)}
+.vp-note{margin:12px 0 0;font-size:13px;color:var(--muted);background:var(--accent-bg);border-radius:8px;padding:8px 10px}
+.vp-note b{color:var(--ink)}
+.switch{position:relative;width:38px;height:22px;display:inline-block}
+.switch input{opacity:0;width:0;height:0}
+.switch span{position:absolute;inset:0;background:var(--line-2);border-radius:99px;transition:.2s;cursor:pointer}
+.switch span::before{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.switch input:checked+span{background:var(--accent)}
+.switch input:checked+span::before{transform:translateX(16px)}
+.vcard{display:block;text-decoration:none;color:#fff}
+.vcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.7;transition:opacity .2s}
+.vcard:hover img{opacity:.9}
+.vplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:68px;height:48px;border-radius:12px;background:#ff0033;display:grid;place-items:center}
+.vplay .ic{width:24px;height:24px;fill:#fff;stroke:#fff}
+.vcap{position:absolute;left:0;right:0;bottom:0;padding:28px 16px 12px;background:linear-gradient(transparent,rgba(0,0,0,.85));display:flex;flex-direction:column}
+.vcap small{color:#ccc;font-size:12px}
+.video-empty{border:1px dashed var(--line-2);border-radius:10px;padding:22px;text-align:center;color:var(--muted);font-size:14px}
+.vlang{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;padding:3px;margin-bottom:12px;gap:2px}
+.vlang button{border:0;background:transparent;border-radius:6px;padding:4px 12px;font-size:13px;color:var(--muted)}
+.vlang button.on{background:var(--card-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2)}
+.vtabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.vtabs button{border:1px solid var(--line-2);background:transparent;border-radius:6px;padding:3px 10px;font-size:13px;color:var(--muted)}
+.vtabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.analogy{display:flex;gap:16px;align-items:center;border:1px solid var(--line);background:var(--bg-2);border-radius:12px;padding:16px 18px;margin-top:18px}
+.analogy{padding:0;overflow:hidden;align-items:stretch;gap:0}
+.analogy figure{margin:0;flex:0 0 44%;max-width:44%;position:relative;background:#000}
+.analogy figure img{display:block;width:100%;height:100%;min-height:200px;object-fit:cover}
+.analogy figcaption{position:absolute;left:8px;bottom:6px;font-size:10.5px;color:#fff;background:rgba(0,0,0,.55);padding:1px 6px;border-radius:4px}
+.analogy figure.noimg{display:grid;place-items:center;min-height:180px;color:var(--accent);background:var(--bg-2);border-right:1px solid var(--line)}
+.analogy figure.noimg .ic{width:64px;height:64px;stroke-width:1.25}
+.analogy .txt{padding:18px 20px;display:flex;flex-direction:column;justify-content:center}
+.analogy .txt b{font-size:17px;font-weight:500;letter-spacing:-.01em}
+.ic{width:1.1em;height:1.1em;flex:0 0 auto;vertical-align:-.18em}
+.lesson .em .ic,.h1-ic .ic{width:20px;height:20px}
+.h1-ic{display:inline-grid;place-items:center;width:44px;height:44px;border:1px solid var(--line-2);border-radius:10px;vertical-align:middle;margin-right:12px;color:var(--accent)}
+.tutor .ava .ic{width:19px;height:19px;color:var(--accent)}
+.ibtn{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.ibtn .ic{width:16px;height:16px}
+.side a .ic{width:16px;height:16px;color:var(--muted)}
+.side a.on .ic{color:var(--ink)}
+.count{display:inline-flex;align-items:center;gap:6px}
+.analogy p{margin:2px 0 0;color:var(--muted);font-size:15px}
+
+/* ===== Tracer ===== */
+.tracer{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px}
+.codebox{background:var(--code-bg);color:var(--code-ink);border:1px solid var(--line-2);border-radius:10px;padding:10px 0;font:13.5px/1.7 "IBM Plex Mono",monospace;overflow:auto;letter-spacing:0}
+.codebox .ln{display:flex;padding:0 12px 0 0;border-left:2px solid transparent;white-space:pre}
+.codebox .ln i{flex:0 0 34px;text-align:right;padding-right:14px;color:var(--ln);font-style:normal;user-select:none}
+.codebox .ln.cur{background:var(--hl);border-left-color:var(--accent)}
+.codebox .ln.cur i{color:var(--accent)}
+.codebox .ln.pick{cursor:pointer}
+.codebox .ln.pick:hover{background:rgba(255,255,255,.05)}
+.codebox .ln.bad{background:rgba(248,113,113,.14);border-left-color:#f87171}
+.codebox .ln.good{background:rgba(74,222,128,.13);border-left-color:#4ade80}
+.tk-k{color:var(--k)}.tk-t{color:var(--t)}.tk-s{color:var(--s)}.tk-n{color:var(--n)}.tk-c{color:var(--c);font-style:italic}
+.side-p{display:flex;flex-direction:column;gap:10px;min-width:0}
+.panel{border:1px solid var(--line);background:var(--bg-2);border-radius:10px;padding:10px 12px}
+.panel h4{margin:0 0 8px;font-size:12px;font-weight:500;color:var(--muted)}
+.vars{display:flex;flex-wrap:wrap;gap:6px}
+.var{font:12.5px "IBM Plex Mono",monospace;border:1px solid var(--line-2);border-radius:6px;padding:2px 8px;color:var(--ink-2)}
+.var b{color:var(--t);font-weight:500}
+.objs{display:flex;flex-wrap:wrap;gap:8px}
+.obj{border:1px solid var(--line-2);background:var(--card);border-radius:8px;min-width:130px;font:12.5px "IBM Plex Mono",monospace;overflow:hidden;animation:pop .3s}
+.obj .hd{padding:3px 8px;font-weight:600;color:#0a0a0a}
+.obj .fl{padding:2px 8px;display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line)}
+.obj .fl.flash{animation:flash 1s}
+.obj .fl span:last-child{color:var(--s)}
+:root[data-theme="light"] .obj .fl span:last-child{color:#4d7c0f}
+.obj .fl span.null{color:var(--muted)!important;font-style:italic}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:none;opacity:1}}
+@keyframes flash{0%{background:var(--accent-bg)}100%{background:transparent}}
+.arrbox{animation:pop .3s;min-width:0;max-width:100%}
+.arrlbl{font:600 12px "IBM Plex Mono",monospace;margin-bottom:4px}
+.arrcells{display:flex;gap:4px;flex-wrap:wrap}
+.ac{display:flex;flex-direction:column;align-items:center;gap:2px}
+.ac span{min-width:44px;height:34px;padding:0 6px;display:grid;place-items:center;border:1px solid var(--line-2);border-radius:6px;background:var(--card);font:13px "IBM Plex Mono",monospace;color:var(--s)}
+.ac i{font:11px "IBM Plex Mono",monospace;color:var(--muted);font-style:normal}
+.ac span.cur,.g2 td.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-bg);color:var(--ink)}
+.ac span.flash,.g2 td.flash{animation:flash 1s}
+.ac span.null,.g2 td.null{color:var(--muted);font-style:italic}
+.g2{border-collapse:separate;border-spacing:4px;font:13px "IBM Plex Mono",monospace}
+.g2 th{color:var(--muted);font-weight:400;font-size:11px;padding:0 4px}
+.g2 td{min-width:40px;height:32px;text-align:center;border:1px solid var(--line-2);border-radius:6px;background:var(--card);color:var(--s)}
+:root[data-theme="light"] .ac span,:root[data-theme="light"] .g2 td{color:#4d7c0f}
+.scene-stage{border:1px solid var(--line);background:var(--bg-2);border-radius:12px;padding:18px;min-height:220px;display:flex;align-items:center;justify-content:center;overflow-x:auto}
+.scene-in{width:100%;animation:sfade .35s}
+@keyframes sfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.srow{display:flex;gap:10px;align-items:stretch;justify-content:center;flex-wrap:wrap}
+.sbox{flex:1 1 140px;max-width:260px;border:1px solid var(--line-2);background:var(--card);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:14px;transition:opacity .2s}
+.sbox b{font-weight:600;color:var(--ink)}
+.sbox span{color:var(--muted);font-size:13px}
+.sbox.hot{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.sbox.good{border-color:var(--green);box-shadow:0 0 0 3px var(--green-bg)}
+.sbox.dim{opacity:.4}
+.sbox.code b{font:500 13px "IBM Plex Mono",monospace}
+.sbox.ren{border-color:var(--amber)}
+.sbox.new{border-color:var(--green)}
+.sbox .bad{color:var(--red)}
+.sarrow{align-self:center;color:var(--muted);font-size:18px;flex:0 0 auto}
+.snote{margin-top:12px;text-align:center;font-size:14px;color:var(--ink-2);background:var(--card-2);border-radius:8px;padding:8px 12px}
+.snote.warn{background:var(--amber-bg);color:var(--ink)}
+.snote.good{background:var(--green-bg);color:var(--ink)}
+.stag{display:inline-block;font-size:11px;font-weight:600;padding:0 6px;border-radius:5px;border:1px solid var(--line-2);color:var(--muted)}
+.stag.ren{color:var(--amber);border-color:var(--amber)}
+.stag.new{color:var(--green);border-color:var(--green)}
+.stbl{width:100%;border-collapse:collapse;font-size:14px}
+.stbl th,.stbl td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+.stbl th{color:var(--muted);font-weight:500;font-size:12px}
+.sgrid9{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sgrid8{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.sgrid9 .sbox,.sgrid8 .sbox{max-width:none}
+.sbars{display:flex;gap:10px;align-items:flex-end;height:200px;justify-content:center}
+.sbar{flex:1;max-width:90px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;opacity:.25;transition:opacity .3s}
+.sbar.on{opacity:1}
+.sbar i{display:block;width:100%;background:var(--line-2);border-radius:6px 6px 0 0;transition:height .4s}
+.sbar.on i{background:var(--ink-2)}
+.sbar.hot i{background:var(--accent)}
+.sbar b{font:600 13px "IBM Plex Mono",monospace}
+.sbar span{font-size:11px;color:var(--muted)}
+.sboard{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+.sboard>div{border:1px solid var(--line-2);border-radius:10px;padding:8px;min-height:150px;background:var(--card)}
+.sboard>div.over{border-color:var(--red);box-shadow:0 0 0 3px var(--red-bg)}
+.sboard h5{margin:0 0 6px;font-size:11px;color:var(--muted);font-weight:600}
+.sboard p{margin:0 0 6px;font-size:13px;border:1px solid var(--line-2);border-radius:6px;padding:5px 8px;background:var(--bg-2)}
+.sboard p.doing{border-color:var(--amber)}
+.sboard p.done{border-color:var(--green);color:var(--muted)}
+.sburn{width:100%;max-width:440px;display:block;margin:0 auto}
+.sburn .ax{stroke:var(--line-2);stroke-width:1.5}
+.sburn .lb{fill:var(--muted);font-size:10px;font-family:"IBM Plex Mono",monospace}
+.sburn .ideal{stroke:var(--muted);stroke-width:2;stroke-dasharray:5 4}
+.sburn .act{fill:none;stroke:var(--accent);stroke-width:3}
+.sburn .today{stroke:var(--ink-2);stroke-width:1;stroke-dasharray:2 3}
+.sburn .gap{stroke:var(--red);stroke-width:3}
+.sburn .gapt{fill:var(--red);font-size:11px}
+.smatrix{display:grid;grid-template-columns:auto 1fr;grid-template-rows:1fr auto;gap:6px;max-width:420px;margin:0 auto}
+.smatrix .my{writing-mode:vertical-rl;transform:rotate(180deg);font-size:11px;color:var(--muted);text-align:center}
+.smatrix .mx{grid-column:2;text-align:center;font-size:11px;color:var(--muted)}
+.smatrix .mg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.smatrix .mc{min-height:56px;border-radius:6px;display:grid;place-items:center;font-size:12px;text-align:center;padding:4px}
+.mc.lvl{background:var(--green-bg)}.mc.lvm{background:var(--amber-bg)}.mc.lvh{background:var(--red-bg);border:1px solid var(--red)}
+.sform{display:flex;flex-direction:column;gap:6px;max-width:300px;margin:0 auto;font-size:14px}
+.sform label{border:1px solid var(--line-2);border-radius:8px;padding:6px 10px;background:var(--card)}
+.sform label.cut{text-decoration:line-through;opacity:.45}
+.slist{margin:0;padding-left:20px;font-size:14px;line-height:1.9}
+.cls{display:flex;flex-direction:column;gap:8px}
+.clsrow{display:flex;gap:10px;align-items:center;justify-content:space-between;border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;font-size:14px}
+.clsrow select{flex:0 0 auto;max-width:48%;background:var(--bg-2);color:var(--ink);border:1px solid var(--line-2);border-radius:6px;padding:5px 8px;font:inherit;font-size:13px}
+.clsrow.bad{border-color:var(--red);background:var(--red-bg)}
+.clsrow.good{border-color:var(--green);background:var(--green-bg)}
+textarea.prose{font-family:inherit;font-size:15px;line-height:1.6;background:var(--bg-2);color:var(--ink)}
+p.model{margin:6px 0 0;font-style:italic}
+@media (max-width:640px){.sgrid8{grid-template-columns:repeat(2,1fr)}.sgrid9{grid-template-columns:repeat(2,1fr)}.clsrow{flex-direction:column;align-items:stretch}.clsrow select{max-width:none}.sboard{grid-template-columns:1fr}}
+.console{background:#000;border:1px solid var(--line-2);color:#d4d4d4;font:12.5px/1.55 "IBM Plex Mono",monospace;border-radius:8px;padding:8px 10px;min-height:38px;white-space:pre-wrap}
+.console .err{color:#f87171}
+.uml{border:1px solid var(--line-2);border-radius:8px;font:12.5px/1.8 "IBM Plex Mono",monospace;overflow:hidden}
+.uml div{padding:0 10px}
+.uml .t{background:var(--ink);color:var(--bg);font-weight:600;text-align:center}
+.uml .on{background:var(--accent-bg);color:var(--accent)}
+.ctrl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.ctrl .ibtn{height:36px;min-width:40px;font-size:14px}
+.ctrl .stepn{font:12px "IBM Plex Mono",monospace;color:var(--muted);margin:0 8px}
+.ctrl .play{background:var(--btn);color:var(--btn-ink);border-color:var(--btn);font-weight:500}
+
+/* summary / details */
+ul.key{margin:4px 0;padding-left:0;list-style:none}
+ul.key li{margin:0;padding:8px 0 8px 22px;border-bottom:1px solid var(--line);position:relative;color:var(--ink-2)}
+ul.key li:last-child{border-bottom:0}
+ul.key li::before{content:"";position:absolute;left:4px;top:17px;width:6px;height:6px;border-radius:2px;background:var(--accent)}
+details{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-top:12px}
+details summary{cursor:pointer;font-weight:500;font-size:14px}
+details[open] summary{margin-bottom:6px}
+pre.code{background:var(--code-bg);color:var(--code-ink);border:1px solid var(--line-2);border-radius:8px;padding:12px 14px;font-size:13px;overflow:auto;margin:8px 0;letter-spacing:0}
+.yt{font-size:13px;color:var(--muted)}
+
+/* exercises */
+.ex{border-top:1px solid var(--line);padding-top:20px;margin-top:20px}
+.ex:first-of-type{border-top:0;margin-top:0;padding-top:0}
+.ex .q{font-weight:500;margin:8px 0 12px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;background:transparent;border:1px solid var(--line-2);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--ink-2)}
+.opt:hover{background:var(--card-2);color:var(--ink)}
+.opt.bad{border-color:var(--red);background:var(--red-bg)}
+.opt.good{border-color:var(--green);background:var(--green-bg);color:var(--ink)}
+.opt code{background:none;border:0;padding:0}
+textarea{width:100%;background:var(--code-bg);color:var(--code-ink);border:1px solid var(--line-2);border-radius:10px;padding:12px;font-size:13.5px;line-height:1.65;resize:vertical;tab-size:4}
+textarea:focus,input:focus{outline:1px solid var(--accent);border-color:var(--accent)}
+input.out{width:100%;background:var(--code-bg);color:var(--code-ink);border:1px solid var(--line-2);border-radius:8px;padding:10px 12px;font:13.5px "IBM Plex Mono",monospace}
+.fb{margin-top:12px;border-radius:10px;padding:10px 14px;font-size:14px;display:none;border:1px solid}
+.fb.show{display:block}
+.fb.bad{background:var(--red-bg);border-color:color-mix(in srgb,var(--red) 45%,transparent)}
+.fb.hint{background:var(--amber-bg);border-color:color-mix(in srgb,var(--amber) 45%,transparent)}
+.fb.good{background:var(--green-bg);border-color:color-mix(in srgb,var(--green) 45%,transparent)}
+.fb pre{margin:6px 0 0}
+
+/* quiz */
+.bar{height:3px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--card);border:1px solid var(--line-2);color:var(--ink);padding:12px 18px;border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.5);z-index:50;max-width:calc(100% - 32px);font-size:14px}
+.back{display:inline-block;margin-top:24px;text-decoration:none;color:var(--muted);font-size:14px}
+.back:hover{color:var(--ink)}
+.nav2{display:flex;justify-content:space-between;gap:10px;margin:24px 0 48px}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .side{display:none}
+  .tracer{grid-template-columns:1fr}
+  .analogy{flex-direction:column}
+  .analogy figure{max-width:none;flex:none}
+  .analogy figure img{height:220px}
+  .wrap{padding:0 16px}
+}
+@media (max-width:640px){
+  h1{font-size:28px}
+  .count{display:none}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat:nth-child(2){border-right:0}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .card{padding:18px}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="logo" href="#home"><i></i>Intro2SE Gym</a>
+  <span class="count" id="count"></span>
+  <button class="ibtn" id="voiceBtn" title="ตั้งค่าเสียงพากย์"></button>
+  <div class="vpanel" id="voicePanel" hidden></div>
+  <button class="ibtn" id="themeBtn" title="สลับธีม"></button>
+</div></header>
+<div class="shell"><aside class="side" id="side"></aside><main id="appScroll"><div class="wrap" id="app"></div></main></div>
+
+<script>
+/* =========================================================
+   CompPro Gym — เว็บฝึก C# ส่วนตัว
+   โครงสร้าง: DATA (บทเรียน/โจทย์) → ENGINE (tracer, checker, quiz) → ROUTER
+   ========================================================= */
+
+/* ---------- storage: ห่อ try/catch เพราะบาง browser บล็อก localStorage ---------- */
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem('seg:'+k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem('seg:'+k, JSON.stringify(v)); }catch(e){} }
+};
+const S = {
+  done: store.get('done', {}),        // บทที่ดูจบ
+  ex: store.get('ex', {}),            // ผลโจทย์แต่ละข้อ
+  review: store.get('review', {}),    // spaced repetition {id:{box,due}}
+  best: store.get('best', 0),
+  bestCh: store.get('bestCh', {}),         // คะแนนสูงสุดของ quiz รายบท
+  voice: store.get('voice', true),
+  theme: store.get('theme', 'dark'),
+  vlang: store.get('vlang', 'th'),         // ภาษาคลิปที่เลือกล่าสุด
+  voiceName: store.get('voiceName', ''),   // เสียงที่เลือก ('' = เลือกให้อัตโนมัติ)
+  rate: store.get('rate', 1),              // ความเร็วเสียง
+};
+const save = () => { for (const k of ['done','ex','review','best','bestCh','voice','theme','vlang','voiceName','rate']) store.set(k, S[k]); };
+
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pick = a => a[Math.floor(Math.random()*a.length)];
+/* ---------- ไอคอนเส้น (Lucide, ISC license) ---------- */
+const ICONS = {"boxes": "<path d=\"M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z\" /> <path d=\"m7 16.5-4.74-2.85\" /> <path d=\"m7 16.5 5-3\" /> <path d=\"M7 16.5v5.17\" /> <path d=\"M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z\" /> <path d=\"m17 16.5-5-3\" /> <path d=\"m17 16.5 4.74-2.85\" /> <path d=\"M17 16.5v5.17\" /> <path d=\"M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z\" /> <path d=\"M12 8 7.26 5.15\" /> <path d=\"m12 8 4.74-2.85\" /> <path d=\"M12 13.5V8\" />", "lock": "<rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\" /> <path d=\"M7 11V7a5 5 0 0 1 10 0v4\" />", "landmark": "<line x1=\"3\" x2=\"21\" y1=\"22\" y2=\"22\" /> <line x1=\"6\" x2=\"6\" y1=\"18\" y2=\"11\" /> <line x1=\"10\" x2=\"10\" y1=\"18\" y2=\"11\" /> <line x1=\"14\" x2=\"14\" y1=\"18\" y2=\"11\" /> <line x1=\"18\" x2=\"18\" y1=\"18\" y2=\"11\" /> <polygon points=\"12 2 20 7 4 7\" />", "zap": "<path d=\"M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z\" />", "car": "<path d=\"M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2\" /> <circle cx=\"7\" cy=\"17\" r=\"2\" /> <path d=\"M9 17h6\" /> <circle cx=\"17\" cy=\"17\" r=\"2\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "bot": "<path d=\"M12 8V4H8\" /> <rect width=\"16\" height=\"12\" x=\"4\" y=\"8\" rx=\"2\" /> <path d=\"M2 14h2\" /> <path d=\"M20 14h2\" /> <path d=\"M15 13v2\" /> <path d=\"M9 13v2\" />", "play": "<polygon points=\"6 3 20 12 6 21 6 3\" />", "pause": "<rect x=\"14\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\" /> <rect x=\"6\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\" />", "skip-back": "<polygon points=\"19 20 9 12 19 4 19 20\" /> <line x1=\"5\" x2=\"5\" y1=\"19\" y2=\"5\" />", "chevron-left": "<path d=\"m15 18-6-6 6-6\" />", "skip-forward": "<polygon points=\"5 4 15 12 5 20 5 4\" /> <line x1=\"19\" x2=\"19\" y1=\"5\" y2=\"19\" />", "volume-2": "<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\" /> <path d=\"M16 9a5 5 0 0 1 0 6\" /> <path d=\"M19.364 18.364a9 9 0 0 0 0-12.728\" />", "volume-x": "<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\" /> <line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\" /> <line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\" />", "moon": "<path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\" />", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\" /> <path d=\"M12 2v2\" /> <path d=\"M12 20v2\" /> <path d=\"m4.93 4.93 1.41 1.41\" /> <path d=\"m17.66 17.66 1.41 1.41\" /> <path d=\"M2 12h2\" /> <path d=\"M20 12h2\" /> <path d=\"m6.34 17.66-1.41 1.41\" /> <path d=\"m19.07 4.93-1.41 1.41\" />", "house": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "target": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <circle cx=\"12\" cy=\"12\" r=\"6\" /> <circle cx=\"12\" cy=\"12\" r=\"2\" />", "rotate-ccw": "<path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\" /> <path d=\"M3 3v5h5\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <polyline points=\"12 6 12 12 16 14\" />", "graduation-cap": "<path d=\"M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z\" /> <path d=\"M22 10v6\" /> <path d=\"M6 12.5V16a6 3 0 0 0 12 0v-3.5\" />", "clipboard-check": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "archive": "<rect width=\"20\" height=\"5\" x=\"2\" y=\"3\" rx=\"1\" /> <path d=\"M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8\" /> <path d=\"M10 12h4\" />", "scan-barcode": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <path d=\"M8 7v10\" /> <path d=\"M12 7v10\" /> <path d=\"M17 7v10\" />", "utensils": "<path d=\"M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2\" /> <path d=\"M7 2v20\" /> <path d=\"M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7\" />", "egg": "<path d=\"M12 22c6.23-.05 7.87-5.57 7.5-10-.36-4.34-3.95-9.96-7.5-10-3.55.04-7.14 5.66-7.5 10-.37 4.43 1.27 9.95 7.5 10z\" />", "grid-3x3": "<rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\" /> <path d=\"M3 9h18\" /> <path d=\"M3 15h18\" /> <path d=\"M9 3v18\" /> <path d=\"M15 3v18\" />", "chef-hat": "<path d=\"M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z\" /> <path d=\"M6 17h12\" />", "coins": "<circle cx=\"8\" cy=\"8\" r=\"6\" /> <path d=\"M18.09 10.37A6 6 0 1 1 10.34 18\" /> <path d=\"M7 6h1v4\" /> <path d=\"m16.71 13.88.7.71-2.82 2.82\" />", "corner-down-left": "<polyline points=\"9 10 4 15 9 20\" /> <path d=\"M20 4v7a4 4 0 0 1-4 4H4\" />", "calculator": "<rect width=\"16\" height=\"20\" x=\"4\" y=\"2\" rx=\"2\" /> <line x1=\"8\" x2=\"16\" y1=\"6\" y2=\"6\" /> <line x1=\"16\" x2=\"16\" y1=\"14\" y2=\"18\" /> <path d=\"M16 10h.01\" /> <path d=\"M12 10h.01\" /> <path d=\"M8 10h.01\" /> <path d=\"M12 14h.01\" /> <path d=\"M8 14h.01\" /> <path d=\"M12 18h.01\" /> <path d=\"M8 18h.01\" />", "repeat": "<path d=\"m17 2 4 4-4 4\" /> <path d=\"M3 11v-1a4 4 0 0 1 4-4h14\" /> <path d=\"m7 22-4-4 4-4\" /> <path d=\"M21 13v1a4 4 0 0 1-4 4H3\" />", "refresh-cw": "<path d=\"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8\" /> <path d=\"M21 3v5h-5\" /> <path d=\"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16\" /> <path d=\"M8 16H3v5\" />", "fast-forward": "<polygon points=\"13 19 22 12 13 5 13 19\" /> <polygon points=\"2 19 11 12 2 5 2 19\" />", "layers": "<path d=\"m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z\" /> <path d=\"m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65\" /> <path d=\"m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />", "search-check": "<path d=\"m8 11 2 2 4-4\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" /> <path d=\"m21 21-4.3-4.3\" />", "shield-check": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"m9 12 2 2 4-4\" />", "key-round": "<path d=\"M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z\" /> <circle cx=\"16.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\" />", "fingerprint": "<path d=\"M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4\" /> <path d=\"M14 13.12c0 2.38 0 6.38-1 8.88\" /> <path d=\"M17.29 21.02c.12-.6.43-2.3.5-3.02\" /> <path d=\"M2 12a10 10 0 0 1 18-6\" /> <path d=\"M2 16h.01\" /> <path d=\"M21.8 16c.2-2 .131-5.354 0-6\" /> <path d=\"M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2\" /> <path d=\"M8.65 22c.21-.66.45-1.32.57-2\" /> <path d=\"M9 6.8a6 6 0 0 1 9 5.2v2\" />", "list-checks": "<path d=\"m3 17 2 2 4-4\" /> <path d=\"m3 7 2 2 4-4\" /> <path d=\"M13 6h8\" /> <path d=\"M13 12h8\" /> <path d=\"M13 18h8\" />", "kanban": "<path d=\"M6 5v11\" /> <path d=\"M12 5v6\" /> <path d=\"M18 5v14\" />", "chart-line": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"m19 9-5 5-4-4-3 3\" />", "triangle-alert": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "users": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <path d=\"M16 3.13a4 4 0 0 1 0 7.75\" />", "scale": "<path d=\"m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z\" /> <path d=\"m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z\" /> <path d=\"M7 21h10\" /> <path d=\"M12 3v18\" /> <path d=\"M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2\" />", "messages-square": "<path d=\"M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z\" /> <path d=\"M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1\" />", "eye-off": "<path d=\"M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49\" /> <path d=\"M14.084 14.158a3 3 0 0 1-4.242-4.242\" /> <path d=\"M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143\" /> <path d=\"m2 2 20 20\" />", "git-branch": "<line x1=\"6\" x2=\"6\" y1=\"3\" y2=\"15\" /> <circle cx=\"18\" cy=\"6\" r=\"3\" /> <circle cx=\"6\" cy=\"18\" r=\"3\" /> <path d=\"M18 9a9 9 0 0 1-9 9\" />", "external-link": "<path d=\"M15 3h6v6\" /> <path d=\"M10 14 21 3\" /> <path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\" />"};
+const ic = (n, cls='') => `<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
+const BOT_AVA = `<div class="ava">${ic('bot')}</div>`;
+const lines = s => s.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+
+/* ---------- พี่บอท: ติวเตอร์สไตล์ตรง ๆ ดุนิด ๆ แต่ตลก ---------- */
+const BOT = {
+  right: ['ถูก! ✅ เก่งเกินคาดนะเนี่ย', 'ถูกเป๊ะ 🎯 ไปต่อ!', 'เยี่ยม ✅ แบบนี้ A มาแน่', 'ถูก! ✅ อย่าเพิ่งเหลิงล่ะ 😏'],
+  wrong1: ['ยังไม่ใช่ 😤 ลองดูอีกที', 'ผิด! แต่ไม่เป็นไร ใจเย็น ๆ', 'เกือบ… แต่ยังไม่ใช่ 👀'],
+  wrong2: ['โอเค ใบ้ให้แล้วนะ คิดตามนี้ 🤔', 'ยังไม่ได้อีก 😅 ลองตอบคำถามนี้ในหัวก่อน'],
+  reveal: ['งั้นดูเฉลยเลย แล้วจำให้ขึ้นใจนะ 📌', 'เฉลยมาแล้ว ข้อนี้จะกลับมาในโหมดทบทวน 😈'],
+};
+
+/* =========================================================
+   DATA — Chapter 10: Class
+   ========================================================= */
+
+/* Tracer builder: เขียนเป็นขั้น ๆ แล้วมันจะ snapshot memory ให้เอง */
+function trace(code){
+  const st = { vars:[], objs:[], out:[], cur:'', uml:-1 };
+  const steps = [];
+  const api = {
+    // l = บรรทัด (เลขเดียว หรือ [เริ่ม, จบ])
+    step(l, say, fn){
+      st.flash = []; st.newObj = null; st.ptr = null;
+      if (fn) fn(api);
+      steps.push({ l, say, s: JSON.parse(JSON.stringify(st)) });
+      return api;
+    },
+    v(name, val){ const f = st.vars.find(x => x[0]===name); f ? f[1]=val : st.vars.push([name, val]); },
+    drop(name){ st.vars = st.vars.filter(x => x[0]!==name); },
+    o(id, cls, fields, color){ st.objs.push({ id, cls, fields, color }); st.newObj = id; },
+    f(id, field, val){ const o = st.objs.find(x => x.id===id); const fl = o.fields.find(x => x[0]===field); fl[1] = val; st.flash.push(id+'.'+field); },
+    print(t){ st.out.push(['o', st.cur + t]); st.cur = ''; },   // Console.WriteLine
+    w(t){ st.cur += t; },                                        // Console.Write (ยังไม่ขึ้นบรรทัดใหม่)
+    // array 1 มิติ: แสดงเป็นกล่องเรียงกัน มีเลข index ใต้กล่อง
+    a(id, label, vals, color){ st.objs.push({ id, cls:label, arr:vals.map(String), color }); st.newObj = id; },
+    as(id, i, val){ st.objs.find(x => x.id===id).arr[i] = String(val); st.flash.push(id+'['+i+']'); },
+    // array 2 มิติ: แสดงเป็นตาราง แถว × คอลัมน์
+    g(id, label, rows, color){ st.objs.push({ id, cls:label, grid:rows.map(r => r.map(String)), color }); st.newObj = id; },
+    gs(id, r, c, val){ st.objs.find(x => x.id===id).grid[r][c] = String(val); st.flash.push(id+'['+r+','+c+']'); },
+    // ชี้ช่องที่กำลังใช้อยู่ (เช่น arr[i])
+    at(id, ...ix){ st.ptr = id + '[' + ix.join(',') + ']'; },
+    err(t){ st.out.push(['e', t]); },
+    u(i){ st.uml = i; },
+  };
+  return { code: lines(code), steps, build: api };
+}
+const C1 = '#ff8a5c', C2 = '#7dd3fc', C3 = '#d4d4d4';
+
+/* =========================================================
+   DATA — Intro to Software Engineering (Ch8–Ch10)
+   ภาพประกอบเป็น "scene" ทีละขั้น (แทน animation โค้ดของ CompPro)
+   ========================================================= */
+
+/* ---------- ตัวช่วยวาดภาพใน scene ---------- */
+const box = (t, b, cls='') => `<div class="sbox ${cls}"><b>${t}</b>${b ? `<span>${b}</span>` : ''}</div>`;
+const row = (...xs) => `<div class="srow">${xs.join('')}</div>`;
+const arrow = (t='→') => `<div class="sarrow">${t}</div>`;
+const note = (t, cls='') => `<div class="snote ${cls}">${t}</div>`;
+const tag = (t, cls='') => `<span class="stag ${cls}">${t}</span>`;
+/* กราฟแท่ง cost of defects: โชว์ถึงแท่งที่ upto */
+const COST = [['Requirements', 1], ['Design', 5], ['Code', 10], ['Test', 25], ['Production', 100]];
+const bars = (upto, hot) => `<div class="sbars">${COST.map(([n, v], k) => `<div class="sbar ${k <= upto ? 'on' : ''} ${k === hot ? 'hot' : ''}"><i style="height:${Math.max(4, v)}%"></i><b>~${v}×</b><span>${n}</span></div>`).join('')}</div>`;
+/* Kanban board */
+const board = (todo, doing, done, limit) => `<div class="sboard">
+  <div><h5>TO-DO</h5>${todo.map(t => `<p>${t}</p>`).join('')}</div>
+  <div class="${doing.length > (limit || 99) ? 'over' : ''}"><h5>DOING${limit ? ` (max ${limit})` : ''}</h5>${doing.map(t => `<p class="doing">${t}</p>`).join('')}</div>
+  <div><h5>DONE</h5>${done.map(t => `<p class="done">${t}</p>`).join('')}</div></div>`;
+/* Burndown chart (SVG) — day = วันที่จะชี้ (0-10) */
+function burn(day, actualPts, showGap){
+  const W = 360, H = 200, X = d => 40 + d * 30, Y = p => 20 + (100 - p) * 1.6;
+  const act = actualPts.map((p, d) => `${X(d)},${Y(p)}`).join(' ');
+  return `<svg class="sburn" viewBox="0 0 ${W} ${H + 30}" role="img" aria-label="burndown chart">
+    <line x1="40" y1="${Y(0)}" x2="${X(10)}" y2="${Y(0)}" class="ax"/><line x1="40" y1="${Y(100)}" x2="40" y2="${Y(0)}" class="ax"/>
+    <text x="4" y="${Y(100) + 4}" class="lb">100%</text><text x="14" y="${Y(50) + 4}" class="lb">50%</text><text x="24" y="${Y(0) + 4}" class="lb">0</text>
+    <text x="${X(0) - 8}" y="${Y(0) + 18}" class="lb">day 0</text><text x="${X(5) - 10}" y="${Y(0) + 18}" class="lb">day 5</text><text x="${X(10) - 16}" y="${Y(0) + 18}" class="lb">day 10</text>
+    <line x1="${X(0)}" y1="${Y(100)}" x2="${X(10)}" y2="${Y(0)}" class="ideal"/>
+    ${actualPts.length ? `<polyline points="${act}" class="act"/>` : ''}
+    ${day != null ? `<line x1="${X(day)}" y1="${Y(100)}" x2="${X(day)}" y2="${Y(0)}" class="today"/>` : ''}
+    ${showGap ? `<line x1="${X(5)}" y1="${Y(50)}" x2="${X(5)}" y2="${Y(70)}" class="gap"/><text x="${X(5) + 6}" y="${Y(60) + 4}" class="gapt">gap 20% ≈ 2 วัน</text>` : ''}
+    <text x="${X(7)}" y="${Y(30) - 6}" class="lb il">ideal</text>
+  </svg>`;
+}
+/* Risk matrix: ชี้ช่อง (likelihood, impact) 0-2 */
+const matrix = (marks={}) => { const L = ['ต่ำ', 'กลาง', 'สูง']; let h = '<div class="smatrix"><div class="my">likelihood ↑</div><div class="mg">';
+  for (let l = 2; l >= 0; l--) for (let i = 0; i <= 2; i++) { const k = l + ',' + i, lvl = l + i; h += `<div class="mc lv${lvl >= 3 ? 'h' : lvl >= 2 ? 'm' : 'l'}">${marks[k] || ''}</div>`; }
+  return h + `</div><div class="mx">impact →</div></div>`; };
+
+const SE8 = { id:'se8', title:'Ch8 · Quality & Security', short:'Ch8', lessons: [] };
+const SE9 = { id:'se9', title:'Ch9 · Project Management', short:'Ch9', lessons: [] };
+const SE10 = { id:'se10', title:'Ch10 · Ethics & Practice', short:'Ch10', lessons: [] };
+
+/* =================== Ch8 =================== */
+SE8.lessons.push({
+  id:'q1', icon:'gauge', title:'Quality Attributes + ISO 25010', sub:'คุณภาพ = หลายอย่างที่ตรวจได้',
+  analogy:{ title:'คุณภาพ = ใบให้คะแนนร้านอาหาร', text:'ไม่ได้ดูแค่ "อร่อยมั้ย" แต่ดูรสชาติ ความเร็ว ความสะอาด ราคา แต่ละอย่าง<b>ตรวจคนละวิธี</b> ซอฟต์แวร์ก็เหมือนกัน: quality คือ checklist ไม่ใช่ความรู้สึก' },
+  yt:'ISO 25010 software quality',
+  video:{ th:[], en:[{ id:'eZifwWkpxE0', title:'ISO 25010 explained (5 นาที)' },{ id:'HrGEA0HT71Q', title:'Decoding ISO/IEC 25010' }] },
+  scene:{ steps:[
+    { say:'คุณภาพไม่ใช่สิ่งเดียว เหมือนให้คะแนนร้านอาหาร ต้องดูหลายด้าน และแต่ละด้าน<b>ตรวจคนละวิธี</b>', html: row(box('🍜 รสชาติ'), box('⚡ ความเร็ว'), box('🧼 ความสะอาด'), box('💰 ราคา')) + note('Quality = checklist ที่ตรวจได้ ไม่ใช่ความรู้สึก') },
+    { say:'5 attribute ที่ต้องจำ และวิธีตรวจของแต่ละตัว', html: `<table class="stbl"><tr><th>Attribute</th><th>หมายถึง</th><th>ตรวจด้วย</th></tr>
+      <tr><td><b>Reliability</b></td><td>ได้ผลถูกเหมือนเดิมทุกครั้ง</td><td>tests</td></tr>
+      <tr><td><b>Usability</b></td><td>คนใช้เป็น เรียนรู้ได้</td><td>ดูผู้ใช้จริงลองใช้</td></tr>
+      <tr><td><b>Maintainability</b></td><td>แก้ไขง่าย</td><td>code review + linter</td></tr>
+      <tr><td><b>Security</b></td><td>คนที่มีสิทธิ์เท่านั้นเห็นข้อมูล</td><td>คิดแบบผู้โจมตี</td></tr>
+      <tr><td><b>Performance</b></td><td>เร็วพอตาม NFR</td><td>วัดจริง ไม่เดา</td></tr></table>` },
+    { say:'มาตรฐานสากล <b>ISO/IEC 25010:2023</b> มี <b>9 characteristics</b>', html: `<div class="sgrid9">${['Functional suitability','Performance efficiency','Compatibility','Interaction capability','Reliability','Security','Maintainability','Flexibility','Safety'].map((n, k) => box('#' + (k+1), n)).join('')}</div>` },
+    { say:'จุดออกสอบ: ปี 2023 <b>เปลี่ยนชื่อ 2 ตัว</b> และ<b>เพิ่มใหม่ 1 ตัว</b> คือ Safety เพราะซอฟต์แวร์ตอนนี้ขับรถ คุมเครื่องมือแพทย์ ทำให้คนบาดเจ็บได้', html: `<div class="sgrid9">${['Functional suitability','Performance efficiency','Compatibility',['Interaction capability','เดิม: Usability','ren'],'Reliability','Security','Maintainability',['Flexibility','เดิม: Portability','ren'],['Safety','ใหม่ปี 2023','new']].map((n, k) => Array.isArray(n) ? box('#' + (k+1) + ' ' + n[0], tag(n[1], n[2]), n[2]) : box('#' + (k+1), n, 'dim')).join('')}</div>` + note('ตัวหลอกในข้อสอบ: <b>Profitability</b> ไม่ใช่ characteristic (ไม่ใช่คุณภาพของ product)', 'warn') },
+  ]},
+  key:[
+    'Quality = หลาย attribute ที่<b>ตรวจได้</b>: Reliability, Usability, Maintainability, Security, Performance',
+    'แต่ละ attribute ต้องโยงกลับไปที่ <b>NFR ใน SRS</b> และ NFR ที่ดีต้องวัดได้ ("เร็ว" ❌ → "ภายใน 2 วินาที" ✅)',
+    'ISO/IEC 25010:2023 มี <b>9 characteristics</b> · <b>Safety = ใหม่</b> · Usability → <b>Interaction capability</b> · Portability → <b>Flexibility</b>',
+  ],
+  more:`<p>9 characteristics ของ ISO/IEC 25010:2023: Functional suitability · Performance efficiency · Compatibility · Interaction capability · Reliability · Security · Maintainability · Flexibility · Safety</p>
+<p>ทำไมเพิ่ม Safety: มาตรฐานใช้กับ ICT product ทั้งระบบ (ซอฟต์แวร์ + ฮาร์ดแวร์ + ข้อมูล) และซอฟต์แวร์ที่คุมรถ เครื่องมือแพทย์ หรือ AI ทำให้คนบาดเจ็บได้จริง</p>`,
+  ex:[
+    { id:'q1a', type:'mcq', lv:1, q:'Which characteristic was <b>newly added</b> in ISO/IEC 25010:2023?', opts:['Usability.','Safety.','Portability.','Profitability.'], ans:1,
+      ask:'ตัวไหนที่ "เพิ่มใหม่" ไม่ใช่ "เปลี่ยนชื่อ"? และตัวไหนไม่ใช่คุณภาพของซอฟต์แวร์เลย?', why:'Safety ใหม่ปี 2023 · Usability/Portability ถูกเปลี่ยนชื่อ · Profitability ไม่ใช่ product quality' },
+    { id:'q1b', type:'mcq', lv:1, q:'Which is <b>not</b> a characteristic in the ISO/IEC 25010:2023 product-quality model?', opts:['Interaction capability.','Safety.','Profitability.','Maintainability.'], ans:2,
+      ask:'"กำไร" เป็นคุณภาพของตัวซอฟต์แวร์ หรือเป็นเรื่องธุรกิจ?', why:'Profitability เป็นเรื่องธุรกิจ ไม่ใช่คุณภาพของ product' },
+    { id:'q1c', type:'classify', lv:2, q:'Which quality attribute is it?', cats:['Reliability','Usability','Maintainability','Security','Performance'],
+      rows:[['The app takes more than 5 seconds to respond when many people use it.', 4],['A new user cannot find the Save button.', 1],['Changing one feature means editing 10 files.', 2],['The calculation is sometimes wrong.', 0],['User A can see User B\'s data.', 3]],
+      ask:'ถามตัวเองว่า "ปัญหานี้คือ ช้า / ใช้ยาก / แก้ยาก / ผิด / ข้อมูลรั่ว?"', why:'ช้า = Performance · หาปุ่มไม่เจอ = Usability · แก้ 10 ไฟล์ = Maintainability · คำนวณผิด = Reliability · เห็นข้อมูลคนอื่น = Security' },
+    { id:'q1d', type:'mcq', lv:2, q:'"The app freezes on older phones but runs on new ones." Which ISO/IEC 25010:2023 characteristic is this closest to?', opts:['Flexibility.','Safety.','Functional suitability.','Compatibility.'], ans:0,
+      ask:'ปัญหาเกิดเพราะ "สภาพแวดล้อม (เครื่อง) ต่างกัน" — characteristic ไหนพูดถึงการทำงานในสภาพแวดล้อมใหม่ (เดิมชื่อ Portability)?', why:'Flexibility (เดิม Portability) = ปรับตัว/ย้ายไปทำงานในสภาพแวดล้อมต่างกันได้' },
+    { id:'q1e', type:'short', lv:3, q:'Short answer: What is wrong with the NFR "The system must be easy to use", and how would you rewrite it?',
+      rules:[
+        { re:/(measur|check|verif|test|วัด|ตรวจ)/i, msg:'บอกด้วยว่าปัญหาคือ<b>วัด/ตรวจไม่ได้</b> (can\'t be measured / checked)' },
+        { re:/(\d|within|second|minute|วินาที|นาที|ภายใน)/i, msg:'ลองเขียน NFR ใหม่ให้มี<b>ตัวเลขที่วัดได้</b> เช่น "ภายใน 1 นาที" หรือ "4 ใน 5 คน"' },
+      ],
+      ask:'NFR ที่ดีต้องตัดสินได้ว่า pass หรือ fail — คำว่า "ง่าย" ตัดสินได้มั้ย?',
+      answer:'It cannot be measured or checked, so nobody can say pass or fail. Better: "4 of 5 new users add their first task within 1 minute without help."' },
+  ]
+});
+
+SE8.lessons.push({
+  id:'q2', icon:'search-check', title:'Review, Linter & Cost of Defects', sub:'จับบั๊กให้เร็ว เพราะยิ่งช้ายิ่งแพง',
+  analogy:{ title:'Linter = spell-check · Code review = เพื่อนพิสูจน์อักษร', text:'spell-check จับคำผิดได้เร็วแต่ไม่รู้ว่าเนื้อหาผิด ส่วนเพื่อนอ่านแล้วเข้าใจเนื้อหาแต่อาจพลาดคำผิด → <b>ใช้คู่กัน</b> · พิมพ์ผิดตอนเขียนแก้ฟรี แต่ถ้าพิมพ์หนังสือไปแล้วต้องพิมพ์ใหม่ทั้งเล่ม' },
+  yt:'what is a linter code review',
+  video:{ th:[{ id:'XPmbbvwmlrI', title:'Checklist รีวิวโค้ด (BorntoDev)' }], en:[{ id:'gj11Z9QIfJU', title:'What is a Linter? (Scrimba)' },{ id:'Vksy27AsTmM', title:'The Cost of Bugs' }] },
+  scene:{ steps:[
+    { say:'เครื่องมือคุณภาพที่ถูกที่สุดมี 2 อย่าง ใช้<b>คน</b> 1 อย่าง ใช้<b>เครื่องมือ</b> 1 อย่าง', html: row(box('👀 Code review (คน)', 'เพื่อนอ่านโค้ดก่อนเข้า main ผ่าน Pull Request จับ logic ผิด ชื่อไม่ชัด เคสที่ขาด'), box('🤖 Linter (เครื่องมือ)', 'อ่านโค้ด<b>โดยไม่รัน</b> (static analysis) เตือน style ตัวแปรไม่ได้ใช้ รูปแบบเสี่ยงบั๊ก · รันทุก commit')) },
+    { say:'คำถามคือ ทำไมต้องรีบจับ? Boehm บอกว่าบั๊กเดียวกัน ถ้าเจอตอน requirements แก้ได้ถูกมาก', html: bars(0, 0) },
+    { say:'ถ้าหลุดไปถึง design แพงขึ้นราว 5 เท่า และตอนเขียนโค้ดราว 10 เท่า', html: bars(2, 2) },
+    { say:'เจอตอน test ราว 25 เท่า และถ้าไปเจอตอน <b>production</b> ราว <b>100 เท่า</b> เพราะต้องแก้ทุกอย่างที่สร้างทับไว้ แถมต้องแจ้งผู้ใช้', html: bars(4, 4) + note('ตัวเลขเป็นสเกลประกอบ ไม่ใช่ค่าเป๊ะ · จุดสำคัญ: review + unit test คุ้มเพราะ<b>ดึงการเจอบั๊กมาทางซ้าย</b>') },
+  ]},
+  key:[
+    '<b>Code review</b> = คนอ่าน (ผ่าน Pull Request) จับ logic/การออกแบบ',
+    '<b>Linter</b> = เครื่องมือ <b>static analysis</b> อ่านโค้ด<b>โดยไม่รัน</b> เร็ว สม่ำเสมอ รันทุก commit',
+    'unit test ต้อง<b>รัน</b>โค้ด · linter ไม่รัน · review ใช้คน → ใช้แทนกันไม่ได้',
+    '<b>Cost of defects (Boehm 1981)</b>: Requirements ~1× → Design ~5× → Code ~10× → Test ~25× → Production ~100×',
+    'แก้ที่ไหนถูกสุด? → <b>Requirements</b>',
+  ],
+  more:`<p>ทำไมยิ่งช้ายิ่งแพง: ยิ่งเจอช้า ยิ่งมีงานที่<b>สร้างทับ</b>ความผิดพลาดนั้นมากขึ้น บั๊กใน requirement ที่ไปเจอตอน production อาจต้องแก้ทั้ง design โค้ด เทสต์ ข้อมูล และแจ้งผู้ใช้</p><p>โค้ดที่ AI เขียน ยิ่งต้องใช้ทั้ง review และ linter เพราะ AI เขียนเร็วกว่าคนอ่าน</p>`,
+  ex:[
+    { id:'q2a', type:'mcq', lv:1, q:'According to Boehm\'s cost-of-defects idea, where is a defect usually <b>cheapest</b> to fix?', opts:['Requirements.','Testing.','Production.','Maintenance.'], ans:0,
+      ask:'ยิ่งเจอเร็ว ยิ่ง…? ระยะไหนมาก่อนสุด?', why:'ยิ่งเร็วยิ่งถูก requirements มีงานสร้างทับน้อยที่สุด' },
+    { id:'q2b', type:'mcq', lv:1, q:'Which tool reads source code <b>without running it</b> to flag style issues and likely bugs?', opts:['A unit test.','A burndown chart.','A code review meeting.','A linter (static analysis).'], ans:3,
+      ask:'ตัวไหน "ไม่รัน" โค้ดแต่เป็นเครื่องมืออัตโนมัติ?', why:'linter = static analysis ไม่รันโค้ด · unit test ต้องรัน · code review ใช้คน' },
+    { id:'q2c', type:'mcq', lv:2, q:'Why can a linter run on <b>every commit</b>, while a code review usually cannot?', opts:['A linter is automatic and takes seconds; a review costs human time.','A linter finds more bugs than people.','Reviews are only allowed once per sprint.','A linter runs the program to test it.'], ans:0,
+      ask:'อะไรแพงกว่า: เวลาของเครื่อง หรือเวลาของคน?', why:'linter อัตโนมัติ ไม่กี่วินาที · review ใช้เวลาคน จึงทำตอนเปิด Pull Request' },
+    { id:'q2d', type:'short', lv:3, q:'Short answer: Explain why code reviews and unit tests "pay for themselves", using the cost-of-defects idea.',
+      rules:[
+        { re:/(early|earlier|sooner|เร็ว|ก่อน|ต้น)/i, msg:'อธิบายว่ามันทำให้เจอบั๊ก<b>เร็วขึ้น/ตั้งแต่ต้น</b>' },
+        { re:/(cheap|cost|less|expens|ถูก|แพง|ต้นทุน|ค่าใช้จ่าย)/i, msg:'โยงกับเรื่อง<b>ต้นทุน</b>: เจอเร็ว = แก้ถูก' },
+      ],
+      ask:'review/test ย้ายจุดที่เจอบั๊กไปที่ระยะไหน? แล้วระยะนั้นแก้ถูกหรือแพง?',
+      answer:'They catch defects early (in review or test) instead of in production. The later a defect is found, the more it costs (Boehm: up to ~100× in production), so finding it early is much cheaper.' },
+  ]
+});
+
+SE8.lessons.push({
+  id:'q3', icon:'shield-check', title:'The Big Three (Security)', sub:'3 นิสัยกันความผิดพลาดของมือใหม่',
+  analogy:{ title:'Security = ดูแลร้านค้า', text:'<b>ตรวจของที่เข้าประตู</b> (validate input) · <b>เฉพาะพนักงานเปิดลิ้นชักเงินได้</b> (access control) · <b>อย่าแปะกุญแจไว้ที่ประตู</b> (no secrets in the repo)' },
+  yt:'OWASP top 10 explained',
+  video:{ th:[{ id:'XVbSl0R_T7M', title:'รู้จัก OWASP (mikelopster)' }], en:[{ id:'xe9LN2w7hfE', title:'OWASP Top 10 2021' }] },
+  scene:{ steps:[
+    { say:'นึกถึงร้านค้าหนึ่งร้าน มี 3 จุดที่ต้องระวัง', html: row(box('🚪 ประตู', 'ของที่เข้ามา'), box('💵 ลิ้นชักเงิน', 'ใครเปิดได้'), box('🔑 กุญแจ', 'เก็บไว้ที่ไหน')) },
+    { say:'#1 <b>Validate input</b>: อย่าเชื่อข้อมูลจากผู้ใช้หรือ browser ตรวจชนิด ความยาว ช่วงค่า <b>ที่ฝั่ง server</b> เพราะผู้ใช้ข้ามหน้าเว็บแล้วส่ง request ตรงได้เสมอ', html: row(box('#1 Validate input', 'อายุ = -5 ❌ ต้องตรวจที่ server', 'hot'), box('#2 Access control', '', 'dim'), box('#3 No secrets', '', 'dim')) + note('ตรวจใน browser = ช่วยให้สะดวก · ตรวจที่ server = ความปลอดภัยจริง') },
+    { say:'#2 <b>Access control</b>: ทุก request ต้องถาม 2 คำถาม "คุณเป็นใคร" และ "ข้อมูลนี้ของคุณมั้ย" · login ตอบแค่ข้อแรก', html: row(box('#1 Validate input', '', 'dim'), box('#2 Access control', 'who are you? + is this yours?', 'hot'), box('#3 No secrets', '', 'dim')) + note('authentication (login) = คุณคือใคร · authorization (access control) = มีสิทธิ์มั้ย') },
+    { say:'#3 <b>No secrets in the repo</b>: password, API key, token ห้ามอยู่ในโค้ดหรือ Git history เก็บใน .env แล้วใส่ใน .gitignore · ถ้าเผลอ commit ไปแล้ว ลบอย่างเดียวไม่พอ ต้อง revoke แล้วออกใหม่', html: row(box('#1 Validate input', '', 'dim'), box('#2 Access control', '', 'dim'), box('#3 No secrets in repo', '.env + .gitignore', 'hot')) + note('Git history จำทุกอย่าง → ลบบรรทัดออกยังไม่พอ ต้อง <b>revoke</b> key', 'warn') },
+  ]},
+  key:[
+    '#1 <b>Validate input</b> — ตรวจชนิด/ความยาว/ช่วงค่า <b>ที่ server</b> (browser ถูกข้ามได้)',
+    '#2 <b>Access control</b> — "who are you, and is this yours?" ทุก request · login อย่างเดียวไม่พอ',
+    '#3 <b>No secrets in the repo</b> — ใช้ <code>.env</code> + <code>.gitignore</code> · commit ไปแล้วต้อง revoke',
+    'ตัวหลอกในข้อสอบ: "encrypt the source code", "dark theme", "hide the id" ไม่ใช่ big three',
+  ],
+  more:`<p>Authentication (ยืนยันตัวตน = login) ≠ Authorization (สิทธิ์ = access control) ระบบที่มีแค่ login ยังไม่ปลอดภัย ต้องเช็กสิทธิ์ทุกครั้งที่อ่าน/แก้ข้อมูล</p>`,
+  ex:[
+    { id:'q3a', type:'mcq', lv:1, q:'Which of the following is <b>not</b> one of the "big three" security habits taught in this course?', opts:['Validate input on the server.','Enforce access control on every request.','Keep secrets out of the repository.','Encrypt the source code before pushing it.'], ans:3,
+      ask:'big three คือ input, access, secrets — ข้อไหนไม่เข้าพวก?', why:'big three = validate input, access control, no secrets in repo · การเข้ารหัสซอร์สโค้ดไม่ได้อยู่ในนั้น' },
+    { id:'q3b', type:'classify', lv:1, q:'Which habit was missing?', cats:['1. Validate input','2. Access control','3. No secrets in repo'],
+      rows:[['The age field accepts -5 and the system saves it.', 0],['Changing order_id in the URL shows someone else\'s order.', 1],['config.js in a public repo contains an API key.', 2],['Password length is checked only in the browser; the server accepts anything.', 0]],
+      ask:'ข้อมูลผิดรูปแบบ → ? · เห็นของคนอื่น → ? · รหัสลับหลุด → ?', why:'-5 และเช็กแค่ browser = validate input (ต้องตรวจที่ server) · เปลี่ยน id = access control (IDOR) · key ใน repo = no secrets' },
+    { id:'q3c', type:'mcq', lv:2, q:'A team accidentally committed an API key to a public repo. What is the <b>best</b> response?', opts:['Delete the line and push again.','Make the repo private.','Revoke the key, issue a new one, and keep it in .env listed in .gitignore.','Rename the variable so attackers cannot find it.'], ans:2,
+      ask:'ลบบรรทัดแล้ว Git history ยังเก็บค่าเก่าไว้มั้ย?', why:'history ยังมี key อยู่ → ต้อง revoke แล้วออกใหม่ และย้ายไปเก็บใน .env' },
+    { id:'q3d', type:'short', lv:3, q:'Short answer: Why is checking the password length <b>only in the browser</b> not enough?',
+      rules:[
+        { re:/(server|backend|เซิร์ฟเวอร์|ฝั่ง server)/i, msg:'บอกว่าต้องตรวจที่ <b>server</b> ด้วย' },
+        { re:/(bypass|skip|disable|direct|turn off|ข้าม|ปิด|ส่งตรง|แก้|ไม่ผ่านหน้าเว็บ)/i, msg:'อธิบายว่าผู้ใช้<b>ข้าม/ปิด</b>การตรวจใน browser ได้ (เช่นส่ง request ตรง)' },
+      ],
+      ask:'ผู้ใช้ปิด JavaScript หรือส่ง request ตรงไปที่ server ได้มั้ย?',
+      answer:'Users can bypass the browser (disable JavaScript or send a request directly), so the server receives unchecked data. Input must be validated on the server.' },
+  ]
+});
+
+SE8.lessons.push({
+  id:'q4', icon:'key-round', title:'IDOR (Broken Access Control)', sub:'ช่องโหว่ที่เจอบ่อยที่สุด',
+  analogy:{ title:'IDOR = ตู้ล็อกเกอร์ที่เปิดได้ด้วยการเปลี่ยนเลข', text:'ถ้าแค่บอกเลขตู้ก็เปิดให้เลย ใครก็เปลี่ยนเลขแล้วเปิดตู้คนอื่นได้ · ที่ถูกคือพนักงานดู<b>บัตรของเรา</b> (session) แล้วเปิดเฉพาะตู้ของเรา' },
+  yt:'IDOR explained',
+  video:{ th:[{ id:'XVbSl0R_T7M', title:'OWASP (mikelopster)' }], en:[{ id:'rloqMGcPMkI', title:'IDOR Explained (PwnFunction)' }] },
+  scene:{ steps:[
+    { say:'ผู้ใช้หมายเลข 1042 ขอดูโน้ตของตัวเอง โดยส่ง user_id มาใน URL', html: row(box('🧑 user 1042', 'login แล้ว'), arrow(), box('GET /api/notes?user_id=<b>1042</b>', '', 'code'), arrow(), box('🖥️ server', 'where(owner = user_id)')) + note('โน้ตของ 1042 ✅ ดูเหมือนปกติ') },
+    { say:'แต่ผู้ใช้<b>แก้ตัวเลขใน URL</b>ได้เอง ลองเปลี่ยนเป็น 1043', html: row(box('🧑 user 1042', 'แก้ URL เอง'), arrow(), box('GET /api/notes?user_id=<b class="bad">1043</b>', '', 'code hot'), arrow(), box('🖥️ server', 'เชื่อ id จาก URL')) },
+    { say:'💥 server เชื่อเลขที่ผู้ใช้ส่งมา เลยส่ง<b>โน้ตของคนอื่น</b>กลับไป นี่คือ <b>IDOR</b> = broken access control ซึ่ง OWASP Top 10 ปี 2021 จัดเป็นอันดับ 1', html: row(box('🧑 user 1042'), arrow('←'), box('📄 โน้ตของ user 1043 😱', '', 'hot')) + note('Insecure Direct Object Reference — "ข้อมูลของใคร" ถูกตัดสินจากสิ่งที่ผู้ใช้แก้ได้', 'warn') },
+    { say:'วิธีแก้: <b>ไม่รับ id จากผู้ใช้</b> ให้เอาตัวตนจาก <b>session</b> ที่ login ไว้แทน', html: row(box('🧑 user 1042'), arrow(), box('GET /api/notes', '(ไม่มี user_id)', 'code'), arrow(), box('🖥️ server', 'me = session.user<br>where(owner = me.id)', 'good')) + note('กฎ: อย่าตัดสิน "ข้อมูลของใคร" จากสิ่งที่ผู้ใช้แก้ได้ → ดึงจาก session เสมอ', 'good') },
+  ]},
+  key:[
+    '<b>IDOR</b> (Insecure Direct Object Reference) = เปลี่ยน id แล้วเห็น/แก้ข้อมูลคนอื่น',
+    'เป็น <b>broken access control</b> = OWASP Top 10 (2021) <b>อันดับ 1</b>',
+    'วิธีแก้: เอาตัวตนจาก <b>authenticated session</b> แล้วเช็กว่าข้อมูลเป็นของคนนั้น (ทั้งดูและแก้/ลบ)',
+    'ซ่อน id / เช็กว่าเป็นตัวเลข / ใส่ linter ❌ ไม่ได้แก้ปัญหา',
+    'เทสต์ต้องลอง <b>dishonest case</b> ด้วย: ผู้ใช้ A ขอข้อมูลของ B → ระบบต้องปฏิเสธ',
+  ],
+  more:`<pre class="code"># ❌ Wrong                          # ✅ Right
+GET /api/notes?user_id=1042          GET /api/notes
+def get_notes(user_id):              def get_notes(session):
+    return db.notes.where(               me = session.user
+        owner=user_id)                   return db.notes.where(owner=me.id)</pre>
+<p>Case CareFlow OPD: เปลี่ยนเลขนัดในลิงก์ → เห็นชื่อ เบอร์ อาการคนอื่น และยกเลิกนัดคนอื่นได้ · "เทสต์ผ่านหมด" เพราะเทสต์แค่ผู้ใช้สุจริต</p>`,
+  ex:[
+    { id:'q4a', type:'mcq', lv:1, q:'A user changes <code>user_id=1042</code> to <code>user_id=1043</code> in the URL and sees another person\'s notes. What is the best fix?', opts:['Hide the id from the URL bar.','Take the owner\'s identity from the authenticated session.','Check that the id is a number.','Add a linter to the project.'], ans:1,
+      ask:'การซ่อน id หรือเช็กว่าเป็นตัวเลข ยังกันคนส่ง id ของคนอื่นได้มั้ย?', why:'นี่คือ IDOR ต้องเอาตัวตนจาก session · ซ่อนหรือเช็กตัวเลขยังส่ง id คนอื่นได้อยู่' },
+    { id:'q4b', type:'mcq', lv:1, q:'IDOR is an example of which OWASP Top 10 (2021) risk?', opts:['Broken Access Control.','Cryptographic Failures.','Security Logging Failures.','Server-Side Request Forgery.'], ans:0,
+      ask:'IDOR คือการเข้าถึงข้อมูลที่ไม่ใช่สิทธิ์ของเรา = control การเข้าถึงพัง', why:'IDOR = Broken Access Control ซึ่งเป็นอันดับ 1 ของ OWASP Top 10 (2021)' },
+    { id:'q4c', type:'mcq', lv:2, q:'In the CareFlow OPD case, the team said "every FR was tested and all tests passed", yet patients could see others\' data. Why?', opts:['The tests were written in the wrong language.','The tests only tried honest users, not an attacker\'s case.','Tests cannot run on hospital systems.','The linter was turned off.'], ans:1,
+      ask:'เทสต์ลองแค่ผู้ใช้สุจริต หรือลองกรณีผู้ใช้ A ขอข้อมูลของ B ด้วย?', why:'เทสต์แค่ happy/honest path ต้องเพิ่มกรณีผู้โจมตี: A ขอข้อมูล B → ระบบต้องปฏิเสธ' },
+    { id:'q4d', type:'short', lv:3, q:'Short answer: State the rule that prevents IDOR in one sentence.',
+      rules:[
+        { re:/(session|login|authenticat|ล็อกอิน|เซสชัน)/i, msg:'บอกว่าต้องเอาตัวตนจาก <b>session</b> (คนที่ login)' },
+        { re:/(user|client|request|url|edit|change|ผู้ใช้|แก้|ส่งมา)/i, msg:'บอกด้วยว่า<b>ห้ามเชื่อ id ที่ผู้ใช้ส่งมา/แก้ได้</b>' },
+      ],
+      ask:'"ข้อมูลของใคร" ควรตัดสินจากสิ่งที่ผู้ใช้แก้ได้ หรือจากอะไร?',
+      answer:'Never decide whose data it is from something the user can edit (like an id in the URL); derive the owner from the authenticated session and check the record belongs to them.' },
+  ]
+});
+
+SE8.lessons.push({
+  id:'q5', icon:'fingerprint', title:'Privacy & PDPA', sub:'Consent · Minimise · Protect',
+  analogy:{ title:'ข้อมูลส่วนตัว = ของฝากที่ต้องรับผิดชอบ', text:'จะรับฝากของต้อง<b>ขออนุญาตและบอกว่าเอาไปทำอะไร</b> (consent) · <b>รับเท่าที่จำเป็น</b> (minimise) · และ<b>ดูแลให้ดี คืนหรือทิ้งเมื่อเจ้าของขอ</b> (protect) · PDPA ไทยบังคับใช้เต็มปี 2022' },
+  yt:'PDPA คืออะไร',
+  video:{ th:[{ id:'ZuO2Tuof_7I', title:'เข้าใจ PDPA ใน 3 นาที (t-reg)' },{ id:'V8A7OqqY980', title:'รู้จัก PDPA (Spring News)' }], en:[] },
+  scene:{ steps:[
+    { say:'แอปจดโน้ตตัวหนึ่ง ตอนสมัครขอข้อมูลเหล่านี้ ลองดูว่าอะไรจำเป็นจริง', html: `<div class="sform">${['ชื่อเล่น','อีเมล','รายชื่อผู้ติดต่อทั้งหมด','รูปใบหน้า','เลขบัตรประชาชน'].map(f => `<label><input type="checkbox" checked disabled> ${f}</label>`).join('')}</div>` },
+    { say:'<b>Minimise</b>: ถ้าฟีเจอร์ไม่ได้ใช้ ก็ไม่ต้องเก็บ ข้อมูลน้อย = ความเสี่ยงน้อย ต้องดูแลน้อย', html: `<div class="sform">${[['ชื่อเล่น',1],['อีเมล',1],['รายชื่อผู้ติดต่อทั้งหมด',0],['รูปใบหน้า',0],['เลขบัตรประชาชน',0]].map(([f, k]) => `<label class="${k ? '' : 'cut'}"><input type="checkbox" ${k ? 'checked' : ''} disabled> ${f}</label>`).join('')}</div>` + note('ไม่มีฟีเจอร์ไหนใช้ contacts / ใบหน้า / เลขบัตร → ตัดออก') },
+    { say:'<b>Consent</b>: เก็บข้อมูลส่วนบุคคลได้เมื่อเจ้าของ<b>ยินยอมโดยรู้ว่าเอาไปทำอะไร</b> (บอกวัตถุประสงค์) · ข้อมูลสุขภาพเป็น<b>ข้อมูลอ่อนไหว</b> ต้องยินยอมชัดแจ้ง', html: row(box('📝 Consent', 'ขอก่อน + บอกวัตถุประสงค์', 'hot'), box('✂️ Minimise', 'เก็บน้อยที่สุด', 'dim'), box('🛡️ Protect', '', 'dim')) },
+    { say:'<b>Protect</b>: เก็บรักษาให้ปลอดภัย และให้เจ้าของ <b>ดู แก้ ลบ</b> ข้อมูลตัวเองได้', html: row(box('📝 Consent', '', 'dim'), box('✂️ Minimise', '', 'dim'), box('🛡️ Protect', 'ปลอดภัย + สิทธิ์ดู/แก้/ลบ', 'hot')) + note('โปรเจกต์นักศึกษา: ใช้ข้อมูลปลอม (fake/seed data) เท่านั้น ห้ามมีข้อมูลจริงใน repo', 'good') },
+  ]},
+  key:[
+    '<b>PDPA</b> (พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล B.E. 2562) บังคับใช้เต็มปี <b>2022</b>',
+    '<b>Consent</b> — ขอก่อนเก็บ + บอกวัตถุประสงค์ · ข้อมูลสุขภาพ = ข้อมูลอ่อนไหว (sensitive)',
+    '<b>Minimise</b> — เก็บเท่าที่ฟีเจอร์ต้องใช้จริง',
+    '<b>Protect</b> — ดูแลให้ปลอดภัย + เจ้าของ<b>ดู แก้ ลบ</b>ได้',
+    'โปรเจกต์: ใช้ข้อมูลปลอมเท่านั้น ข้อมูลจริงห้ามอยู่ใน repo/Git history',
+  ],
+  more:`<p>PDPA มาตรา 26: ข้อมูลสุขภาพเป็นข้อมูลส่วนบุคคลที่อ่อนไหว ต้องได้รับความยินยอมโดยชัดแจ้ง</p>`,
+  ex:[
+    { id:'q5a', type:'mcq', lv:1, q:'"Collect only the personal data that the feature really needs" describes which PDPA principle?', opts:['Consent.','Minimise.','Protect.','Portability.'], ans:1,
+      ask:'"เก็บเท่าที่จำเป็น" ตรงกับคำไหน?', why:'นี่คือ data minimisation — เก็บเท่าที่จำเป็น' },
+    { id:'q5b', type:'classify', lv:1, q:'Consent, minimise, or protect?', cats:['Consent','Minimise','Protect'],
+      rows:[['A note-taking app asks to read your whole contact list, but no feature uses it.', 1],['An app stores photos of users\' faces without saying what they are for.', 0],['A user asks to delete their account, but the system has no way to delete their data.', 2]],
+      ask:'เก็บเกินที่ใช้ → ? · ไม่บอกว่าเอาไปทำอะไร → ? · เจ้าของลบข้อมูลไม่ได้ → ?', why:'contacts ไม่ได้ใช้ = Minimise · ไม่บอกวัตถุประสงค์ = Consent · ลบไม่ได้ = Protect (สิทธิ์ของเจ้าของข้อมูล)' },
+    { id:'q5c', type:'mcq', lv:2, q:'Under PDPA, a patient\'s symptoms are best described as …', opts:['public data.','sensitive personal data that needs explicit consent.','anonymous data.','business data owned by the hospital.'], ans:1,
+      ask:'ข้อมูลสุขภาพจัดเป็นข้อมูลประเภทไหนใน PDPA?', why:'ข้อมูลสุขภาพเป็นข้อมูลส่วนบุคคลอ่อนไหว (sensitive) ต้องยินยอมชัดแจ้ง' },
+  ]
+});
+
+/* =================== Ch9 =================== */
+SE9.lessons.push({
+  id:'p1', icon:'list-checks', title:'Break Down & Estimate', sub:'Story points · Planning poker · Velocity',
+  analogy:{ title:'Story points = เทียบขนาด ไม่ใช่ทายชั่วโมง', text:'บอกว่า "กระเป๋าใบนี้ใหญ่กว่าใบนั้นสองเท่า" ง่ายกว่าบอกว่า "จุ 23.5 ลิตร" · ทีมก็เทียบงานกับงานอ้างอิง แล้วให้แต้ม 1, 2, 3, 5, 8…' },
+  yt:'story points planning poker',
+  video:{ th:[{ id:'v6icoUgUB1E', title:'รู้จัก Agile ใน 3 นาที (BorntoDev)' }], en:[{ id:'VsSaolMtkKU', title:'What are Story Points?' },{ id:'gE7srp2BzoM', title:'Planning Poker Explained' }] },
+  scene:{ steps:[
+    { say:'FR ใหญ่ "นักศึกษาจองห้องติวได้" ใหญ่เกินจะประเมิน ต้อง<b>แตกเป็น task เล็ก</b> โดยเดินตามเส้นทางของผู้ใช้', html: box('FR: A student can book a tutoring room', 'ใหญ่เกินไป → แตกย่อย', 'hot') },
+    { say:'แตกได้ 5 task แต่ละอันบอกได้ชัดว่าเสร็จหรือยัง (และ tests ก็เป็น task ด้วย)', html: row(box('Date & time page'), box('Room is free?'), box('Save booking'), box('Confirm & cancel'), box('Tests')) },
+    { say:'ให้แต้มโดยเทียบกับ<b>งานอ้างอิง</b>: Save booking = 1 แต้ม · งานที่ไม่แน่นอนสูงได้แต้มมากกว่า · ใช้ 1, 2, 3, 5, 8, 13', html: row(box('Save booking', tag('1 (ref)')), box('Date & time', tag('2')), box('Confirm & cancel', tag('3')), box('Tests', tag('3')), box('Room is free?', tag('5', 'new'))) + note('รวม FR นี้ = 14 points · 13 ขึ้นไป → แตกอีก') },
+    { say:'<b>Planning poker</b>: ทุกคนเปิดไพ่<b>พร้อมกัน</b> คนให้สูงสุดกับต่ำสุดอธิบาย แล้วโหวตใหม่ · เปิดพร้อมกันเพื่อไม่ให้ใครโดน<b>ชี้นำ (anchor)</b> จากเสียงแรกหรือเสียงดังสุด', html: row(box('🂡 3'), box('🂡 3'), box('🂡 8', 'อธิบายหน่อย', 'hot'), box('🂡 2', 'อธิบายหน่อย', 'hot')) },
+    { say:'<b>Velocity</b> = ค่าเฉลี่ยแต้มที่<b>เสร็จจริง</b>ต่อ sprint: (18 + 22) ÷ 2 = 20 · เหลือ 60 แต้ม → 60 ÷ 20 ≈ <b>3 sprint</b>', html: row(box('Sprint 1', '18 pts'), box('Sprint 2', '22 pts'), arrow('='), box('Velocity', '20 pts/sprint', 'good'), arrow(), box('60 ÷ 20', '≈ 3 sprints', 'hot')) + note('กับดัก: 60÷22 (ใช้แต่ sprint ดีสุด) หรือ 60÷18 (แย่สุด) · ใช้ค่าเฉลี่ย · "เกือบเสร็จ" นับเป็น 0', 'warn') },
+  ]},
+  key:[
+    'แตก FR เป็น task เล็กที่บอกได้ว่า done/not done · ประเมินไม่ได้ = ยังไม่เข้าใจ → แตกอีก',
+    '<b>Story points</b> = ขนาดเทียบกัน (effort + complexity + uncertainty) ไม่ใช่ชั่วโมง · 1, 2, 3, 5, 8, 13',
+    '<b>Planning poker</b> = เปิดพร้อมกัน กันการ anchor · คนสูงสุด/ต่ำสุดอธิบาย',
+    '<b>Velocity</b> = เฉลี่ยแต้มที่ Done ต่อ sprint · sprint ที่ต้องใช้ = แต้มที่เหลือ ÷ velocity',
+    'แต้มเป็นของทีมใดทีมหนึ่ง ห้ามเทียบข้ามทีม',
+  ],
+  more:`<p>ทำไม story points ดีกว่าชั่วโมง: คนเทียบขนาด ("ใหญ่กว่าเท่าตัว") ได้แม่นกว่าเดาชั่วโมง และงานหลายชิ้นประเมินขาด/เกินจะหักล้างกัน · งาน 3 แต้มก็ยัง 3 แต้มไม่ว่าใครทำ แต่ชั่วโมงขึ้นกับคน</p>`,
+  ex:[
+    { id:'p1a', type:'mcq', lv:1, q:'A team finished 18 story points in sprint 1 and 22 in sprint 2. About how many sprints will 60 remaining points take?', opts:['2','3','4','6'], ans:1,
+      ask:'velocity เฉลี่ย = (18 + 22) ÷ 2 = ? แล้ว 60 ÷ velocity = ?', why:'velocity = 20 · 60 ÷ 20 = 3' },
+    { id:'p1b', type:'mcq', lv:1, q:'In planning poker, why does everyone reveal their estimate <b>at the same time</b>?', opts:['To finish the meeting faster.','So no one is anchored by the first or loudest estimate.','So the Product Owner can pick the final number.','To convert story points into hours.'], ans:1,
+      ask:'ถ้าคนแรกพูดตัวเลขก่อน คนอื่นจะคิดเองอิสระมั้ย?', why:'เปิดพร้อมกันเพื่อไม่ให้ใครถูกชี้นำ (anchoring) จากเสียงแรกหรือเสียงดังสุด' },
+    { id:'p1c', type:'mcq', lv:2, q:'Why do story-point scales jump (1, 2, 3, 5, 8, 13) instead of counting 1 to 13?', opts:['Bigger tasks are less certain, so fine distinctions like 6 vs 7 are meaningless.','Because Fibonacci numbers are faster to add.','To make estimates match hours.','Because Scrum forbids even numbers.'], ans:0,
+      ask:'งานใหญ่ ๆ เราบอกได้แม่นมั้ยว่า 6 หรือ 7?', why:'งานใหญ่ไม่แน่นอนสูง การแยก 6 กับ 7 จึงไม่มีความหมาย ช่องห่างเลยกว้างขึ้น' },
+    { id:'p1d', type:'mcq', lv:2, q:'Sprint velocities were 15 and 25. Which forecast for 80 remaining points uses the <b>right</b> reasoning?', opts:['80 ÷ 25 ≈ 3.2 sprints (best sprint).','80 ÷ 15 ≈ 5.3 sprints (worst sprint).','80 ÷ 20 = about 4 sprints (average).','80 ÷ 40 = 2 sprints (sum of both).'], ans:2,
+      ask:'ใช้ sprint ดีสุด แย่สุด หรือค่าเฉลี่ย?', why:'velocity = เฉลี่ย (15 + 25) ÷ 2 = 20 → 80 ÷ 20 ≈ 4 · ใช้ดีสุด = มองโลกสวยเกิน, แย่สุด = ระวังเกิน' },
+  ]
+});
+
+SE9.lessons.push({
+  id:'p2', icon:'kanban', title:'Sprint Board & Doing Limit', sub:'To-do · Doing · Done',
+  analogy:{ title:'Doing limit = จานบนเตา', text:'พ่อครัวที่เปิดเตา 6 หัวพร้อมกัน สุดท้ายไหม้หมดไม่มีจานไหนเสร็จ · ทำทีละ 2 จานให้<b>เสร็จก่อน</b>แล้วค่อยเริ่มจานใหม่ ได้อาหารเสิร์ฟจริงเร็วกว่า' },
+  yt:'kanban WIP limit',
+  video:{ th:[{ id:'FbyROt-8u0A', title:'รู้จัก Kanban board' }], en:[{ id:'KqsYZim1rIQ', title:'Kanban WIP limits (2 นาที)' }] },
+  scene:{ steps:[
+    { say:'<b>Sprint</b> = รอบสั้นที่กำหนดเวลาตายตัว เช่น 1 สัปดาห์ งานทั้งหมดอยู่บน board 3 คอลัมน์', html: board(['list UI (FR-2)','edit task (FR-3)','due-date logic (FR-1)','task model'], [], ['repo + CI setup'], 2) },
+    { say:'ดึงงานเข้า Doing ได้<b>ไม่เกิน 2</b>', html: board(['list UI (FR-2)','edit task (FR-3)'], ['due-date logic (FR-1)','task model'], ['repo + CI setup'], 2) },
+    { say:'ทดลองแบบ A: 2 คน 4 งาน งานละ 2 วัน ถ้า<b>เริ่มทั้ง 4 พร้อมกัน</b> วันที่ 3 จะได้อะไร', html: board([], ['list UI ½','edit task ½','due-date ½','task model ½'], ['repo + CI setup'], 2) + note('Day 3: ทำครึ่ง ๆ ทั้ง 4 งาน → <b>Done = 0</b>', 'warn') },
+    { say:'แบบ B: จำกัด Doing ไว้ 2 ทำให้เสร็จแล้วค่อยเริ่มใหม่ วันที่ 3 ได้ <b>2 งานเสร็จ</b> เอาไป demo และ test ได้แล้ว', html: board([], ['list UI ½','edit task ½'], ['repo + CI setup','due-date logic','task model'], 2) + note('Day 3: <b>Done = 2</b> · velocity กับ burndown ขยับเฉพาะงานที่ Done เท่านั้น', 'good') },
+  ]},
+  key:[
+    '<b>Sprint</b> = รอบทำงานสั้นที่มีเวลาตายตัว (เช่น 1 สัปดาห์)',
+    'Board: <b>To-do / Doing / Done</b> เห็นว่าใครทำอะไรได้ในพริบตา',
+    '<b>จำกัด Doing</b> = ทำให้เสร็จก่อนเริ่มงานใหม่ เพราะงานครึ่ง ๆ เยอะ = ไม่มีอะไรเสร็จ',
+    'Doing เต็ม = เห็นงานที่ติดได้ทันที ไม่ต้องรอวันสุดท้าย',
+    'งานนับว่า Done เมื่อ <b>merge</b> แล้ว',
+  ],
+  more:`<p>Daily check-in 5 นาที: done / doing / blocked → เจอปัญหาตอนยังเล็ก</p>`,
+  ex:[
+    { id:'p2a', type:'mcq', lv:1, q:'Why does a team limit the number of tasks in the "Doing" column?', opts:['To make the board look tidy.','To give the Scrum Master more control.','To finish work before starting new work, so items actually get done.','To reduce the number of commits.'], ans:2,
+      ask:'งานครึ่ง ๆ 4 อัน กับงานเสร็จ 2 อัน อันไหน demo ได้?', why:'งานค้างครึ่ง ๆ หลายชิ้นทำให้ไม่มีอะไรเสร็จ จึงจำกัดเพื่อให้ทำเสร็จก่อน' },
+    { id:'p2b', type:'mcq', lv:2, q:'Two developers have 4 tasks of 2 days each. If they start all 4 at once, how many tasks are Done on day 3?', opts:['0','2','3','4'], ans:0,
+      ask:'2 คนแบ่งทำ 4 งานพร้อมกัน วันที่ 3 แต่ละงานไปถึงไหน?', why:'แต่ละคนสลับทำ 2 งาน → วันที่ 3 ทุกงานยังไม่เสร็จ = 0 · ถ้าจำกัด Doing = 2 จะได้ 2 งาน' },
+    { id:'p2c', type:'mcq', lv:1, q:'When is a task considered "Done" on the team board?', opts:['When the developer says it is nearly finished.','When the code is merged.','When it is moved to Doing.','When the sprint ends.'], ans:1,
+      ask:'"เกือบเสร็จ" นับไหม?', why:'งาน Done เมื่อ merge แล้ว · "เกือบเสร็จ" นับเป็น 0' },
+  ]
+});
+
+SE9.lessons.push({
+  id:'p3', icon:'chart-line', title:'Scrum + Burndown', sub:'3 roles · 5 events · 3 artifacts',
+  analogy:{ title:'Burndown = เกจน้ำมัน', text:'เส้นประบอกว่า "ตอนนี้ควรเหลืองานเท่าไหร่" ถ้าเส้นจริง<b>อยู่สูงกว่า</b> = งานเหลือมากกว่าแผน = <b>ช้ากว่ากำหนด</b> จะหมดเวลาก่อน และเห็นได้เร็วพอที่จะแก้' },
+  yt:'scrum burndown chart',
+  video:{ th:[{ id:'rtqk-lqEKJE', title:'Scrum คืออะไร (MFEC)' },{ id:'DWNZbTvWFqc', title:'Agile และ Scrum คืออะไร (BSI)' },{ id:'sE_hJFucEN4', title:'Burndown Chart คืออะไร' }], en:[{ id:'XU0llRltyFM', title:'Intro to Scrum in Under 10 Minutes' },{ id:'BVTZxAe-8Wc', title:'The Burndown Chart (Scrum Inc.)' }] },
+  scene:{ steps:[
+    { say:'Scrum คือจังหวะที่ทำซ้ำ: เรียงงาน → วางแผน sprint → ทำงานและคุยกันทุกวัน → โชว์ผลงานและปรับปรุง', html: row(box('Product Backlog', 'งานทั้งหมด เรียงลำดับ'), arrow(), box('Sprint Planning', 'เลือกงาน sprint นี้'), arrow(), box('Sprint + Daily Scrum', 'ทำ + sync ทุกวัน'), arrow(), box('Review + Retro', 'โชว์ + ปรับปรุง')) },
+    { say:'จำแบบถามคำถามเดียว: เป็น<b>ใคร</b> (role) · เกิด<b>เมื่อไหร่</b> (event) · หรือ<b>เปิดดูได้</b> (artifact)', html: row(box('3 Roles (ใคร)', 'Product Owner · Scrum Master · Developers'), box('5 Events (เมื่อไหร่)', 'Sprint · Planning · Daily Scrum · Review · Retrospective'), box('3 Artifacts (อะไร)', 'Product Backlog · Sprint Backlog · Increment')) + note('กับดัก: Sprint <b>Backlog</b> = artifact (list) แต่ Sprint <b>Review</b> = event (ประชุม)', 'warn') },
+    { say:'Burndown: แกน y = <b>งานที่เหลือ</b> แกน x = วันใน sprint · เส้นประ ideal ลดลงเท่า ๆ กันจนเป็น 0', html: burn(null, []) },
+    { say:'sprint 10 วัน วันที่ 5: ideal บอกควรเหลือ 50% แต่เส้นจริงเหลือ 70%', html: burn(5, [100, 95, 88, 80, 75, 70]) },
+    { say:'เส้นจริง<b>อยู่เหนือ</b> ideal = <b>ช้ากว่าแผน</b> ห่าง 20% ≈ 2 วัน · พูดใน Daily Scrum เลย: แตกงานที่ติด ช่วยกันทำ หรือคุยกับ PO ว่าจะตัดอะไร', html: burn(5, [100, 95, 88, 80, 75, 70], true) + note('เส้นที่ "ขึ้น" = มีงานใหม่เพิ่มกลาง sprint · รอแก้วันสุดท้าย = ล้มเหลวจริง', 'warn') },
+  ]},
+  key:[
+    '<b>3 roles</b>: Product Owner (ทำอะไร ลำดับไหน) · Scrum Master (ดูแล process ไม่ใช่หัวหน้า) · Developers',
+    '<b>5 events</b>: Sprint · Sprint Planning · Daily Scrum · Sprint Review · Retrospective',
+    '<b>3 artifacts</b>: Product Backlog · Sprint Backlog · <b>Increment</b> (ชิ้นงานที่ใช้งานได้จาก sprint)',
+    '<b>Burndown</b>: แกน y = งานที่เหลือ · เหนือ ideal = <b>behind</b> · ใต้ ideal = ahead',
+  ],
+  more:`<p>Sprint เองก็เป็น event (กล่องที่ครอบ event อื่น) · ที่มา: The Scrum Guide (2020), Cohn (2005)</p>`,
+  ex:[
+    { id:'p3a', type:'mcq', lv:1, q:'In Scrum, which of the following is an <b>artifact</b>?', opts:['Sprint Review.','Product Owner.','Product Backlog.','Daily Scrum.'], ans:2,
+      ask:'อันไหน "เปิดดูได้" (ไม่ใช่คน ไม่ใช่การประชุม)?', why:'Product Backlog = artifact · Sprint Review/Daily Scrum = event · Product Owner = role' },
+    { id:'p3b', type:'mcq', lv:1, q:'On a sprint burndown chart, the actual line stays <b>above</b> the ideal line. What does this mean?', opts:['The team is ahead of schedule.','The team is behind schedule.','The sprint has no remaining work.','The estimates were too large.'], ans:1,
+      ask:'แกน y คืองาน "ที่เหลือ" — สูงกว่าแปลว่าเหลือมากหรือน้อย?', why:'เหนือ ideal = งานเหลือมากกว่าแผน = ช้ากว่ากำหนด' },
+    { id:'p3c', type:'classify', lv:2, q:'Role, event or artifact?', cats:['Role','Event','Artifact'],
+      rows:[['Product Owner', 0],['Daily Scrum', 1],['Sprint Backlog', 2],['Scrum Master', 0],['Retrospective', 1],['Increment', 2]],
+      ask:'ใคร = role · เกิดบนปฏิทิน = event · เปิดหรือโชว์ได้ = artifact', why:'PO, Scrum Master = role · Daily Scrum, Retrospective = event · Sprint Backlog, Increment = artifact' },
+    { id:'p3d', type:'mcq', lv:2, q:'Which Scrum artifact is the <b>usable piece of product</b> that a sprint produces?', opts:['Increment.','Product Backlog.','Sprint Backlog.','Daily Scrum.'], ans:0,
+      ask:'ชิ้นงานที่ demo ได้หลังจบ sprint เรียกว่าอะไร?', why:'Increment = ผลงานที่ใช้งานได้จาก sprint · Daily Scrum เป็น event' },
+  ]
+});
+
+SE9.lessons.push({
+  id:'p4', icon:'triangle-alert', title:'Risk Management', sub:'Identify → Analyse → Plan → Monitor',
+  analogy:{ title:'Risk management = พยากรณ์อากาศ', text:'เห็นพายุมา (<b>identify</b>) · ประเมินว่าแรงแค่ไหน (<b>analyse</b>) · พกร่มหรือเปลี่ยนเส้นทาง (<b>plan</b>) · คอยดูฟ้าต่อ (<b>monitor</b>)' },
+  yt:'software project risk management',
+  video:{ th:[], en:[{ id:'x7A9idByPA4', title:'What Is Risk Management In Projects?' }] },
+  scene:{ steps:[
+    { say:'Sommerville แบ่งการจัดการความเสี่ยงเป็น 4 ขั้น', html: row(box('1 Identify', 'อะไรอาจพัง'), arrow(), box('2 Analyse', 'likelihood × impact'), arrow(), box('3 Plan', 'avoid / reduce / accept'), arrow(), box('4 Monitor', 'เช็กใหม่ทุก sprint')) },
+    { say:'ขั้น <b>Analyse</b>: วางแต่ละความเสี่ยงบนตาราง โอกาสเกิด × ผลกระทบ ช่องแดงจัดการก่อน', html: matrix({ '2,2':'🔥 coder คนเดียวป่วย', '1,2':'ฟีเจอร์ยากทำไม่ได้', '0,0':'สีหน้า settings' }) },
+    { say:'ความเสี่ยงมี <b>3 ประเภท</b> ดูว่ามันกระทบอะไร', html: row(box('Project risk', 'กระทบเวลา/ทรัพยากร<br>เช่น สมาชิกถอนวิชา'), box('Product risk', 'กระทบคุณภาพ/performance<br>เช่น หน้าค้นหาช้ามาก'), box('Business risk', 'กระทบเป้าหมายใหญ่<br>เช่น ทำเสร็จแต่ไม่มีใครใช้')) },
+    { say:'ขั้น <b>Plan</b>: เลือกรับมือ 3 แบบ', html: row(box('Avoid', 'ตัดสิ่งที่เสี่ยงออก<br>เช่น ตัดฟีเจอร์ video call ออกจาก scope', 'hot'), box('Reduce', 'ลดโอกาส/ผลกระทบ<br>เช่น pair + commit ทุกวัน'), box('Accept', 'ยอมรับ ผลกระทบต่ำ<br>เช่น สีหน้า settings ไม่สวย')) },
+  ]},
+  key:[
+    '4 ขั้น: <b>Identify → Analyse (likelihood × impact) → Plan → Monitor</b>',
+    '<b>Project</b> risk = เวลา/คน · <b>Product</b> risk = คุณภาพ/performance · <b>Business</b> risk = เป้าหมาย/ตลาด',
+    'Plan: <b>Avoid</b> (ตัดออก) · <b>Reduce</b> (ลด) · <b>Accept</b> (ยอมรับเมื่อผลกระทบต่ำ)',
+    'ทีมเล็ก: บอกความเสี่ยงอันดับ 1–2 ออกมาดัง ๆ แล้ววางแผนรับมือ ไม่ต้องมีเอกสารใหญ่',
+  ],
+  more:`<p>ที่มา: Sommerville 9e §22.1 Risk management</p>`,
+  ex:[
+    { id:'p4a', type:'mcq', lv:1, q:'"We build the app, but nobody actually needs it." In Sommerville\'s classification this is a …', opts:['project risk.','product risk.','business risk.','technical risk.'], ans:2,
+      ask:'กระทบตารางเวลา คุณภาพ หรือเป้าหมาย/ตลาด?', why:'กระทบเป้าหมายใหญ่ขององค์กร/ตลาด = business risk' },
+    { id:'p4b', type:'mcq', lv:1, q:'Nobody on the team has used live video before, so the team <b>removes</b> the video-call feature from the project scope. Which risk response is this?', opts:['Avoid.','Reduce.','Accept.','Monitor.'], ans:0,
+      ask:'ตัดสิ่งที่เสี่ยงทิ้งไปเลย = ?', why:'เอาสิ่งที่เสี่ยงออกจาก scope = Avoid' },
+    { id:'p4c', type:'mcq', lv:2, q:'Estimating how likely each risk is and how big its impact would be belongs to which step?', opts:['Identify.','Analyse.','Plan.','Monitor.'], ans:1,
+      ask:'likelihood × impact คือขั้นไหน?', why:'Analyse = ประเมิน likelihood × impact · Identify = แค่หาว่ามี risk อะไร' },
+    { id:'p4d', type:'classify', lv:2, q:'What kind of risk is it?', cats:['Project risk','Product risk','Business risk'],
+      rows:[['A team member drops the course mid-term.', 0],['The search page is very slow with lots of data.', 1],['It\'s finished, but nobody wants to use it.', 2]],
+      ask:'เรื่องคน/เวลา → ? · เรื่องคุณภาพ → ? · เรื่องคนไม่ใช้ → ?', why:'คนหาย = project · ช้า = product · ไม่มีคนใช้ = business' },
+  ]
+});
+
+SE9.lessons.push({
+  id:'p5', icon:'users', title:'Roles & Retrospective', sub:'Keep · Drop · Change (blameless)',
+  analogy:{ title:'Retrospective = ทีมฟุตบอลดูเทปหลังแข่ง', text:'ไม่ได้ดูเพื่อหาคนผิด แต่ดูว่า<b>ระบบการเล่น</b>ตรงไหนพัง แล้วเลือกปรับ<b>หนึ่งอย่าง</b>สำหรับนัดหน้า' },
+  yt:'sprint retrospective',
+  video:{ th:[{ id:'rGAIUx5YFTQ', title:'Retrospective คืออะไร' }], en:[{ id:'5eu1HotNmWs', title:'What is a Sprint Retrospective?' },{ id:'TD-XsdD2n3s', title:'Facilitate the Retrospective (Scrum.org)' }] },
+  scene:{ steps:[
+    { say:'ทีมเล็กทุกคนต้องเป็นเจ้าของอะไรสักอย่าง และ<b>หมุนเวียนบทบาท</b>ได้', html: row(box('Coordinator', 'ดูแล board, check-in'), box('Repo owner', 'ดูแล main, review PR'), box('Quality', 'linter + tests เขียว'), box('Demo / docs', 'walkthrough + README')) + note('ความรับผิดชอบเป็น<b>รายบุคคล</b> แม้ทำเป็นทีม: commit และ task คือหลักฐาน') },
+    { say:'จบทุก sprint ถาม 3 คำถาม', html: row(box('✅ Keep', 'อะไรดี → ทำต่อโดยตั้งใจ'), box('🗑️ Drop', 'อะไรไม่ดี → เจาะจง + ไม่โทษคน'), box('🔁 Change', 'จะเปลี่ยนอะไร → <b>หนึ่ง</b>อย่างที่ทำได้จริง')) },
+    { say:'ประโยคนี้<b>โทษคน</b> ไม่ช่วยให้ทีมดีขึ้น', html: note('❌ "เพราะต้นทำงานช้า ทีมเลยส่งไม่ทัน"', 'warn') },
+    { say:'เขียนใหม่แบบ <b>blameless</b>: บอกปัญหาของ<b>กระบวนการ</b> ไม่โทษใคร และให้คำมั่นเปลี่ยน 1 อย่าง', html: note('✅ "งานหน้าค้นหาใหญ่เกินไป และไม่มีใครเห็นว่ามันติดจนวันสุดท้าย sprint หน้าเราจะแตกงานให้เล็กลง และ check-in ทุกวัน"', 'good') },
+  ]},
+  key:[
+    'บทบาทหมุนเวียน: Coordinator · Repo owner · Quality · Demo/docs',
+    'ความรับผิดชอบเป็นรายบุคคล — commit/task คือหลักฐาน (contribution factor)',
+    'Retrospective: <b>Keep / Drop / Change</b> ~15 นาทีทุก sprint',
+    '<b>Blameless</b>: โทษกระบวนการ ไม่ใช่คน · เลือกเปลี่ยน<b>หนึ่ง</b>อย่างที่ทำได้จริง',
+  ],
+  more:`<p>AI ช่วยแตกงานได้ แต่<b>ทีม</b>ยังเป็นเจ้าของแผน scope และ deadline</p>`,
+  ex:[
+    { id:'p5a', type:'mcq', lv:1, q:'Which retrospective note is written in a <b>blameless</b> way?', opts:['"Mint was slow, so we missed the deadline."','"Nobody worked hard enough this sprint."','"The AI tool ruined our code."','"All testing was left to the last day; next sprint we test each task when it moves to Done."'], ans:3,
+      ask:'ข้อไหนพูดถึง "กระบวนการ" และมีการเปลี่ยนแปลงที่ชัดเจน?', why:'บอกปัญหาของกระบวนการ ไม่โทษใคร และมี change ที่ทำได้จริง' },
+    { id:'p5b', type:'mcq', lv:1, q:'The three retrospective questions are …', opts:['Plan / Build / Ship.','Keep / Drop / Change.','Who / When / What.','Avoid / Reduce / Accept.'], ans:1,
+      ask:'อะไรดี อะไรไม่ดี จะเปลี่ยนอะไร', why:'Keep (ดี) · Drop (ไม่ดี) · Change (จะเปลี่ยนอะไร)' },
+    { id:'p5c', type:'short', lv:3, q:'Short answer: Rewrite this note in a blameless way: "Because Ton was slow, the team missed the deadline."',
+      rules:[
+        { not:/\bton\b|ต้น/i, msg:'อย่าเอ่ยชื่อคน (blameless = ไม่โทษบุคคล)' },
+        { re:/(task|process|split|smaller|check|plan|งาน|แตก|กระบวนการ|เช็ก|check-in|ประชุม)/i, msg:'พูดถึงปัญหาของ<b>กระบวนการ/งาน</b> เช่น งานใหญ่ไป ไม่มีใครเห็นว่าติด' },
+        { re:/(next|will|from now|sprint หน้า|ครั้งหน้า|จะ)/i, msg:'ใส่<b>การเปลี่ยนแปลง 1 อย่าง</b>สำหรับ sprint หน้า' },
+      ],
+      ask:'ปัญหาจริงคือคน หรือคือ "งานใหญ่เกิน/ไม่มีใครเห็นว่าติด"? แล้ว sprint หน้าจะเปลี่ยนอะไร?',
+      answer:'"The search-page task was too big, and nobody saw it was stuck until the last day. Next sprint we will split tasks smaller and check in every day."' },
+  ]
+});
+
+/* =================== Ch10 =================== */
+SE10.lessons.push({
+  id:'e1', icon:'scale', title:'ACM/IEEE Code of Ethics', sub:'8 principles · Public มาก่อน',
+  analogy:{ title:'จรรยาบรรณ = คำสัญญาของอาชีพ', text:'หมอ วิศวกร และตอนนี้คนทำซอฟต์แวร์ มีอำนาจเหนือชีวิตคน · code of ethics คือวิธีรักษาความไว้ใจนั้น · และมัน<b>ครอบคลุมนักศึกษาด้วย</b>' },
+  yt:'software engineering code of ethics ACM IEEE',
+  video:{ th:[], en:[] },
+  scene:{ steps:[
+    { say:'ทำไม SE ต้องมี code ของตัวเอง: ACM กับ IEEE-CS ร่วมกันตั้งกรรมการ ร่างปี 1997 และ<b>อนุมัติ version 5.2 ปี 1999</b>', html: row(box('1993', 'IEEE-CS + ACM'), arrow(), box('1994', 'joint committee'), arrow(), box('1997', 'draft ใน Comm. ACM'), arrow(), box('1999', 'v5.2 approved', 'hot')) + note('code ไม่ใช่กฎหมาย · ให้ความรู้ เป็นแรงบันดาลใจ บอกสาธารณะว่าอาชีพนี้รับผิดชอบอะไร') },
+    { say:'<b>8 principles</b> อ่านคำแรกของแต่ละข้อ: เริ่มจาก <b>Public</b> แล้วกระจายออกไป', html: `<div class="sgrid8">${['Public','Client & employer','Product','Judgment','Management','Profession','Colleagues','Self'].map((n, k) => box(String(k+1), n, k === 0 ? 'hot' : '')).join('')}</div>` + note('ร่างปี 1997 เอา Product ขึ้นก่อน · ฉบับอนุมัติ 1999 ย้าย <b>Public ขึ้นที่ 1</b>') },
+    { say:'แต่ละหลักทำงาน <b>3 ระดับ</b>', html: row(box('Aspire', 'อยากเป็นคนดี: ซื่อสัตย์ ยุติธรรม'), box('Expect', 'หน้าที่มืออาชีพ: รับผิดชอบงานตัวเอง รวมส่วนที่ AI ร่าง'), box('Demand', 'แนวปฏิบัติที่วัดได้: อนุมัติเฉพาะซอฟต์แวร์ที่ผ่านเทสต์')) },
+    { say:'กับดักข้อสอบ: Principle 2 บอกให้ "รับใช้นายจ้าง" แต่<b>ต้องอยู่ภายใต้ประโยชน์สาธารณะ</b> · Public มาก่อนเสมอ', html: row(box('1 Public', '', 'hot'), arrow('>'), box('2 Client & employer', 'within the public interest')) },
+  ]},
+  key:[
+    'ACM/IEEE-CS Software Engineering Code of Ethics · draft 1997 · <b>v5.2 อนุมัติ 1999</b>',
+    '<b>8 principles</b>: Public · Client & employer · Product · Judgment · Management · Profession · Colleagues · Self',
+    '<b>Public มาก่อน</b> · Principle 2 ทำได้ "ภายใต้ประโยชน์สาธารณะ" เท่านั้น',
+    '3 ระดับ: <b>Aspire</b> (ค่านิยม) · <b>Expect</b> (หน้าที่มืออาชีพ) · <b>Demand</b> (แนวปฏิบัติที่วัดได้)',
+    'Code ไม่ใช่กฎหมาย และครอบคลุม<b>นักศึกษา</b>ด้วย',
+  ],
+  more:`<table class="stbl"><tr><th>#</th><th>Principle</th><th>ในวิชานี้</th></tr>
+<tr><td>1</td><td>Public</td><td>"AI เขียน" ไม่ใช่ข้ออ้าง เราเป็นเจ้าของสิ่งที่ส่ง</td></tr>
+<tr><td>2</td><td>Client & employer</td><td>บอกทีมก่อน deadline · ไม่ใช้โปรแกรมเถื่อน</td></tr>
+<tr><td>3</td><td>Product</td><td>SRS, tests, PDPA, risk</td></tr>
+<tr><td>4</td><td>Judgment</td><td>ห้ามเซ็นรายงานเทสต์ที่ไม่ได้รัน</td></tr>
+<tr><td>5</td><td>Management</td><td>หัวหน้าต้องนำอย่างมีจริยธรรม</td></tr>
+<tr><td>6</td><td>Profession</td><td>demo สิ่งที่ทำได้จริง ไม่ขายเกิน</td></tr>
+<tr><td>7</td><td>Colleagues</td><td>ให้เครดิตงานคนอื่น · review อย่างตรงไปตรงมา</td></tr>
+<tr><td>8</td><td>Self</td><td>เรียนรู้ต่อเนื่อง · AI ทำให้เรียนเร็วขึ้น ไม่ได้ทำให้ไม่ต้องเรียน</td></tr></table>`,
+  ex:[
+    { id:'e1a', type:'mcq', lv:1, q:'In the ACM/IEEE-CS Software Engineering Code of Ethics, which principle comes <b>first</b>?', opts:['Client and employer.','Product.','Public.','Self.'], ans:2,
+      ask:'จริยธรรมกระจายออกจากจุดไหน: "ไม่ทำร้ายสาธารณะ"?', why:'Public มาก่อน (ฉบับ 1999 ย้ายขึ้นมาเป็นข้อ 1)' },
+    { id:'e1b', type:'mcq', lv:2, q:'Principle 2 says "serve your client and employer". Which limit applies?', opts:['Only if they pay on time.','Only within the public interest.','Only if the manager approves.','There is no limit.'], ans:1,
+      ask:'หลักไหนอยู่เหนือหลัก 2?', why:'รับใช้นายจ้างได้ แต่ภายใต้ประโยชน์สาธารณะ (Principle 1 มาก่อน)' },
+    { id:'e1c', type:'mcq', lv:2, q:'"Approve software only if you have good grounds to believe it is safe and has passed appropriate tests." Which level of obligation is this?', opts:['Aspire.','Expect.','Demand.','Inspire.'], ans:2,
+      ask:'นี่คือค่านิยมกว้าง ๆ หรือพฤติกรรมเฉพาะที่วัดได้?', why:'Demand = แนวปฏิบัติเฉพาะที่วัดได้ ใกล้ state of the art' },
+    { id:'e1d', type:'mcq', lv:1, q:'Who does the Software Engineering Code of Ethics cover?', opts:['Only senior engineers.','Only ACM members who sign it.','Practitioners, educators, managers and students of the profession.','Only people working on safety-critical systems.'], ans:2,
+      ask:'นักศึกษาอยู่ในนั้นด้วยมั้ย?', why:'ครอบคลุมผู้ปฏิบัติงาน อาจารย์ ผู้จัดการ และ<b>นักศึกษา</b>' },
+  ]
+});
+
+SE10.lessons.push({
+  id:'e2', icon:'messages-square', title:'Using the Code', sub:'5 คำถามเมื่อหลักขัดกัน + จับคู่ principle',
+  analogy:{ title:'Code ≠ สูตรคำนวณ', text:'มันไม่ได้ให้คำตอบอัตโนมัติ แต่ให้<b>วิธีคิด</b> และเป็นมาตรฐานที่ทีมชี้ได้เวลาจะบอกว่า "ไม่"' },
+  yt:'software engineering ethics dilemma',
+  video:{ th:[], en:[] },
+  scene:{ steps:[
+    { say:'สถานการณ์: หัวหน้าสั่งให้ปล่อยวันศุกร์ ทั้งที่ทีมรู้ว่ามีบั๊กที่ทำ<b>ข้อมูลผู้ใช้รั่ว</b>ได้ จะทำยังไง?', html: note('🗓️ Ship Friday ทั้งที่รู้ว่ามีบั๊กข้อมูลรั่ว?', 'warn') },
+    { say:'ใช้ <b>5 คำถาม</b>', html: `<ol class="slist"><li><b>ใครได้รับผลกระทบ?</b> คิดกว้าง รวมคนที่ไม่เคยแตะแอป</li><li><b>เราเคารพทุกคนมั้ย?</b></li><li><b>สาธารณะที่รู้ข้อเท็จจริงครบจะยอมรับมั้ย?</b></li><li><b>คนที่มีอำนาจน้อยสุดจะเป็นยังไง?</b></li><li><b>มืออาชีพในอุดมคติจะทำแบบนี้มั้ย?</b></li></ol>` },
+    { say:'คำตอบ: ผู้ได้รับผลกระทบคือผู้ใช้ทุกคน สาธารณะไม่ยอมรับ "รู้อยู่แล้วแต่ deadline มาก่อน" → <b>รายงานความเสี่ยง แล้วเลื่อนหรือแก้</b> (Principle 1 Public)', html: note('✅ รายงาน + เลื่อน/แก้ก่อนปล่อย → Principle 1 (Public) ร่วมกับ 3 และ 4', 'good') },
+  ]},
+  key:[
+    'Code <b>ไม่ใช่ algorithm</b>: หลักอาจขัดกัน ต้องใช้วิจารณญาณ',
+    '5 คำถาม: ใครได้รับผลกระทบ · เคารพทุกคนมั้ย · สาธารณะที่รู้ครบจะยอมรับมั้ย · <b>คนที่มีอำนาจน้อยสุด</b> · มืออาชีพในอุดมคติจะทำมั้ย',
+    'เซ็นรายงานเทสต์ที่ไม่ได้รัน → <b>4 Judgment</b> · เอางานเพื่อนมาอ้างเป็นของตัวเอง → <b>7 Colleagues</b>',
+    'หัวหน้าสั่งให้ปิดบัง defect → <b>5 Management</b> · ปล่อยทั้งที่ข้อมูลรั่ว → <b>1 Public</b>',
+  ],
+  more:`<p>code เตือนว่าห้ามหยิบข้อใดข้อหนึ่งมาอ้างเพื่อแก้ตัวความผิด</p>`,
+  ex:[
+    { id:'e2a', type:'classify', lv:2, q:'Which principle does it break?', cats:['1 Public','4 Judgment','5 Management','7 Colleagues'],
+      rows:[['Your manager says ship on Friday, although the team knows a bug can leak users\' data.', 0],['You sign a test report saying all tests passed, but you never ran them.', 1],['You present a classmate\'s module as your own work in the demo.', 3],['A team lead tells juniors to hide known defects from the client.', 2]],
+      ask:'ข้อมูลผู้ใช้ → ? · เซ็นสิ่งที่ไม่จริง → ? · เครดิตเพื่อน → ? · หัวหน้าสั่งผิด → ?', why:'ปล่อยทั้งที่ข้อมูลรั่ว = Public · เซ็นเทสต์ที่ไม่ได้รัน = Judgment · เอางานเพื่อน = Colleagues · หัวหน้าสั่งปิดบัง = Management' },
+    { id:'e2b', type:'mcq', lv:2, q:'Which question from the Code focuses on people with the least power to complain or protect themselves?', opts:['Who is affected?','How would a well-informed public see it?','What happens to the least empowered?','Would an ideal professional do this?'], ans:2,
+      ask:'คำถามไหนพูดถึง "คนที่มีอำนาจน้อยสุด"?', why:'"What happens to the least empowered?" = คนที่ปกป้องตัวเองได้น้อยที่สุด' },
+    { id:'e2c', type:'mcq', lv:1, q:'At the demo, a team claims a feature works although it only works in one scripted path. Which principle is most at risk?', opts:['6 Profession (accurate, not misleading claims).','8 Self.','2 Client & employer.','5 Management.'], ans:0,
+      ask:'หลักไหนพูดเรื่อง "ไม่โฆษณาเกินจริง"?', why:'Principle 6 Profession: พูดถึงความสามารถของซอฟต์แวร์อย่างถูกต้อง ไม่หลอกลวง' },
+  ]
+});
+
+SE10.lessons.push({
+  id:'e3', icon:'eye-off', title:'Everyday Issues & Data Ethics', sub:'Can vs Should',
+  analogy:{ title:'Can vs Should', text:'แค่เพราะ<b>เก็บได้</b> ไม่ได้แปลว่า<b>ควรเก็บ</b> · ข้อมูลที่ปลอดภัยที่สุดคือข้อมูลที่เราเลือกไม่เก็บตั้งแต่แรก' },
+  yt:'data ethics privacy',
+  video:{ th:[{ id:'zCVI9CK4b8g', title:'3 เรื่องเข้าใจผิดเกี่ยวกับ PDPA (ขายหัวเราะ)' }], en:[] },
+  scene:{ steps:[
+    { say:'Sommerville §1.2: ปัญหาจริยธรรมที่เจอในงานปกติ <b>4 เรื่อง</b>', html: row(box('#1 Confidentiality', 'เคารพข้อมูลของนายจ้าง/ลูกค้า แม้ไม่มีสัญญา'), box('#2 Competence', 'ไม่อ้างความสามารถเกินจริง'), box('#3 IP rights', 'เคารพลิขสิทธิ์ สิทธิบัตร license'), box('#4 Computer misuse', 'ไม่ใช้ทักษะทำร้ายระบบคนอื่น')) },
+    { say:'Ch8 สอนว่าจะปกป้องข้อมูล<b>ยังไง</b> (how) · Ch10 ถามว่า<b>ควร</b>เก็บมั้ย (whether)', html: row(box('Ch8 Security', 'HOW: ป้องกันยังไง'), arrow(), box('Ch10 Data ethics', 'WHETHER: ควรเก็บมั้ย', 'hot')) },
+    { say:'Data ethics 3 ข้อ', html: row(box('Minimise', 'เก็บเท่าที่ฟีเจอร์ต้องใช้'), box('Protect', 'ดูแล + สิทธิ์ดู/แก้/ลบ'), box('Be transparent', 'บอกว่าเก็บอะไร เอาไปทำอะไร ด้วยภาษาง่าย ๆ ก่อนเก็บ')) },
+  ]},
+  key:[
+    '4 everyday issues (Sommerville §1.2): <b>Confidentiality · Competence · IP rights · Computer misuse</b>',
+    'Data ethics: <b>Minimise · Protect · Be transparent</b>',
+    'Security = <b>how</b> · Data ethics = <b>whether</b> (can vs should)',
+    'copy โค้ดจาก repo ที่<b>ไม่มี license</b> = ปัญหา IP',
+  ],
+  more:`<p>Confidentiality + IP = เหตุผลที่ไม่ commit secret และไม่ copy โค้ดที่ไม่มี license · Competence + misuse = เหตุผลที่ "AI เขียน" ไม่ใช่ข้ออ้างเมื่อเกิดความเสียหาย</p>`,
+  ex:[
+    { id:'e3a', type:'classify', lv:2, q:'Which issue or data rule is it?', cats:['Confidentiality','IP rights','Competence','Minimise','Be transparent'],
+      rows:[['You post a screenshot of a client\'s internal dashboard in a public Discord to ask for help.', 0],['You paste code from a GitHub repo that has no licence into your product.', 1],['After one tutorial, you tell a client you are an expert and take the job.', 2],['A study-reminder app asks for your national ID number and birthday at sign-up.', 3],['The app shares usage data with an ad partner, but the privacy notice never says so.', 4]],
+      ask:'ข้อมูลลูกค้า → ? · โค้ดไม่มี license → ? · อ้างเกินจริง → ? · ขอข้อมูลเกิน → ? · ไม่บอกผู้ใช้ → ?', why:'Discord = Confidentiality · ไม่มี licence = IP · อ้างเป็น expert = Competence · ขอเลขบัตร = Minimise · ไม่แจ้งการแชร์ = Be transparent' },
+    { id:'e3b', type:'mcq', lv:1, q:'A study-reminder prototype asks every user for their national ID number. Which data-ethics principle does this break <b>most directly</b>?', opts:['Transparency.','Data minimisation.','Competence.','Intellectual property.'], ans:1,
+      ask:'แอปเตือนอ่านหนังสือต้องใช้เลขบัตรมั้ย?', why:'ขอข้อมูลที่ฟีเจอร์ไม่ได้ใช้ = ผิด data minimisation' },
+    { id:'e3c', type:'mcq', lv:2, q:'"Security was the how; data ethics is the …"', opts:['when.','whether.','who.','where.'], ans:1,
+      ask:'Ch10 ถามว่า "ควรเก็บ<b>หรือไม่</b>"', why:'data ethics = whether: ควรเก็บข้อมูลนี้ตั้งแต่แรกหรือไม่' },
+  ]
+});
+
+SE10.lessons.push({
+  id:'e4', icon:'bot', title:'Responsible AI & Backdoors', sub:'AI ช่วยได้ แต่คนต้องรับผิดชอบ',
+  analogy:{ title:'AI = เด็กฝึกงานที่เร็วมาก', text:'ร่างงานได้เร็วและเก่ง แต่<b>เราต้องเซ็น</b>ก่อนส่งออกไป ถ้าผิด หัวหน้า (เรา) เป็นคนรับผิดชอบ ไม่ใช่เด็กฝึกงาน' },
+  yt:'responsible AI software supply chain',
+  video:{ th:[{ id:'C2rCnXuWoLM', title:'หลักการ Responsible AI (Microsoft Thailand)' },{ id:'P2_GlluNVoE', title:'AI Ethics / Responsible AI คืออะไร (iT24Hrs)' }], en:[{ id:'w_3L1Bf2P_g', title:'Introduction to Responsible AI (Google Cloud)' },{ id:'BqpWvESLW78', title:'Software supply chain threats (Red Hat)' }] },
+  scene:{ steps:[
+    { say:'ใช้ AI ได้และควรใช้ให้เป็น แต่มีกติกา', html: row(box('✅ DO', 'คนต้องอ่าน เทสต์ อนุมัติ (human sign-off)<br>เปิดเผยว่าใช้ AI ตรงไหน (AI-Use Statement)<br>ระวัง bias และความผิดพลาด', 'good'), box('❌ DON\'T', '"AI บอกมา" ไม่ใช่ข้ออ้าง<br>ห้ามใส่ข้อมูลส่วนตัว/secret ใน prompt<br>อย่าอ้างว่างาน AI เป็นของตัวเองทั้งหมด', 'hot')) },
+    { say:'Case ตุลาคม 2026: update ของ AI tool ที่ดูปกติ แฝง <b>backdoor</b> มาด้วย', html: row(box('Marketplace', 'ผู้โจมตีปล่อย build ที่ถูกแก้'), arrow(), box('Update "ปกติ"', 'ประมาณ 11 ชั่วโมง'), arrow(), box('เครื่อง developer', 'เพิ่ม SSH key ของผู้โจมตี'), arrow(), box('Backdoor', 'เปิด reverse tunnel', 'hot')) + note('backdoor = ทางเข้าลับที่ข้ามการ login ปกติ · tool ดูปกติและมีสิทธิ์ของเรา → <b>ความไว้ใจคือช่องทางโจมตี</b>', 'warn') },
+    { say:'backdoor มาในโค้ดที่ AI เขียนให้ก็ได้ เช่นบรรทัดนี้ <b>เทสต์ login ผ่านหมด</b> เพราะเทสต์เช็กว่าอะไร "ควรทำงาน" ไม่ได้เช็กทางเข้าเกิน', html: `<pre class="code">def login(user, password):
+    if password == "dev-2569": return True   # ← ไม่มีใครสั่ง!
+    ...</pre>` + note('ลบ บอกทีม เทสต์ใหม่ · จะบั๊กหรือ backdoor ตั้งใจหรือไม่ ทีมที่ปล่อยเป็นเจ้าของ', 'good') },
+    { say:'บทเรียน: ปฏิบัติต่อ AI tools, packages และ models เหมือน <b>supply-chain dependency</b> มีประโยชน์ แต่ต้องตรวจก่อนไว้ใจ · model "local" ก็ไม่ได้แปลว่าปลอดภัย', html: row(box('ตรวจที่มา', 'publisher + hash'), box('อย่ารีบ update', 'รอ version ใหม่นิ่งก่อน'), box('secret อายุสั้น', 'จำกัดสิทธิ์'), box('จำกัด AI agent', 'least privilege')) },
+  ]},
+  key:[
+    'คนต้อง<b>รับผิดชอบเสมอ</b>: human sign-off · เปิดเผยการใช้ AI · ระวัง bias',
+    '"The AI said so" / "AI caused it" <b>ไม่ใช่ข้ออ้าง</b> · ทีมที่ review และปล่อยโค้ดต้องรับผิดชอบ',
+    'ห้ามใส่ข้อมูลส่วนตัวจริงหรือ secret ใน prompt (ถือว่าเป็นข้อมูลสาธารณะ)',
+    '<b>Backdoor</b> = ทางเข้าลับข้าม login · เทสต์มักจับไม่ได้ → ต้องอ่านโค้ดก่อน commit',
+    'AI tools/packages/models = <b>supply-chain dependencies</b> · local model ≠ trusted',
+  ],
+  more:`<p>ลดความเสี่ยงของ model: ตรวจ publisher และ hash · ใช้ <code>safetensors</code> · เลี่ยง <code>trust_remote_code</code> · รันใน sandbox ที่ไม่มี network · ให้ tool สิทธิ์น้อยที่สุด · คนยืนยันการกระทำที่เสี่ยง</p>`,
+  ex:[
+    { id:'e4a', type:'mcq', lv:1, q:'A bug in AI-generated code exposes users\' data after release. Who is accountable?', opts:['The company that trained the AI model.','No one, because the code was generated automatically.','The engineers who reviewed and shipped the code.','The user who reported the bug.'], ans:2,
+      ask:'ใครเป็นคนอนุมัติและปล่อยโค้ดนั้นออกไป?', why:'ความรับผิดชอบอยู่กับทีมที่ review และ ship · "AI เขียน" ไม่ใช่ข้ออ้าง' },
+    { id:'e4b', type:'classify', lv:2, q:'Responsible AI use, or not?', cats:['Responsible','Not OK'],
+      rows:[['AI drafts your unit tests; you run them and fix two wrong expected values.', 0],['You paste a real clinic\'s patient list into a chatbot to "make test data".', 1],['The AI-Use Statement says "no AI used", but AI generated the UI layout.', 1],['AI-written code leaks data; the team\'s report says "the AI caused it".', 1]],
+      ask:'มีคนตรวจและเซ็นมั้ย? มีข้อมูลจริงใน prompt มั้ย? ซื่อสัตย์มั้ย? รับผิดชอบมั้ย?', why:'เทสต์ที่คนตรวจแล้ว = OK · ข้อมูลผู้ป่วยจริงใน prompt / ปิดบังการใช้ AI / โทษ AI = ไม่ OK' },
+    { id:'e4c', type:'mcq', lv:2, q:'Why might all login tests still pass when code contains <code>if password == "dev-2569": return True</code>?', opts:['Tests usually check what should work, not for an extra way in.','The tests are too slow to notice.','The linter removes that line automatically.','Passwords cannot be tested.'], ans:0,
+      ask:'เทสต์ปกติลองรหัสลับที่เราไม่รู้จักมั้ย?', why:'เทสต์เช็กสิ่งที่ควรทำงาน แต่ไม่ค่อยเช็ก "ทางเข้าเกิน" → ต้องอ่านและ review โค้ด' },
+    { id:'e4d', type:'mcq', lv:3, q:'"The tool was official" — after installing a tampered AI extension, is this a full defence for the team?', opts:['Yes, the vendor is fully responsible.','No; it explains how it happened, but the team still owns what it ships.','Yes, if they uninstall it.','Only if no data was leaked.'], ans:1,
+      ask:'"มาจาก official" อธิบายสาเหตุ หรือยกเลิกความรับผิดชอบ?', why:'อธิบายได้ว่าเกิดอย่างไร แต่ทีมยังรับผิดชอบสิ่งที่ปล่อย · ต้องรายงาน ตรวจ SSH keys และ rotate credentials' },
+  ]
+});
+
+SE10.lessons.push({
+  id:'e5', icon:'git-branch', title:'Professional Practice & Dev Tools', sub:'นิสัยการทำงาน + IDE → Git → CI → Deploy',
+  analogy:{ title:'CI = เพื่อนร่วมทีมที่ไม่มีวันเหนื่อย', text:'ทุกครั้งที่ push จะ<b>รันเทสต์ทั้งหมดให้อัตโนมัติ</b> โค้ดที่พังถูกจับได้ในไม่กี่นาที โดยเครื่อง ก่อนถึงมือทีม' },
+  yt:'continuous integration explained',
+  video:{ th:[{ id:'h4Le0tscF1U', title:'CI/CD ใน 3 นาที (BorntoDev)' }], en:[{ id:'1er2cjUq1UI', title:'What is Continuous Integration? (IBM)' },{ id:'scEDHsr3APg', title:'CI/CD in 100 Seconds (Fireship)' }] },
+  scene:{ steps:[
+    { say:'นิสัยที่สำคัญพอ ๆ กับโค้ด และเป็นส่วนที่ AI ทำแทนไม่ได้', html: row(box('Communicate', 'บอกเร็ว รวมถึงตอนติด'), box('Commit', 'รักษาคำพูด หรือเจรจาใหม่แต่เนิ่น ๆ'), box('Feedback', 'วิจารณ์งาน ไม่ใช่คน'), box('Document', 'README + commit ที่ชัด')) },
+    { say:'เครื่องมือของทีมจริง', html: row(box('IDE', 'เขียน + AI ช่วย'), arrow(), box('Git / GitHub', 'version control'), arrow('→ on push'), box('CI', 'รันเทสต์อัตโนมัติ', 'hot'), arrow(), box('Deploy', 'ผู้ใช้ลองได้')) },
+    { say:'<b>CI (Continuous Integration)</b> = บริการที่รันเทสต์<b>ทุกครั้งที่ push</b> · GitHub Pages ที่ publish เว็บใหม่ทุก push ก็เป็นแนวคิดเดียวกันในขั้น deploy', html: note('CI ไม่ได้เขียนเทสต์ให้ ไม่ได้แทน code review และไม่ได้ deploy แค่ครั้งเดียวตอนจบโปรเจกต์', 'warn') },
+  ]},
+  key:[
+    'นิสัยมืออาชีพ: <b>Communicate · Commit · Feedback · Document</b>',
+    'Toolchain: <b>IDE → Git/GitHub → CI → Deploy</b>',
+    '<b>CI</b> = รันเทสต์อัตโนมัติ<b>ทุกครั้งที่ push</b> · ไม่ได้เขียนเทสต์ให้ ไม่แทน review',
+    'AI-Use Statement ต้องซื่อสัตย์ · oral exam ต้องอธิบายทุกบรรทัดของงานตัวเองได้',
+  ],
+  more:`<p>Oral exam 4 เกณฑ์: เข้าใจ concept · อธิบายงานตัวเองได้ · ใช้ AI อย่างโปร่งใสและมีวิจารณญาณ · การสื่อสาร</p>`,
+  ex:[
+    { id:'e5a', type:'mcq', lv:1, q:'What does Continuous Integration (CI) do?', opts:['It writes the unit tests for you.','It runs the tests automatically on every push.','It deploys the system once, at the end of the project.','It replaces code review.'], ans:1,
+      ask:'CI ทำงานตอนไหน และทำอะไร?', why:'CI รันเทสต์อัตโนมัติทุกครั้งที่ push' },
+    { id:'e5b', type:'mcq', lv:1, q:'Which is the correct order of a typical team toolchain?', opts:['CI → IDE → Deploy → Git','IDE → Git/GitHub → CI → Deploy','Git → Deploy → IDE → CI','Deploy → CI → Git → IDE'], ans:1,
+      ask:'เขียนโค้ดที่ไหนก่อน แล้ว push ไปไหน แล้วอะไรรันเทสต์?', why:'เขียนใน IDE → push ขึ้น Git/GitHub → CI รันเทสต์ → Deploy' },
+    { id:'e5c', type:'mcq', lv:2, q:'At the oral exam, a student says "the AI wrote that part" when asked to explain their code. Under the course rules this is …', opts:['an acceptable answer.','not an answer; understanding your own work is required.','a reason to get bonus points.','only a problem if the code has bugs.'], ans:1,
+      ask:'oral exam วัดอะไร: ความเข้าใจ หรือแค่ว่าใครเขียน?', why:'"AI เขียน" ไม่ใช่คำตอบ ต้องอธิบายงานตัวเองได้ (ไม่งั้น "can explain own work" = 0)' },
+  ]
+});
+
+const CHAPTERS = [SE8, SE9, SE10];
+
+/* index โจทย์ทั้งหมดไว้หาเร็ว ๆ */
+const ALL = {};
+for (const ch of CHAPTERS) for (const L of ch.lessons) for (const e of L.ex) { e.lesson = L.id; ALL[e.id] = e; }
+const allLessons = () => CHAPTERS.flatMap(c => c.lessons);
+const lessonById = id => allLessons().find(l => l.id === id);
+const chapterOf = id => CHAPTERS.find(c => c.lessons.some(l => l.id === id));
+
+/* =========================================================
+   ENGINE
+   ========================================================= */
+
+/* ---------- syntax highlight C# แบบง่าย ---------- */
+const KW = new Set('class public private protected static void new return get set value if else for foreach in while do int double string bool char float decimal var true false null using namespace this'.split(' '));
+function hl(line){
+  return line.replace(/(\/\/.*$)|("(?:[^"\\]|\\.)*")|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)|([^\w"]+)/g, (m, c, s, n, w, o) => {
+    if (c) return `<span class="tk-c">${esc(c)}</span>`;
+    if (s) return `<span class="tk-s">${esc(s)}</span>`;
+    if (n) return `<span class="tk-n">${n}</span>`;
+    if (w) return KW.has(w) ? `<span class="tk-k">${w}</span>` : /^[A-Z]/.test(w) ? `<span class="tk-t">${w}</span>` : w;
+    return esc(o);
+  });
+}
+function codeBox(code, opts={}){
+  const arr = Array.isArray(code) ? code : lines(code);
+  return `<div class="codebox">${arr.map((l, i) => `<div class="ln${opts.pick?' pick':''}" data-n="${i+1}"><i>${i+1}</i><span>${hl(l) || ' '}</span></div>`).join('')}</div>`;
+}
+
+/* ---------- เสียงพากย์ (Web Speech API) ----------
+   เสียงขึ้นกับ browser: Edge มีเสียงไทย AI "Premwadee/Niwat (Natural)" ฟังดีสุด, Chrome มี "Google ไทย"
+   เลยให้คะแนนเสียงแต่ละตัว แล้วเลือกตัวที่ดีที่สุดให้อัตโนมัติ (ผู้ใช้เปลี่ยนเองได้ในแผงตั้งค่า) */
+const HAS_TTS = 'speechSynthesis' in window;
+let VOICES = [];
+const voiceScore = v => (/natural|neural/i.test(v.name) ? 20 : 0) + (/online/i.test(v.name) ? 6 : 0)
+  + (/premwadee|niwat|achara/i.test(v.name) ? 4 : 0) + (/google/i.test(v.name) ? 8 : 0) + (v.localService ? 0 : 1);
+function loadVoices(){
+  try{ VOICES = speechSynthesis.getVoices().filter(v => /^th/i.test(v.lang)).sort((a, b) => voiceScore(b) - voiceScore(a)); }catch(e){ VOICES = []; }
+  if ($('#voicePanel') && !$('#voicePanel').hidden) renderVoicePanel();
+}
+if (HAS_TTS){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+const pickVoice = () => VOICES.find(v => v.name === S.voiceName) || VOICES[0] || null;
+
+/* แปลงข้อความบนจอ → คำที่อ่านออกเสียงได้ลื่น ๆ (เช่น acc.Balance → "acc จุด Balance") */
+function toSpeech(html){
+  const dec = s => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
+  const OPS = [
+    [/>=/g, ' มากกว่าหรือเท่ากับ '], [/<=/g, ' น้อยกว่าหรือเท่ากับ '], [/==/g, ' เท่ากับ '], [/!=/g, ' ไม่เท่ากับ '],
+    [/=>/g, ' '], [/\+\+/g, ' บวกหนึ่ง '], [/\+=/g, ' บวกเพิ่ม '],
+  ];
+  // ในโค้ด (<code>): "=" อ่านว่า "เท่ากับ", จุดอ่านว่า "จุด", [0] อ่านว่า "ช่อง 0"
+  const CODE = [...OPS, [/(\w)\.(?=[A-Za-z_])/g, '$1 จุด '], [/\[(\w+)\]/g, ' ช่อง $1 '], [/\(\s*\)/g, ''], [/=/g, ' เท่ากับ ']];
+  let t = html.replace(/<code>([\s\S]*?)<\/code>/g, (m, c) => { let x = dec(c); for (const [a, b] of CODE) x = x.replace(a, b); return ' ' + x + ' '; });
+  t = dec(t.replace(/<[^>]+>/g, ' ')).replace(/\p{Extended_Pictographic}|️|‍/gu, '');
+  // ในประโยคทั่วไป: "A = B" แปลว่า "A คือ B"
+  const PROSE = [...OPS, [/→/g, ' แล้วก็ '], [/\(\s*[^\w\s฀-๿]\s*\)/g, ''], [/(\w)\.(?=[A-Za-z_])/g, '$1 จุด '],
+    [/\[(\w+)\]/g, ' ช่อง $1 '], [/=/g, ' คือ '], [/#(\d+)/g, ' หมายเลข $1 '], [/\bnull\b/g, 'นัล'], [/\bvoid\b/g, 'วอยด์'], [/(\d)\s*%/g, '$1 เปอร์เซ็นต์'],
+    [/[;{}"`|·]/g, ' '], [/\s+/g, ' '], [/ช่อง\s+ช่อง/g, 'ช่อง']];
+  for (const [a, b] of PROSE) t = t.replace(a, b);
+  return t.trim();
+}
+/* ตัดเป็นท่อนสั้น ๆ: Chrome มักตัดเสียงกลางคันถ้าประโยคยาวเกิน ~15 วินาที */
+function chunks(t, max = 140){
+  const out = []; let cur = '';
+  for (const w of t.split(' ')) {
+    if (cur && (cur + ' ' + w).length > max) { out.push(cur); cur = w; } else cur = cur ? cur + ' ' + w : w;
+  }
+  if (cur) out.push(cur);
+  return out;
+}
+let speakId = 0;
+function speak(html, onend, force){
+  if ((!S.voice && !force) || !HAS_TTS) { onend && setTimeout(onend, 2600); return; }
+  try{
+    speechSynthesis.cancel();
+    const my = ++speakId, parts = chunks(toSpeech(html)), voice = pickVoice();
+    let i = 0;
+    const next = () => {
+      if (my !== speakId) return;                    // มีการกดหยุด/เปลี่ยนขั้นไปแล้ว
+      if (i >= parts.length) { onend && onend(); return; }
+      const u = new SpeechSynthesisUtterance(parts[i++]);
+      u.lang = voice ? voice.lang : 'th-TH'; if (voice) u.voice = voice;
+      u.rate = S.rate; u.pitch = 1;
+      u.onend = next; u.onerror = next;
+      speechSynthesis.speak(u);
+    };
+    next();
+  }catch(e){ onend && setTimeout(onend, 2600); }
+}
+const stopSpeak = () => { speakId++; try{ speechSynthesis.cancel(); }catch(e){} };
+
+/* ---------- แผงตั้งค่าเสียง ---------- */
+function renderVoicePanel(){
+  const cur = pickVoice();
+  const natural = VOICES.some(v => /natural|neural/i.test(v.name));
+  $('#voicePanel').innerHTML = `
+    <div class="vp-row"><b>เสียงพากย์</b>
+      <label class="switch"><input type="checkbox" id="vpOn" ${S.voice ? 'checked' : ''}><span></span></label></div>
+    ${!HAS_TTS ? `<p class="sub">browser นี้ไม่รองรับเสียงอ่าน</p>` : !VOICES.length ? `<p class="vp-note">เครื่องนี้ไม่มีเสียงภาษาไทย 😢 ลองเปิดเว็บด้วย <b>Microsoft Edge</b> จะได้เสียงไทยแบบ AI ที่ฟังเหมือนคนจริง</p>` : `
+    <label class="vp-lbl">เลือกเสียง</label>
+    <select id="vpVoice">${VOICES.map(v => `<option value="${esc(v.name)}" ${cur && v.name === cur.name ? 'selected' : ''}>${esc(v.name.replace(/^Microsoft\s*/i, ''))}${/natural|neural/i.test(v.name) ? ' ⭐' : ''}</option>`).join('')}</select>
+    <label class="vp-lbl">ความเร็ว <span id="vpRateTxt">${S.rate.toFixed(2)}x</span></label>
+    <input type="range" id="vpRate" min="0.7" max="1.5" step="0.05" value="${S.rate}">
+    <button class="btn ghost" id="vpTest" style="width:100%;justify-content:center;margin-top:10px">${ic('play')} ลองฟัง</button>
+    ${natural ? '' : `<p class="vp-note">💡 อยากได้เสียงที่ฟังเหมือนคนจริงกว่านี้ เปิดเว็บด้วย <b>Microsoft Edge</b> แล้วเลือกเสียงที่มี ⭐ (Natural)</p>`}`}`;
+  $('#vpOn').onchange = e => { S.voice = e.target.checked; save(); applyVoice(); if (!S.voice) stopSpeak(); };
+  if ($('#vpVoice')) {
+    $('#vpVoice').onchange = e => { S.voiceName = e.target.value; save(); };
+    $('#vpRate').oninput = e => { S.rate = +e.target.value; $('#vpRateTxt').textContent = S.rate.toFixed(2) + 'x'; save(); };
+    $('#vpTest').onclick = () => speak('หวัดดี พี่บอทเอง วันนี้มาเรียน <code>Class</code> กัน ถ้า <code>acc.Balance</code> มากกว่าหรือเท่ากับ 0 ก็เก็บค่าไว้ ผ่านแน่ A!', null, true);
+  }
+}
+
+/* ---------- Tracer: โค้ดรันทีละบรรทัด + memory + console ---------- */
+function mountTracer(el, t){
+  let i = 0, playing = false, timer = null;
+  el.innerHTML = `
+    <div class="tutor" style="margin-bottom:12px">${BOT_AVA}<div class="bub" data-say></div></div>
+    <div class="tracer">
+      <div>${codeBox(t.code)}</div>
+      <div class="side-p">
+        ${t.uml ? `<div class="panel"><h4>UML</h4><div class="uml" data-uml></div></div>` : `
+        <div class="panel"><h4>ตัวแปร (variables)</h4><div class="vars" data-vars></div></div>
+        <div class="panel"><h4>ใน memory (array / object)</h4><div class="objs" data-objs></div></div>`}
+        <div class="panel"><h4>Console (output)</h4><div class="console" data-out></div></div>
+      </div>
+    </div>
+    <div class="ctrl">
+      <button class="ibtn" data-a="first" title="เริ่มใหม่">${ic('skip-back')}</button>
+      <button class="ibtn" data-a="prev" title="ย้อน">${ic('chevron-left')}</button>
+      <button class="ibtn play" data-a="play" title="เล่นอัตโนมัติ">${ic('play')} เล่น</button>
+      <button class="ibtn" data-a="next" title="ถัดไป">${ic('skip-forward')}</button>
+      <span class="stepn" data-step></span>
+    </div>`;
+  const lns = [...el.querySelectorAll('.ln')];
+  const render = (say=true) => {
+    const st = t.steps[i];
+    const [a, b] = Array.isArray(st.l) ? st.l : [st.l, st.l];
+    lns.forEach((ln, k) => ln.classList.toggle('cur', k+1 >= a && k+1 <= b));
+    lns[a-1].scrollIntoView({ block:'nearest', behavior:'smooth' });
+    $('[data-say]', el).innerHTML = st.say;
+    $('[data-step]', el).textContent = `ขั้น ${i+1} / ${t.steps.length}`;
+    const s = st.s;
+    if (t.uml){
+      $('[data-uml]', el).innerHTML = t.uml.map((u, k) => `<div class="${k===0?'t':''} ${k===s.uml && k>0?'on':''}">${esc(u)}</div>`).join('');
+      if (s.uml === 0) $('[data-uml] .t', el).style.outline = '3px solid var(--amber)';
+    } else {
+      $('[data-vars]', el).innerHTML = s.vars.length ? s.vars.map(([n, v]) => `<span class="var"><b>${esc(n)}</b> = ${esc(v)}</span>`).join('') : '<small style="color:var(--muted)">ยังไม่มี</small>';
+      const cell = (o, key, v) => `${s.flash.includes(o.id+key)?'flash':''} ${s.ptr===o.id+key?'cur':''} ${v==='null'?'null':''}`;
+      $('[data-objs]', el).innerHTML = s.objs.length ? s.objs.map(o => o.arr ? `
+        <div class="arrbox" style="${o.id===s.newObj?'':'animation:none'}">
+          <div class="arrlbl" style="color:${o.color}">${esc(o.cls)}</div>
+          <div class="arrcells">${o.arr.map((v, k) => `<div class="ac"><span class="${cell(o, '['+k+']', v)}">${esc(v)}</span><i>[${k}]</i></div>`).join('')}</div>
+        </div>` : o.grid ? `
+        <div class="arrbox" style="${o.id===s.newObj?'':'animation:none'}">
+          <div class="arrlbl" style="color:${o.color}">${esc(o.cls)}</div>
+          <table class="g2"><tr><th></th>${o.grid[0].map((_, c) => `<th>c${c}</th>`).join('')}</tr>
+            ${o.grid.map((row, r) => `<tr><th>r${r}</th>${row.map((v, c) => `<td class="${cell(o, '['+r+','+c+']', v)}">${esc(v)}</td>`).join('')}</tr>`).join('')}</table>
+        </div>` : `<div class="obj" style="border-color:${o.color}${o.id===s.newObj?'':';animation:none'}">
+          <div class="hd" style="background:${o.color}">${esc(o.id.startsWith('#') ? o.id+' : '+o.cls : o.cls)}</div>
+          ${o.fields.map(([f, v]) => `<div class="fl ${s.flash.includes(o.id+'.'+f)?'flash':''}"><span>${esc(f)}</span><span class="${v==='null'?'null':''}">${esc(v)}</span></div>`).join('')}
+        </div>`).join('') : '<small style="color:var(--muted)">ยังไม่มี</small>';
+    }
+    $('[data-out]', el).innerHTML = s.out.map(([k, x]) => k === 'e' ? `<span class="err">${esc(x)}</span>` : esc(x)).concat(s.cur ? [esc(s.cur)] : []).join('\n');
+    if (say && playing) speak(st.say, () => { if (playing) timer = setTimeout(() => go(1, true), 500); });
+  };
+  const go = (d, auto) => {
+    clearTimeout(timer);
+    if (!auto) { stopSpeak(); }
+    const n = i + d;
+    if (n < 0) return;
+    if (n >= t.steps.length) { stop(); return; }
+    i = n; render();
+  };
+  const playBtn = $('[data-a="play"]', el);
+  const stop = () => { playing = false; clearTimeout(timer); stopSpeak(); playBtn.innerHTML = ic('play') + ' เล่น'; };
+  el.addEventListener('click', e => {
+    const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return;
+    if (a === 'play') {
+      if (playing) return stop();
+      playing = true; playBtn.innerHTML = ic('pause') + ' หยุด';
+      if (i >= t.steps.length - 1) i = 0;
+      render();
+    }
+    if (a === 'next') { const p = playing; stop(); go(1); if (S.voice && !p) speak(t.steps[i].say); }
+    if (a === 'prev') { stop(); go(-1); }
+    if (a === 'first') { stop(); i = 0; render(false); }
+  });
+  render(false);
+  return { stop };
+}
+
+/* ---------- Scene: ภาพประกอบทีละขั้น (ใช้แทน tracer ในวิชาที่ไม่ใช่โค้ด) ---------- */
+function mountScene(el, sc){
+  let i = 0, playing = false, timer = null;
+  el.innerHTML = `
+    <div class="tutor" style="margin-bottom:12px">${BOT_AVA}<div class="bub" data-say></div></div>
+    <div class="scene-stage" data-stage></div>
+    <div class="ctrl">
+      <button class="ibtn" data-a="first" title="เริ่มใหม่">${ic('skip-back')}</button>
+      <button class="ibtn" data-a="prev" title="ย้อน">${ic('chevron-left')}</button>
+      <button class="ibtn play" data-a="play" title="เล่นอัตโนมัติ">${ic('play')} เล่น</button>
+      <button class="ibtn" data-a="next" title="ถัดไป">${ic('skip-forward')}</button>
+      <span class="stepn" data-step></span>
+    </div>`;
+  const stage = $('[data-stage]', el), playBtn = $('[data-a="play"]', el);
+  const render = (say=true) => {
+    const st = sc.steps[i];
+    $('[data-say]', el).innerHTML = st.say;
+    stage.innerHTML = `<div class="scene-in">${st.html}</div>`;
+    $('[data-step]', el).textContent = `ขั้น ${i+1} / ${sc.steps.length}`;
+    if (say && playing) speak(st.say, () => { if (playing) timer = setTimeout(() => go(1, true), 700); });
+  };
+  const stop = () => { playing = false; clearTimeout(timer); stopSpeak(); playBtn.innerHTML = ic('play') + ' เล่น'; };
+  const go = (d, auto) => {
+    clearTimeout(timer); if (!auto) stopSpeak();
+    const n = i + d; if (n < 0) return;
+    if (n >= sc.steps.length) { stop(); return; }
+    i = n; render();
+  };
+  el.addEventListener('click', e => {
+    const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return;
+    if (a === 'play') { if (playing) return stop(); playing = true; playBtn.innerHTML = ic('pause') + ' หยุด'; if (i >= sc.steps.length - 1) i = 0; render(); }
+    if (a === 'next') { const p = playing; stop(); go(1); if (S.voice && !p) speak(sc.steps[i].say); }
+    if (a === 'prev') { stop(); go(-1); }
+    if (a === 'first') { stop(); i = 0; render(false); }
+  });
+  render(false);
+  return { stop };
+}
+
+/* ---------- Checker สำหรับโจทย์เขียนโค้ด ----------
+   ลำดับการช่วย (ตามที่เลือก): d) ชี้บรรทัดที่ผิด → c) ถามกลับให้คิด → a) บอกคำตอบ */
+function syntaxScan(code){
+  const L = code.split('\n');
+  let depth = 0;
+  for (let k = 0; k < L.length; k++){
+    const raw = L[k].replace(/\/\/.*$/, '').replace(/"(?:[^"\\]|\\.)*"/g, '""');
+    const t = raw.trim();
+    for (const ch of raw){ if (ch === '{') depth++; if (ch === '}') depth--; }
+    if (depth < 0) return { line:k+1, msg:'มี <code>}</code> เกินมา' };
+    if (/\bnew\s+[A-Z]\w*\s*;/.test(t)) return { line:k+1, msg:'หลัง <code>new ชื่อClass</code> ต้องมี <code>()</code>' };
+    if (/Console\.(writeline|Writeline|writeLine)/.test(t)) return { line:k+1, msg:'สะกดผิด ต้องเป็น <code>Console.WriteLine</code> (C# สนใจตัวพิมพ์ใหญ่-เล็ก)' };
+    if (!t || /[;{},]$/.test(t)) continue;
+    if (/^(class|public|private|protected|static|if|else|for|foreach|while|do|namespace|get|set)\b/.test(t) || /\)\s*$/.test(t) && /^(if|for|foreach|while)\b/.test(t)) {
+      // header line: ควรตามด้วย { บรรทัดถัดไป
+      const next = (L.slice(k+1).find(x => x.trim()) || '').trim();
+      if (next.startsWith('{')) continue;
+      if (/^(if|else|for|foreach|while)\b/.test(t)) continue; // if/for แบบไม่มีปีกกา
+      if (/\b(int|double|string|bool|char|float|decimal|[A-Z]\w*(\[\])?)\s+\w+\s*$/.test(t) || /=/.test(t)) return { line:k+1, msg:'น่าจะลืม <code>;</code> (semicolon) ท้ายบรรทัดนี้' };
+      continue;
+    }
+    const next = (L.slice(k+1).find(x => x.trim()) || '').trim();
+    if (next.startsWith('{')) continue;
+    return { line:k+1, msg:'น่าจะลืม <code>;</code> (semicolon) ท้ายบรรทัดนี้' };
+  }
+  if (depth > 0) return { line:L.length, msg:'ปีกกา <code>{</code> ยังปิดไม่ครบ ขาด <code>}</code> อีก '+depth+' ตัว' };
+  return null;
+}
+function checkWrite(code, rules){
+  const syn = syntaxScan(code);
+  if (syn) return { ok:false, ...syn, kind:'syntax' };
+  const flat = code.replace(/\/\/.*$/gm, '');
+  for (const r of rules){
+    if (r.re && !r.re.test(flat)) return { ok:false, msg:r.msg };
+    if (r.not && r.not.test(flat)) {
+      const k = flat.split('\n').findIndex(x => r.not.test(x));
+      return { ok:false, msg:r.msg, line: k >= 0 ? k+1 : undefined };
+    }
+  }
+  return { ok:true };
+}
+
+/* ---------- บันทึกผล + spaced repetition ---------- */
+const DAY = 864e5;
+function record(id, firstTry){
+  S.ex[id] = firstTry ? 'ok' : 'retry';
+  if (!firstTry) S.review[id] = { box:0, due: Date.now() + 60e3 * 10 }; // ผิด → กลับมาทวนอีก 10 นาที
+  save();
+}
+function reviewResult(id, ok){
+  const r = S.review[id] || { box:0 };
+  if (ok) { r.box++; if (r.box >= 3) { delete S.review[id]; save(); return; } r.due = Date.now() + [1,3,7][r.box-1] * DAY; }
+  else { r.box = 0; r.due = Date.now() + 60e3 * 10; }
+  S.review[id] = r; save();
+}
+const dueList = () => Object.entries(S.review).filter(([id, r]) => r.due <= Date.now() && ALL[id]).map(([id]) => id);
+
+/* ---------- แสดงโจทย์ 1 ข้อ ----------
+   onDone(firstTry) ถูกเรียกครั้งเดียวเมื่อจบข้อ (ตอบถูก หรือ ดูเฉลย) */
+function mountItem(el, it, onDone, opts={}){
+  let tries = 0, finished = false;
+  const lvl = `<span class="pill lv">Lv.${it.lv}</span>`;
+  const typeName = { mcq:'MCQ', output:'ทาย output', bug:'หาบั๊ก', write:'เขียนโค้ด', classify:'จัดประเภท (classify)', short:'Short answer' }[it.type];
+  el.innerHTML = `<div class="row">${lvl}<span class="pill">${typeName}</span>${S.ex[it.id]==='ok'?'<span class="pill ok">✓ เคยทำถูก</span>':''}</div>
+    <div class="q">${it.q}</div><div data-body></div><div class="fb" data-fb></div>`;
+  const body = $('[data-body]', el), fb = $('[data-fb]', el);
+  const say = (cls, html) => { fb.className = 'fb show ' + cls; fb.innerHTML = html; };
+  const finish = (first) => { if (finished) return; finished = true; onDone && onDone(first); };
+  const wrong = (pointer) => {
+    tries++;
+    if (tries === 1) say('bad', `<b>${pick(BOT.wrong1)}</b>${pointer ? '<br>'+pointer : ''}`);
+    else if (tries === 2) say('hint', `<b>${pick(BOT.wrong2)}</b><br>🤔 ${it.ask}${pointer ? '<br>'+pointer : ''}`);
+    else reveal();
+  };
+  const reveal = () => {
+    say('hint', `<b>${pick(BOT.reveal)}</b><br>${answerHtml()}<br>💡 ${it.why || ''}`);
+    markAnswer(); finish(false);
+  };
+  const right = () => { say('good', `<b>${pick(BOT.right)}</b><br>💡 ${it.why || 'โค้ดผ่านทุกเงื่อนไข'}`); markAnswer(); finish(tries === 0); };
+  const answerHtml = () => it.type === 'mcq' ? 'คำตอบ: ' + it.opts[it.ans]
+    : it.type === 'output' ? 'คำตอบ:<pre class="code">' + esc(it.ans) + '</pre>'
+    : it.type === 'bug' ? 'คำตอบ: บรรทัด ' + it.ans
+    : it.type === 'classify' ? 'คำตอบ:<ul class="key">' + it.rows.map(([t, k]) => `<li>${t} → <b>${it.cats[k]}</b></li>`).join('') + '</ul>'
+    : it.type === 'short' ? 'ตัวอย่างคำตอบ:<p class="model">' + it.answer + '</p>'
+    : 'ตัวอย่างคำตอบ:<pre class="code">' + it.answer.split('\n').map(hl).join('\n') + '</pre>';
+  let markAnswer = () => {};
+
+  if (it.code) body.insertAdjacentHTML('beforeend', codeBox(it.code, { pick: it.type === 'bug' }));
+
+  if (it.type === 'mcq'){
+    body.insertAdjacentHTML('beforeend', `<div class="opts" style="margin-top:8px">${it.opts.map((o, k) => `<button class="opt" data-k="${k}">${'ABCD'[k]}. ${o}</button>`).join('')}</div>`);
+    markAnswer = () => body.querySelectorAll('.opt')[it.ans].classList.add('good');
+    body.addEventListener('click', e => {
+      const b = e.target.closest('.opt'); if (!b || finished) return;
+      if (+b.dataset.k === it.ans) right(); else { b.classList.add('bad'); wrong(); }
+    });
+  }
+  if (it.type === 'bug'){
+    body.insertAdjacentHTML('beforeend', `<p class="sub" style="margin-top:6px;font-size:14px">👆 คลิกที่บรรทัดในโค้ด</p>`);
+    const lnEls = [...body.querySelectorAll('.ln')];
+    markAnswer = () => lnEls[it.ans-1].classList.add('good');
+    body.addEventListener('click', e => {
+      const ln = e.target.closest('.ln'); if (!ln || finished) return;
+      if (+ln.dataset.n === it.ans) right(); else { ln.classList.add('bad'); wrong(`บรรทัด ${ln.dataset.n} ไม่ใช่ตัวปัญหา`); }
+    });
+  }
+  if (it.type === 'output'){
+    const multi = it.ans.includes('\n');
+    body.insertAdjacentHTML('beforeend', `<div style="margin-top:8px">${multi ? `<textarea rows="3" class="out" placeholder="พิมพ์ output (บรรทัดละ 1 ผลลัพธ์)"></textarea>` : `<input class="out" placeholder="พิมพ์ output ที่คิดว่าจะออก">`}</div>
+      <div class="row" style="margin-top:8px"><button class="btn" data-go>ส่งคำตอบ</button><button class="btn ghost" data-giveup>ยอมแพ้ ดูเฉลย</button></div>`);
+    const inp = $('.out', body);
+    const norm = s => s.trim().split('\n').map(x => x.trim().replace(/\s+/g, ' ')).filter(Boolean);
+    const go = () => {
+      if (finished) return;
+      const me = norm(inp.value), ans = norm(it.ans);
+      if (!me.length) return;
+      if (me.join('\n') === ans.join('\n')) return right();
+      const k = ans.findIndex((x, j) => x !== me[j]);
+      wrong(ans.length > 1 ? `👉 บรรทัดที่ ${k+1} ของ output ยังไม่ถูก` : '');
+    };
+    $('[data-go]', body).onclick = go;
+    $('[data-giveup]', body).onclick = () => !finished && reveal();
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !multi) go(); });
+  }
+  if (it.type === 'classify'){
+    body.insertAdjacentHTML('beforeend', `<div class="cls">${it.rows.map(([t], k) => `<div class="clsrow" data-r="${k}"><span>${t}</span><select><option value="">— เลือก —</option>${it.cats.map((c, j) => `<option value="${j}">${c}</option>`).join('')}</select></div>`).join('')}</div>
+      <div class="row" style="margin-top:8px"><button class="btn" data-go>ส่งคำตอบ</button><button class="btn ghost" data-giveup>ยอมแพ้ ดูเฉลย</button></div>`);
+    const rowsEl = [...body.querySelectorAll('.clsrow')];
+    markAnswer = () => rowsEl.forEach((r, k) => { r.classList.remove('bad'); r.classList.add('good'); r.querySelector('select').value = it.rows[k][1]; });
+    $('[data-go]', body).onclick = () => {
+      if (finished) return;
+      const vals = rowsEl.map(r => r.querySelector('select').value);
+      if (vals.some(v => v === '')) { say('hint', 'เลือกให้ครบทุกข้อก่อนนะ'); return; }
+      const bad = rowsEl.filter((r, k) => +vals[k] !== it.rows[k][1]);
+      rowsEl.forEach(r => r.classList.toggle('bad', bad.includes(r)));
+      if (!bad.length) return right();
+      wrong(`📍 ผิด ${bad.length} ข้อ (ไฮไลต์สีแดง) ลองแก้เฉพาะข้อนั้น`);
+    };
+    $('[data-giveup]', body).onclick = () => !finished && reveal();
+  }
+  if (it.type === 'short'){
+    body.insertAdjacentHTML('beforeend', `<textarea class="prose" rows="4" placeholder="ตอบเป็นภาษาอังกฤษหรือไทยก็ได้ (ข้อสอบจริงเป็นอังกฤษ)"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn" data-go>ตรวจคำตอบ</button><button class="btn ghost" data-giveup>ยอมแพ้ ดูเฉลย</button></div>
+      <p class="sub" style="font-size:12px;margin-top:6px">ตัวตรวจดูแค่ว่ามี "ประเด็นสำคัญ" ครบมั้ย ไม่ได้ให้คะแนนภาษา</p>`);
+    const ta = $('textarea', body);
+    $('[data-go]', body).onclick = () => {
+      if (finished || !ta.value.trim()) return;
+      const t = ta.value;
+      for (const r of it.rules) {
+        if (r.re && !r.re.test(t)) return wrong('📍 ' + r.msg);
+        if (r.not && r.not.test(t)) return wrong('📍 ' + r.msg);
+      }
+      right();
+      fb.insertAdjacentHTML('beforeend', `<br>ตัวอย่างคำตอบเต็ม: <i>${it.answer}</i>`);
+    };
+    $('[data-giveup]', body).onclick = () => !finished && reveal();
+  }
+  if (it.type === 'write'){
+    body.insertAdjacentHTML('beforeend', `<textarea rows="${Math.max(8, it.starter.split('\n').length + 5)}" spellcheck="false"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn" data-go>ตรวจโค้ด</button><button class="btn ghost" data-giveup>ยอมแพ้ ดูเฉลย</button></div>`);
+    const ta = $('textarea', body);
+    ta.value = it.starter;
+    editorKeys(ta);
+    $('[data-go]', body).onclick = () => {
+      if (finished) return;
+      const r = checkWrite(ta.value, it.rules);
+      if (r.ok) return right();
+      const where = r.line ? `📍 <b>บรรทัด ${r.line}:</b> ` : '📍 ';
+      wrong(where + r.msg);
+    };
+    $('[data-giveup]', body).onclick = () => !finished && reveal();
+  }
+}
+/* textarea: Tab = 4 spaces, Enter = คง indent เดิม (เหมือน IDE นิด ๆ) */
+function editorKeys(ta){
+  ta.addEventListener('keydown', e => {
+    const s = ta.selectionStart, v = ta.value;
+    if (e.key === 'Tab'){ e.preventDefault(); ta.setRangeText('    ', s, ta.selectionEnd, 'end'); }
+    if (e.key === 'Enter'){
+      const lineStart = v.lastIndexOf('\n', s - 1) + 1;
+      let ind = v.slice(lineStart, s).match(/^\s*/)[0];
+      if (v[s-1] === '{') ind += '    ';
+      e.preventDefault(); ta.setRangeText('\n' + ind, s, ta.selectionEnd, 'end');
+    }
+  });
+}
+
+/* =========================================================
+   PAGES
+   ========================================================= */
+const app = $('#app');
+let cleanup = null;
+
+function pageHome(){
+  const lessons = allLessons();
+  const total = Object.keys(ALL).length, okN = Object.keys(ALL).filter(id => S.ex[id] === 'ok').length;
+  const due = dueList().length;
+  const doneN = lessons.filter(l => S.done[l.id]).length;
+  const next = lessons.find(l => !S.done[l.id]);
+  app.innerHTML = `
+    <div style="margin-top:40px"><span class="eyebrow"><b>SE</b> Intro to Software Engineering · Final 23 พ.ย.–4 ธ.ค.</span></div>
+    <h1>เข้าใจ concept<br><span style="color:var(--muted)">แล้วตอบข้อสอบได้</span></h1>
+    <p class="sub">ดูคลิป → ดูภาพทีละขั้น → ตอบแบบข้อสอบจริง (English MCQ + short answer) · ครั้งละ 30–60 นาทีพอ</p>
+    <div class="card">
+      <div class="tutor">${BOT_AVA}<div class="bub">${
+        due ? `มีโจทย์ที่เคยผิด <b>${due} ข้อ</b> รอทบทวนอยู่นะ ทำก่อนเลย ไม่งั้นลืมแน่ 😤`
+        : next ? `ต่อที่ <b>${chapterOf(next.id).short} · ${next.title}</b> เลย (เรียงตามบทของวิชา Ch8 → Ch9 → Ch10 · ข้อสอบจริงเป็นภาษาอังกฤษ เลยตั้งโจทย์เป็นอังกฤษ + อธิบายไทย)`
+        : `ดูครบทุกบทแล้ว 🔥 ไปลุย <b>Final Quiz</b> แล้วทำคะแนนให้ถึง 80% (A) ให้ได้!`
+      }</div></div>
+      <div class="stats" style="margin-top:14px">
+        <div class="stat"><b>${doneN}/${lessons.length}</b><small>บทเรียนที่ดูจบ</small></div>
+        <div class="stat"><b>${okN}/${total}</b><small>โจทย์ที่ทำถูก</small></div>
+        <div class="stat hot"><b>${S.best}%</b><small>Final Quiz รวมทุกบท สูงสุด · เป้า A = 80%</small></div>
+        <div class="stat"><b>${due}</b><small>รอทบทวน</small></div>
+      </div>
+      <div class="row" style="margin-top:14px">
+        ${next ? `<a class="btn" style="text-decoration:none" href="#l/${next.id}">${ic('play')} เรียนต่อ: ${next.title}</a>` : ''}
+        ${due ? `<a class="btn ghost" style="text-decoration:none" href="#review">${ic('rotate-ccw')} ทบทวน (${due})</a>` : ''}
+        <a class="btn ghost" style="text-decoration:none" href="#quiz">${ic('clipboard-check')} Final Quiz (ทุกบท)</a>
+      </div>
+    </div>
+    ${CHAPTERS.map(c => `
+      <div class="row" style="margin-top:28px;margin-bottom:10px;justify-content:space-between"><h2 style="margin:0">${c.title} ${c.soon ? '<span class="pill">เร็ว ๆ นี้</span>' : ''}</h2>
+        ${c.soon ? '' : `<a class="btn ghost" style="padding:6px 12px;font-size:13px" href="#quiz/${c.id}">${ic('clipboard-check')} Quiz ${c.short}${S.bestCh[c.id] != null ? ' · ดีสุด ' + S.bestCh[c.id] + '%' : ''}</a>`}</div>
+      ${c.soon ? `<p class="sub">กำลังทำ…</p>` : `
+      <div class="grid">${c.lessons.map((l, k) => `
+        <a class="lesson" href="#l/${l.id}">
+          <div class="em">${ic(l.icon)}</div>
+          <div class="n">0${k+1}</div><h3>${l.title}</h3>
+          <p class="sub" style="font-size:14px">${l.sub}</p>
+          <div class="row" style="margin-top:8px">${S.done[l.id] ? '<span class="pill ok">✓ ดูจบแล้ว</span>' : ''}<span class="pill">${l.ex.length} โจทย์</span></div>
+        </a>`).join('')}</div>`}
+    `).join('')}
+    <p class="sub" style="margin:30px 0;font-size:13px">ความคืบหน้าเก็บไว้ในเบราว์เซอร์นี้เท่านั้น · <a href="#" id="reset">ล้างข้อมูล</a></p>`;
+  $('#reset').onclick = e => { e.preventDefault(); if (confirm('ล้างความคืบหน้าทั้งหมด?')) { for (const k of ['done','ex','review','bestCh']) S[k] = {}; S.best = 0; save(); pageHome(); } };
+}
+
+function pageLesson(id){
+  const L = lessonById(id); if (!L) return pageHome();
+  const ch = chapterOf(id), idx = ch.lessons.indexOf(L), prev = ch.lessons[idx-1], next = ch.lessons[idx+1];
+  app.innerHTML = `
+    <a class="back" href="#home">← หน้าแรก</a>
+    <h1><span class="h1-ic">${ic(L.icon)}</span>${L.title}</h1>
+    <p class="sub">${ch.title} · บทที่ ${idx+1}/${ch.lessons.length} · ${L.sub}</p>
+
+    <div class="card">
+      <div class="step-h"><span class="no">01</span><h2>ดูคนสอนจริง</h2><span class="sub" style="margin-left:auto;font-size:13px">เลือกภาษาที่ชอบได้</span></div>
+      <div data-video></div>
+    </div>
+
+    <div class="card">
+      <div class="step-h"><span class="no">02</span><h2>ดูให้เห็นภาพ</h2></div>
+      <div class="analogy" style="margin:0 0 16px">${L.analogy.img ? `<figure><img src="${L.analogy.img}" alt="${esc(L.analogy.title)}" loading="lazy"><figcaption>${L.analogy.credit}</figcaption></figure>` : `<figure class="noimg">${ic(L.icon)}</figure>`}<div class="txt"><b>${L.analogy.title}</b><p>${L.analogy.text}</p></div></div>
+      <p class="sub" style="margin:0 0 12px;font-size:14px">กด <b style="color:var(--ink)">เล่น</b> ให้พี่บอทพากย์ หรือกด <b style="color:var(--ink)">ถัดไป</b> ดูภาพทีละขั้นเอง</p>
+      <div data-tracer></div>
+    </div>
+
+    <div class="card">
+      <div class="step-h"><span class="no">03</span><h2>สรุปสั้น ๆ</h2></div>
+      <ul class="key">${L.key.map(k => `<li>${k}</li>`).join('')}</ul>
+      <details><summary>ดูละเอียดเพิ่ม</summary>${L.more}</details>
+    </div>
+
+    <div class="card">
+      <div class="step-h"><span class="no">04</span><h2>ลงมือทำ</h2></div>
+      <p class="sub" style="font-size:14px;margin-bottom:14px">ตอบผิดไม่เป็นไร พี่บอทจะช่วยตามลำดับ: ชี้จุดผิด → ถามให้คิด → เฉลย</p>
+      ${L.ex.map(e => `<div class="ex" data-ex="${e.id}"></div>`).join('')}
+    </div>
+
+    <div class="nav2">
+      ${prev ? `<a class="btn ghost" style="text-decoration:none" href="#l/${prev.id}">← ${prev.title}</a>` : '<span></span>'}
+      ${next ? `<a class="btn" style="text-decoration:none" href="#l/${next.id}">ต่อไป: ${next.title} →</a>` : `<a class="btn" style="text-decoration:none" href="#quiz/${ch.id}">${ic('clipboard-check')} ไปทำ Quiz ${ch.short} →</a>`}
+    </div>`;
+  mountVideo($('[data-video]'), L);
+  const tr = L.trace ? mountTracer($('[data-tracer]'), L.trace) : mountScene($('[data-tracer]'), L.scene);
+  cleanup = tr.stop;
+  for (const e of L.ex) mountItem($(`[data-ex="${e.id}"]`), e, first => record(e.id, first));
+  S.done[L.id] = true; save();
+}
+
+/* Final Quiz: ปรับความยากอัตโนมัติ — ถูก 2 ข้อติด → ขึ้น level, ผิด → ลง level */
+function pageQuiz(chId){
+  const N = 12, ch = CHAPTERS.find(c => c.id === chId);
+  const pool = Object.values(ALL).filter(e => e.type !== 'write' && e.type !== 'short' && (!ch || chapterOf(e.lesson) === ch));
+  const qTitle = ch ? 'Quiz · ' + ch.title : 'Final Quiz · ทุกบท';
+  let lv = 1, streak = 0, n = 0, score = 0;
+  const used = new Set(), wrongL = {};
+  const nextItem = () => {
+    for (const d of [0, 1, -1, 2, -2]) {
+      const c = pool.filter(e => e.lv === lv + d && !used.has(e.id));
+      if (c.length) return pick(c);
+    }
+    return null;
+  };
+  const show = () => {
+    const it = nextItem();
+    if (n >= N || !it) return finish();
+    used.add(it.id);
+    app.innerHTML = `<a class="back" href="#home">← ออก</a>
+      <h1><span class="h1-ic">${ic('clipboard-check')}</span>${qTitle}</h1>
+      <p class="sub">ข้อ ${n+1}/${N} · ระดับตอนนี้ Lv.${lv} · คะแนน ${score}</p>
+      <div class="bar" style="margin:12px 0"><i style="width:${n/N*100}%"></i></div>
+      <div class="card"><div data-it></div><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn" data-next disabled>ข้อต่อไป →</button></div></div>`;
+    mountItem($('[data-it]'), it, first => {
+      n++;
+      if (first) { score++; streak++; if (streak >= 2 && lv < 3) { lv++; streak = 0; } }
+      else { streak = 0; if (lv > 1) lv--; wrongL[it.lesson] = (wrongL[it.lesson] || 0) + 1; S.review[it.id] = { box:0, due: Date.now() }; }
+      S.ex[it.id] = first ? 'ok' : 'retry'; save();
+      const b = $('[data-next]'); b.disabled = false; b.onclick = show; b.focus();
+    });
+  };
+  const finish = () => {
+    const pct = Math.round(score / Math.max(n, 1) * 100);
+    const prevBest = ch ? (S.bestCh[ch.id] ?? -1) : S.best;
+    const isBest = pct > prevBest;
+    if (isBest) { if (ch) S.bestCh[ch.id] = pct; else S.best = pct; save(); }
+    const grade = pct >= 80 ? 'A' : pct >= 75 ? 'B+' : pct >= 70 ? 'B' : pct >= 65 ? 'C+' : pct >= 60 ? 'C' : pct >= 50 ? 'D' : 'F';
+    const weak = Object.entries(wrongL).sort((a, b) => b[1] - a[1]);
+    app.innerHTML = `<a class="back" href="#home">← หน้าแรก</a>
+      <h1>ผลสอบ: ${pct}% ${isBest ? '🏆 สถิติใหม่!' : ''}</h1>
+      <div class="card">
+        <div class="tutor">${BOT_AVA}<div class="bub">${
+          pct >= 80 ? `ระดับ <b>${grade}</b> 🔥 แบบนี้เป็นที่ 1 ได้จริง แต่อย่าเพิ่งเหลิง ทำซ้ำให้ได้ทุกรอบ`
+          : pct >= 60 ? `ได้ประมาณ <b>${grade}</b> ยังไม่ถึง A นะ 😤 กลับไปดูบทที่ผิดบ่อยแล้วมาสอบใหม่`
+          : `<b>${grade}</b>… ไม่เป็นไร รอบแรกทุกคนก็พัง 😅 กลับไปดู animation ของบทข้างล่างอีกรอบ แล้วค่อยมาใหม่`
+        }</div></div>
+        <p>ถูก <b>${score}/${n}</b> · ระดับสุดท้าย Lv.${lv} · สถิติดีสุด ${ch ? S.bestCh[ch.id] : S.best}%</p>
+        ${weak.length ? `<h3>จุดที่ต้องฝึกเพิ่ม</h3><ul class="key">${weak.map(([l, c]) => { const L = lessonById(l); return `<li><a href="#l/${l}">${L.title}</a> — ผิด ${c} ข้อ</li>`; }).join('')}</ul><p class="sub" style="font-size:14px">ข้อที่ผิดถูกใส่ไว้ในโหมดทบทวนแล้ว</p>` : '<p>ไม่ผิดเลยสักข้อ 😳 เก่งเกิน</p>'}
+        <div class="row"><a class="btn" style="text-decoration:none" href="#quiz${ch ? '/' + ch.id : ''}" onclick="setTimeout(route)">สอบใหม่</a><a class="btn ghost" style="text-decoration:none" href="#home">หน้าแรก</a></div>
+      </div>`;
+  };
+  show();
+}
+
+function pageReview(){
+  const ids = dueList();
+  if (!ids.length) {
+    app.innerHTML = `<a class="back" href="#home">← หน้าแรก</a><h1><span class="h1-ic">${ic('rotate-ccw')}</span>ทบทวน</h1><div class="card"><div class="tutor">${BOT_AVA}<div class="bub">ตอนนี้ไม่มีอะไรต้องทวน 👍 ข้อที่เคยผิดจะกลับมาให้ทำซ้ำ: อีก 10 นาที → 1 วัน → 3 วัน → 7 วัน จนจำได้จริง</div></div></div>`;
+    return;
+  }
+  let k = 0;
+  const show = () => {
+    if (k >= ids.length) return pageReview();
+    const it = ALL[ids[k]];
+    app.innerHTML = `<a class="back" href="#home">← หน้าแรก</a><h1><span class="h1-ic">${ic('rotate-ccw')}</span>ทบทวน</h1><p class="sub">ข้อ ${k+1}/${ids.length} · ข้อที่เคยทำผิด</p>
+      <div class="card"><div data-it></div><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn" data-next disabled>ต่อไป →</button></div></div>`;
+    mountItem($('[data-it]'), it, first => { reviewResult(it.id, first); const b = $('[data-next]'); b.disabled = false; b.onclick = () => { k++; show(); }; });
+  };
+  show();
+}
+
+/* ---------- คลิป YouTube: ฝังพร้อมเวลาเริ่ม-จบ ----------
+   ใส่ในบทเรียนแบบ: video:[{ id:'VIDEO_ID', start:200, end:465, title:'ชื่อคลิป' }] (วินาที) */
+/* YouTube ยอมให้ฝังเฉพาะหน้าที่บอกได้ว่ามาจากเว็บไหน (มี referrer)
+   หน้า artifact ทำงานใน sandbox ไม่มี referrer → เจอ Error 153 เลยใช้การ์ดลิงก์แทน */
+const CAN_EMBED = /(^|\.)github\.io$|^localhost$|^127\./.test(location.hostname);
+const watchUrl = v => `https://www.youtube.com/watch?v=${encodeURIComponent(v.id)}${v.start ? '&t=' + v.start + 's' : ''}`;
+function mountVideo(el, L){
+  const V = L.video || {};
+  const has = l => (V[l] || []).length > 0;
+  let lang = has(S.vlang) ? S.vlang : (has('th') ? 'th' : 'en'), k = 0;
+  const show = () => {
+    const vids = V[lang] || [];
+    const seg = `<div class="vlang">
+        <button class="${lang==='th'?'on':''}" data-l="th">ไทย</button>
+        <button class="${lang==='en'?'on':''}" data-l="en">English · Bro Code</button>
+      </div>`;
+    let body;
+    if (!vids.length) {
+      body = `<div class="video-empty">ยังไม่มีคลิป${lang==='en'?'ภาษาอังกฤษ':'ภาษาไทย'}สำหรับบทนี้<br>
+        <a class="yt" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(L.yt)}">หาคลิปบน YouTube ↗</a></div>`;
+    } else {
+      const v = vids[Math.min(k, vids.length-1)];
+      const q = new URLSearchParams({ rel:'0', modestbranding:'1' });
+      if (v.start) q.set('start', v.start); if (v.end) q.set('end', v.end);
+      body = (vids.length > 1 ? `<div class="vtabs">${vids.map((x, j) => `<button class="${j===k?'on':''}" data-v="${j}">${j+1}. ${esc(x.title)}</button>`).join('')}</div>` : '')
+        + (CAN_EMBED
+          ? `<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.id)}?${q}" title="${esc(v.title)}" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`
+          : `<a class="video vcard" target="_blank" rel="noopener" href="${watchUrl(v)}">
+               <img src="https://i.ytimg.com/vi/${encodeURIComponent(v.id)}/hqdefault.jpg" alt="" onerror="this.remove()">
+               <span class="vplay">${ic('play')}</span>
+               <span class="vcap"><b>${esc(v.title)}</b><small>กดเพื่อดูบน YouTube (เปิดแท็บใหม่)</small></span>
+             </a>`)
+        + `<div class="row" style="margin-top:8px;justify-content:space-between">${v.note ? `<p class="sub" style="font-size:14px;flex:1">ℹ️ ${v.note}</p>` : '<span></span>'}<a class="yt" target="_blank" rel="noopener" href="${watchUrl(v)}">เปิดบน YouTube ↗</a></div>`;
+    }
+    el.innerHTML = seg + body;
+    el.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { lang = b.dataset.l; S.vlang = lang; save(); k = 0; show(); });
+    el.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { k = +b.dataset.v; show(); });
+  };
+  show();
+}
+
+/* ---------- sidebar ---------- */
+function renderSide(h){
+  const due = dueList().length;
+  $('#side').innerHTML = `
+    <h5>เมนู</h5>
+    <a href="#home" class="${h==='home'?'on':''}">${ic('house')} หน้าแรก</a>
+    <a href="#quiz" class="${h==='quiz'?'on':''}">${ic('target')} Final Quiz</a>
+    <a href="#review" class="${h==='review'?'on':''}">${ic('rotate-ccw')} ทบทวน ${due ? `<span class="badge">${due}</span>` : ''}</a>
+    <a href="../../Computer-Programming/practice/">${ic('external-link')} ไปวิชา CompPro (C#)</a>
+    ${CHAPTERS.map(c => `<h5>${c.title}</h5>` + (c.soon ? `<a class="soon">เร็ว ๆ นี้</a>` :
+      c.lessons.map(l => `<a href="#l/${l.id}" class="${h==='l/'+l.id?'on':''}"><span class="dot ${S.done[l.id]?'ok':''}"></span>${l.title}</a>`).join('')
+      + `<a href="#quiz/${c.id}" class="${h==='quiz/'+c.id?'on':''}">${ic('clipboard-check')} Quiz ${c.short}</a>`)).join('')}`;
+}
+
+/* ---------- router ---------- */
+function route(){
+  if (cleanup) { cleanup(); cleanup = null; }
+  stopSpeak();
+  const h = location.hash.slice(1) || 'home';
+  if (h.startsWith('l/')) pageLesson(h.slice(2));
+  else if (h === 'quiz' || h.startsWith('quiz/')) pageQuiz(h.split('/')[1]);
+  else if (h === 'review') pageReview();
+  else pageHome();
+  window.scrollTo(0, 0);
+  renderSide(h);
+  updateCount();
+}
+window.addEventListener('hashchange', route);
+
+/* ---------- top bar: countdown, voice, theme ---------- */
+function updateCount(){
+  const d = Math.ceil((new Date('2026-11-23T00:00:00+07:00') - Date.now()) / DAY);
+  $('#count').innerHTML = d > 0 ? `${ic('clock')} Final เริ่ม 23 พ.ย. (อีก ${d} วัน)` : `${ic('clock')} ช่วงสอบ Final 23 พ.ย.–4 ธ.ค. สู้ ๆ`;
+}
+function applyTheme(){ document.documentElement.dataset.theme = S.theme; $('#themeBtn').innerHTML = ic(S.theme === 'dark' ? 'moon' : 'sun'); }
+function applyVoice(){ $('#voiceBtn').innerHTML = ic(S.voice ? 'volume-2' : 'volume-x'); }
+$('#themeBtn').onclick = () => { S.theme = S.theme === 'dark' ? 'light' : 'dark'; save(); applyTheme(); };
+/* กดปุ่มลำโพง → เปิดแผงตั้งค่าเสียง, คลิกที่อื่น → ปิด */
+$('#voiceBtn').onclick = e => {
+  e.stopPropagation();
+  const p = $('#voicePanel'); p.hidden = !p.hidden;
+  if (!p.hidden) { loadVoices(); renderVoicePanel(); }
+};
+document.addEventListener('click', e => { const p = $('#voicePanel'); if (!p.hidden && !p.contains(e.target)) p.hidden = true; });
+
+/* เตือนพักทุก 45 นาที (สมาธิอยู่ได้ 30–60 นาที) */
+setInterval(() => {
+  const t = document.createElement('div'); t.className = 'toast';
+  t.innerHTML = ic('bot') + ' เรียนมา 45 นาทีแล้ว พักสายตา 5 นาที ลุกไปกินน้ำก่อน เดี๋ยวสมองค้าง 🧠💤';
+  document.body.appendChild(t); setTimeout(() => t.remove(), 9000);
+}, 45 * 60e3);
+
+applyTheme(); applyVoice(); route();
+</script>
+</body>
+</html>
