@@ -196,6 +196,23 @@ h3{font-size:16px;font-weight:500;margin:0 0 4px}
 :root[data-theme="light"] .ac span,:root[data-theme="light"] .g2 td{color:#4d7c0f}
 .scene-stage{border:1px solid var(--line);background:var(--bg-2);border-radius:12px;padding:18px;min-height:220px;display:flex;align-items:center;justify-content:center;overflow-x:auto}
 .scene-in{width:100%;animation:sfade .35s}
+ol.learn{list-style:none;counter-reset:ln;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+ol.learn li{counter-increment:ln;position:relative;padding:12px 14px 12px 50px;border:1px solid var(--line);border-radius:10px;background:var(--bg-2)}
+ol.learn li::before{content:counter(ln);position:absolute;left:14px;top:12px;width:24px;height:24px;border-radius:7px;background:var(--accent-bg);color:var(--accent);font:600 13px "IBM Plex Mono",monospace;display:grid;place-items:center}
+ol.learn li>b{display:block;color:var(--ink);font-weight:600;margin-bottom:2px}
+ol.learn li p{margin:0;color:var(--ink-2);font-size:15px}
+h3.lh{margin:22px 0 10px;font-size:16px}
+.wex{border:1px solid var(--line-2);border-radius:10px;padding:14px 16px;background:var(--card)}
+.wex .wq{margin:0 0 10px;font-weight:500}
+.wsteps{margin:0 0 10px;padding-left:22px;color:var(--ink-2)}
+.wsteps li{margin:4px 0;animation:sfade .3s}
+.wans{margin:0 0 4px;padding:8px 12px;border-radius:8px;background:var(--green-bg);animation:sfade .3s}
+.traps{display:flex;flex-direction:column;gap:8px}
+.trap{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14px}
+.trap>div{padding:10px 12px}
+.trap .tw{background:var(--red-bg);color:var(--ink-2)}
+.trap .tr{background:var(--green-bg);color:var(--ink)}
+@media (max-width:640px){.trap{grid-template-columns:1fr}}
 .spyr{display:flex;flex-direction:column;align-items:center;gap:6px}
 .spyr div{text-align:center;border:1px solid var(--line-2);background:var(--card);border-radius:8px;padding:10px;font-size:14px}
 .spyr div.base{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
@@ -1359,6 +1376,423 @@ for (const ch of CHAPTERS) for (const L of ch.lessons) for (const e of L.ex) { e
 const allLessons = () => CHAPTERS.flatMap(c => c.lessons);
 const lessonById = id => allLessons().find(l => l.id === id);
 const chapterOf = id => CHAPTERS.find(c => c.lessons.some(l => l.id === id));
+/* =========================================================
+   LEARN — "เข้าใจหลักการ" + ตัวอย่างคิดทีละขั้น + จุดที่คนมักพลาด
+   learn:   [หัวข้อ, คำอธิบาย]  (คืออะไร → ทำไม → ใช้ยังไง)
+   example: { q, steps:[...], ans }
+   traps:   [ผิด, ถูก]
+   ========================================================= */
+const LEARN = {
+/* ---------------- Ch6 ---------------- */
+g1:{
+  learn:[
+    ['Construction คืออะไร', 'คือขั้นที่เปลี่ยน design เป็นโค้ดที่ทำงานได้จริง ไม่ได้มีแค่การพิมพ์โค้ด แต่รวมการออกแบบรายละเอียด การ debug การเขียน unit test และการรวมโค้ดเข้าด้วยกัน'],
+    ['ทำไมต้อง "อ่านง่าย"', 'โค้ดถูก<b>อ่าน</b>บ่อยกว่าถูก<b>เขียน</b>มาก ทั้งเพื่อนที่ review ตัวเราตอนแก้บั๊ก และคนที่มาทำต่อ ถ้าอ่านยาก บั๊กก็ซ่อนได้ง่ายและแก้ช้า หลัก "Minimize complexity" จึงสำคัญที่สุด'],
+    ['ความซับซ้อนวัดยังไง', 'นับ "เส้นทาง" ที่โค้ดวิ่งได้ (cyclomatic complexity) ทุก <code>if</code>, <code>else</code>, loop เพิ่มเส้นทาง ยิ่งเส้นทางเยอะ ยิ่งต้องเขียนเทสต์เยอะเพื่อให้ครอบคลุม'],
+    ['ลดความซับซ้อนยังไง', 'แบ่งเป็นฟังก์ชันเล็กที่ทำ<b>อย่างเดียว</b> · ตั้งชื่อให้บอกความหมาย · ไม่ copy-paste ซ้ำ (ทำเป็นฟังก์ชันแทน) · comment บอก "ทำไม" ไม่ใช่ "ทำอะไร"'],
+    ['Construct for verification', 'คือเขียนโค้ดให้<b>ทดสอบง่าย</b>ตั้งแต่ตอนเขียน เช่น ฟังก์ชันที่รับ input แล้วคืน output (ไม่ไปแตะ database หรือหน้าจอโดยตรง) จะเขียน unit test ได้ง่ายในบทถัดไป'],
+  ],
+  example:{ q:'Which change best follows "minimize complexity"? A function <code>process()</code> validates input, saves to the database and sends an email, all in 80 lines.',
+    steps:['หลักคือ "one function does one thing"', 'process() ทำ 3 อย่าง (validate, save, email) → ซับซ้อน ทดสอบยาก', 'ทางแก้คือแยกเป็น 3 ฟังก์ชันที่ชื่อบอกหน้าที่ เช่น validate_task(), save_task(), send_reminder_email()'],
+    ans:'Split it into small functions, each doing one job with a clear name.' },
+  traps:[
+    ['โค้ดสั้นบรรทัดเดียว = โค้ดดี', 'โค้ดดีคือ<b>อ่านแล้วเข้าใจทันที</b> บรรทัดเดียวที่อัดหลายอย่างมักอ่านยากกว่า'],
+    ['ใส่ comment เยอะ ๆ แทนการตั้งชื่อดี', 'ถ้าต้องมี comment อธิบายชื่อ แปลว่าชื่อยังไม่ดี → เปลี่ยนชื่อก่อน'],
+    ['comment บอกว่าโค้ด "ทำอะไร" ทุกบรรทัด', 'comment ควรบอก <b>"ทำไม"</b> เพราะโค้ดที่ดีบอก "ทำอะไร" ได้ด้วยตัวเองแล้ว'],
+  ]},
+g2:{
+  learn:[
+    ['Version control คืออะไร', 'คือระบบที่จำ<b>ทุกการเปลี่ยนแปลง</b>ของไฟล์ในโปรเจกต์ ว่าใครแก้อะไร เมื่อไหร่ และทำไม ย้อนกลับไปเวอร์ชันที่ใช้ได้ก็ได้ Git คือเครื่องมือ version control ที่นิยมที่สุด'],
+    ['ทำไมต้องมี staging (git add)', 'เพื่อ<b>เลือก</b>ว่าจะใส่การเปลี่ยนแปลงไหนลงใน commit นี้ เช่นแก้ 3 ไฟล์ แต่ 2 ไฟล์เป็นเรื่องเดียวกัน ก็ add แค่ 2 ไฟล์นั้นแล้ว commit ก่อน → commit ละเรื่อง'],
+    ['commit คืออะไร', 'คือ <b>snapshot</b> ของโปรเจกต์ ณ ตอนนั้น + ข้อความอธิบาย commit อยู่ในเครื่องเรา จนกว่าจะ <code>push</code> ขึ้น GitHub เพื่อนถึงจะเห็น'],
+    ['commit ที่ดีหน้าตาเป็นยังไง', '<b>เล็ก</b> (เรื่องเดียว) และ<b>ข้อความบอกว่าทำอะไรและทำไม</b> ในวิชานี้ให้อ้าง FR ด้วย เช่น <code>feat: add task with due date (FR-1)</code> เพื่อโยงโค้ดกลับไปที่ requirement (Golden Thread)'],
+    ['push กับ pull ต่างกันยังไง', '<code>push</code> = ส่ง commit ของเราขึ้น GitHub · <code>pull</code> = ดึง commit ของเพื่อนจาก GitHub ลงมาที่เครื่องเรา'],
+  ],
+  example:{ q:'You fixed a bug in <code>tasks.py</code> and, in the same session, changed button colours in <code>style.css</code>. What is the best way to commit?',
+    steps:['สองการแก้ไขเป็นคนละเรื่อง (bug fix กับ UI)', 'หลัก: commit ละเรื่อง เพื่อให้อ่านประวัติง่ายและย้อนเฉพาะส่วนได้', 'ทำ <code>git add tasks.py</code> → commit "fix: …" แล้วค่อย <code>git add style.css</code> → commit "style: …"'],
+    ans:'Make two separate commits, one per logical change, each with a clear message.' },
+  traps:[
+    ['commit แล้วเพื่อนเห็นทันที', 'commit อยู่ในเครื่องเราเท่านั้น ต้อง <b>push</b> ก่อนเพื่อนถึงจะเห็น'],
+    ['git add = อัปโหลดขึ้น GitHub', 'add แค่เตรียมของเข้า commit (staging) · การส่งขึ้น GitHub คือ push'],
+    ['รวมงานทั้งสัปดาห์ไว้ commit เดียวจะได้เรียบร้อย', 'commit ใหญ่ทำให้ review ยากและย้อนบางส่วนไม่ได้ → commit เล็ก บ่อย ๆ'],
+  ]},
+g3:{
+  learn:[
+    ['Branch คืออะไร', 'คือ<b>เส้นงานคู่ขนาน</b>ที่แยกออกจาก main เราแก้โค้ดบน branch ได้อิสระโดยไม่กระทบ main ที่ทุกคนใช้อยู่'],
+    ['ทำไมต้องแยก branch', 'ถ้าทุกคนแก้ใน main พร้อมกัน โค้ดที่ยังไม่เสร็จหรือมีบั๊กจะทำให้ทั้งทีมพัง branch ทำให้แต่ละฟีเจอร์พัฒนาแยกกัน แล้วค่อยรวมเข้า main เมื่อเสร็จและผ่าน review'],
+    ['Merge คืออะไร', 'คือการ<b>รวม</b>การเปลี่ยนแปลงจาก branch หนึ่งเข้าอีก branch ส่วนใหญ่ Git รวมให้อัตโนมัติ ถ้าแก้คนละไฟล์หรือคนละบรรทัด'],
+    ['Merge conflict เกิดเมื่อไหร่', 'เกิดเมื่อสอง branch <b>แก้บรรทัดเดียวกัน</b>ต่างกัน Git ไม่รู้ว่าจะเอาแบบไหน จึงหยุดแล้วใส่ marker ให้เราเลือก ไม่ได้แปลว่ามีอะไรพังหรือหาย'],
+    ['แก้ conflict ทีละขั้น', '1) เปิดไฟล์ดูส่วนระหว่าง <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> กับ <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> · 2) ตัดสินใจเอาแบบไหนหรือรวมกัน (คุยกับเพื่อนถ้าไม่แน่ใจ) · 3) ลบ marker ทั้งหมด · 4) add + commit'],
+  ],
+  example:{ q:'You and a teammate both changed <code>max_tasks</code> in <code>config.py</code>. Git reports a merge conflict. Your teammate suggests running <code>git push --force</code>. What should you do?',
+    steps:['conflict = Git ถามว่าจะเอาค่าไหน (50 หรือ 100)', 'push --force จะเขียนทับประวัติบน GitHub → งานของเพื่อนอาจหาย', 'ทางที่ถูก: เปิดไฟล์ ตกลงค่าที่ถูก ลบ marker แล้ว commit การแก้ conflict'],
+    ans:'Resolve the conflict in the file (choose or combine, remove markers) and commit; never force-push a shared branch.' },
+  traps:[
+    ['conflict = repo พัง ต้องเริ่มใหม่', 'conflict เป็นเรื่องปกติ ไม่มีอะไรหาย แค่ต้องเลือกแล้ว commit'],
+    ['แก้ conflict แล้วลืมลบ <<<<<<< ===== >>>>>>>', 'ต้องลบ marker ทั้งหมด ไม่งั้นโค้ดจะ error'],
+    ['ใช้ git push --force ให้จบเร็ว ๆ', 'force push ลบงานเพื่อน · ห้ามใช้บน branch ที่ใช้ร่วมกัน'],
+  ]},
+g4:{
+  learn:[
+    ['Git กับ GitHub ต่างกันยังไง', '<b>Git</b> = โปรแกรมในเครื่องเรา ใช้ได้แม้ไม่มีเน็ต · <b>GitHub</b> = เว็บที่เก็บ repo ของทีมไว้ตรงกลาง มี Pull Request, issues และดูประวัติผ่าน browser ได้'],
+    ['Pull Request คืออะไร', 'คือคำขอว่า "ช่วยดูการเปลี่ยนแปลงใน branch นี้ แล้วรวมเข้า main" PR แสดง <b>diff</b> (บรรทัดที่เพิ่ม/ลบ) ให้เพื่อนอ่าน คอมเมนต์ และอนุมัติ'],
+    ['ทำไม PR สำคัญ', 'เป็น<b>ด่านตรวจคุณภาพ</b>ก่อนเข้า main: จับบั๊กก่อนรวม ไม่มีใครทำ main พังคนเดียว และทุกคนได้เรียนรู้โค้ดของเพื่อน (code review ที่เรียนใน Ch8 เกิดที่นี่)'],
+    ['Protected main', 'คือ main ที่ห้าม push ตรง ทุกการเปลี่ยนต้องมาเป็น PR · branch ควรเล็กและ merge บ่อย ไม่ปล่อยค้างนาน (ยิ่งนานยิ่ง conflict เยอะ)'],
+    ['.gitignore', 'ไฟล์ที่บอก Git ว่า<b>ไม่ต้องเก็บ</b>อะไร เช่น <code>.env</code> (ความลับ), <code>node_modules/</code> (สร้างใหม่ได้) ต้องสร้างตั้งแต่วันแรก เพราะถ้า push ไปแล้ว ประวัติจะจำไว้ตลอด'],
+  ],
+  example:{ q:'Your team wants to add a "mark done" feature without risking main. Put the GitHub workflow steps in order.',
+    steps:['สร้าง branch ใหม่ เช่น <code>feat/mark-done</code>', 'เขียนโค้ด + commit บน branch แล้ว push branch ขึ้น GitHub', 'เปิด Pull Request ให้เพื่อน review diff', 'แก้ตามคอมเมนต์ เมื่ออนุมัติแล้วค่อย merge เข้า main'],
+    ans:'branch → commit → push branch → open PR → review → merge into main.' },
+  traps:[
+    ['PR = คำสั่ง pull ข้อมูลลงเครื่อง', 'PR คือการ<b>ขอให้ review แล้ว merge</b> ส่วน git pull คือดึงโค้ดลงเครื่อง'],
+    ['repo private แล้วใส่ API key ได้', 'push แล้วถือว่ารั่ว ต้องเก็บใน .env + .gitignore เสมอ'],
+    ['ใส่ node_modules / build output ใน repo ด้วยจะได้ครบ', 'ไฟล์ที่สร้างใหม่ได้ไม่ต้อง commit → ใส่ใน .gitignore'],
+  ]},
+g5:{
+  learn:[
+    ['AI-first หมายความว่าอะไร', 'ให้ AI ร่างโค้ดแรกได้ แต่<b>เราเป็นวิศวกรที่รับผิดชอบ</b> ต้องอ่าน ทดสอบ และอธิบายได้ทุกบรรทัด'],
+    ['ทำไม AI ผิดได้', 'AI เดาจากรูปแบบที่เคยเห็น มัน<b>ไม่รู้บริบท</b>ของโปรเจกต์เรา อาจแต่งชื่อฟังก์ชันที่ไม่มีจริง ลืมกรณีขอบ หรือเพิ่มของเกินที่ไม่มีใครขอ'],
+    ['วิธีตรวจโค้ด AI', 'รันจริง (จับ hallucinated API) · เทสต์ค่าขอบ ว่าง/null/ใหญ่ (จับ missing edge case) · เทียบกับ FR (ตัด over-engineering) · เช็ก package ก่อนติดตั้ง (supply-chain) · อ่านเทียบ acceptance criteria (จับ logic ผิด)'],
+    ['Prompt ที่ดี', 'ใส่ <b>FR + กฎ</b> ให้ชัด เช่น "title ห้ามว่าง → ValueError, due_date เป็น YYYY-MM-DD, keep it simple and readable" AI จะร่างได้ตรงกว่า'],
+    ['AI Usage Log', 'จดว่าถาม AI อะไร และ<b>เราแก้อะไร</b> เพื่อใช้ตอบในการสอบ oral และเขียน AI-Use Statement อย่างซื่อสัตย์'],
+  ],
+  example:{ q:'AI code for <code>tasks_due_soon()</code> passes the happy-path test, but crashes when the task list is empty. What failure is this, and how should you catch it?',
+    steps:['ใช้ได้ตอนข้อมูลปกติ แต่พังตอนว่าง = ลืมกรณีขอบ', 'เป็น failure แบบ "missing edge cases"', 'จับด้วยการเขียนเทสต์ค่าขอบเอง เช่น list ว่าง ต้องคืน [] ไม่ crash'],
+    ans:'Missing edge cases; catch it by testing boundaries such as an empty list.' },
+  traps:[
+    ['เทสต์ที่ AI เขียนให้ผ่านหมด = โค้ดถูก', 'AI มักเทสต์แค่ happy path ต้องเช็กว่าเทสต์ครอบคลุมทุก acceptance criterion'],
+    ['AI แนะนำ package ไหนก็ติดตั้งได้เลย', 'package คือ supply-chain risk ต้องตรวจก่อนว่าน่าเชื่อถือ'],
+    ['อธิบายไม่ได้ก็ไม่เป็นไร เพราะ AI เขียน', 'อธิบายไม่ได้ = งานยังไม่เสร็จ และเราต้องรับผิดชอบ'],
+  ]},
+
+/* ---------------- Ch7 ---------------- */
+t1:{
+  learn:[
+    ['Testing คืออะไร', 'คือการรันโค้ดเพื่อเช็กว่ามันทำสิ่งที่ควรทำ "รันได้ ไม่ crash" ยังไม่พอ ต้องได้<b>คำตอบที่ถูก</b>ด้วย'],
+    ['Verification', 'ถามว่า "<b>เราสร้างถูกวิธีไหม?</b>" คือเช็กว่าโค้ดตรงตาม spec/requirement หรือเปล่า เช่น เทสต์ว่าแจ้งเตือนก่อนครบกำหนด 1 วันพอดีตามที่ SRS เขียน'],
+    ['Validation', 'ถามว่า "<b>เราสร้างของที่ถูกไหม?</b>" คือเช็กว่าสิ่งที่สร้างตอบความต้องการจริงของผู้ใช้ เช่น นักศึกษาใช้แล้วไม่พลาดส่งงานจริงไหม'],
+    ['ทำไมต้องมีทั้งสองอย่าง', 'โค้ดอาจตรง spec 100% (ผ่าน verification) แต่ spec อาจผิดตั้งแต่แรก ไม่มีใครอยากใช้ (ไม่ผ่าน validation) หรือกลับกัน ผู้ใช้ชอบแต่มีบั๊ก'],
+    ['V-model เชื่อมกันยังไง', 'ทุกขั้นที่สร้างทางซ้ายมีการทดสอบคู่กันทางขวา: requirements ↔ acceptance/system test · design ↔ integration test · detailed design ↔ unit test'],
+  ],
+  example:{ q:'A team proves with unit tests that every function matches the SRS. After launch, users say the app solves the wrong problem. Which activity was missing?',
+    steps:['unit test ตรงกับ SRS = verification ผ่านแล้ว', 'แต่ผู้ใช้บอกว่าแก้ปัญหาผิด = ไม่ใช่สิ่งที่ผู้ใช้ต้องการ', 'สิ่งที่ขาดคือการเช็กกับผู้ใช้จริง เช่น acceptance test หรือ demo = validation'],
+    ans:'Validation (e.g. acceptance testing with real users).' },
+  traps:[
+    ['Verification กับ validation เหมือนกัน', 'Verification = ตรง spec · Validation = ตรงความต้องการผู้ใช้'],
+    ['unit test พิสูจน์ validation ได้', 'unit test พิสูจน์ <b>verification</b> · validation ต้องใช้ผู้ใช้จริง (acceptance)'],
+    ['แอปไม่ crash = ทำงานถูก', 'ต้องเช็กว่า output ถูกด้วย ไม่ใช่แค่ไม่พัง'],
+  ]},
+t2:{
+  learn:[
+    ['Test case คืออะไร', 'คือคู่ของ <b>input ที่รู้ค่า</b> กับ <b>output ที่คาดไว้</b> รันแล้วเทียบ: ตรง = pass · ไม่ตรง = fail (เจอบั๊ก)'],
+    ['Unit test คืออะไร', 'คือเทสต์ชิ้นเล็กที่สุด มักเป็นฟังก์ชันเดียว ทดสอบแบบ<b>แยกเดี่ยว</b> ไม่ต่อ database/UI/network จึงเร็ว และถ้า fail ก็รู้ทันทีว่าพังที่ไหน'],
+    ['AC กลายเป็นเทสต์ยังไง', 'acceptance criterion แต่ละข้อใน SRS เขียนเป็นเทสต์ได้ 1 ตัว เช่น "งาน done ต้องไม่ถูกเตือน" → เทสต์ที่ใส่งาน done แล้ว assert ว่าผลลัพธ์เป็น list ว่าง'],
+    ['Arrange – Act – Assert', '<b>Arrange</b> เตรียมข้อมูล → <b>Act</b> เรียกฟังก์ชัน → <b>Assert</b> บอกว่าผลต้องเป็นอะไร โครงนี้ทำให้อ่านเทสต์ง่าย'],
+    ['เทสต์ที่ดี', 'ทดสอบ<b>พฤติกรรมเดียว</b> (fail แล้วรู้เหตุผลเดียว) · ตั้งชื่อเหมือนประโยค · มีเคสขอบ · assert ค่าจริง ไม่ใช่แค่ "ไม่ว่าง" · ไม่ขึ้นกับวันที่จริงหรืออินเทอร์เน็ต'],
+  ],
+  example:{ q:'Which test best checks the AC "an empty title must be rejected"?',
+    steps:['AC บอกว่า title ว่างต้อง<b>ถูกปฏิเสธ</b>', 'ดังนั้นเทสต์ต้องส่ง title ว่าง (หรือมีแต่ช่องว่าง) แล้วคาดว่าเกิด error', 'ในภาษา Python เขียนเป็น <code>with pytest.raises(ValueError): add_task("   ")</code>'],
+    ans:'A test that calls add_task with an empty title and expects a ValueError.' },
+  traps:[
+    ['<code>assert result is not None</code> ก็พอ', 'ขยะก็ not None → ต้อง assert ค่าจริง เช่น title, status'],
+    ['เทสต์ 1 ตัวเช็ก 20 อย่างจะได้ประหยัด', 'fail แล้วไม่รู้ว่าอะไรพัง → 1 เทสต์ = 1 พฤติกรรม'],
+    ['เทสต์ fail ก็แก้เทสต์ให้ผ่าน', 'เทสต์ fail = เจอบั๊ก → <b>แก้โค้ด</b> ไม่ใช่แก้เทสต์ (ยกเว้นเทสต์ผิดเอง)'],
+  ]},
+t3:{
+  learn:[
+    ['ทำไมต้องเลือก input', 'input ที่เป็นไปได้มีเป็นล้าน ทดสอบทุกค่าไม่ได้ จึงต้องเลือก<b>ค่าที่มีโอกาสเจอบั๊กมากที่สุด</b>ด้วยจำนวนเทสต์น้อยที่สุด'],
+    ['EP (Equivalence Partitioning)', 'แบ่ง input เป็น<b>กลุ่ม</b>ที่ระบบน่าจะทำงานแบบเดียวกัน (เช่น ต่ำเกิน / ใช้ได้ / สูงเกิน) แล้วเลือกเทสต์<b>กลุ่มละ 1 ค่า</b> เพราะถ้าค่าหนึ่งในกลุ่มผ่าน ค่าอื่นในกลุ่มก็น่าจะผ่าน'],
+    ['BVA (Boundary Value Analysis)', 'บั๊กชอบอยู่<b>ตรงขอบ</b> เพราะคนเขียนมักสับสน <code>&lt;</code> กับ <code>&lt;=</code> BVA จึงเทสต์ค่าตรงขอบพอดี และเลยขอบไปหนึ่ง'],
+    ['ทำทีละขั้น (ช่วง a–b)', '1) หาช่วงที่ใช้ได้ เช่น 1–100 · 2) EP: เลือกตัวแทน ต่ำเกิน (0) / ใช้ได้ (50) / สูงเกิน (101) · 3) BVA: เทสต์ a−1, a, b, b+1 = 0, 1, 100, 101'],
+    ['Off-by-one', 'บั๊กที่ขอบเลื่อนไป 1 เช่น กฎบอก "ไม่เกิน 100" แต่โค้ดเขียน <code>&lt; 100</code> → ค่า 100 ถูกปฏิเสธผิด ๆ ค่าขอบพอดี (100) จะจับบั๊กนี้ได้'],
+  ],
+  example:{ q:'A discount applies for orders of 500–2,000 baht. Which values does BVA test?',
+    steps:['ช่วงที่ใช้ได้: a = 500, b = 2,000', 'BVA = ตรงขอบและเลยขอบ: a−1, a, b, b+1', 'ได้ 499, 500, 2,000, 2,001'],
+    ans:'499, 500, 2000, 2001.' },
+  traps:[
+    ['BVA = เทสต์ค่ากลาง ๆ เช่น 50', 'ค่ากลางคือ EP · BVA คือค่าขอบและเลยขอบ'],
+    ['เทสต์แค่ค่าที่ใช้ได้ก็พอ', 'ต้องเทสต์ค่าที่<b>ใช้ไม่ได้</b>ด้วย เพื่อเช็กว่าระบบปฏิเสธถูก'],
+    ['EP ต้องเทสต์ทุกค่าในกลุ่ม', 'EP เทสต์แค่<b>กลุ่มละ 1 ค่า</b> เป็นตัวแทนทั้งกลุ่ม'],
+  ]},
+t4:{
+  learn:[
+    ['ทำไมมีหลายระดับ', 'แต่ละระดับจับบั๊กคนละแบบ: unit จับบั๊กในฟังก์ชัน · integration จับปัญหาตอนชิ้นส่วนคุยกัน · system จับปัญหาของทั้งแอป · acceptance จับว่าผู้ใช้รับได้ไหม'],
+    ['Test pyramid', 'มี <b>unit test เยอะที่สุด</b> (เร็ว ถูก ชี้จุดพังได้แม่น) integration รองลงมา และ system test น้อยที่สุด (ช้า แพง พังแล้วหาสาเหตุยาก)'],
+    ['Release vs Acceptance', '<b>Release testing</b> = ทีมแยก (ไม่ใช่คนเขียน) ทดสอบเวอร์ชันเต็มก่อนปล่อย · <b>Acceptance testing</b> = ผู้ใช้จริงหรือลูกค้าเป็นคนตัดสินว่ารับระบบไหม'],
+    ['ระดับไหนพิสูจน์ validation', '<b>Acceptance</b> เท่านั้น เพราะเป็นระดับเดียวที่ผู้ใช้จริงตัดสิน ระดับอื่นเช็กกับ spec (verification)'],
+    ['บทเรียน Ariane 5', 'โค้ดเก่าทำงานได้ในจรวดรุ่นเก่า แต่ไม่เคยทดสอบกับค่าใหม่ที่ใหญ่ขึ้น → overflow · <b>โค้ดที่ใช้ซ้ำ (หรือ copy จาก AI) ต้องทดสอบใหม่</b>กับ input ใหม่'],
+  ],
+  example:{ q:'The login module and the task module each pass their own unit tests, but logging in and then adding a task fails. Which level of testing should have caught it?',
+    steps:['แต่ละโมดูลผ่าน unit test แยกกัน', 'ปัญหาเกิดตอน<b>สองโมดูลทำงานร่วมกัน</b>', 'การทดสอบหลายโมดูลร่วมกันผ่าน interface = integration testing'],
+    ans:'Integration testing.' },
+  traps:[
+    ['system test เยอะ ๆ ดีที่สุดเพราะเหมือนใช้จริง', 'system test ช้าและแพง → pyramid ให้ unit test เยอะที่สุด'],
+    ['release testing = ผู้ใช้จริงทดสอบ', 'release = ทีมแยกทดสอบก่อนปล่อย · acceptance = ผู้ใช้จริงตัดสิน'],
+    ['โค้ดเก่าเคยผ่านเทสต์ เอามาใช้ใหม่ได้เลย', 'reused code is not tested code → เทสต์ใหม่กับ input ใหม่'],
+  ]},
+t5:{
+  learn:[
+    ['ทำไมต้องวัดการยอมรับ', 'แอปที่ไม่มีบั๊กก็อาจไม่มีใครใช้ ถ้าไม่มีประโยชน์หรือใช้ยาก การวัด acceptance ช่วยตอบว่า "ผู้ใช้จะใช้จริงไหม"'],
+    ['TAM', 'โมเดลง่ายสุด: คนจะใช้ถ้ารู้สึกว่า<b>มีประโยชน์</b> (PU) และ<b>ใช้ง่าย</b> (PEOU) วัดด้วยแบบสอบถาม 1–5 แล้วเฉลี่ย'],
+    ['UTAUT2', 'ละเอียดกว่า มี 7 ปัจจัย: PE ช่วยฉันไหม · EE ง่ายไหม · SI เพื่อนใช้ไหม · FC มีอุปกรณ์/เน็ต/คนช่วยไหม · HM สนุกไหม · PV คุ้มราคาไหม · HB เป็นนิสัยไหม'],
+    ['SUS คิดยังไง', '10 ข้อ ตอบ 1–5 · ข้อคี่เป็นข้อความบวก → คะแนน = ตอบ − 1 · ข้อคู่เป็นข้อความลบ → คะแนน = 5 − ตอบ · รวม 10 ข้อ (ได้ 0–40) แล้ว × 2.5 = 0–100'],
+    ['อ่านคะแนน + ทำเมื่อไหร่', '~68 = ค่าเฉลี่ย · 80+ = ดีเยี่ยม · ต่ำกว่า 50 = แย่ · ต้องให้ผู้ใช้<b>ทำ task จริงก่อน</b> (think aloud, ห้ามช่วย) แล้วค่อยทำ SUS'],
+  ],
+  example:{ q:'A user answers SUS items 1–10 with: 5, 1, 4, 2, 5, 1, 4, 2, 5, 1. What is the SUS score?',
+    steps:['ข้อคี่ (1,3,5,7,9) ตอบ 5,4,5,4,5 → ลบ 1 → 4+3+4+3+4 = 18', 'ข้อคู่ (2,4,6,8,10) ตอบ 1,2,1,2,1 → 5 ลบ → 4+3+4+3+4 = 18', 'รวม 18 + 18 = 36 → 36 × 2.5 = <b>90</b> (ดีเยี่ยม)'],
+    ans:'90.' },
+  traps:[
+    ['รวมคำตอบดิบทั้ง 10 ข้อแล้ว × 2.5', 'ต้องแปลงก่อน: คี่ = ตอบ − 1, คู่ = 5 − ตอบ'],
+    ['ให้ทำ SUS ก่อนใช้แอปเพื่อดูความคาดหวัง', 'SUS มีความหมาย<b>หลังใช้งานจริง</b>เท่านั้น'],
+    ['SUS 68 = แย่', '68 = ค่าเฉลี่ย · แย่คือต่ำกว่า 50'],
+  ]},
+
+/* ---------------- Ch8 ---------------- */
+q1:{
+  learn:[
+    ['คุณภาพซอฟต์แวร์คืออะไร', 'ไม่ใช่ความรู้สึกว่า "ดี" แต่คือ<b>ชุดคุณสมบัติที่ตรวจได้</b> เช่น ทำงานถูก ใช้ง่าย แก้ง่าย ปลอดภัย เร็วพอ'],
+    ['ทำไมต้องแยกเป็น attribute', 'เพราะแต่ละอย่าง<b>ตรวจคนละวิธี</b>: ความถูกต้องใช้ test · ใช้ง่ายดูผู้ใช้จริง · แก้ง่ายใช้ review/linter · ปลอดภัยคิดแบบผู้โจมตี · เร็วต้องวัดจริง'],
+    ['เชื่อมกับ NFR ยังไง', 'attribute แต่ละตัวควรมี NFR ใน SRS ที่<b>วัดได้</b> เช่น "หน้าค้นหาแสดงผลภายใน 2 วินาทีสำหรับ 1,000 รายการ" แทน "ระบบต้องเร็ว"'],
+    ['ISO/IEC 25010:2023', 'มาตรฐานสากลที่ทุกบริษัทใช้คำเดียวกัน มี 9 characteristics · ใหม่ปี 2023 คือ <b>Safety</b> · เปลี่ยนชื่อ Usability → <b>Interaction capability</b> และ Portability → <b>Flexibility</b>'],
+    ['จับคู่สถานการณ์ยังไง', 'ถามว่าปัญหาคือ: ผิด (Reliability/Functional suitability) · ใช้ยาก (Interaction capability) · ช้า (Performance) · แก้ยาก (Maintainability) · ข้อมูลรั่ว (Security) · ใช้กับเครื่อง/ระบบอื่นไม่ได้ (Flexibility/Compatibility) · ทำให้คนบาดเจ็บ (Safety)'],
+  ],
+  example:{ q:'A medical-device app could give a wrong insulin dose if the sensor fails, and the team adds a fail-safe that stops dosing. Which ISO/IEC 25010:2023 characteristic is this mainly about?',
+    steps:['ความเสี่ยงคือทำให้<b>คนบาดเจ็บ</b> ไม่ใช่แค่แอปค้าง', 'fail-safe = ป้องกันอันตรายต่อชีวิต/สุขภาพ', 'characteristic ที่พูดถึงการไม่ทำให้คนตกอยู่ในอันตราย คือ Safety (ใหม่ปี 2023)'],
+    ans:'Safety.' },
+  traps:[
+    ['Usability ยังเป็นชื่อใน ISO 25010:2023', 'ปี 2023 เปลี่ยนเป็น <b>Interaction capability</b>'],
+    ['Profitability เป็นคุณภาพของซอฟต์แวร์', 'เป็นเรื่องธุรกิจ ไม่ใช่ characteristic'],
+    ['NFR "ระบบต้องใช้ง่าย" ดีแล้ว', 'วัดไม่ได้ → ต้องมีตัวเลข เช่น "4 ใน 5 คนทำได้ใน 1 นาที"'],
+  ]},
+q2:{
+  learn:[
+    ['Code review คืออะไร', 'เพื่อนในทีม<b>อ่านโค้ด</b>ก่อนรวมเข้า main (ผ่าน Pull Request) จับได้ทั้ง logic ผิด ชื่อไม่ชัด เคสที่ขาด และทำให้ทุกคนรู้จักโค้ดทั้งระบบ'],
+    ['Linter คืออะไร', 'โปรแกรมที่<b>อ่านโค้ดโดยไม่รัน</b> (static analysis) แล้วเตือนเรื่อง style ตัวแปรที่ไม่ได้ใช้ รูปแบบเสี่ยงบั๊ก ทำงานเร็วและรันได้ทุก commit'],
+    ['ต่างจาก unit test ยังไง', 'unit test ต้อง<b>รันโค้ด</b>แล้วเทียบผล · linter ไม่รัน แค่อ่าน · review ใช้คนอ่านและเข้าใจเจตนา → สามอย่างจับบั๊กคนละแบบ ใช้แทนกันไม่ได้'],
+    ['Cost of defects', 'Boehm (1981): ยิ่งเจอบั๊กช้า ยิ่งแพง เพราะมีงานสร้างทับไว้มากขึ้น (~1× ตอน requirements → ~100× ตอน production) บั๊กใน production ต้องแก้โค้ด เทสต์ ข้อมูล และแจ้งผู้ใช้'],
+    ['ใช้ความรู้นี้ยังไง', 'ทำทุกอย่างที่ช่วย<b>เจอบั๊กเร็ว</b>: เขียน requirement ให้ชัด · review ทุก PR · linter ทุก commit · unit test → "move the catch leftward"'],
+  ],
+  example:{ q:'A requirement mistake is found during testing instead of during requirements review. Roughly how does the cost compare (Boehm\'s illustrative scale)?',
+    steps:['สเกล: Requirements ~1× · Design ~5× · Code ~10× · Test ~25× · Production ~100×', 'เจอตอน test ≈ 25× เทียบกับเจอตอน requirements ≈ 1×', 'จึงแพงกว่าประมาณ 25 เท่า (เป็นสเกลประกอบ ไม่ใช่ค่าเป๊ะ)'],
+    ans:'About 25 times more expensive than fixing it at the requirements stage.' },
+  traps:[
+    ['linter รันโปรแกรมเพื่อหาบั๊ก', 'linter <b>ไม่รัน</b>โค้ด (static) · unit test ต่างหากที่รัน'],
+    ['มี linter แล้วไม่ต้อง review', 'linter ไม่เข้าใจเจตนา/logic → ต้องมีคน review ด้วย'],
+    ['แก้บั๊กตอน production ถูกที่สุดเพราะรู้ปัญหาชัด', 'production แพงที่สุด (~100×)'],
+  ]},
+q3:{
+  learn:[
+    ['ทำไม "อย่าเชื่อผู้ใช้"', 'ผู้ใช้ (หรือผู้โจมตี) ส่งอะไรมาก็ได้ ข้ามหน้าเว็บแล้วยิง request ตรงไปที่ server ก็ได้ ระบบจึงต้องตรวจทุกอย่างที่เข้ามาที่ฝั่ง server'],
+    ['#1 Validate input', 'ตรวจ<b>ชนิด ความยาว ช่วงค่า</b>ที่ server ก่อนใช้หรือบันทึก การตรวจใน browser แค่ช่วยให้ผู้ใช้สะดวก ไม่ใช่ความปลอดภัย'],
+    ['#2 Access control', 'ทุก request ต้องตอบ 2 คำถาม: "<b>คุณเป็นใคร</b>" (authentication = login) และ "<b>ข้อมูลนี้ของคุณไหม</b>" (authorization) มีแค่ login ยังไม่พอ'],
+    ['#3 No secrets in the repo', 'password/API key/token เก็บใน <code>.env</code> และใส่ .env ใน <code>.gitignore</code> ถ้าเผลอ push แล้ว Git history ยังเก็บไว้ → ต้อง <b>revoke แล้วออกใหม่</b>'],
+    ['วิธีจับคู่สถานการณ์', 'ข้อมูลผิดรูปแบบ/เกินช่วงหลุดเข้าระบบ → Validate input · เห็น/แก้ข้อมูลคนอื่นได้ → Access control · ความลับอยู่ในโค้ด/repo → No secrets'],
+  ],
+  example:{ q:'An admin page is hidden from the menu, but any logged-in user who types <code>/admin</code> in the URL can open it. Which habit is missing?',
+    steps:['ผู้ใช้ login แล้ว (รู้ว่าเป็นใคร) แต่ไม่ได้มีสิทธิ์ admin', 'การซ่อนเมนูไม่ใช่การป้องกัน เพราะพิมพ์ URL เองได้', 'ต้องเช็กสิทธิ์ทุก request ที่ server = Access control'],
+    ans:'Access control: check on the server that the user is allowed, on every request.' },
+  traps:[
+    ['ตรวจใน JavaScript ฝั่ง browser ก็ปลอดภัยแล้ว', 'ข้าม browser ได้ → ต้องตรวจที่ <b>server</b>'],
+    ['login แล้ว = ปลอดภัย', 'login บอกแค่ว่าเป็นใคร ต้องเช็ก<b>สิทธิ์</b>ด้วย'],
+    ['ลบ API key ออกจากโค้ดแล้วจบ', 'history ยังมี key → ต้อง revoke + ออก key ใหม่'],
+  ]},
+q4:{
+  learn:[
+    ['IDOR คืออะไร', 'Insecure Direct Object Reference = ระบบใช้ <b>id ที่ผู้ใช้ส่งมา</b> (เช่นใน URL) ไปดึงข้อมูลตรง ๆ โดยไม่เช็กว่าเป็นของคนนั้นไหม ผู้ใช้จึงเปลี่ยนเลขแล้วเห็นข้อมูลคนอื่น'],
+    ['ทำไมอันตราย', 'เป็นรูปแบบของ <b>Broken Access Control</b> ซึ่ง OWASP Top 10 (2021) จัดเป็น<b>อันดับ 1</b> ทำง่าย (แค่เปลี่ยนเลข) แต่ข้อมูลรั่วได้ทั้งระบบ'],
+    ['หลักการแก้', '"ข้อมูลของใคร" ต้องตัดสินจาก <b>session</b> (คนที่ login) ไม่ใช่จากสิ่งที่ผู้ใช้แก้ได้ และต้องเช็กทั้งตอน<b>ดู แก้ และลบ</b>'],
+    ['ทำไมวิธีอื่นไม่พอ', 'ซ่อน id → ยังเดาได้ · เช็กว่าเป็นตัวเลข → id คนอื่นก็เป็นตัวเลข · ใส่ linter → ไม่เกี่ยว ปัญหาคือ logic สิทธิ์'],
+    ['ทดสอบยังไง', 'เพิ่ม "dishonest case": ผู้ใช้ A ขอข้อมูลของ B → ระบบต้องปฏิเสธ เพราะเทสต์ปกติมักลองแค่ผู้ใช้สุจริต'],
+  ],
+  example:{ q:'<code>DELETE /api/orders?order_id=88</code> deletes order 88 for any logged-in user. What is the correct fix?',
+    steps:['ใครก็ลบออเดอร์ของคนอื่นได้ด้วยการเปลี่ยน order_id → IDOR', 'ต้องรู้ว่าใครเป็นคนขอ: เอาจาก session', 'เช็กว่า order 88 เป็นของผู้ใช้คนนั้นก่อนลบ ถ้าไม่ใช่ → ปฏิเสธ (403)'],
+    ans:'Get the user from the session and check the order belongs to them before deleting; otherwise refuse.' },
+  traps:[
+    ['เปลี่ยน id เป็นเลขสุ่มยาว ๆ ก็แก้ได้', 'แค่เดายากขึ้น ยังต้องเช็ก<b>สิทธิ์</b>ทุกครั้ง'],
+    ['เช็กสิทธิ์ตอนดูข้อมูลพอแล้ว', 'ต้องเช็กทั้ง<b>ดู แก้ ลบ</b> (CareFlow ยกเลิกนัดคนอื่นได้)'],
+    ['เทสต์ผ่านหมด = ไม่มีช่องโหว่', 'ต้องมีเทสต์กรณีผู้ใช้ไม่สุจริตด้วย'],
+  ]},
+q5:{
+  learn:[
+    ['PDPA คืออะไร', 'พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล B.E. 2562 บังคับใช้เต็มปี 2022 ทำให้การดูแลข้อมูลส่วนตัวเป็น<b>หน้าที่ตามกฎหมาย</b> ไม่ใช่แค่มารยาท'],
+    ['Consent', 'ก่อนเก็บข้อมูลส่วนบุคคล ต้องได้รับความยินยอม<b>โดยบอกวัตถุประสงค์</b>ให้ชัด ข้อมูลอ่อนไหว (เช่นสุขภาพ) ต้องยินยอมโดยชัดแจ้ง'],
+    ['Minimise', 'เก็บ<b>เท่าที่ฟีเจอร์ต้องใช้</b>เท่านั้น ข้อมูลยิ่งน้อย ความเสี่ยงยิ่งน้อย และภาระที่ต้องป้องกันก็น้อยลง'],
+    ['Protect', 'เก็บรักษาให้ปลอดภัย และ<b>ให้เจ้าของใช้สิทธิ์</b> ดู แก้ ลบ ข้อมูลตัวเองได้ ระบบที่ลบข้อมูลไม่ได้เลยผิดหลักนี้'],
+    ['ในโปรเจกต์นักศึกษา', 'ใช้ข้อมูลปลอม (fake/seed data) · ข้อมูลจริงห้ามอยู่ใน repo หรือ Git history · ห้ามใส่ข้อมูลจริงใน prompt ของ AI'],
+  ],
+  example:{ q:'A fitness app collects users\' heart-rate history and shares it with insurance companies, mentioned only on page 30 of the terms. Which PDPA principle is most directly broken?',
+    steps:['heart-rate = ข้อมูลสุขภาพ = ข้อมูลอ่อนไหว', 'ผู้ใช้ไม่ได้รับรู้วัตถุประสงค์อย่างชัดเจน (ซ่อนไว้หน้า 30)', 'จึงขาดความยินยอมที่ชัดแจ้งและบอกวัตถุประสงค์ = Consent'],
+    ans:'Consent (explicit consent for a stated purpose, especially for sensitive health data).' },
+  traps:[
+    ['เก็บไว้ก่อนเผื่อใช้ทีหลัง', 'ผิดหลัก <b>Minimise</b> เก็บเฉพาะที่ใช้จริง'],
+    ['มี privacy policy ยาว ๆ = ได้ consent แล้ว', 'consent ต้องชัดและบอกวัตถุประสงค์ ไม่ใช่ซ่อนไว้'],
+    ['ลบข้อมูลไม่ได้ก็ไม่เป็นไร', 'เจ้าของมีสิทธิ์ ดู แก้ <b>ลบ</b> (Protect)'],
+  ]},
+
+/* ---------------- Ch9 ---------------- */
+p1:{
+  learn:[
+    ['ทำไมต้องแตกงาน', 'งานใหญ่ประเมินไม่ได้และไม่รู้ว่าคืบหน้าแค่ไหน แตกเป็น task เล็กที่บอกได้ชัดว่า<b>เสร็จหรือยัง</b> จะประเมิน มอบหมาย และติดตามได้ ถ้าประเมินไม่ได้ = ยังไม่เข้าใจงาน → แตกอีก'],
+    ['Story point คืออะไร', 'หน่วย<b>เปรียบเทียบขนาด</b>งาน (ความยาก + ความซับซ้อน + ความไม่แน่นอน) เทียบกับงานอ้างอิง เช่น งานอ้างอิง = 1 แต้ม งานที่ใหญ่ประมาณสองเท่า = 2 แต้ม'],
+    ['ทำไมไม่ใช้ชั่วโมง', 'คนเทียบขนาดได้แม่นกว่าเดาชั่วโมง · ชั่วโมงขึ้นกับว่าใครทำ แต่แต้มไม่เปลี่ยน · งานหลายชิ้นที่ประเมินขาด/เกินจะหักล้างกัน'],
+    ['Planning poker', 'ทุกคน<b>เปิดไพ่พร้อมกัน</b>เพื่อไม่ให้ใครถูกชี้นำ (anchoring) คนที่ให้แต้มสูงสุดกับต่ำสุดอธิบายเหตุผล → ความซับซ้อนที่ซ่อนอยู่จะโผล่ออกมา แล้วโหวตใหม่'],
+    ['Velocity และการพยากรณ์', 'velocity = <b>ค่าเฉลี่ย</b>แต้มที่ทำ<b>เสร็จจริง</b>ต่อ sprint · จำนวน sprint ≈ แต้มที่เหลือ ÷ velocity · ใช้คำว่า "ประมาณ" เพราะเป็นเครื่องมือวางแผน ไม่ใช่คำสัญญา'],
+  ],
+  example:{ q:'Velocities: sprint 1 = 12, sprint 2 = 18, sprint 3 = 15 points. 90 points remain. About how many sprints?',
+    steps:['velocity เฉลี่ย = (12 + 18 + 15) ÷ 3 = 45 ÷ 3 = 15', 'sprint ที่ต้องใช้ ≈ 90 ÷ 15 = 6', 'ตอบว่า "ประมาณ 6 sprint" (ไม่ใช้ sprint ดีสุดหรือแย่สุด)'],
+    ans:'About 6 sprints.' },
+  traps:[
+    ['งานที่ "เกือบเสร็จ" นับครึ่งแต้ม', 'velocity นับเฉพาะงานที่ <b>Done</b> · เกือบเสร็จ = 0'],
+    ['เอาแต้มทีม A เทียบกับทีม B', 'แต้มเป็นของทีมใดทีมหนึ่ง เทียบข้ามทีมไม่ได้'],
+    ['ให้ PO หรือคนอาวุโสพูดตัวเลขก่อน', 'ต้องเปิดพร้อมกัน ไม่งั้นทุกคนโดน anchor'],
+  ]},
+p2:{
+  learn:[
+    ['Sprint คืออะไร', 'รอบทำงานสั้นที่<b>เวลาตายตัว</b> (เช่น 1–2 สัปดาห์) วางแผนต้นรอบ ทำงาน แล้วโชว์ผลตอนจบรอบ ทำให้เห็นความคืบหน้าบ่อยและปรับแผนได้เร็ว'],
+    ['Kanban board', 'กระดานคอลัมน์ <b>To-do / Doing / Done</b> ทุกคนเห็นว่าใครทำอะไร อะไรติด อะไรเสร็จ ในพริบตา'],
+    ['WIP limit (Doing limit)', 'จำกัดจำนวนงานใน Doing เช่นไม่เกิน 2 เพื่อบังคับให้<b>ทำให้เสร็จก่อนเริ่มงานใหม่</b>'],
+    ['ทำไมจำกัดแล้วเร็วขึ้น', 'งานครึ่ง ๆ หลายชิ้น demo/test ไม่ได้ และไม่เพิ่ม velocity · ทำทีละน้อยให้เสร็จ ได้ของที่ใช้งานได้เร็วกว่า และถ้า Doing เต็มเพราะงานติด ทีมจะเห็นปัญหาทันที'],
+    ['Done คืออะไร', 'ในวิชานี้งานจะ Done เมื่อ <b>merge</b> แล้ว ไม่ใช่แค่ "เขียนเสร็จในเครื่อง"'],
+  ],
+  example:{ q:'The Doing column has a limit of 3 and already holds 3 tasks. A developer finishes nothing yet but wants to start a new task. What should they do?',
+    steps:['Doing เต็มตาม limit แล้ว', 'กติกา WIP: ห้ามเริ่มงานใหม่จนกว่างานใน Doing จะเสร็จ', 'ควรช่วยปิดงานที่ค้าง (หรือช่วยคนที่ติด) ก่อน'],
+    ans:'Help finish a task already in Doing before starting a new one.' },
+  traps:[
+    ['เริ่มหลายงานพร้อมกันจะเสร็จเร็วกว่า', 'งานครึ่ง ๆ ไม่ได้เพิ่ม Done · finish before you start'],
+    ['WIP limit มีไว้ให้ Scrum Master คุมทีม', 'มีไว้ให้งาน<b>เสร็จจริง</b> และเห็นงานที่ติด'],
+    ['เขียนโค้ดเสร็จในเครื่อง = Done', 'Done เมื่อ merge แล้ว'],
+  ]},
+p3:{
+  learn:[
+    ['Scrum คืออะไร', 'framework เบา ๆ ที่ทำเป็นรอบ: เรียงงานทั้งหมด (backlog) → เลือกงานมาทำใน sprint → คุยกันทุกวัน → โชว์ผลงาน → คุยว่าจะปรับปรุงอะไร แล้ววนใหม่'],
+    ['3 Roles (ใคร)', '<b>Product Owner</b> ตัดสินว่าทำอะไร ลำดับไหน (ดูแล backlog) · <b>Scrum Master</b> ดูแลให้ process ทำงานได้ (ไม่ใช่หัวหน้า) · <b>Developers</b> สร้างงาน'],
+    ['5 Events (เมื่อไหร่)', '<b>Sprint</b> (กล่องเวลาที่ครอบทุก event) · <b>Sprint Planning</b> เลือกงาน · <b>Daily Scrum</b> 15 นาทีทุกวัน · <b>Sprint Review</b> โชว์ผลงาน · <b>Retrospective</b> ปรับปรุงวิธีทำงาน'],
+    ['3 Artifacts (อะไร)', '<b>Product Backlog</b> งานทั้งหมดเรียงลำดับ · <b>Sprint Backlog</b> งานของ sprint นี้ · <b>Increment</b> ชิ้นงานที่ใช้งานได้จาก sprint'],
+    ['อ่าน burndown', 'แกน y = <b>งานที่เหลือ</b> · เส้น ideal ลดลงเท่า ๆ กันถึง 0 · เส้นจริง<b>อยู่เหนือ</b> ideal = เหลือมากกว่าแผน = <b>ช้า</b> · อยู่ใต้ = เร็วกว่าแผน · เส้นจริงขึ้น = มีงานเพิ่มกลาง sprint'],
+  ],
+  example:{ q:'In a 10-day sprint, on day 8 the ideal line shows 20% left and the actual line shows 10% left. What does this mean?',
+    steps:['แกน y คืองานที่เหลือ', 'จริงเหลือ 10% น้อยกว่า ideal ที่ควรเหลือ 20%', 'เส้นจริงอยู่ใต้ ideal → ทำได้เร็วกว่าแผน (ahead of schedule)'],
+    ans:'The team is ahead of schedule.' },
+  traps:[
+    ['เส้นสูงกว่า = ทำได้มากกว่า', 'burndown แสดงงาน<b>ที่เหลือ</b> สูงกว่า = ช้ากว่า'],
+    ['Sprint Backlog กับ Sprint Review เป็นประเภทเดียวกัน', 'Backlog = artifact (list) · Review = event (ประชุม)'],
+    ['Scrum Master = หัวหน้าที่สั่งงาน', 'ดูแล process ช่วยทีม ไม่ใช่คนสั่งงาน'],
+  ]},
+p4:{
+  learn:[
+    ['Risk คืออะไร', 'สิ่งที่<b>อาจเกิดขึ้น</b>แล้วทำให้โปรเจกต์เสียหาย ยังไม่ได้เกิด (ถ้าเกิดแล้วคือ "ปัญหา") การจัดการความเสี่ยงคือคิดล่วงหน้าว่าจะทำอะไร'],
+    ['4 ขั้น', '<b>Identify</b> ลิสต์ว่าอะไรอาจผิดพลาด → <b>Analyse</b> ประเมินโอกาสเกิด × ผลกระทบ → <b>Plan</b> เลือกวิธีรับมือ → <b>Monitor</b> เช็กใหม่ทุก sprint'],
+    ['3 ประเภท', 'ดูว่ากระทบอะไร: <b>Project</b> = เวลา/คน/ทรัพยากร · <b>Product</b> = คุณภาพ/performance ของซอฟต์แวร์ · <b>Business</b> = เป้าหมายองค์กร/ตลาด (เช่นไม่มีคนต้องการ)'],
+    ['3 วิธีรับมือ', '<b>Avoid</b> = ตัดสิ่งที่เสี่ยงออก · <b>Reduce</b> = ลดโอกาสเกิดหรือลดผลกระทบ · <b>Accept</b> = ยอมรับเพราะผลกระทบต่ำ'],
+    ['ทีมเล็กทำแค่ไหน', 'ไม่ต้องมีเอกสารใหญ่ บอกความเสี่ยงอันดับ 1–2 ออกมาดัง ๆ แล้วตกลงว่าจะทำอะไร เพราะเรื่องที่ไม่คาดคิดทำร้ายทีมเล็กมากที่สุด'],
+  ],
+  example:{ q:'The team relies on one free API that might shut down. They add a backup data source so the app still works if the API fails. Which kind of risk and which response?',
+    steps:['API ล่ม → แอปทำงานไม่ได้ = กระทบตัวซอฟต์แวร์ = product risk', 'ไม่ได้ตัดฟีเจอร์ออก (ไม่ใช่ avoid) และไม่ได้ยอมรับเฉย ๆ (ไม่ใช่ accept)', 'เพิ่มแหล่งสำรองเพื่อลดผลกระทบ = reduce'],
+    ans:'Product risk; response = reduce.' },
+  traps:[
+    ['Analyse = ลิสต์ความเสี่ยง', 'ลิสต์คือ Identify · Analyse คือประเมิน likelihood × impact'],
+    ['ตัดฟีเจอร์ที่เสี่ยงออก = Reduce', 'ตัดออก = <b>Avoid</b>'],
+    ['"ไม่มีใครอยากใช้" = product risk', 'กระทบเป้าหมาย/ตลาด = <b>business</b> risk'],
+  ]},
+p5:{
+  learn:[
+    ['ทำไมต้องมีบทบาท', 'ถ้าไม่มีใครเป็นเจ้าของงาน งานนั้นมักไม่มีใครทำ แต่ละคนรับผิดชอบบางอย่างชัด ๆ (board, repo, quality, demo) และ<b>หมุนเวียน</b>ได้ให้ทุกคนได้เรียนรู้'],
+    ['ความรับผิดชอบรายบุคคล', 'แม้ทำเป็นทีม ผลงานของแต่ละคนต้อง<b>เห็นได้ใน repo</b> (commit, PR, task) เพราะนั่นคือหลักฐาน contribution'],
+    ['Retrospective คืออะไร', 'ประชุมท้าย sprint ประมาณ 15 นาที ถาม 3 ข้อ: <b>Keep</b> อะไรดี ทำต่อ · <b>Drop</b> อะไรไม่ดี · <b>Change</b> จะเปลี่ยนอะไร (เลือก 1 อย่างที่ทำได้จริง)'],
+    ['Blameless หมายถึงอะไร', 'มองว่า<b>กระบวนการ</b>ผิด ไม่ใช่คนผิด เพราะการโทษคนทำให้ทุกคนปิดปัญหา แต่การหาจุดที่ process พังทำให้แก้ได้จริงและไม่เกิดซ้ำ'],
+    ['เขียน retro ที่ดี', 'บอกปัญหาให้เจาะจง (งานใหญ่ไป ไม่มีใครเห็นว่าติด) + ไม่เอ่ยชื่อคนในทางตำหนิ + การเปลี่ยนแปลงหนึ่งอย่างที่วัดได้สำหรับ sprint หน้า'],
+  ],
+  example:{ q:'Which is the best "Change" item for the next retrospective after the team discovered bugs only on demo day?',
+    steps:['Change ต้องเป็นสิ่งที่<b>ทำได้จริงและเจาะจง</b>', '"ตั้งใจทำงานให้ดีขึ้น" กว้างเกินไป · "โทษคนเขียน" ไม่ blameless', 'ตัวเลือกที่ดี: "ทดสอบทุก task ก่อนย้ายเข้า Done" ทำได้จริงและแก้ที่ process'],
+    ans:'"Test each task before it moves to Done" — specific, process-focused, one change.' },
+  traps:[
+    ['retro = หาว่าใครทำพัง', 'blameless: หาว่า<b>กระบวนการ</b>ตรงไหนพัง'],
+    ['ลิสต์สิ่งที่จะเปลี่ยนให้เยอะที่สุด', 'เลือก <b>1</b> อย่างที่ทำได้จริง ดีกว่า 10 ความหวัง'],
+    ['ทำงานเป็นทีมแล้วคะแนนเท่ากันหมด', 'ความรับผิดชอบรายบุคคล ต้องมีหลักฐานใน repo'],
+  ]},
+
+/* ---------------- Ch10 ---------------- */
+e1:{
+  learn:[
+    ['ทำไมต้องมีจรรยาบรรณ', 'ซอฟต์แวร์ควบคุมเงิน สุขภาพ ความเป็นส่วนตัวของคน คนทำซอฟต์แวร์จึงมีโอกาส "ทำดีหรือทำร้าย" ได้มาก code of ethics คือมาตรฐานร่วมที่ทำให้สังคมไว้ใจอาชีพนี้'],
+    ['ที่มา', 'ACM และ IEEE-CS ร่วมกันร่าง (draft ปี 1997) และ<b>อนุมัติ version 5.2 ปี 1999</b> เป็นมาตรฐานสำหรับผู้ปฏิบัติงาน อาจารย์ ผู้จัดการ และ<b>นักศึกษา</b> · ไม่ใช่กฎหมาย'],
+    ['8 principles', '1 <b>Public</b> · 2 Client & employer · 3 Product · 4 Judgment · 5 Management · 6 Profession · 7 Colleagues · 8 Self · จำง่าย: เริ่มจากสาธารณะ แล้วไล่ไปลูกค้า ผลงาน วิจารณญาณตัวเอง หัวหน้า อาชีพ เพื่อนร่วมงาน และตัวเอง'],
+    ['Public มาก่อนเสมอ', 'ถ้านายจ้างสั่งสิ่งที่ทำร้ายสาธารณะ (เช่นปล่อยระบบที่รู้ว่าข้อมูลรั่ว) Principle 1 ชนะ Principle 2 เพราะ "รับใช้นายจ้าง<b>ภายใต้</b>ประโยชน์สาธารณะ"'],
+    ['3 ระดับ', '<b>Aspire</b> ค่านิยมที่อยากเป็น (ซื่อสัตย์ ยุติธรรม) · <b>Expect</b> หน้าที่มืออาชีพ (รับผิดชอบงานตัวเอง) · <b>Demand</b> แนวปฏิบัติที่วัดได้ (อนุมัติเฉพาะซอฟต์แวร์ที่ผ่านเทสต์)'],
+  ],
+  example:{ q:'Your client asks you to skip security testing to meet a launch date, although the system stores citizens\' ID numbers. According to the Code, which principle should guide you first?',
+    steps:['ลูกค้าคือ Principle 2 (Client & employer)', 'แต่ข้อมูลประชาชนเสี่ยงรั่ว = กระทบสาธารณะ', 'Principle 2 ทำได้แค่ภายใต้ประโยชน์สาธารณะ → Principle 1 Public มาก่อน: แจ้งความเสี่ยงและไม่ข้ามการทดสอบ'],
+    ans:'Principle 1 Public: the public interest comes before the client\'s deadline.' },
+  traps:[
+    ['Product เป็นข้อ 1', 'ร่าง 1997 เคยเป็น Product แต่ฉบับ 1999 ให้ <b>Public</b> เป็นข้อ 1'],
+    ['Code of ethics เป็นกฎหมาย', 'ไม่ใช่กฎหมาย เป็นมาตรฐานวิชาชีพ'],
+    ['นักศึกษายังไม่ต้องสนใจ code', 'code ครอบคลุม<b>นักศึกษา</b>ด้วย'],
+  ]},
+e2:{
+  learn:[
+    ['Code ไม่ใช่สูตรสำเร็จ', 'หลักแต่ละข้ออาจขัดกันได้ code จึงไม่ได้ให้คำตอบอัตโนมัติ แต่ให้<b>วิธีคิด</b>และเป็นมาตรฐานที่ทีมชี้ได้เวลาต้องปฏิเสธ'],
+    ['5 คำถามเวลาลังเล', '1) ใครได้รับผลกระทบ (รวมคนที่ไม่ได้ใช้แอป) · 2) เราเคารพทุกคนไหม · 3) ถ้าสาธารณะรู้ข้อเท็จจริงครบ จะยอมรับไหม · 4) คนที่มีอำนาจน้อยที่สุดจะเป็นยังไง · 5) มืออาชีพในอุดมคติจะทำแบบนี้ไหม'],
+    ['จับคู่ principle ยังไง', 'ถามว่า "ใครหรืออะไรถูกทำร้าย": สาธารณะ → 1 · ลูกค้า/นายจ้าง → 2 · คุณภาพงาน → 3 · ความซื่อสัตย์ในการตัดสิน/เซ็นเอกสาร → 4 · หัวหน้าสั่งผิด → 5 · โฆษณาเกินจริง → 6 · เครดิต/ปฏิบัติต่อเพื่อน → 7 · ไม่พัฒนาตัวเอง → 8'],
+    ['ตัวอย่างในวิชานี้', 'เซ็นรายงานเทสต์ที่ไม่ได้รัน → 4 · demo ฟีเจอร์ที่ใช้ไม่ได้จริง → 6 · เอาโมดูลเพื่อนมาอ้างเป็นของตัวเอง → 7 · "AI เขียน" เป็นข้ออ้าง → 1 (รับผิดชอบงานตัวเอง)'],
+  ],
+  example:{ q:'A team lead assigns a junior to a security-critical module the junior has never studied, without support, and tells them not to ask for help. Which principle is most at risk?',
+    steps:['คนที่ทำผิดคือหัวหน้าทีม (คนที่จัดการคน)', 'Principle 5 Management: มอบงานตามความรู้และประสบการณ์ ช่วยให้คนเติบโต และไม่สั่งให้ใครทำผิด code', 'จึงเป็น Management (และกระทบ Product/Public ตามมา)'],
+    ans:'Principle 5 Management.' },
+  traps:[
+    ['หลักข้อไหนก็ใช้อ้างแก้ตัวได้', 'code เตือนว่าห้ามหยิบข้อเดียวมาแก้ตัวความผิด'],
+    ['ทำตามที่หัวหน้าสั่งแล้วไม่ผิด', 'หัวหน้าสั่งผิด code ได้ (Principle 5) และ Public มาก่อน'],
+    ['"เกือบใช้ได้" ก็โชว์ว่าใช้ได้ไปก่อน', 'ผิด Principle 6: ต้องพูดถึงซอฟต์แวร์อย่างถูกต้อง'],
+  ]},
+e3:{
+  learn:[
+    ['4 เรื่องในงานประจำวัน', 'Sommerville §1.2: <b>Confidentiality</b> เก็บความลับของลูกค้า/นายจ้าง · <b>Competence</b> ไม่อ้างความสามารถเกินจริง · <b>IP rights</b> เคารพลิขสิทธิ์/license · <b>Computer misuse</b> ไม่ใช้ทักษะทำร้ายระบบคนอื่น'],
+    ['Confidentiality ในชีวิตจริง', 'แคปหน้าจอระบบภายในของลูกค้าไปถามใน Discord สาธารณะ = ผิด แม้จะไม่ได้เซ็นสัญญาก็ตาม'],
+    ['IP rights ในชีวิตจริง', 'repo บน GitHub ที่<b>ไม่มี license</b> ไม่ได้แปลว่าใช้ฟรี (เจ้าของยังมีลิขสิทธิ์) จะเอาโค้ดมาใช้ต้องดู license ก่อน'],
+    ['Data ethics: can vs should', 'Ch8 สอนว่าป้องกันข้อมูล<b>ยังไง</b> (how) · Ch10 ถามว่า<b>ควรเก็บไหม</b> (whether) · หลัก 3 ข้อ: Minimise · Protect · <b>Be transparent</b> (บอกด้วยภาษาง่าย ๆ ว่าเก็บอะไร ใช้ทำอะไร ก่อนเก็บ)'],
+  ],
+  example:{ q:'A developer copies a clever algorithm from a public GitHub repository that has no licence file into a commercial product. Which everyday issue is this?',
+    steps:['repo ไม่มี license = เจ้าของยังถือลิขสิทธิ์อยู่', 'เอาไปใช้ในงานเชิงพาณิชย์โดยไม่ได้รับอนุญาต', 'เป็นเรื่องทรัพย์สินทางปัญญา = IP rights'],
+    ans:'IP rights.' },
+  traps:[
+    ['public repo = ใช้ฟรีได้หมด', 'ต้องดู license · ไม่มี license = ไม่ได้อนุญาต'],
+    ['ไม่ได้เซ็น NDA ก็แชร์ข้อมูลลูกค้าได้', 'confidentiality ต้องรักษาแม้ไม่มีสัญญา'],
+    ['กฎหมายอนุญาตให้เก็บ = ควรเก็บ', 'can ≠ should · เก็บเท่าที่จำเป็นและโปร่งใส'],
+  ]},
+e4:{
+  learn:[
+    ['Accountability คืออะไร', 'คนที่<b>review และปล่อย</b>งานออกไปต้องรับผิดชอบเสมอ ไม่ว่าโค้ดจะมาจาก AI จาก library หรือจากเพื่อน "AI บอกมา" จึงไม่ใช่ข้ออ้าง'],
+    ['ใช้ AI อย่างรับผิดชอบ', 'คนต้องอ่าน เทสต์ และอนุมัติ (human sign-off) · เปิดเผยว่าใช้ AI ตรงไหน · ระวัง bias/ข้อผิดพลาด · ห้ามใส่ข้อมูลส่วนตัวจริงหรือ secret ลงใน prompt'],
+    ['AI-Use Statement', 'เอกสารที่บอกว่า <b>AI ช่วยตรงไหน · เราตรวจอะไร · เราแก้อะไร</b> ต้องเจาะจงและซื่อสัตย์ · ถ้าไม่มี milestone ถูกจำกัดสูงสุด 50% · การใช้ AI ไม่ใช่ปัญหา การปิดบังต่างหาก'],
+    ['Backdoor คืออะไร', 'ทางเข้าลับที่ข้ามการ login ปกติ อาจมาจาก tool ที่ถูกแก้ (supply-chain attack) หรือจากโค้ดที่ AI เขียน เช่น <code>if password == "dev-2569": return True</code> · เทสต์ปกติมักจับไม่ได้ เพราะเช็กแค่สิ่งที่ควรทำงาน'],
+    ['ป้องกันยังไง', 'ปฏิบัติต่อ AI tools/packages/models เหมือน dependency: ตรวจที่มา (publisher, hash) · ไม่รีบ update เวอร์ชันใหม่ล่าสุด · secret อายุสั้นและสิทธิ์จำกัด · จำกัดสิ่งที่ AI agent ทำได้ · <b>อ่านโค้ดก่อน commit</b>'],
+  ],
+  example:{ q:'Your AI-Use Statement says only "We used ChatGPT." Why is this weak, and what should it say instead?',
+    steps:['บอกแค่ชื่อ tool → ไม่รู้ว่าใช้ทำอะไร', 'statement ที่ดีต้องบอก: AI ช่วยส่วนไหน (เช่นร่าง unit test) · เราตรวจอะไร (รันเทสต์) · เราแก้อะไร (แก้ expected value 2 ข้อ)', 'แบบนี้ถึงจะโปร่งใสและใช้ตอบตอนสอบ oral ได้'],
+    ans:'It is too vague; it should state where AI helped, what you checked, and what you changed.' },
+  traps:[
+    ['tool มาจาก official marketplace = ปลอดภัย 100%', 'trust คือช่องทางโจมตี · ทีมยังต้องรับผิดชอบ'],
+    ['เขียนว่า "no AI used" ปลอดภัยกว่า', 'ถ้าใช้จริงแล้วปิดบัง = ไม่ซื่อสัตย์ ผิดกว่าการใช้'],
+    ['model ที่รันในเครื่อง (local) เชื่อได้เลย', 'local ≠ trusted · ไฟล์ model อาจมีโค้ดแฝง'],
+  ]},
+e5:{
+  learn:[
+    ['นิสัยมืออาชีพ', '<b>Communicate</b> บอกเร็ว รวมถึงตอนติด · <b>Commit</b> รักษาคำพูด หรือเจรจาใหม่แต่เนิ่น ๆ · <b>Feedback</b> วิจารณ์งานไม่ใช่คน · <b>Document</b> README และ commit ที่ชัด'],
+    ['เครื่องมือของทีม', '<b>IDE</b> เขียนโค้ด (มี AI ช่วย) → <b>Git/GitHub</b> เก็บเวอร์ชันและแชร์ → <b>CI</b> รันเทสต์อัตโนมัติ → <b>Deploy</b> ให้ผู้ใช้ลอง'],
+    ['CI คืออะไร', 'Continuous Integration = บริการที่<b>รันเทสต์ทุกครั้งที่ push</b> ถ้ามีคน push โค้ดที่ทำให้เทสต์พัง จะรู้ภายในไม่กี่นาที ก่อนกระทบทั้งทีม'],
+    ['CI ไม่ได้ทำอะไร', 'ไม่ได้<b>เขียน</b>เทสต์ให้ (เราต้องเขียนเอง) · ไม่ได้แทน code review · ไม่ใช่การ deploy ครั้งเดียวตอนจบ'],
+    ['Oral exam ดูอะไร', '4 เกณฑ์: เข้าใจ concept · อธิบายงานตัวเองได้ · ใช้ AI อย่างโปร่งใสและมีวิจารณญาณ · การสื่อสาร · ถ้าอธิบายงานที่อ้างว่าเป็นของตัวเองไม่ได้ = 0 ในข้อนั้น'],
+  ],
+  example:{ q:'A teammate pushes code that breaks three existing tests. Nobody notices until demo day. Which tool would have caught this within minutes?',
+    steps:['ปัญหา: เทสต์พังหลัง push แต่ไม่มีใครรันเทสต์', 'ต้องการบางอย่างที่รันเทสต์อัตโนมัติทุกครั้งที่ push', 'นั่นคือ Continuous Integration (CI)'],
+    ans:'Continuous Integration (CI).' },
+  traps:[
+    ['CI เขียน unit test ให้อัตโนมัติ', 'CI แค่<b>รัน</b>เทสต์ที่เราเขียน'],
+    ['มี CI แล้วไม่ต้อง review', 'CI ไม่แทน code review'],
+    ['บอกว่าติดตอนใกล้ deadline ก็ได้', 'communicate <b>เร็ว</b> ตั้งแต่เริ่มติด'],
+  ]},
+};
+
+for (const L of allLessons()) if (LEARN[L.id]) Object.assign(L, LEARN[L.id]);
 
 /* =========================================================
    ENGINE
@@ -1839,14 +2273,28 @@ function pageLesson(id){
       <div data-tracer></div>
     </div>
 
+    ${L.learn ? `<div class="card">
+      <div class="step-h"><span class="no">03</span><h2>เข้าใจหลักการ</h2><span class="sub" style="margin-left:auto;font-size:13px">คืออะไร → ทำไม → ใช้ยังไง</span></div>
+      <ol class="learn">${L.learn.map(([h, t]) => `<li><b>${h}</b><p>${t}</p></li>`).join('')}</ol>
+      ${L.example ? `<h3 class="lh">🧩 ตัวอย่างคิดทีละขั้น</h3>
+      <div class="wex" data-wex>
+        <p class="wq">${L.example.q}</p>
+        <ol class="wsteps">${L.example.steps.map(x => `<li hidden>${x}</li>`).join('')}</ol>
+        <p class="wans" hidden>✅ <b>Answer:</b> ${L.example.ans}</p>
+        <button class="btn ghost" data-wnext>ลองคิดก่อน แล้วกดดูขั้นที่ 1</button>
+      </div>` : ''}
+      ${L.traps ? `<h3 class="lh">⚠️ จุดที่คนมักพลาด</h3>
+      <div class="traps">${L.traps.map(([w, r]) => `<div class="trap"><div class="tw">❌ ${w}</div><div class="tr">✅ ${r}</div></div>`).join('')}</div>` : ''}
+    </div>` : ''}
+
     <div class="card">
-      <div class="step-h"><span class="no">03</span><h2>สรุปสั้น ๆ</h2></div>
+      <div class="step-h"><span class="no">${L.learn ? '04' : '03'}</span><h2>สรุปสั้น ๆ</h2></div>
       <ul class="key">${L.key.map(k => `<li>${k}</li>`).join('')}</ul>
       <details><summary>ดูละเอียดเพิ่ม</summary>${L.more}</details>
     </div>
 
     <div class="card">
-      <div class="step-h"><span class="no">04</span><h2>ลงมือทำ</h2></div>
+      <div class="step-h"><span class="no">${L.learn ? '05' : '04'}</span><h2>ลงมือทำ</h2></div>
       <p class="sub" style="font-size:14px;margin-bottom:14px">ตอบผิดไม่เป็นไร พี่บอทจะช่วยตามลำดับ: ชี้จุดผิด → ถามให้คิด → เฉลย</p>
       ${L.ex.map(e => `<div class="ex" data-ex="${e.id}"></div>`).join('')}
     </div>
@@ -1856,6 +2304,15 @@ function pageLesson(id){
       ${next ? `<a class="btn" style="text-decoration:none" href="#l/${next.id}">ต่อไป: ${next.title} →</a>` : `<a class="btn" style="text-decoration:none" href="#quiz/${ch.id}">${ic('clipboard-check')} ไปทำ Quiz ${ch.short} →</a>`}
     </div>`;
   mountVideo($('[data-video]'), L);
+  const wx = $('[data-wex]');
+  if (wx) {
+    const items = [...wx.querySelectorAll('.wsteps li')], ansEl = $('.wans', wx), btn = $('[data-wnext]', wx);
+    let k = 0;
+    btn.onclick = () => {
+      if (k < items.length) { items[k].hidden = false; k++; btn.textContent = k < items.length ? `ดูขั้นที่ ${k + 1}` : 'ดูคำตอบ'; }
+      else { ansEl.hidden = false; btn.remove(); }
+    };
+  }
   const tr = L.trace ? mountTracer($('[data-tracer]'), L.trace) : mountScene($('[data-tracer]'), L.scene);
   cleanup = tr.stop;
   for (const e of L.ex) mountItem($(`[data-ex="${e.id}"]`), e, first => record(e.id, first));
