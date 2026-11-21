@@ -196,6 +196,9 @@ h3{font-size:16px;font-weight:500;margin:0 0 4px}
 :root[data-theme="light"] .ac span,:root[data-theme="light"] .g2 td{color:#4d7c0f}
 .scene-stage{border:1px solid var(--line);background:var(--bg-2);border-radius:12px;padding:18px;min-height:220px;display:flex;align-items:center;justify-content:center;overflow-x:auto}
 .scene-in{width:100%;animation:sfade .35s}
+.spyr{display:flex;flex-direction:column;align-items:center;gap:6px}
+.spyr div{text-align:center;border:1px solid var(--line-2);background:var(--card);border-radius:8px;padding:10px;font-size:14px}
+.spyr div.base{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
 @keyframes sfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .srow{display:flex;gap:10px;align-items:stretch;justify-content:center;flex-wrap:wrap}
 .sbox{flex:1 1 140px;max-width:260px;border:1px solid var(--line-2);background:var(--card);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:14px;transition:opacity .2s}
@@ -370,7 +373,7 @@ const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pick = a => a[Math.floor(Math.random()*a.length)];
 /* ---------- ไอคอนเส้น (Lucide, ISC license) ---------- */
-const ICONS = {"boxes": "<path d=\"M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z\" /> <path d=\"m7 16.5-4.74-2.85\" /> <path d=\"m7 16.5 5-3\" /> <path d=\"M7 16.5v5.17\" /> <path d=\"M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z\" /> <path d=\"m17 16.5-5-3\" /> <path d=\"m17 16.5 4.74-2.85\" /> <path d=\"M17 16.5v5.17\" /> <path d=\"M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z\" /> <path d=\"M12 8 7.26 5.15\" /> <path d=\"m12 8 4.74-2.85\" /> <path d=\"M12 13.5V8\" />", "lock": "<rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\" /> <path d=\"M7 11V7a5 5 0 0 1 10 0v4\" />", "landmark": "<line x1=\"3\" x2=\"21\" y1=\"22\" y2=\"22\" /> <line x1=\"6\" x2=\"6\" y1=\"18\" y2=\"11\" /> <line x1=\"10\" x2=\"10\" y1=\"18\" y2=\"11\" /> <line x1=\"14\" x2=\"14\" y1=\"18\" y2=\"11\" /> <line x1=\"18\" x2=\"18\" y1=\"18\" y2=\"11\" /> <polygon points=\"12 2 20 7 4 7\" />", "zap": "<path d=\"M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z\" />", "car": "<path d=\"M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2\" /> <circle cx=\"7\" cy=\"17\" r=\"2\" /> <path d=\"M9 17h6\" /> <circle cx=\"17\" cy=\"17\" r=\"2\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "bot": "<path d=\"M12 8V4H8\" /> <rect width=\"16\" height=\"12\" x=\"4\" y=\"8\" rx=\"2\" /> <path d=\"M2 14h2\" /> <path d=\"M20 14h2\" /> <path d=\"M15 13v2\" /> <path d=\"M9 13v2\" />", "play": "<polygon points=\"6 3 20 12 6 21 6 3\" />", "pause": "<rect x=\"14\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\" /> <rect x=\"6\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\" />", "skip-back": "<polygon points=\"19 20 9 12 19 4 19 20\" /> <line x1=\"5\" x2=\"5\" y1=\"19\" y2=\"5\" />", "chevron-left": "<path d=\"m15 18-6-6 6-6\" />", "skip-forward": "<polygon points=\"5 4 15 12 5 20 5 4\" /> <line x1=\"19\" x2=\"19\" y1=\"5\" y2=\"19\" />", "volume-2": "<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\" /> <path d=\"M16 9a5 5 0 0 1 0 6\" /> <path d=\"M19.364 18.364a9 9 0 0 0 0-12.728\" />", "volume-x": "<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\" /> <line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\" /> <line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\" />", "moon": "<path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\" />", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\" /> <path d=\"M12 2v2\" /> <path d=\"M12 20v2\" /> <path d=\"m4.93 4.93 1.41 1.41\" /> <path d=\"m17.66 17.66 1.41 1.41\" /> <path d=\"M2 12h2\" /> <path d=\"M20 12h2\" /> <path d=\"m6.34 17.66-1.41 1.41\" /> <path d=\"m19.07 4.93-1.41 1.41\" />", "house": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "target": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <circle cx=\"12\" cy=\"12\" r=\"6\" /> <circle cx=\"12\" cy=\"12\" r=\"2\" />", "rotate-ccw": "<path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\" /> <path d=\"M3 3v5h5\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <polyline points=\"12 6 12 12 16 14\" />", "graduation-cap": "<path d=\"M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z\" /> <path d=\"M22 10v6\" /> <path d=\"M6 12.5V16a6 3 0 0 0 12 0v-3.5\" />", "clipboard-check": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "archive": "<rect width=\"20\" height=\"5\" x=\"2\" y=\"3\" rx=\"1\" /> <path d=\"M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8\" /> <path d=\"M10 12h4\" />", "scan-barcode": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <path d=\"M8 7v10\" /> <path d=\"M12 7v10\" /> <path d=\"M17 7v10\" />", "utensils": "<path d=\"M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2\" /> <path d=\"M7 2v20\" /> <path d=\"M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7\" />", "egg": "<path d=\"M12 22c6.23-.05 7.87-5.57 7.5-10-.36-4.34-3.95-9.96-7.5-10-3.55.04-7.14 5.66-7.5 10-.37 4.43 1.27 9.95 7.5 10z\" />", "grid-3x3": "<rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\" /> <path d=\"M3 9h18\" /> <path d=\"M3 15h18\" /> <path d=\"M9 3v18\" /> <path d=\"M15 3v18\" />", "chef-hat": "<path d=\"M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z\" /> <path d=\"M6 17h12\" />", "coins": "<circle cx=\"8\" cy=\"8\" r=\"6\" /> <path d=\"M18.09 10.37A6 6 0 1 1 10.34 18\" /> <path d=\"M7 6h1v4\" /> <path d=\"m16.71 13.88.7.71-2.82 2.82\" />", "corner-down-left": "<polyline points=\"9 10 4 15 9 20\" /> <path d=\"M20 4v7a4 4 0 0 1-4 4H4\" />", "calculator": "<rect width=\"16\" height=\"20\" x=\"4\" y=\"2\" rx=\"2\" /> <line x1=\"8\" x2=\"16\" y1=\"6\" y2=\"6\" /> <line x1=\"16\" x2=\"16\" y1=\"14\" y2=\"18\" /> <path d=\"M16 10h.01\" /> <path d=\"M12 10h.01\" /> <path d=\"M8 10h.01\" /> <path d=\"M12 14h.01\" /> <path d=\"M8 14h.01\" /> <path d=\"M12 18h.01\" /> <path d=\"M8 18h.01\" />", "repeat": "<path d=\"m17 2 4 4-4 4\" /> <path d=\"M3 11v-1a4 4 0 0 1 4-4h14\" /> <path d=\"m7 22-4-4 4-4\" /> <path d=\"M21 13v1a4 4 0 0 1-4 4H3\" />", "refresh-cw": "<path d=\"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8\" /> <path d=\"M21 3v5h-5\" /> <path d=\"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16\" /> <path d=\"M8 16H3v5\" />", "fast-forward": "<polygon points=\"13 19 22 12 13 5 13 19\" /> <polygon points=\"2 19 11 12 2 5 2 19\" />", "layers": "<path d=\"m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z\" /> <path d=\"m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65\" /> <path d=\"m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />", "search-check": "<path d=\"m8 11 2 2 4-4\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" /> <path d=\"m21 21-4.3-4.3\" />", "shield-check": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"m9 12 2 2 4-4\" />", "key-round": "<path d=\"M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z\" /> <circle cx=\"16.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\" />", "fingerprint": "<path d=\"M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4\" /> <path d=\"M14 13.12c0 2.38 0 6.38-1 8.88\" /> <path d=\"M17.29 21.02c.12-.6.43-2.3.5-3.02\" /> <path d=\"M2 12a10 10 0 0 1 18-6\" /> <path d=\"M2 16h.01\" /> <path d=\"M21.8 16c.2-2 .131-5.354 0-6\" /> <path d=\"M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2\" /> <path d=\"M8.65 22c.21-.66.45-1.32.57-2\" /> <path d=\"M9 6.8a6 6 0 0 1 9 5.2v2\" />", "list-checks": "<path d=\"m3 17 2 2 4-4\" /> <path d=\"m3 7 2 2 4-4\" /> <path d=\"M13 6h8\" /> <path d=\"M13 12h8\" /> <path d=\"M13 18h8\" />", "kanban": "<path d=\"M6 5v11\" /> <path d=\"M12 5v6\" /> <path d=\"M18 5v14\" />", "chart-line": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"m19 9-5 5-4-4-3 3\" />", "triangle-alert": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "users": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <path d=\"M16 3.13a4 4 0 0 1 0 7.75\" />", "scale": "<path d=\"m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z\" /> <path d=\"m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z\" /> <path d=\"M7 21h10\" /> <path d=\"M12 3v18\" /> <path d=\"M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2\" />", "messages-square": "<path d=\"M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z\" /> <path d=\"M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1\" />", "eye-off": "<path d=\"M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49\" /> <path d=\"M14.084 14.158a3 3 0 0 1-4.242-4.242\" /> <path d=\"M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143\" /> <path d=\"m2 2 20 20\" />", "git-branch": "<line x1=\"6\" x2=\"6\" y1=\"3\" y2=\"15\" /> <circle cx=\"18\" cy=\"6\" r=\"3\" /> <circle cx=\"6\" cy=\"18\" r=\"3\" /> <path d=\"M18 9a9 9 0 0 1-9 9\" />", "external-link": "<path d=\"M15 3h6v6\" /> <path d=\"M10 14 21 3\" /> <path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\" />"};
+const ICONS = {"boxes": "<path d=\"M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z\" /> <path d=\"m7 16.5-4.74-2.85\" /> <path d=\"m7 16.5 5-3\" /> <path d=\"M7 16.5v5.17\" /> <path d=\"M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z\" /> <path d=\"m17 16.5-5-3\" /> <path d=\"m17 16.5 4.74-2.85\" /> <path d=\"M17 16.5v5.17\" /> <path d=\"M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z\" /> <path d=\"M12 8 7.26 5.15\" /> <path d=\"m12 8 4.74-2.85\" /> <path d=\"M12 13.5V8\" />", "lock": "<rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\" /> <path d=\"M7 11V7a5 5 0 0 1 10 0v4\" />", "landmark": "<line x1=\"3\" x2=\"21\" y1=\"22\" y2=\"22\" /> <line x1=\"6\" x2=\"6\" y1=\"18\" y2=\"11\" /> <line x1=\"10\" x2=\"10\" y1=\"18\" y2=\"11\" /> <line x1=\"14\" x2=\"14\" y1=\"18\" y2=\"11\" /> <line x1=\"18\" x2=\"18\" y1=\"18\" y2=\"11\" /> <polygon points=\"12 2 20 7 4 7\" />", "zap": "<path d=\"M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z\" />", "car": "<path d=\"M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2\" /> <circle cx=\"7\" cy=\"17\" r=\"2\" /> <path d=\"M9 17h6\" /> <circle cx=\"17\" cy=\"17\" r=\"2\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "bot": "<path d=\"M12 8V4H8\" /> <rect width=\"16\" height=\"12\" x=\"4\" y=\"8\" rx=\"2\" /> <path d=\"M2 14h2\" /> <path d=\"M20 14h2\" /> <path d=\"M15 13v2\" /> <path d=\"M9 13v2\" />", "play": "<polygon points=\"6 3 20 12 6 21 6 3\" />", "pause": "<rect x=\"14\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\" /> <rect x=\"6\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\" />", "skip-back": "<polygon points=\"19 20 9 12 19 4 19 20\" /> <line x1=\"5\" x2=\"5\" y1=\"19\" y2=\"5\" />", "chevron-left": "<path d=\"m15 18-6-6 6-6\" />", "skip-forward": "<polygon points=\"5 4 15 12 5 20 5 4\" /> <line x1=\"19\" x2=\"19\" y1=\"5\" y2=\"19\" />", "volume-2": "<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\" /> <path d=\"M16 9a5 5 0 0 1 0 6\" /> <path d=\"M19.364 18.364a9 9 0 0 0 0-12.728\" />", "volume-x": "<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\" /> <line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\" /> <line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\" />", "moon": "<path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\" />", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\" /> <path d=\"M12 2v2\" /> <path d=\"M12 20v2\" /> <path d=\"m4.93 4.93 1.41 1.41\" /> <path d=\"m17.66 17.66 1.41 1.41\" /> <path d=\"M2 12h2\" /> <path d=\"M20 12h2\" /> <path d=\"m6.34 17.66-1.41 1.41\" /> <path d=\"m19.07 4.93-1.41 1.41\" />", "house": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "target": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <circle cx=\"12\" cy=\"12\" r=\"6\" /> <circle cx=\"12\" cy=\"12\" r=\"2\" />", "rotate-ccw": "<path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\" /> <path d=\"M3 3v5h5\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <polyline points=\"12 6 12 12 16 14\" />", "graduation-cap": "<path d=\"M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z\" /> <path d=\"M22 10v6\" /> <path d=\"M6 12.5V16a6 3 0 0 0 12 0v-3.5\" />", "clipboard-check": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "archive": "<rect width=\"20\" height=\"5\" x=\"2\" y=\"3\" rx=\"1\" /> <path d=\"M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8\" /> <path d=\"M10 12h4\" />", "scan-barcode": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <path d=\"M8 7v10\" /> <path d=\"M12 7v10\" /> <path d=\"M17 7v10\" />", "utensils": "<path d=\"M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2\" /> <path d=\"M7 2v20\" /> <path d=\"M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7\" />", "egg": "<path d=\"M12 22c6.23-.05 7.87-5.57 7.5-10-.36-4.34-3.95-9.96-7.5-10-3.55.04-7.14 5.66-7.5 10-.37 4.43 1.27 9.95 7.5 10z\" />", "grid-3x3": "<rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\" /> <path d=\"M3 9h18\" /> <path d=\"M3 15h18\" /> <path d=\"M9 3v18\" /> <path d=\"M15 3v18\" />", "chef-hat": "<path d=\"M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z\" /> <path d=\"M6 17h12\" />", "coins": "<circle cx=\"8\" cy=\"8\" r=\"6\" /> <path d=\"M18.09 10.37A6 6 0 1 1 10.34 18\" /> <path d=\"M7 6h1v4\" /> <path d=\"m16.71 13.88.7.71-2.82 2.82\" />", "corner-down-left": "<polyline points=\"9 10 4 15 9 20\" /> <path d=\"M20 4v7a4 4 0 0 1-4 4H4\" />", "calculator": "<rect width=\"16\" height=\"20\" x=\"4\" y=\"2\" rx=\"2\" /> <line x1=\"8\" x2=\"16\" y1=\"6\" y2=\"6\" /> <line x1=\"16\" x2=\"16\" y1=\"14\" y2=\"18\" /> <path d=\"M16 10h.01\" /> <path d=\"M12 10h.01\" /> <path d=\"M8 10h.01\" /> <path d=\"M12 14h.01\" /> <path d=\"M8 14h.01\" /> <path d=\"M12 18h.01\" /> <path d=\"M8 18h.01\" />", "repeat": "<path d=\"m17 2 4 4-4 4\" /> <path d=\"M3 11v-1a4 4 0 0 1 4-4h14\" /> <path d=\"m7 22-4-4 4-4\" /> <path d=\"M21 13v1a4 4 0 0 1-4 4H3\" />", "refresh-cw": "<path d=\"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8\" /> <path d=\"M21 3v5h-5\" /> <path d=\"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16\" /> <path d=\"M8 16H3v5\" />", "fast-forward": "<polygon points=\"13 19 22 12 13 5 13 19\" /> <polygon points=\"2 19 11 12 2 5 2 19\" />", "layers": "<path d=\"m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z\" /> <path d=\"m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65\" /> <path d=\"m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />", "search-check": "<path d=\"m8 11 2 2 4-4\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" /> <path d=\"m21 21-4.3-4.3\" />", "shield-check": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"m9 12 2 2 4-4\" />", "key-round": "<path d=\"M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z\" /> <circle cx=\"16.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\" />", "fingerprint": "<path d=\"M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4\" /> <path d=\"M14 13.12c0 2.38 0 6.38-1 8.88\" /> <path d=\"M17.29 21.02c.12-.6.43-2.3.5-3.02\" /> <path d=\"M2 12a10 10 0 0 1 18-6\" /> <path d=\"M2 16h.01\" /> <path d=\"M21.8 16c.2-2 .131-5.354 0-6\" /> <path d=\"M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2\" /> <path d=\"M8.65 22c.21-.66.45-1.32.57-2\" /> <path d=\"M9 6.8a6 6 0 0 1 9 5.2v2\" />", "list-checks": "<path d=\"m3 17 2 2 4-4\" /> <path d=\"m3 7 2 2 4-4\" /> <path d=\"M13 6h8\" /> <path d=\"M13 12h8\" /> <path d=\"M13 18h8\" />", "kanban": "<path d=\"M6 5v11\" /> <path d=\"M12 5v6\" /> <path d=\"M18 5v14\" />", "chart-line": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"m19 9-5 5-4-4-3 3\" />", "triangle-alert": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "users": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <path d=\"M16 3.13a4 4 0 0 1 0 7.75\" />", "scale": "<path d=\"m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z\" /> <path d=\"m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z\" /> <path d=\"M7 21h10\" /> <path d=\"M12 3v18\" /> <path d=\"M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2\" />", "messages-square": "<path d=\"M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z\" /> <path d=\"M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1\" />", "eye-off": "<path d=\"M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49\" /> <path d=\"M14.084 14.158a3 3 0 0 1-4.242-4.242\" /> <path d=\"M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143\" /> <path d=\"m2 2 20 20\" />", "git-branch": "<line x1=\"6\" x2=\"6\" y1=\"3\" y2=\"15\" /> <circle cx=\"18\" cy=\"6\" r=\"3\" /> <circle cx=\"6\" cy=\"18\" r=\"3\" /> <path d=\"M18 9a9 9 0 0 1-9 9\" />", "external-link": "<path d=\"M15 3h6v6\" /> <path d=\"M10 14 21 3\" /> <path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\" />", "code-xml": "<path d=\"m18 16 4-4-4-4\" /> <path d=\"m6 8-4 4 4 4\" /> <path d=\"m14.5 4-5 16\" />", "git-commit-horizontal": "<circle cx=\"12\" cy=\"12\" r=\"3\" /> <line x1=\"3\" x2=\"9\" y1=\"12\" y2=\"12\" /> <line x1=\"15\" x2=\"21\" y1=\"12\" y2=\"12\" />", "git-merge": "<circle cx=\"18\" cy=\"18\" r=\"3\" /> <circle cx=\"6\" cy=\"6\" r=\"3\" /> <path d=\"M6 21V9a9 9 0 0 0 9 9\" />", "git-pull-request": "<circle cx=\"18\" cy=\"18\" r=\"3\" /> <circle cx=\"6\" cy=\"6\" r=\"3\" /> <path d=\"M13 6h3a2 2 0 0 1 2 2v7\" /> <line x1=\"6\" x2=\"6\" y1=\"9\" y2=\"21\" />", "sparkles": "<path d=\"M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z\" /> <path d=\"M20 3v4\" /> <path d=\"M22 5h-4\" /> <path d=\"M4 17v2\" /> <path d=\"M5 18H3\" />", "circle-check-big": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "flask-conical": "<path d=\"M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2\" /> <path d=\"M8.5 2h7\" /> <path d=\"M7 16h10\" />", "smile": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 14s1.5 2 4 2 4-2 4-2\" /> <line x1=\"9\" x2=\"9.01\" y1=\"9\" y2=\"9\" /> <line x1=\"15\" x2=\"15.01\" y1=\"9\" y2=\"9\" />"};
 const ic = (n, cls='') => `<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
 const BOT_AVA = `<div class="ava">${ic('bot')}</div>`;
 const lines = s => s.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
@@ -966,7 +969,389 @@ SE10.lessons.push({
   ]
 });
 
-const CHAPTERS = [SE8, SE9, SE10];
+/* =================== Ch6 Construction & Version Control =================== */
+const SE6 = { id:'se6', title:'Ch6 · Construction & Git', short:'Ch6', lessons: [] };
+const SE7 = { id:'se7', title:'Ch7 · Testing', short:'Ch7', lessons: [] };
+const pre = c => `<pre class="code">${c}</pre>`;
+
+SE6.lessons.push({
+  id:'g1', icon:'code-xml', title:'Construction Fundamentals', sub:'โค้ดอ่านง่าย > โค้ดฉลาด',
+  analogy:{ title:'โค้ด = จดหมายถึงตัวเองในอนาคต', text:'คนที่จะมาอ่านโค้ดนี้อีกที มักเป็น<b>ตัวเราเอง</b>ในอีก 3 เดือน · เขียนให้อ่านง่าย ชื่อบอกความหมาย ฟังก์ชันทำอย่างเดียว ดีกว่าเขียนบรรทัดเดียวเท่ ๆ ที่ไม่มีใครอ่านออก' },
+  yt:'clean code readable naming',
+  video:{ th:[], en:[{ id:'PDYmEtBSn60', title:'What is Cyclomatic Complexity?' }] },
+  scene:{ steps:[
+    { say:'SWEBOK บอกว่า construction ไม่ใช่แค่พิมพ์โค้ด แต่รวม detailed design, unit test, debug, review · และมี <b>5 fundamentals</b>', html: row(box('1 Minimize complexity', 'ข้อที่สำคัญที่สุด', 'hot'), box('2 Anticipate change', 'ให้แก้ครั้งหน้าง่าย'), box('3 Construct for verification', 'ให้หาบั๊กง่าย'), box('4 Reuse assets', 'ใช้ library ที่เชื่อถือได้'), box('5 Apply standards', 'สไตล์เดียวกันทั้งทีม')) },
+    { say:'❌ แบบ "ฉลาด": บรรทัดเดียว ชื่อลึกลับ ทำ 3 อย่าง บั๊กซ่อนอยู่ก็มองไม่เห็น', html: pre(`def a(t, l): return [x for x in l
+    if (x['d'] - now()).days <= 1 and not x['c']]`) + note('ชื่อ a, t, l, x[\'d\'] ไม่บอกอะไรเลย', 'warn') },
+    { say:'✅ แบบอ่านง่าย: ชื่อบอกความหมาย ฟังก์ชันทำงานเดียว อ่านแล้วรู้ว่าตรงกับ FR-3', html: pre(`def tasks_due_soon(tasks):
+    # due within 1 day and not done (FR-3)
+    soon = []
+    for task in tasks:
+        days_left = (task.due_date - today()).days
+        if days_left <= 1 and not task.done:
+            soon.append(task)
+    return soon`) },
+    { say:'ทุก if และ loop เพิ่ม "เส้นทาง" ในฟังก์ชัน · <b>Cyclomatic complexity</b> (McCabe 1976) คือการนับเส้นทางพวกนี้ ยิ่งเยอะยิ่งทดสอบยาก บั๊กซ่อนง่าย', html: row(box('1 route', 'ทดสอบ 1 แบบ', 'good'), arrow(), box('+ if', '2 routes'), arrow(), box('+ if + loop', 'หลาย routes = เทสต์เยอะ', 'hot')) + note('กฎ: ลด branch · ฟังก์ชันเล็ก · ชื่อชัด · <b>one function does one thing</b>') },
+    { say:'การตั้งชื่อใน Python และกฎความยาวชื่อ', html: `<table class="stbl"><tr><th>ประเภท</th><th>สไตล์</th><th>ตัวอย่าง</th></tr>
+      <tr><td>Variable / function</td><td><b>snake_case</b></td><td><code>due_date</code>, <code>add_task()</code></td></tr>
+      <tr><td>Class</td><td><b>PascalCase</b></td><td><code>TaskRepository</code></td></tr>
+      <tr><td>Constant</td><td><b>UPPER_SNAKE</b></td><td><code>MAX_TASKS</code></td></tr>
+      <tr><td>Boolean</td><td>อ่านเป็น yes/no</td><td><code>is_overdue</code> (ไม่ใช่ <code>flag</code>)</td></tr></table>` + note('ชื่อยาวพอดี ~10–16 ตัวอักษร · i, j, k ใช้ได้ใน loop สั้น ๆ · ต้องเขียน comment อธิบายชื่อ = ชื่อยังไม่ดี') },
+  ]},
+  key:[
+    'Construction (SWEBOK) = coding + debugging + detailed design + unit test + integration',
+    '5 fundamentals: <b>Minimize complexity</b> (สำคัญสุด) · Anticipate change · Construct for verification · Reuse assets · Apply standards',
+    '<b>Cyclomatic complexity</b> = จำนวนเส้นทางในโค้ด · ยิ่งมาก ยิ่งเทสต์ยาก',
+    'ชื่อ: snake_case (ตัวแปร/ฟังก์ชัน) · PascalCase (class) · UPPER_SNAKE (ค่าคงที่) · boolean แบบ is_…',
+    'Comment บอก <b>why</b> ไม่ใช่ what · ลบ dead code · ห้าม copy-paste ซ้ำ 5 ที่ → ทำเป็นฟังก์ชัน',
+  ],
+  more:`<p><b>Construct for verification</b> = เขียนให้หาบั๊กง่าย: ฟังก์ชันเล็กที่รับ input คืน output (unit test ง่าย) · ใช้มาตรฐานเดียวกัน · มี log บอกว่าโปรแกรมทำอะไร</p><p>โค้ดคือคำอธิบายที่แม่นที่สุดของระบบ (diagram มักล้าสมัย)</p>`,
+  ex:[
+    { id:'g1a', type:'mcq', lv:1, q:'Which construction fundamental is described as "the one to remember" and drives almost every other rule?', opts:['Reuse assets.','Minimize complexity.','Apply standards.','Anticipate change.'], ans:1,
+      ask:'คนต้องอ่านโค้ดทีหลัง — หลักไหนเกี่ยวกับ "อ่านง่าย"?', why:'Minimize complexity: โค้ดง่ายอ่านง่าย ดีกว่าโค้ดฉลาด' },
+    { id:'g1b', type:'mcq', lv:1, q:'In Python conventions, how should a <b>class</b> be named?', opts:['task_repository','TaskRepository','TASK_REPOSITORY','taskrepository'], ans:1,
+      ask:'class ใช้สไตล์ไหน: snake_case / PascalCase / UPPER_SNAKE?', why:'class = PascalCase · ตัวแปร/ฟังก์ชัน = snake_case · ค่าคงที่ = UPPER_SNAKE' },
+    { id:'g1c', type:'mcq', lv:2, q:'A function has many nested <code>if</code> statements and loops. Why is this a problem according to cyclomatic complexity?', opts:['It makes the program run slower.','More routes mean more places for bugs to hide and more cases to test.','Python does not allow nested ifs.','It uses more memory.'], ans:1,
+      ask:'ทุก if/loop เพิ่มอะไรในฟังก์ชัน?', why:'แต่ละ branch เพิ่มเส้นทาง → ทดสอบยากขึ้นและบั๊กซ่อนง่ายขึ้น' },
+    { id:'g1d', type:'classify', lv:2, q:'Good name or bad name?', cats:['Good name','Bad name'],
+      rows:[['is_overdue (a boolean)', 0],['tmp2', 1],['days_until_due()', 0],['flag', 1],['MAX_TASKS (a constant)', 0]],
+      ask:'ชื่อนี้บอกได้มั้ยว่าเก็บอะไร โดยไม่ต้องมี comment?', why:'is_overdue, days_until_due(), MAX_TASKS บอกความหมาย · tmp2, flag ไม่บอกอะไร' },
+    { id:'g1e', type:'mcq', lv:2, q:'The same 6-line block is copy-pasted in 5 places. What is the best action?', opts:['Add a comment above each copy.','Move it into one function and call it.','Leave it; duplication is faster.','Put it in a separate file without changes.'], ans:1,
+      ask:'ถ้ามีบั๊กในบล็อกนั้น ต้องแก้กี่ที่?', why:'duplication = แก้บั๊กเดียว 5 ที่ → ทำเป็นฟังก์ชัน' },
+  ]
+});
+
+SE6.lessons.push({
+  id:'g2', icon:'git-commit-horizontal', title:'Git: Commit Loop', sub:'Edit → Stage → Commit → Push',
+  analogy:{ title:'Commit = ปิดกล่องพัสดุแล้วติดฉลาก', text:'<code>git add</code> = ใส่ของลงกล่อง · <code>git commit</code> = ปิดกล่อง + เขียนฉลากว่า<b>ทำไม</b> · <code>git push</code> = ส่งกล่องให้ทีมบน GitHub · กล่องเล็ก ส่งบ่อย' },
+  yt:'git explained',
+  video:{ th:[{ id:'5TlGWHU_SQc', title:'สอนใช้งาน Git คลิปเดียวจบ (BorntoDev)' },{ id:'X3bQzBhRMKQ', title:'Git & GitHub สำหรับผู้เริ่มต้น (KongRuksiam)' }], en:[{ id:'hwP7WQkmECE', title:'Git in 100 Seconds (Fireship)' },{ id:'e9lnsKot_SQ', title:'How Git Works (ByteByteGo)' }] },
+  scene:{ steps:[
+    { say:'ปัญหาที่ version control แก้', html: row(box('📄 report_final_v2_FINAL_really.docx', 'อันไหนตัวจริง?'), box('😡 "เซฟทับงานฉัน!"', 'แก้ไฟล์เดียวกัน'), box('🐛 "เมื่อวานยังได้อยู่…"', 'อะไรเปลี่ยน ใครเปลี่ยน')) + note('Git = ปุ่ม save ของประวัติทั้งโปรเจกต์ · ทีมจริงขาดไม่ได้') },
+    { say:'วงจรที่ทำซ้ำทั้งเทอม: แก้ไฟล์ → <b>add</b> (staging) → <b>commit</b> (snapshot) → <b>push</b> (ส่งขึ้น GitHub)', html: row(box('Working files', 'แก้โค้ด'), arrow('git add'), box('Staging', 'ของที่จะเข้ากล่องถัดไป'), arrow('git commit'), box('History', 'snapshot + ข้อความ'), arrow('git push'), box('GitHub', 'แชร์ให้ทีม', 'hot')) },
+    { say:'แต่ละ commit ตอบได้ว่าเปลี่ยนอะไร ใคร เมื่อไหร่ และจากข้อความ <b>ทำไม</b>', html: pre(`$ git log --oneline
+a1b2c3d feat: add task with due date (FR-1)    ← Priya · 2h ago
+9f8e7d6 fix: reject empty task title (FR-1)    ← Nan · yesterday
+4c5b6a7 feat: mark task done (FR-2)            ← Aran · yesterday`) + note('ทุกไฟล์ที่ track เรียกว่า <b>configuration item</b>') },
+    { say:'commit ที่ดี: <b>เล็ก เปลี่ยนเรื่องเดียว และบอกว่าทำไม</b> พร้อมอ้าง FR · commit ที่แย่: "stuff", "fixed it", แก้ 200 ไฟล์ในทีเดียว', html: row(box('✅ feat: add task with due date (FR-1)', '1 logical change + FR', 'good'), box('❌ "fixed it" · "asdf" · "update (200 files)"', 'ไม่บอกอะไร รวมทุกอย่าง', 'hot')) },
+  ]},
+  key:[
+    'Loop: <b>edit → git add (stage) → git commit (snapshot + message) → git push</b>',
+    'commit ที่ดี = <b>เล็ก · หนึ่งเรื่อง · บอกว่าทำไม</b> · ในวิชานี้อ้าง FR: <code>feat: … (FR-1)</code>',
+    '<code>git status</code> ดูว่าแก้อะไร · <code>git log --oneline</code> ดูประวัติ',
+    'ตั้งชื่อครั้งแรก: <code>git config --global user.name</code> เพื่อให้ commit เป็นชื่อเรา',
+  ],
+  more:`<p>Cheat sheet: <code>git init</code> · <code>git remote add origin &lt;url&gt;</code> · สร้าง <code>.gitignore</code> ก่อน · <code>git status</code> · <code>git add &lt;file&gt;</code> · <code>git commit -m "feat: … (FR-1)"</code> · <code>git push</code> · <code>git pull</code></p>`,
+  ex:[
+    { id:'g2a', type:'mcq', lv:1, q:'Which commit message follows the course\'s good-commit rule?', opts:['"fixed it"','"update (200 files changed)"','"feat: add task with due date (FR-1)"','"asdf"'], ans:2,
+      ask:'ข้อความไหนบอกว่าทำอะไร และโยงกับ FR?', why:'บอก type + สิ่งที่ทำ + FR ที่ส่งมอบ' },
+    { id:'g2b', type:'mcq', lv:1, q:'What does <code>git add tasks.py</code> do?', opts:['Uploads tasks.py to GitHub.','Puts the changes in tasks.py into the staging area for the next commit.','Deletes tasks.py from history.','Creates a new branch called tasks.py.'], ans:1,
+      ask:'add = ใส่ของลงกล่อง ยังไม่ได้ปิดกล่องหรือส่ง', why:'git add = stage การเปลี่ยนแปลงเพื่อ commit ถัดไป · push คือส่งขึ้น GitHub' },
+    { id:'g2c', type:'mcq', lv:2, q:'A student commits all work for two weeks in one commit: "update". Why is this a problem?', opts:['Git cannot store large commits.','Reviewers and future-you cannot tell what changed or why, and it is hard to undo one part.','It uses too much disk space.','GitHub rejects commits older than one week.'], ans:1,
+      ask:'ถ้าอยากย้อนเฉพาะฟีเจอร์เดียวจะทำได้มั้ย?', why:'commit ใหญ่ ข้อความว่างเปล่า → ไม่รู้ว่าเปลี่ยนอะไร ทำไม และย้อนบางส่วนยาก' },
+    { id:'g2d', type:'mcq', lv:2, q:'Put the core loop in order.', opts:['commit → add → push → edit','edit → add → commit → push','push → edit → commit → add','edit → push → add → commit'], ans:1,
+      ask:'แก้ → ใส่กล่อง → ปิดกล่อง → ส่ง', why:'edit → git add → git commit → git push' },
+  ]
+});
+
+SE6.lessons.push({
+  id:'g3', icon:'git-merge', title:'Branch & Merge Conflict', sub:'ทำงานคู่ขนานโดยไม่พัง main',
+  analogy:{ title:'Branch = "Save As" ทั้งโปรเจกต์', text:'ทดลองในสำเนาได้เต็มที่ ถ้าใช้ได้ค่อย merge กลับ ถ้าไม่ได้ก็ทิ้ง main ไม่โดนแตะ · <b>Merge conflict</b> = สองคนแก้ประโยคเดียวกันในเอกสาร Git ไม่เดา แต่ถามเราว่าจะเอาแบบไหน' },
+  yt:'git branch merge conflict',
+  video:{ th:[{ id:'5TlGWHU_SQc', title:'สอนใช้งาน Git (BorntoDev)' }], en:[{ id:'DloR0BOGNU0', title:'Never fear merge conflicts again' }] },
+  scene:{ steps:[
+    { say:'แตก branch ออกจาก main ไปทำฟีเจอร์ commit ได้อิสระ main ยังเสถียรสำหรับทุกคน', html: pre(`main           ●───●─────────────●   ← merge กลับเมื่อเสร็จ + review แล้ว
+                    \\           /
+feat/add-task        ●───●───●       ← ทำงานตรงนี้`) + row(box('Branch', 'git branch feat/add-task'), box('Commit', 'ทำบน branch'), box('Merge', 'เข้า main หลัง review')) },
+    { say:'ถ้าสองคน<b>แก้บรรทัดเดียวกัน</b> Git จะหยุดแล้วบอกว่าชนกันตรงไหน = merge conflict เป็นเรื่องปกติ', html: pre(`<<<<<<< HEAD              # เวอร์ชันของเรา
+max_tasks = 50
+=======
+max_tasks = 100           # เวอร์ชันของเพื่อน
+>>>>>>> feat/limits       # อีก branch`) },
+    { say:'วิธีแก้: เปิดไฟล์ เลือกหรือรวมโค้ดที่ถูก <b>ลบเครื่องหมาย &lt;&lt;&lt; === &gt;&gt;&gt;</b> แล้ว commit การแก้นั้น', html: pre(`max_tasks = 100           # ทีมตกลงใช้ค่านี้`) + note('✅ อ่าน → เลือก/รวม → ลบ marker → commit', 'good') },
+    { say:'⚠️ ห้าม "แก้" ด้วย <code>git push --force</code> เพราะมัน<b>ลบงานของเพื่อน</b>แทนที่จะแก้การชน · ห้าม force-push branch ที่คนอื่นใช้ร่วม', html: note('❌ git push --force = ลบงานเพื่อนทิ้ง ไม่ใช่การแก้ conflict', 'warn') },
+  ]},
+  key:[
+    '<b>Branch</b> = เส้นคู่ขนานที่ปลอดภัย ทำงานโดยไม่แตะ main',
+    '<b>Merge conflict</b> = สองคนแก้บรรทัดเดียวกัน → Git หยุดถามเรา (ไม่ได้พัง ไม่มีอะไรหาย)',
+    'แก้: อ่าน → เลือก/รวมโค้ด → <b>ลบ marker</b> <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> <code>=======</code> <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> → commit',
+    '<b>ห้าม</b> <code>git push --force</code> บน branch ที่แชร์ (ลบงานเพื่อน)',
+  ],
+  more:`<p><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> = เวอร์ชันของ branch เรา · ระหว่าง <code>=======</code> กับ <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; feat/…</code> = เวอร์ชันของอีก branch</p>`,
+  ex:[
+    { id:'g3a', type:'mcq', lv:1, q:'Two teammates changed the same line in different branches. When merging, Git shows <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code> and <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>. What is the best action?', opts:['Run git push --force to overwrite the other version.','Delete the whole file and start again.','Choose or combine the correct code, remove the markers, then commit.','Ignore the markers and push.'], ans:2,
+      ask:'Git ต้องการให้เรา "ตัดสินใจ" อะไร?', why:'เลือก/รวมโค้ดที่ถูก ลบ marker แล้ว commit การแก้ · force push ลบงานเพื่อน' },
+    { id:'g3b', type:'mcq', lv:1, q:'Why do teams create a branch for each feature?', opts:['To work in parallel without breaking main.','To make the repository bigger.','Because Git cannot commit to main.','To avoid writing commit messages.'], ans:0,
+      ask:'branch ปกป้องอะไร?', why:'branch ให้ทำงานคู่ขนาน main ยังเสถียร' },
+    { id:'g3c', type:'mcq', lv:2, q:'Why is <code>git push --force</code> dangerous on a shared branch?', opts:['It is slower than a normal push.','It can erase teammates\' commits instead of resolving the conflict.','It creates too many branches.','It disables GitHub.'], ans:1,
+      ask:'force push ทับประวัติบน GitHub — commit ของเพื่อนที่อยู่ในนั้นจะเป็นยังไง?', why:'force push เขียนทับประวัติ → งานเพื่อนหาย' },
+    { id:'g3d', type:'mcq', lv:2, q:'A merge conflict appears. What does it mean?', opts:['The repository is corrupted.','Git could not decide between two changes to the same lines and asks you to choose.','Someone deleted main.','The code has a syntax error.'], ans:1,
+      ask:'conflict = พังหรือ = Git ถามเรา?', why:'conflict เป็นเรื่องปกติ Git แค่ไม่เดาและให้เราเลือก ไม่มีอะไรหาย' },
+  ]
+});
+
+SE6.lessons.push({
+  id:'g4', icon:'git-pull-request', title:'GitHub & Pull Requests', sub:'Protected main · PR = review ก่อน merge',
+  analogy:{ title:'Pull Request = ให้เพื่อนตรวจการบ้านก่อนส่งครู', text:'เพื่อนอ่าน (ดู diff) แนะนำให้แก้ แล้วงานค่อยเข้า <b>main</b> (ส่งครู) · ไม่มีใครแอบทำ main พังได้คนเดียว' },
+  yt:'pull request github',
+  video:{ th:[{ id:'X3bQzBhRMKQ', title:'Git & GitHub (KongRuksiam)' }], en:[{ id:'nCKdihvneS0', title:'Create a pull request in 4 min (GitHub)' },{ id:'24bJBqjjvBs', title:'How pull requests work (visualized)' }] },
+  scene:{ steps:[
+    { say:'<b>Git</b> = เครื่องมือในเครื่องเรา (ใช้ offline ได้) · <b>GitHub</b> = บ้านกลางที่ทีมแชร์ repo', html: row(box('💻 Local repo', 'บนเครื่องเรา'), arrow('push →<br>← pull'), box('☁️ GitHub', 'single shared truth', 'hot')) + row(box('clone', 'ก๊อปทั้ง repo ครั้งแรก'), box('push', 'ส่ง commit ขึ้น'), box('pull', 'ดึงของเพื่อนลง'), box('PR', 'เสนอ + review + merge')) },
+    { say:'Pull Request: push branch → เปิด PR → เพื่อน<b>อ่าน diff</b> คอมเมนต์ → อนุมัติแล้วค่อย merge เข้า main', html: row(box('Push branch', 'feat/add-task'), arrow(), box('Open PR', 'เสนอการเปลี่ยน'), arrow(), box('Teammate reviews', 'อ่าน diff + คอมเมนต์', 'hot'), arrow(), box('Merge to main', 'หลังอนุมัติ')) + note('PR = จุดที่ code review เกิดขึ้น (quality gate ของทีม)') },
+    { say:'กติกาทีม 3 ข้อ', html: row(box('Rule 1', '<b>ห้าม commit ตรงเข้า main</b> ทุกอย่างผ่าน branch + PR'), box('Rule 2', 'branch เล็ก merge บ่อย ไม่ปล่อยค้างเป็นสัปดาห์'), box('Rule 3', 'ทุกคน commit ชื่อทุกคนต้องอยู่ในประวัติ = หลักฐานรายบุคคล')) },
+    { say:'main คือ baseline ต้องสะอาด: อะไรควร track อะไรห้าม commit', html: row(box('✅ TRACK', 'source code + tests · README, docs · tag release', 'good'), box('❌ NEVER COMMIT', 'secrets/API key/.env · node_modules, build output · ข้อมูลส่วนตัวจริง', 'hot')) + note('<code>.gitignore</code> บอก Git ว่าไม่ต้องเก็บอะไร → สร้างตั้งแต่วันแรก ก่อน push ครั้งแรก') },
+  ]},
+  key:[
+    'Git = เครื่องมือ (offline ได้) · GitHub = ที่แชร์ repo ของทีม',
+    '<b>clone</b> (ก๊อปครั้งแรก) · <b>push</b> (ส่งขึ้น) · <b>pull</b> (ดึงลง) · <b>PR</b> (review แล้ว merge)',
+    '<b>Pull Request</b> = "ช่วย review แล้วค่อย merge" · โชว์ diff · ไม่มีใครทำ main พังคนเดียว',
+    'Protected main: <b>ไม่ commit ตรงเข้า main</b> · branch เล็ก merge บ่อย · ทุกคน commit',
+    '<code>.gitignore</code>: secrets, .env, node_modules, build output · ข้อมูลส่วนตัวจริงห้ามอยู่ใน repo',
+  ],
+  more:`<p>Tag release = mark เวอร์ชันที่ใช้งานได้ (baseline ที่ย้อนกลับไปได้)</p>`,
+  ex:[
+    { id:'g4a', type:'mcq', lv:1, q:'What is the main purpose of a Pull Request?', opts:['To download a teammate\'s code.','To let a teammate review the change before it is merged into main.','To delete old branches automatically.','To run the program on GitHub.'], ans:1,
+      ask:'PR = "please review, then …"?', why:'PR = ขอให้ review ก่อน merge เข้า main' },
+    { id:'g4b', type:'mcq', lv:1, q:'A new teammate wants their very first copy of the team repository, including its history. Which command?', opts:['git push','git pull','git clone','git commit'], ans:2,
+      ask:'ครั้งแรกสุด ยังไม่มี repo ในเครื่องเลย', why:'git clone = ก๊อปทั้ง repo + ประวัติครั้งแรก · หลังจากนั้นใช้ pull/push' },
+    { id:'g4c', type:'classify', lv:2, q:'Track in Git, or never commit?', cats:['Track in Git','Never commit'],
+      rows:[['Source code and unit tests', 0],['.env file with an API key', 1],['README.md', 0],['node_modules/ folder', 1],['A CSV of real users\' phone numbers', 1]],
+      ask:'ของที่เป็นผลงาน/เอกสาร → track · ของลับ/ของที่สร้างอัตโนมัติ/ข้อมูลจริง → ?', why:'code, tests, README = track · .env, node_modules, ข้อมูลส่วนตัวจริง = ห้าม commit (ใส่ .gitignore)' },
+    { id:'g4d', type:'mcq', lv:2, q:'A teammate pushes directly to main without a PR, and the app breaks for everyone. Which team rule was broken?', opts:['Everyone commits.','Never commit to main directly; every change arrives through a branch + PR.','Use long-lived branches.','Tag every release.'], ans:1,
+      ask:'การเปลี่ยนแปลงควรเข้า main ทางไหน?', why:'กฎข้อ 1: ทุกการเปลี่ยนผ่าน branch + PR' },
+    { id:'g4e', type:'mcq', lv:2, q:'When should a team add a <code>.gitignore</code> file?', opts:['After the final demo.','On day one, before the first push.','Only if someone leaks a password.','Never; GitHub ignores files automatically.'], ans:1,
+      ask:'ถ้า push ไฟล์ลับไปแล้ว ประวัติจะเก็บไว้มั้ย?', why:'สร้างตั้งแต่วันแรกก่อน push ครั้งแรก เพราะ push ไปแล้วประวัติจะจำไว้' },
+  ]
+});
+
+SE6.lessons.push({
+  id:'g5', icon:'sparkles', title:'AI-Assisted Coding', sub:'Generate → Read → Test → Explain',
+  analogy:{ title:'AI = ผู้ช่วยร่างที่เร็วแต่ไม่รู้บริบท', text:'AI ร่างโค้ดแรกได้เร็ว แต่<b>เราคือวิศวกร</b>ที่ต้องอ่าน ทดสอบ และอธิบายได้ทุกบรรทัด · อธิบายบรรทัดไหนไม่ได้ = งานยังไม่เสร็จ' },
+  yt:'AI coding verify code',
+  video:{ th:[], en:[] },
+  scene:{ steps:[
+    { say:'วงจรของวิศวกรเมื่อใช้ AI', html: row(box('Generate', 'AI ร่างโค้ด'), arrow(), box('Read', 'เข้าใจทุกบรรทัด'), arrow(), box('Test', 'รันกับ input จริง'), arrow(), box('Explain', 'พร้อมอธิบายตอนสอบ oral', 'hot')) },
+    { say:'<b>5 แบบที่โค้ด AI ผิด</b> ต้องจับก่อน commit', html: `<table class="stbl"><tr><th>Failure</th><th>หน้าตา</th><th>จับยังไง</th></tr>
+      <tr><td><b>Hallucinated API</b></td><td>เรียกฟังก์ชัน/library ที่ไม่มีจริง</td><td>รัน → error · เช็ก docs จริง</td></tr>
+      <tr><td><b>Missing edge cases</b></td><td>ใช้ได้แค่ happy path พังเมื่อว่าง/null/ใหญ่</td><td>เทสต์ขอบเอง (Ch7)</td></tr>
+      <tr><td><b>Over-engineering</b></td><td>เพิ่ม config/layer ที่ไม่มี FR สั่ง</td><td>ไม่มี FR → ตัดทิ้ง</td></tr>
+      <tr><td><b>Untrusted dependency</b></td><td>แนะนำ package แปลก ๆ ให้ pip install</td><td>supply-chain risk → ตรวจก่อน</td></tr>
+      <tr><td><b>Silent wrong logic</b></td><td>รันได้ แต่ได้คำตอบผิด</td><td>อ่านเทียบ acceptance criteria</td></tr></table>` },
+    { say:'AI Critique #6: AI บอกว่า "ใส่ API key ในโค้ดแล้ว commit ได้เลย repo เป็น private ไม่เป็นไร" ผิดตรงไหน?', html: pre(`API_KEY = "sk-live-9f2a…"   # ← AI แนะนำให้ commit`) + note('push แล้ว = ถือว่า<b>รั่วแล้ว</b> · Git จำไว้ในประวัติแม้ลบบรรทัด · เพื่อน, fork, หรือ repo ที่อาจเปิด public ทีหลังก็มี key นี้', 'warn') },
+    { say:'วิธีที่ถูก: เก็บใน .env ใส่ .env ใน .gitignore แล้วโหลดจาก environment · ถ้า push ไปแล้ว ต้อง <b>revoke/rotate</b> key ทันที ลบบรรทัดอย่างเดียวไม่พอ', html: row(box('.env', 'เก็บ key'), box('.gitignore', 'ใส่ .env'), box('load from env', 'os.environ'), box('push ไปแล้ว?', '<b>revoke/rotate</b> ทันที', 'hot')) },
+  ]},
+  key:[
+    'AI-first: <b>Generate → Read → Test → Explain</b> · อธิบายไม่ได้ = ยังไม่เสร็จ',
+    '5 failures: <b>hallucinated API · missing edge cases · over-engineering · untrusted dependency · silent wrong logic</b>',
+    'Prompt ที่ดี: ใส่ FR + กฎ (เช่น title ห้ามว่าง → ValueError) + "keep it simple and readable"',
+    'AI Usage Log บันทึกว่าถามอะไร แก้อะไร → เอาไปใช้ตอนสอบ oral',
+    'Secret ที่ push แล้ว = รั่วแล้ว (แม้ repo private) → <b>revoke/rotate</b>',
+  ],
+  more:`<pre class="code">def add_task(title, due_date):
+    if not title.strip():                 # ← ตรงกับ acceptance criterion ของ FR-1
+        raise ValueError("title required")
+    return {"id": next_id(), "title": title, "due_date": due_date, "done": False}
+# git commit -m "feat: add task with due date (FR-1)"</pre>`,
+  ex:[
+    { id:'g5a', type:'mcq', lv:1, q:'AI-generated code calls <code>tasks.sort_by_deadline()</code>, but running it shows "no such method". Which AI failure is this?', opts:['Over-engineering.','Hallucinated API.','Untrusted dependency.','Missing edge cases.'], ans:1,
+      ask:'ฟังก์ชันนี้มีอยู่จริงมั้ย?', why:'เรียกสิ่งที่ไม่มีจริง = hallucinated API · จับได้ด้วยการรันและเช็ก docs' },
+    { id:'g5b', type:'classify', lv:2, q:'Which AI coding failure is it?', cats:['Hallucinated API','Missing edge cases','Over-engineering','Untrusted dependency','Silent wrong logic'],
+      rows:[['Works for normal tasks but crashes on an empty task list.', 1],['Adds a plugin system and five config options that no FR asked for.', 2],['Suggests pip install of an obscure package with 3 downloads.', 3],['Runs without errors but returns tasks due next week instead of tomorrow.', 4]],
+      ask:'พังตอนว่าง → ? · ของเกินที่ไม่มี FR → ? · package แปลก → ? · รันได้แต่ผิด → ?', why:'empty list = missing edge cases · plugin ที่ไม่มี FR = over-engineering · package แปลก = untrusted dependency · ได้ผลผิดเงียบ ๆ = silent wrong logic' },
+    { id:'g5c', type:'mcq', lv:2, q:'An AI says: "Put the API key directly in the code and commit it — the repo is private, so it is fine." What is the best response?', opts:['Agree, private repos are safe.','Commit it, then delete the line in the next commit.','Keep it in .env listed in .gitignore; if it was already pushed, revoke/rotate the key.','Encrypt the whole repository.'], ans:2,
+      ask:'ลบบรรทัดแล้ว Git history ยังมี key มั้ย?', why:'เก็บใน .env + .gitignore · push ไปแล้วต้อง revoke/rotate (ลบอย่างเดียวไม่พอ)' },
+    { id:'g5d', type:'mcq', lv:1, q:'At the oral exam you cannot explain a line the AI wrote in your part. According to the course, the code is …', opts:['done, because it passes the tests.','not done; it is a liability you own.','the AI vendor\'s responsibility.','acceptable if you mention it in a comment.'], ans:1,
+      ask:'"If you can\'t explain a line, it isn\'t …"', why:'อธิบายไม่ได้ = ยังไม่เสร็จ และเป็นความเสี่ยงที่เราต้องรับผิดชอบ' },
+  ]
+});
+
+/* =================== Ch7 Testing =================== */
+SE7.lessons.push({
+  id:'t1', icon:'circle-check-big', title:'Verification vs Validation', sub:'Built it right? · Built the right thing?',
+  analogy:{ title:'เขียนเรียงความ vs ตอบโจทย์ครู', text:'<b>Verification</b> = เขียนถูกไวยากรณ์ ตรงตามแบบ · <b>Validation</b> = เรียงความนั้นตอบสิ่งที่ครูต้องการจริง · ต้องผ่านทั้งสองอย่าง' },
+  yt:'verification vs validation',
+  video:{ th:[{ id:'tyIGCoBFwdA', title:'พื้นฐาน Software Testing (BorntoDev)' }], en:[{ id:'qxitgylm1EU', title:'Verification vs Validation (2 นาที)' },{ id:'gQrSxbfUjug', title:'V&V (Georgia Tech / Udacity)' }] },
+  scene:{ steps:[
+    { say:'"รันได้" ไม่ได้แปลว่า "ทำงานถูก" · แอปเปิดได้ ไม่ crash แต่แจ้งเตือนผิดวัน นักศึกษาก็ยังพลาดส่งงาน', html: note('✅ เปิดได้ · ✅ ไม่ crash · ❌ แจ้งเตือนผิดวัน → เทสต์ช่วยจับก่อนผู้ใช้เจอ', 'warn') },
+    { say:'ทุกเทสต์ตอบหนึ่งในสองคำถามนี้', html: row(box('Verification', '"Did we build it <b>right</b>?" โค้ดตรง spec ไม่มีบั๊ก<br>เช็กด้วย unit test, code review', 'hot'), box('Validation', '"Did we build the <b>right thing</b>?" ตรงกับที่ผู้ใช้ต้องการ<br>เช็กด้วย demo, acceptance test, feedback', 'good')) + note('จำ: Verification = code is <b>v</b>ery correct · Validation = has <b>value</b> for the user') },
+    { say:'<b>V-model</b>: ทุกขั้นที่สร้าง (ซ้าย) มีระดับการทดสอบคู่กัน (ขวา)', html: `<table class="stbl"><tr><th>สร้าง (ซ้าย)</th><th>ทดสอบ (ขวา)</th></tr><tr><td>Requirements</td><td>System / acceptance tests → <b>validation</b></td></tr><tr><td>Design / architecture</td><td>Integration tests</td></tr><tr><td>Detailed design</td><td>Unit tests → <b>verification</b></td></tr><tr><td colspan="2" style="text-align:center">↓ Code ↑</td></tr></table>` },
+  ]},
+  key:[
+    '<b>Verification</b> = "built it right?" ตรง spec · unit test, code review',
+    '<b>Validation</b> = "built the right thing?" ตรงความต้องการผู้ใช้ · acceptance test, demo, feedback',
+    'ฟีเจอร์เขียนสมบูรณ์แต่ไม่มีใครต้องการ → <b>ไม่ผ่าน validation</b>',
+    '<b>V-model</b>: requirements ↔ acceptance · design ↔ integration · detailed design ↔ unit',
+  ],
+  more:`<p>เทสต์หาบั๊กก่อนผู้ใช้เจอ ตอนที่ยังแก้ถูก (เชื่อมกับ cost of defects ใน Ch8)</p>`,
+  ex:[
+    { id:'t1a', type:'mcq', lv:1, q:'Checking "does the code match the spec, with no bugs?" is called …', opts:['Validation.','Usability.','Release.','Verification.'], ans:3,
+      ask:'"built it right" หรือ "built the right thing"?', why:'Verification = ตรงตาม spec' },
+    { id:'t1b', type:'mcq', lv:1, q:'A feature is coded perfectly, but no user needs it. Which check does it fail?', opts:['Unit testing.','Integration testing.','Validation.','Verification.'], ans:2,
+      ask:'โค้ดถูกแล้ว แต่ "สร้างของที่ถูก" มั้ย?', why:'Validation = สร้างสิ่งที่ผู้ใช้ต้องการ · ฟีเจอร์ไร้ประโยชน์ไม่ผ่าน' },
+    { id:'t1c', type:'mcq', lv:2, q:'In the V-model, which test level is matched with the <b>requirements</b> step?', opts:['Unit tests.','Integration tests.','System / acceptance tests.','Code review.'], ans:2,
+      ask:'ขั้นบนสุดฝั่งซ้ายคู่กับขั้นบนสุดฝั่งขวา', why:'requirements ↔ system/acceptance tests (validation)' },
+    { id:'t1d', type:'classify', lv:2, q:'Verification or validation?', cats:['Verification','Validation'],
+      rows:[['A unit test proves the reminder appears exactly 1 day before the due date.', 0],['Students use the app for a week and say the reminders really help.', 1],['A teammate reviews the code against the spec.', 0],['The customer watches a demo and accepts the system.', 1]],
+      ask:'เช็กกับ spec → ? · เช็กกับผู้ใช้จริง → ?', why:'unit test, code review = verification · ผู้ใช้จริง, demo/acceptance = validation' },
+  ]
+});
+
+SE7.lessons.push({
+  id:'t2', icon:'flask-conical', title:'Test Cases & Unit Tests', sub:'Input + expected output · Arrange–Act–Assert',
+  analogy:{ title:'เทสต์ = เครื่องคิดเลขที่จดคำตอบไว้ล่วงหน้า', text:'กด 2 + 2 แล้วคาดว่าได้ 4 ถ้าขึ้น 5 = บั๊ก · เทสต์จด "คาดว่า 4" ครั้งเดียว แล้วคอมเช็กให้ทุกครั้ง · unit test = ตรวจตัวต่อ LEGO ทีละชิ้นก่อนสร้างปราสาท' },
+  yt:'unit test arrange act assert',
+  video:{ th:[{ id:'zV03qPVps2A', title:'ทำความรู้จัก Unit Testing' }], en:[] },
+  scene:{ steps:[
+    { say:'test case = <b>input ที่รู้ค่า + output ที่คาดไว้</b>', html: row(box('Input', 'งานครบกำหนด 10 ส.ค.<br>วันนี้ 9 ส.ค.'), arrow(), box('tasks_due_for_reminder()', '', 'code'), arrow(), box('Output', 'ผลจริง')) + row(box('ตรงที่คาด → ✓ PASS', '', 'good'), box('ไม่ตรง → ✗ FAIL', 'เจอบั๊กตอนยังถูก', 'hot')) },
+    { say:'<b>unit test</b> = ทดสอบชิ้นเล็กชิ้นเดียว (มักเป็นฟังก์ชันเดียว) แบบ<b>แยกเดี่ยว</b> ไม่มี database UI network · เร็ว และบอกชัดว่าอะไรพัง', html: row(box('One unit', 'ฟังก์ชันเดียว'), box('Fast', 'มิลลิวินาที'), box('Precise', 'บอกชัดว่าพังตรงไหน')) },
+    { say:'แต่ละ <b>acceptance criterion</b> ใน SRS กลายเป็น<b>หนึ่งเทสต์</b> · ทุกเทสต์มี 3 ส่วน: Arrange · Act · Assert', html: pre(`def test_does_not_remind_done_task():     # ← ตั้งชื่อเหมือนประโยค
+    # 1. Arrange: เตรียมข้อมูล
+    tasks = [Task(due=date(2026,8,10), status='done')]
+    # 2. Act: เรียกฟังก์ชัน
+    result = tasks_due_for_reminder(tasks, date(2026,8,9))
+    # 3. Assert: บอกว่าต้องได้อะไร
+    assert result == []                     # [] = ไม่มีอะไรต้องเตือน`) },
+    { say:'AI Critique #7: AI บอก "เพิ่มเทสต์แล้ว ผ่านหมด ส่งได้เลย!" แต่เทสต์นี้<b>อ่อน</b> เพราะเช็กแค่ว่า "มีอะไรคืนมา"', html: pre(`assert add_task('Buy milk') is not None    # ❌ ขยะก็ "not None"`) + pre(`task = add_task('Buy milk')                 # ✅ เช็กข้อมูลจริง
+assert task.title == 'Buy milk'
+assert task.status == 'open'
+with pytest.raises(ValueError):
+    add_task('   ')                          # title ว่างต้องถูกปฏิเสธ`) + note('เทสต์ที่ไม่มีวัน fail เพราะบั๊กจริง = ให้ความมั่นใจปลอม', 'warn') },
+  ]},
+  key:[
+    'Test = <b>known input + expected output</b> · ตรง = pass · ไม่ตรง = fail (เจอบั๊ก)',
+    '<b>Unit test</b> = หนึ่งฟังก์ชัน แยกเดี่ยว (ไม่มี DB/UI/network) · เร็ว แม่น',
+    'แต่ละ <b>acceptance criterion → 1 เทสต์</b> (requirement ไปถึงโค้ด)',
+    'โครงสร้าง <b>Arrange · Act · Assert</b> · ตั้งชื่อเทสต์เหมือนประโยค',
+    'เทสต์ที่ดี: เล็ก 1 พฤติกรรม เทสต์ขอบ (ว่าง, วันพอดี) ไม่ขึ้นกับวันที่จริง/อินเทอร์เน็ต · ไม่เทสต์แค่ happy path',
+  ],
+  more:`<p>AI มักลืม: กรณีว่าง (ไม่มีงาน → คืน []) · กรณี done · ขอบพอดี (ครบวันนี้ vs พรุ่งนี้, off-by-one) · logic ผิดเงียบ ๆ (มีแต่ assert ที่จับได้) · ให้ AI เขียนทั้งโค้ดและเทสต์ แล้วเช็กว่าเทสต์ครอบคลุม AC ครบมั้ย</p><p>เทสต์ fail → แก้โค้ด ไม่ใช่แก้เทสต์</p>`,
+  ex:[
+    { id:'t2a', type:'mcq', lv:1, q:'A test is made of …', opts:['a bug + a fix.','a user + a survey.','a known input + the expected output.','code + comments.'], ans:2,
+      ask:'ให้อะไรเข้าไป แล้วเทียบกับอะไร?', why:'ให้ input ที่รู้ค่า แล้วเช็กว่าผลเท่ากับที่คาด' },
+    { id:'t2b', type:'mcq', lv:1, q:'A unit test checks …', opts:['one function, in isolation.','several modules working together.','the whole app with real users.','the app on iOS and Android.'], ans:0,
+      ask:'unit = ชิ้นเล็กสุด', why:'unit = ชิ้นเดียว ไม่มี database, UI, network' },
+    { id:'t2c', type:'mcq', lv:2, q:'Why is <code>assert add_task(\'Buy milk\') is not None</code> a weak test?', opts:['It uses Python.','It tests too many things.','It never checks the real data (title, status), so it cannot catch real bugs.','It is too long.'], ans:2,
+      ask:'ถ้า add_task คืนข้อมูลผิด เทสต์นี้จะ fail มั้ย?', why:'เทสต์ที่ fail ไม่ได้เพราะบั๊กจริง ให้ความมั่นใจปลอม' },
+    { id:'t2d', type:'mcq', lv:2, q:'In Arrange–Act–Assert, what happens in the <b>Act</b> step?', opts:['Prepare the input data.','Call the function under test.','Check the result equals the expected value.','Write the commit message.'], ans:1,
+      ask:'Arrange = เตรียม · Act = ? · Assert = เช็ก', why:'Act = เรียกฟังก์ชันที่กำลังทดสอบ' },
+    { id:'t2e', type:'mcq', lv:2, q:'A test passes on Monday and fails on Tuesday without any code change. What is the most likely cause?', opts:['The test depends on today\'s real date.','The linter changed the code.','Git lost the commit.','The test has too few asserts.'], ans:0,
+      ask:'เทสต์ที่ดีต้องไม่ขึ้นกับอะไร?', why:'เทสต์ต้องไม่ขึ้นกับวันที่จริงหรืออินเทอร์เน็ต ให้ส่งวันที่เข้าไปเอง (เช่น date(2026,8,9))' },
+  ]
+});
+
+SE7.lessons.push({
+  id:'t3', icon:'ruler', title:'Choosing Inputs: EP & BVA', sub:'Equivalence partitioning · Boundary values',
+  analogy:{ title:'BVA = บั๊กชอบซ่อนตรงขอบ', text:'เหมือนป้าย "ส่วนสูง 120 ซม. ขึ้นไปเล่นได้" ต้องลองเด็ก 119 กับ 120 พอดี ไม่ใช่แค่ 150 · ความผิดพลาดแบบใช้ <code>&lt;</code> แทน <code>&lt;=</code> (off-by-one) อยู่ตรงขอบนี้' },
+  yt:'boundary value analysis equivalence partitioning',
+  video:{ th:[], en:[{ id:'P1Hv2sUPKeM', title:'BVA and Equivalence Partitioning (Guru99, 3 นาที)' }] },
+  scene:{ steps:[
+    { say:'ทดสอบทุก input ไม่ได้ · ตัวอย่าง: title ต้องยาว <b>1–100 ตัวอักษร</b>', html: row(box('too short', '0 ตัว', 'hot'), box('valid', '1–100', 'good'), box('too long', '101+', 'hot')) },
+    { say:'<b>EP (Equivalence Partitioning)</b>: แบ่ง input เป็นกลุ่มที่ทำงานเหมือนกัน แล้วเทสต์<b>กลุ่มละ 1 ค่า</b> → 0 · 50 · 101', html: row(box('Group 1 invalid', 'เทสต์ 0 → ✗ reject'), box('Group 2 valid', 'เทสต์ 50 → ✓ accept', 'good'), box('Group 3 invalid', 'เทสต์ 101 → ✗ reject')) + note('1 เทสต์ เป็นตัวแทนทั้งกลุ่ม') },
+    { say:'<b>BVA (Boundary Value Analysis)</b>: เทสต์<b>ตรงขอบและเลยขอบไปหนึ่ง</b> → เพิ่ม 1 กับ 100 · รวมเป็น 0, 1, 100, 101', html: `<div class="srow">${[['0','✗','hot'],['1','✓ edge','good'],['50','✓',''],['100','✓ edge','good'],['101','✗','hot']].map(([v,t,c]) => box(v, t, c)).join('')}</div>` + note('BVA ใช้กับวันที่ได้ด้วย: อดีต / วันนี้ / อนาคต') },
+  ]},
+  key:[
+    '<b>EP</b> = แบ่ง input เป็นกลุ่ม เทสต์กลุ่มละ 1 ค่า (เช่น 0 · 50 · 101)',
+    '<b>BVA</b> = เทสต์ตรงขอบและเลยขอบ (เช่น <b>0 · 1 · 100 · 101</b>)',
+    '<b>Off-by-one</b> = ขอบผิดไปหนึ่ง เช่นใช้ <code>&lt;</code> แทน <code>&lt;=</code> → BVA จับได้',
+    'Edge case = input แปลก/สุดขั้ว: ว่าง, 0, ค่าสูงสุด',
+  ],
+  more:`<p>ช่วง a–b: BVA เทสต์ a−1, a, b, b+1 (บางตำราเพิ่ม a+1, b−1)</p>`,
+  ex:[
+    { id:'t3a', type:'mcq', lv:1, q:'A title must be 1–100 characters. Which set of test values uses Boundary Value Analysis?', opts:['0, 1, 100, 101','500, 1000','50 only','1, 2, 3, 4'], ans:0,
+      ask:'ขอบคือ 1 กับ 100 → ตรงขอบ + เลยขอบ', why:'BVA: 0 | 1 … 100 | 101' },
+    { id:'t3b', type:'mcq', lv:2, q:'An age field accepts 18–60. Which values does EP pick (one per group)?', opts:['18, 60','10, 30, 70','17, 18, 60, 61','0, 100'], ans:1,
+      ask:'มีกี่กลุ่ม: ต่ำเกิน / ใช้ได้ / สูงเกิน → เลือกตัวแทนกลุ่มละตัว', why:'EP: ต่ำเกิน (10) · ใช้ได้ (30) · สูงเกิน (70) · ส่วน 17, 18, 60, 61 คือ BVA' },
+    { id:'t3c', type:'mcq', lv:2, q:'The code checks <code>if len(title) &lt; 100</code> but the rule is "up to 100 characters". Which test value catches this bug?', opts:['50','100','0','1'], ans:1,
+      ask:'ค่าไหนที่ < 100 กับ <= 100 ให้ผลต่างกัน?', why:'100 พอดี: กฎบอกผ่าน แต่โค้ดปฏิเสธ → off-by-one · BVA จับตรงขอบ' },
+    { id:'t3d', type:'mcq', lv:1, q:'What is an "off-by-one" error?', opts:['A typo in a variable name.','A bug where a limit is wrong by one, e.g. &lt; instead of &lt;=.','A missing semicolon.','A test that runs one second too long.'], ans:1,
+      ask:'ขอบผิดไปกี่หน่วย?', why:'off-by-one = ขอบผิดไปหนึ่ง เช่น < แทน <=' },
+  ]
+});
+
+SE7.lessons.push({
+  id:'t4', icon:'layers', title:'Levels of Testing', sub:'Unit → Integration → System → Release → Acceptance',
+  analogy:{ title:'Test pyramid = โรงงานรถยนต์', text:'ทดสอบชิ้นส่วนบนโต๊ะเยอะ ๆ (unit) แล้วค่อยลองขับทั้งคันไม่กี่รอบ (system) · ฐานกว้าง = เทสต์เล็กเยอะ เร็ว ถูก · ยอด = เทสต์ใหญ่น้อย ช้า แพง' },
+  yt:'test pyramid levels of testing',
+  video:{ th:[], en:[{ id:'JQVA3xIrwEo', title:'What is the Test Pyramid?' }] },
+  scene:{ steps:[
+    { say:'<b>Test pyramid</b> (Cohn): unit test อยู่ฐาน มีเยอะที่สุด', html: `<div class="spyr"><div style="width:40%">System · few · slow · expensive</div><div style="width:65%">Integration</div><div style="width:90%" class="base">Unit tests · many · fast · cheap</div></div>` },
+    { say:'<b>5 levels</b> ตัวอย่างจากแอป StudyMate', html: `<table class="stbl"><tr><th>Level</th><th>ทดสอบอะไร</th><th>ตัวอย่าง</th></tr>
+      <tr><td>1 <b>Unit</b></td><td>ฟังก์ชันเดียว แยกเดี่ยว</td><td>days_until_due: 10 ส.ค. − 8 ส.ค. → 2</td></tr>
+      <tr><td>2 <b>Integration</b></td><td>หลายโมดูลด้วยกัน</td><td>เพิ่มงานผ่าน TaskService → บันทึกแล้วอ่านกลับได้</td></tr>
+      <tr><td>3 <b>System</b></td><td>ทั้งแอป end to end</td><td>เพิ่มงาน → โชว์บน Today → แจ้งเตือนมา</td></tr>
+      <tr><td>4 <b>Release</b></td><td>เวอร์ชันเต็ม โดย<b>ทีมแยก</b> ก่อนปล่อย</td><td>ใช้ได้บน iOS + Android, งานเก่ายังโหลดได้</td></tr>
+      <tr><td>5 <b>Acceptance</b></td><td><b>ผู้ใช้จริง</b>ตัดสินว่ายอมรับมั้ย</td><td>นักศึกษาใช้ 1 สัปดาห์: ช่วยได้จริงมั้ย</td></tr></table>` + note('Acceptance เป็นระดับเดียวที่พิสูจน์ <b>validation</b>', 'good') },
+    { say:'Case Ariane 5 ปี 1996: เอาซอฟต์แวร์ของ Ariane 4 มาใช้ซ้ำ แต่จรวดใหม่เร็วกว่า ตัวเลขความเร็วใหญ่เกิน ใส่ 64-bit ลงที่ 16-bit → overflow · ระเบิดใน 37 วินาที เสียหายราว 370 ล้านดอลลาร์', html: row(box('Ariane 4 code', 'reuse'), arrow(), box('ค่าความเร็วใหม่ใหญ่ขึ้น', ''), arrow(), box('64-bit → 16-bit', 'overflow', 'hot'), arrow(), box('💥 37 วินาที', '~$370M')) + note('บทเรียน: <b>Reused code is not tested code</b> โค้ดที่ใช้ซ้ำหรือ copy จาก AI ต้องเทสต์ใหม่กับ input และขอบใหม่', 'warn') },
+  ]},
+  key:[
+    '<b>Test pyramid</b>: unit (ฐาน) มากสุด · integration กลาง · system (ยอด) น้อยสุด',
+    '5 levels: <b>Unit · Integration · System · Release · Acceptance</b>',
+    '<b>Release</b> = ทีมแยกทดสอบเวอร์ชันเต็มก่อนปล่อย · <b>Acceptance</b> = ผู้ใช้จริง/ลูกค้าตัดสิน',
+    'Acceptance = ระดับเดียวที่พิสูจน์ <b>validation</b>',
+    '<b>Ariane 5</b>: reused code is not tested code · overflow 64→16 bit',
+  ],
+  more:`<p>Regression = โค้ดใหม่ทำของเดิมที่เคยใช้ได้พัง → เทสต์อัตโนมัติช่วยจับ</p>`,
+  ex:[
+    { id:'t4a', type:'mcq', lv:1, q:'In the test pyramid, which tests should you have the <b>most</b> of?', opts:['Acceptance tests.','Unit tests.','System tests.','Release tests.'], ans:1,
+      ask:'ฐานพีระมิดกว้างที่สุดคืออะไร?', why:'unit test อยู่ฐาน: เยอะ เร็ว ถูก' },
+    { id:'t4b', type:'mcq', lv:1, q:'At which level do real users or the customer decide whether to accept the system?', opts:['Component.','Integration.','Unit.','Acceptance.'], ans:3,
+      ask:'ใครเป็นคนตัดสิน "accept"?', why:'Acceptance testing = ระดับเดียวที่พิสูจน์ validation' },
+    { id:'t4c', type:'classify', lv:2, q:'Which level of testing is it?', cats:['Unit','Integration','System','Release','Acceptance'],
+      rows:[['days_until_due returns 2 for due 10 Aug and today 8 Aug.', 0],['Add a task through TaskService, then read it back from storage.', 1],['Add a task, see it on the Today screen, and receive the reminder.', 2],['A separate team checks the full version on iOS and Android before shipping.', 3],['Students use the app for a week and decide if it helps.', 4]],
+      ask:'ฟังก์ชันเดียว → ? · หลายโมดูล → ? · ทั้งแอป → ? · ทีมแยกก่อนปล่อย → ? · ผู้ใช้ตัดสิน → ?', why:'ตามลำดับ: Unit · Integration · System · Release · Acceptance' },
+    { id:'t4d', type:'mcq', lv:2, q:'What is the main lesson of Ariane 5 Flight 501?', opts:['16-bit is always better.','Reused code is not tested code: re-test it with the new inputs.','Rockets should not use software.','Only test the happy path.'], ans:1,
+      ask:'โค้ดเก่าเคยถูกเทสต์กับความเร็วของจรวดใหม่มั้ย?', why:'โค้ดจาก Ariane 4 ไม่เคยเทสต์กับค่าที่ใหญ่ขึ้นของ Ariane 5' },
+  ]
+});
+
+SE7.lessons.push({
+  id:'t5', icon:'smile', title:'Acceptance: TAM, UTAUT2, SUS', sub:'ผู้ใช้ชอบมั้ย จะใช้มั้ย',
+  analogy:{ title:'SUS = แบบสอบถาม 10 ข้อหลังลองใช้จริง', text:'ให้ผู้ใช้<b>ทำงานจริงก่อน</b> (เพิ่มงาน เปิดแจ้งเตือน) แล้วค่อยให้คะแนน 10 ข้อ ได้คะแนนเดียวเต็ม 100 · ~68 = ค่าเฉลี่ย' },
+  yt:'System Usability Scale SUS',
+  video:{ th:[], en:[{ id:'UMv_OW9__qY', title:'The System Usability Scale (NNgroup)' },{ id:'uqV3BuIluzQ', title:'How to calculate the SUS score' }] },
+  scene:{ steps:[
+    { say:'<b>TAM</b> (Davis 1989): คนจะใช้เครื่องมือหรือไม่ ขึ้นกับ 2 อย่าง', html: row(box('PU', 'Perceived Usefulness<br>"มีประโยชน์มั้ย?"'), arrow('+'), box('PEOU', 'Perceived Ease of Use<br>"ใช้ง่ายมั้ย?"'), arrow(), box('Intention → Use', '', 'good')) + note('TAM = 2 ปัจจัย (เช็กเร็ว) · UTAUT2 = 7 ปัจจัย (ภาพเต็ม ใช้ในงานวิจัย)') },
+    { say:'<b>UTAUT2</b> (Venkatesh et al. 2012): 7 เหตุผลที่คนใช้แอป', html: `<div class="sgrid8">${[['PE','Performance Expectancy · ช่วยฉันมั้ย'],['EE','Effort Expectancy · เรียนรู้ง่ายมั้ย'],['SI','Social Influence · เพื่อนใช้มั้ย'],['FC','Facilitating Conditions · มีมือถือ เน็ต คนช่วย'],['HM','Hedonic Motivation · สนุกมั้ย'],['PV','Price Value · คุ้มราคามั้ย'],['HB','Habit · เปิดจนเป็นนิสัย']].map(([a,b]) => box(a, b)).join('')}</div>` },
+    { say:'<b>SUS</b> (Brooke 1996): 10 ข้อ ให้คะแนน 1–5 · ข้อคี่เป็นข้อบวก: <b>คำตอบ − 1</b> · ข้อคู่เป็นข้อลบ: <b>5 − คำตอบ</b>', html: `<table class="stbl"><tr><th>ข้อ</th>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<th>${n}</th>`).join('')}</tr><tr><td>คำตอบ</td>${[4,2,5,1,4,2,4,1,5,2].map(v=>`<td>${v}</td>`).join('')}</tr><tr><td>คะแนน</td>${[4,2,5,1,4,2,4,1,5,2].map((v,k)=>`<td><b>${k%2===0?v-1:5-v}</b></td>`).join('')}</tr></table>` + note('ข้อคี่: 3+4+3+3+4 = 17 · ข้อคู่: 3+4+3+4+3 = 17') },
+    { say:'รวม (17 + 17) × <b>2.5</b> = <b>85</b> = ดีเยี่ยม · อ่านคะแนน: ~68 = ค่าเฉลี่ย · 80+ = ดีเยี่ยม · ต่ำกว่า 50 = แย่', html: row(box('ผลรวม 10 ข้อ', '34'), arrow('× 2.5'), box('SUS = 85', 'excellent', 'good')) + row(box('< 50', 'poor', 'hot'), box('~68', 'average'), box('80+', 'excellent', 'good')) },
+    { say:'Usability test: เขียน task scenario · หาผู้ใช้จริง 5–10 คน · ให้ <b>think aloud</b> และห้ามช่วย · สังเกตว่าทำได้มั้ย ใช้เวลาเท่าไหร่ ติดตรงไหน · <b>แล้วค่อย</b>ให้ทำ SUS', html: row(box('1 Tasks', 'เช่น "เพิ่มงานครบกำหนดวันศุกร์"'), arrow(), box('2 Think aloud', 'ห้ามใบ้'), arrow(), box('3 Observe', 'สำเร็จ? เวลา? ผิดตรงไหน?'), arrow(), box('4 SUS', 'หลังใช้งานจริงเท่านั้น', 'hot')) },
+  ]},
+  key:[
+    '<b>TAM</b>: PU (มีประโยชน์) + PEOU (ใช้ง่าย) → ตั้งใจใช้',
+    '<b>UTAUT2</b>: 7 ปัจจัย PE, EE, SI, FC, HM, PV, HB',
+    '<b>SUS</b>: 10 ข้อ 1–5 · คี่ = ตอบ − 1 · คู่ = 5 − ตอบ · รวม × <b>2.5</b> = 0–100',
+    'อ่าน SUS: ~68 ค่าเฉลี่ย · 80+ ดีเยี่ยม · < 50 แย่',
+    'ทำ SUS <b>หลัง</b>ผู้ใช้ทำงานจริง · usability test ใช้ think aloud, 5–10 คน, ห้ามใบ้',
+  ],
+  more:`<p>ทำไมต้องดูทั้งสองอย่าง: การสังเกตตอนทำ task บอกว่าพังตรงไหน ส่วน SUS ให้คะแนนรวม และ SUS มีความหมายเฉพาะหลังใช้จริง</p>`,
+  ex:[
+    { id:'t5a', type:'mcq', lv:1, q:'SUS item 1 (odd, positive). A user answers 4. What is the item score?', opts:['1','10','4','3'], ans:3,
+      ask:'ข้อคี่: คำตอบ − 1', why:'4 − 1 = 3' },
+    { id:'t5b', type:'mcq', lv:1, q:'SUS item 2 (even, negative). A user answers 2. What is the item score?', opts:['1','3','2','5'], ans:1,
+      ask:'ข้อคู่: 5 − คำตอบ', why:'5 − 2 = 3' },
+    { id:'t5c', type:'mcq', lv:2, q:'The 10 item scores add up to 30. What is the SUS score?', opts:['75','60','30','300'], ans:0,
+      ask:'ผลรวม × 2.5', why:'30 × 2.5 = 75 สูงกว่าค่าเฉลี่ย ~68' },
+    { id:'t5d', type:'mcq', lv:1, q:'When should users fill in the SUS questionnaire?', opts:['Only if they find a bug.','Before they see the app.','One year later.','Right after doing real tasks with the app.'], ans:3,
+      ask:'SUS มีความหมายตอนไหน?', why:'ทำ task จริงก่อน แล้วค่อย SUS' },
+    { id:'t5e', type:'mcq', lv:1, q:'TAM says two things decide whether people adopt a tool. Which two?', opts:['Speed and security.','Price and habit.','Perceived usefulness and perceived ease of use.','Age and gender.'], ans:2,
+      ask:'PU + PEOU ย่อมาจากอะไร?', why:'PU (มีประโยชน์มั้ย) + PEOU (ใช้ง่ายมั้ย) → intention to use' },
+    { id:'t5f', type:'mcq', lv:2, q:'A team gets a SUS score of 45. How should they read it?', opts:['Excellent usability.','About average.','Poor usability; there are serious problems to fix.','SUS scores below 50 are invalid.'], ans:2,
+      ask:'ต่ำกว่า 50 = ?', why:'< 50 = poor · ~68 = average · 80+ = excellent' },
+  ]
+});
+
+/* ----- เพิ่มโจทย์ AI-Use Statement (Ch10) ----- */
+const AIUSE_EX = [
+  { id:'e4e', type:'mcq', lv:1, q:'What should a good AI-Use Statement contain?', opts:['Only the name of the AI tool.','Where AI helped, what you checked, and what you changed.','A promise that no AI was used.','The AI\'s full chat history only.'], ans:1,
+    ask:'แค่บอกชื่อ tool พอมั้ย หรือต้องบอกว่าเราตรวจและแก้อะไร?', why:'บอกว่า AI ช่วยตรงไหน เราตรวจอะไร และแก้อะไร = ความโปร่งใสที่เจาะจง' },
+  { id:'e4f', type:'mcq', lv:2, q:'A team submits a milestone <b>without</b> an AI-Use Statement. According to the course rules, what happens?', opts:['Nothing; it is optional.','The milestone is capped at 50%.','The team gets a bonus for not using AI.','The milestone is graded only on the code.'], ans:1,
+    ask:'สไลด์ Ch10 บอกว่าไม่มี AI-Use Statement จะโดนอะไร?', why:'ไม่มี AI-Use Statement → milestone ถูกจำกัดคะแนนสูงสุด 50%' },
+  { id:'e4g', type:'mcq', lv:2, q:'Using AI well in this course is …', opts:['forbidden; any AI use is cheating.','expected and rewarded; hiding it is the problem.','allowed only for comments.','allowed only if the AI is local.'], ans:1,
+    ask:'ปัญหาคือการใช้ AI หรือการปิดบัง?', why:'ใช้ AI ให้ดีเป็นสิ่งที่คาดหวัง ส่วนการปิดบังหรือส่งสิ่งที่อธิบายไม่ได้คือปัญหา' },
+];
+
+SE10.lessons.find(l => l.id === 'e4').ex.push(...AIUSE_EX);
+const CHAPTERS = [SE6, SE7, SE8, SE9, SE10];
 
 /* index โจทย์ทั้งหมดไว้หาเร็ว ๆ */
 const ALL = {};
@@ -1397,13 +1782,13 @@ function pageHome(){
   const doneN = lessons.filter(l => S.done[l.id]).length;
   const next = lessons.find(l => !S.done[l.id]);
   app.innerHTML = `
-    <div style="margin-top:40px"><span class="eyebrow"><b>SE</b> Intro to Software Engineering · Final 27 พ.ย.</span></div>
+    <div style="margin-top:40px"><span class="eyebrow"><b>SE</b> Intro to Software Engineering · Final 27 พ.ย. 09:00 · 50 MCQ · Ch6–10</span></div>
     <h1>เข้าใจ concept<br><span style="color:var(--muted)">แล้วตอบข้อสอบได้</span></h1>
-    <p class="sub">ดูคลิป → ดูภาพทีละขั้น → ตอบแบบข้อสอบจริง (English MCQ + short answer) · ครั้งละ 30–60 นาทีพอ</p>
+    <p class="sub">ดูคลิป → ดูภาพทีละขั้น → ตอบแบบข้อสอบจริง (English MCQ แบบสถานการณ์สั้น ๆ) · ครั้งละ 30–60 นาทีพอ</p>
     <div class="card">
       <div class="tutor">${BOT_AVA}<div class="bub">${
         due ? `มีโจทย์ที่เคยผิด <b>${due} ข้อ</b> รอทบทวนอยู่นะ ทำก่อนเลย ไม่งั้นลืมแน่ 😤`
-        : next ? `ต่อที่ <b>${chapterOf(next.id).short} · ${next.title}</b> เลย (เรียงตามบทของวิชา Ch8 → Ch9 → Ch10 · ข้อสอบจริงเป็นภาษาอังกฤษ เลยตั้งโจทย์เป็นอังกฤษ + อธิบายไทย)`
+        : next ? `ต่อที่ <b>${chapterOf(next.id).short} · ${next.title}</b> เลย (เรียง Ch6 → Ch10 · ข้อสอบจริง MCQ อังกฤษ 50 ข้อ ปิดหนังสือ เลยตั้งโจทย์เป็นอังกฤษ + อธิบายไทย · short answer เป็นแบบฝึกคิดเสริม)`
         : `ดูครบทุกบทแล้ว 🔥 ไปลุย <b>Final Quiz</b> แล้วทำคะแนนให้ถึง 80% (A) ให้ได้!`
       }</div></div>
       <div class="stats" style="margin-top:14px">
@@ -1479,7 +1864,7 @@ function pageLesson(id){
 
 /* Final Quiz: ปรับความยากอัตโนมัติ — ถูก 2 ข้อติด → ขึ้น level, ผิด → ลง level */
 function pageQuiz(chId){
-  const N = 12, ch = CHAPTERS.find(c => c.id === chId);
+  const ch = CHAPTERS.find(c => c.id === chId), N = ch ? 12 : 25;   // Final รวมทุกบท 25 ข้อ (ข้อสอบจริง 50)
   const pool = Object.values(ALL).filter(e => e.type !== 'write' && e.type !== 'short' && (!ch || chapterOf(e.lesson) === ch));
   const qTitle = ch ? 'Quiz · ' + ch.title : 'Final Quiz · ทุกบท';
   let lv = 1, streak = 0, n = 0, score = 0;
